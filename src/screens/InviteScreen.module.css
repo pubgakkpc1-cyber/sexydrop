@@ -1,0 +1,89 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.codeCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  background:
+    radial-gradient(140px 100px at 85% 0%, rgba(183, 164, 249, 0.16), transparent 70%),
+    var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.codeLabel {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.codeValue {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.linkLabel {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: var(--space-2);
+}
+
+.linkValue {
+  font-size: var(--font-size-xs);
+  color: var(--accent);
+  word-break: break-all;
+}
+
+.codeHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+.copy {
+  margin-top: var(--space-2);
+  height: 44px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.rules {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+}
+
+.rules strong {
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}

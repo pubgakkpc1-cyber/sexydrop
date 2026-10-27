@@ -1,0 +1,256 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.banner {
+  position: relative;
+  display: block;
+  min-height: 98px;
+  padding: var(--space-3) var(--space-4);
+  border-radius: 20px;
+  text-decoration: none;
+  color: var(--text);
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.banner:active {
+  transform: scale(0.985);
+}
+
+/* Название с иконкой — слева снизу (как в референсе). */
+.titleRow {
+  position: absolute;
+  left: var(--space-4);
+  bottom: var(--space-3);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  z-index: 2;
+}
+
+.titleIcon {
+  width: 19px;
+  height: 19px;
+  flex-shrink: 0;
+}
+
+.bannerTitle {
+  font-size: 19px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.4px;
+  text-shadow: 0 1px 6px rgba(15, 14, 17, 0.35);
+}
+
+.badge {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-4);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #17161a;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: var(--radius-full);
+  padding: 4px 11px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), inset 0 1px 1px #ffffff;
+}
+
+/* --- РАКЕТКА: голубой градиент, искры, зелёные множители, арт-ракета --- */
+.crash {
+  background: linear-gradient(118deg, #aecbff 0%, #7ea6ff 55%, #6b95ff 100%);
+}
+
+.sparkle {
+  position: absolute;
+  color: #ffffff;
+  line-height: 1;
+  z-index: 1;
+}
+
+.multiplier {
+  position: absolute;
+  z-index: 1;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--price-green);
+  border-radius: var(--radius-full);
+  padding: 3px 8px;
+  box-shadow: 0 2px 6px rgba(15, 14, 17, 0.22);
+}
+
+.crashRocket {
+  position: absolute;
+  right: 96px;
+  top: 50%;
+  width: 62px;
+  height: 62px;
+  transform: translateY(-54%) rotate(14deg);
+  filter: drop-shadow(0 4px 10px rgba(15, 14, 17, 0.28));
+  z-index: 1;
+}
+
+/* --- PVP HUB: оранжевый, мини-карточки SOLO/TEAM --- */
+.pvp {
+  background: linear-gradient(118deg, #ffc531 0%, #ff9d0b 100%);
+}
+
+.pvpArt {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 1;
+}
+
+.pvpCardSolo,
+.pvpCardTeam {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 64px;
+  height: 58px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 10px rgba(15, 14, 17, 0.22);
+}
+
+.pvpCardSolo {
+  background: linear-gradient(155deg, #ffd44d 0%, #ffab1f 100%);
+}
+
+.pvpCardTeam {
+  background: linear-gradient(105deg, #3b82f6 0%, #3b82f6 55%, #ef4444 55%, #ef4444 100%);
+}
+
+.pvpAvatar {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #fda4d0, #a78bfa);
+  border: 1.5px solid rgba(255, 255, 255, 0.8);
+}
+
+.pvpTagDark {
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  color: #6b4a00;
+  background: rgba(255, 255, 255, 0.34);
+  border-radius: var(--radius-full);
+  padding: 1px 7px;
+}
+
+.pvpTagLight {
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.6px;
+  color: #ffffff;
+  background: rgba(15, 14, 17, 0.35);
+  border-radius: var(--radius-full);
+  padding: 1px 7px;
+}
+
+.pvpVs {
+  font-size: 13px;
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(15, 14, 17, 0.3);
+}
+
+/* --- PLAY HUB: фиолетовый, мини-плитки игр --- */
+.play {
+  background: linear-gradient(118deg, #a13cf7 0%, #7a0fe0 100%);
+}
+
+.playArt {
+  position: absolute;
+  right: var(--space-3);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  z-index: 1;
+}
+
+.playTileUpgrade,
+.playTilePlinko,
+.playTileMines {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 46px;
+  height: 58px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 10px rgba(15, 14, 17, 0.25);
+}
+
+.playTileUpgrade {
+  background: linear-gradient(160deg, #5ee36e 0%, #22c55e 100%);
+}
+
+.upgradeRing {
+  width: 18px;
+  height: 18px;
+  border-radius: var(--radius-full);
+  border: 3px solid #ffffff;
+  border-right-color: rgba(255, 255, 255, 0.35);
+}
+
+.upgradePct {
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  color: #1d5c2a;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: var(--radius-full);
+  padding: 1px 5px;
+}
+
+.playTilePlinko {
+  background: #1d1b2b;
+  display: grid;
+  grid-template-columns: repeat(3, 5px);
+  gap: 5px 7px;
+  place-content: center;
+}
+
+.playTilePlinko i {
+  width: 5px;
+  height: 5px;
+  border-radius: var(--radius-full);
+  background: #ffffff;
+  opacity: 0.92;
+}
+
+.playTileMines {
+  background: linear-gradient(160deg, #4aa8ff 0%, #2f66ff 100%);
+}
+
+.mineCube {
+  width: 11px;
+  height: 11px;
+  border-radius: 3px;
+  background: linear-gradient(160deg, #ffffff, #cdd9ea);
+  box-shadow: 0 2px 4px rgba(15, 14, 17, 0.25);
+}

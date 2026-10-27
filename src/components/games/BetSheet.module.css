@@ -1,0 +1,199 @@
+/* Шит ставки «Ракетки» (Dual Betting, 4.1). */
+
+.segmented {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  background: var(--tile);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+}
+
+.segment {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 12px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.tabIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.segmentActive {
+  color: var(--accent-contrast);
+  background: var(--accent-vivid);
+}
+
+/* --- Вкладка GRAM --- */
+
+.gramTab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.presets {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.preset {
+  flex: 1;
+  padding: 10px 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.presetActive {
+  color: var(--accent-contrast);
+  background: var(--accent-vivid);
+  border-color: var(--accent-vivid);
+}
+
+/* --- Вкладка «Подарки»: пустой инвентарь --- */
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) 0 var(--space-2);
+  text-align: center;
+}
+
+.emptyIcon {
+  width: 34px;
+  height: 34px;
+  color: var(--text-faint);
+}
+
+.emptyTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--price-blue);
+}
+
+.divider {
+  width: 100%;
+  margin: var(--space-1) 0;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 2px;
+  color: var(--text-faint);
+  text-align: center;
+}
+
+.emptyHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+/* --- Вкладка «Подарки»: список предметов --- */
+
+.giftTab {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  max-height: 260px;
+  overflow-y: auto;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 40px 1fr auto;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.row[data-rarity='common'] {
+  border-color: var(--rarity-common);
+}
+
+.row[data-rarity='rare'] {
+  border-color: var(--rarity-rare);
+}
+
+.row[data-rarity='epic'] {
+  border-color: var(--rarity-epic);
+}
+
+.row[data-rarity='legendary'] {
+  border-color: var(--rarity-legendary);
+}
+
+.rowActive {
+  background: var(--surface-3);
+  border-color: var(--accent-vivid);
+}
+
+.image {
+  width: 40px;
+  height: 40px;
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.rarity {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.giftNote {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+.error {
+  font-size: var(--font-size-sm);
+  color: var(--danger);
+  text-align: center;
+}

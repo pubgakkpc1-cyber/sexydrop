@@ -1,0 +1,127 @@
+/* PVP HUB (5.1–5.6): режимы, баннер активного раунда, сводка честности. */
+
+.modeGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.mode {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  color: var(--text);
+  background:
+    radial-gradient(140px 90px at 85% 0%, rgba(183, 164, 249, 0.16), transparent 70%),
+    var(--card);
+  transition: border-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.mode:active {
+  transform: scale(0.99);
+}
+
+.modeJackpot {
+  background:
+    radial-gradient(160px 110px at 85% 10%, rgba(250, 204, 21, 0.18), transparent 70%),
+    var(--card);
+  border-color: rgba(250, 204, 21, 0.28);
+}
+
+.modeTvt {
+  background:
+    radial-gradient(160px 110px at 85% 10%, rgba(59, 130, 246, 0.18), transparent 70%),
+    var(--card);
+  border-color: rgba(59, 130, 246, 0.28);
+}
+
+.modeIcon {
+  font-size: 26px;
+}
+
+.modeName {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.modeDesc {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+/* --- Баннер активного раунда (5.4) --- */
+
+.activeRound {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: rgba(250, 204, 21, 0.08);
+  border: 1px solid rgba(250, 204, 21, 0.4);
+  border-radius: var(--radius-md);
+  text-decoration: none;
+  color: var(--text);
+}
+
+.activePulse {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--orange-deep);
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.7);
+  flex-shrink: 0;
+}
+
+.activeInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.activeTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.activeMeta {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.activeBack {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--orange-deep);
+  flex-shrink: 0;
+}
+
+/* --- Сводка честности --- */
+
+.rules {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  text-align: left;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+  background: transparent;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.rulesIcon {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  opacity: 0.6;
+}

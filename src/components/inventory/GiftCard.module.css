@@ -1,0 +1,105 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-3);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  /* Редкость — цветом рамки и подписи (токены --rarity-*, как в ResultModal). */
+}
+
+.clickable {
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: transform var(--transition-fast);
+}
+
+.clickable:active {
+  transform: scale(0.98);
+}
+
+.card[data-rarity='common'] {
+  border-color: var(--rarity-common);
+}
+
+.card[data-rarity='rare'] {
+  border-color: var(--rarity-rare);
+}
+
+.card[data-rarity='epic'] {
+  border-color: var(--rarity-epic);
+}
+
+.card[data-rarity='legendary'] {
+  border-color: var(--rarity-legendary);
+}
+
+.art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-2);
+  background: var(--surface);
+  border-radius: var(--radius-md);
+}
+
+.image {
+  width: 64px;
+  height: 64px;
+}
+
+.name {
+  max-width: 100%;
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  width: 100%;
+}
+
+.rarity {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+}
+
+.card[data-rarity='common'] .rarity {
+  color: var(--rarity-common);
+}
+
+.card[data-rarity='rare'] .rarity {
+  color: var(--rarity-rare);
+}
+
+.card[data-rarity='epic'] .rarity {
+  color: var(--rarity-epic);
+}
+
+.card[data-rarity='legendary'] .rarity {
+  color: var(--rarity-legendary);
+}
+
+.serial {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.price {
+  font-size: var(--font-size-xs);
+}

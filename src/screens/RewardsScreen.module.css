@@ -1,0 +1,234 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.sectionTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.rules {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+.note {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+.error {
+  font-size: var(--font-size-xs);
+  color: var(--danger);
+}
+
+/* --- Билеты --- */
+
+.ticketHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ticketBalance {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--orange-deep);
+  font-variant-numeric: tabular-nums;
+  padding: 2px 12px;
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.exchange {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.exchangeButton {
+  padding: 10px var(--space-3);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.exchangeButton:not(:disabled):active {
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.55);
+}
+
+.exchangeButton:disabled {
+  filter: grayscale(0.6) brightness(0.75);
+  cursor: not-allowed;
+}
+
+/* --- Задания --- */
+
+.questList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.quest {
+  padding: var(--space-3);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.questTop {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.questTitle {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.questReward {
+  font-size: var(--font-size-xs);
+  color: var(--orange-deep);
+  font-weight: var(--font-weight-semibold);
+}
+
+.questBar {
+  height: 8px;
+  background: var(--surface-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.questFill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--orange-deep), #fbbf24);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-fast);
+}
+
+.questBottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.claim {
+  padding: 5px 14px;
+  font-family: inherit;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+}
+
+.claim:disabled {
+  filter: grayscale(0.7) brightness(0.75);
+  cursor: not-allowed;
+}
+
+/* --- Розыгрыш --- */
+
+.prizeTable {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.prizeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2) var(--space-3);
+  font-size: var(--font-size-xs);
+  border-bottom: 1px solid var(--border);
+}
+
+.prizeRow:last-child {
+  border-bottom: none;
+}
+
+.prizeChance {
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.raffleCta {
+  height: 48px;
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.raffleCta:disabled {
+  filter: grayscale(0.7) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.drawResult {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent);
+}
+
+.drawHistory {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.drawRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  padding: 3px var(--space-2);
+  background: var(--card);
+  border-radius: var(--radius-sm, 6px);
+}

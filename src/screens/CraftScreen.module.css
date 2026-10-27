@@ -1,0 +1,270 @@
+/* Крафт (4.5) — красно-оранжевая тема референса frame_126 (баннер «Крафт»). */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px 6px 4px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.back:active {
+  color: var(--text);
+}
+
+.backIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.demoChip {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: rgba(183, 164, 249, 0.12);
+  border: 1px solid rgba(183, 164, 249, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+/* --- Полотно: сумма входа и кандидаты --- */
+
+.board {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  background:
+    radial-gradient(140px 100px at 20% 12%, rgba(255, 157, 11, 0.35), transparent 70%),
+    linear-gradient(160deg, #f0562b 0%, #d92b2b 60%, #a31d1d 100%);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.boardLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.sumPill {
+  padding: 6px 18px;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: var(--radius-full);
+  font-variant-numeric: tabular-nums;
+}
+
+.candidates {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.candidate {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 6px;
+  background: rgba(0, 0, 0, 0.28);
+  border-radius: var(--radius-full);
+  min-width: 0;
+}
+
+.candidateImage {
+  width: 24px;
+  height: 24px;
+}
+
+.candidateName {
+  font-size: 10px;
+  font-weight: var(--font-weight-semibold);
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+.candidateChance {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--gold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.boardEmpty {
+  font-size: var(--font-size-sm);
+  color: rgba(255, 255, 255, 0.85);
+  text-align: center;
+}
+
+/* --- Мульти-выбор инвентаря --- */
+
+.sectionTitle {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
+}
+
+.cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-2) var(--space-1);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+  min-width: 0;
+}
+
+.cellActive {
+  background: rgba(249, 115, 22, 0.14);
+  border-color: rgba(255, 159, 46, 0.65);
+}
+
+.cellImage {
+  width: 40px;
+  height: 40px;
+}
+
+.cellName {
+  max-width: 100%;
+  font-size: 10px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cellPrice {
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  color: var(--price-green);
+  font-variant-numeric: tabular-nums;
+}
+
+.emptyInline {
+  padding: var(--space-4);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --- CTA и заметки --- */
+
+.placeBet {
+  height: 52px;
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.placeBet:active {
+  transform: scale(0.98);
+}
+
+.placeBet:disabled {
+  filter: grayscale(0.7) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.placeBet:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+.note {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}
+
+/* --- Результат --- */
+
+.resultWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-4) 0 var(--space-2);
+  text-align: center;
+}
+
+.resultImage {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.45));
+}
+
+.resultLost {
+  opacity: 0.4;
+  filter: grayscale(0.8);
+}
+
+.resultTitle {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.resultTitleWon {
+  color: var(--success);
+}
+
+.resultTitleLost {
+  color: var(--danger);
+}
+
+.resultMeta {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}

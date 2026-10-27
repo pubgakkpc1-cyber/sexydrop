@@ -1,0 +1,267 @@
+/* Дайс (4.7) — синяя тема плитки Dice (frame_126), панель ставки по Plinko UI Kit. */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px 6px 4px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.back:active {
+  color: var(--text);
+}
+
+.backIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.demoChip {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: rgba(183, 164, 249, 0.12);
+  border: 1px solid rgba(183, 164, 249, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+/* --- Полотно: ролл + направление + цель --- */
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  background:
+    radial-gradient(160px 120px at 78% 12%, rgba(59, 130, 246, 0.3), transparent 70%),
+    linear-gradient(170deg, #1c2030 0%, #14161f 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.rollDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.rollValue {
+  font-size: 44px;
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  color: var(--text);
+}
+
+.rollWon {
+  color: var(--success);
+}
+
+.rollLost {
+  color: var(--danger);
+}
+
+.rollHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.direction {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.directionChip {
+  padding: 10px 4px;
+  font-family: inherit;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast), color var(--transition-fast);
+}
+
+.directionChipActive {
+  color: var(--text);
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.slider {
+  width: 100%;
+  appearance: none;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: var(--surface-3);
+  outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: #3ab8ff;
+  border: 3px solid #ffffff;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: var(--radius-full);
+  background: #3ab8ff;
+  border: 3px solid #ffffff;
+  cursor: pointer;
+}
+
+.targetRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.targetValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.chancePill {
+  padding: 4px 14px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--orange-deep);
+  background: #ffffff;
+  border-radius: var(--radius-full);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Поля шанса и множителя (пересчитывают друг друга) --- */
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+
+/* --- Панель ставки --- */
+
+.betPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.preset {
+  padding: 9px 4px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.presetActive {
+  background: rgba(59, 130, 246, 0.14);
+  border-color: rgba(59, 130, 246, 0.55);
+}
+
+.betError {
+  font-size: var(--font-size-xs);
+  color: var(--danger);
+}
+
+.placeBet {
+  height: 52px;
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.placeBet:active {
+  transform: scale(0.98);
+}
+
+.placeBet:disabled {
+  filter: grayscale(0.7) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.placeBet:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+.resultWon {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--success);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.resultLost {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--danger);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

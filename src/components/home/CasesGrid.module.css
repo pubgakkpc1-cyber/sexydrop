@@ -1,0 +1,127 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  background: rgba(20, 18, 30, 0.72);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  overflow: hidden;
+  text-decoration: none;
+  color: var(--text);
+  transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.tile:active {
+  transform: scale(0.97);
+}
+
+.art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: var(--space-4) var(--space-3) var(--space-2);
+  min-height: 128px;
+  /* Свечение под артом — цвет кейса из конфига (упадёт в нейтральный, если не задан). */
+  background:
+    radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--case-glow, #8b5cf6) 30%, transparent) 0%, transparent 62%),
+    transparent;
+}
+
+.newBadge {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-full);
+  padding: 3px 8px;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.newBadgeIcon {
+  width: 11px;
+  height: 11px;
+}
+
+.image {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.55));
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--card);
+  border-top: 1px solid var(--border);
+}
+
+.name {
+  font-weight: var(--font-weight-semibold);
+  font-size: 15px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pricePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.pillGreen {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(21, 128, 61, 0.95));
+  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.pillPurple {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(126, 34, 206, 0.95));
+  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+
+.pillIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}

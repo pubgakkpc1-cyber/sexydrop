@@ -1,0 +1,136 @@
+.nav {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  background: #0d0d12;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  padding-bottom: var(--safe-bottom);
+  flex-shrink: 0;
+  position: relative;
+  z-index: 50;
+  contain: layout;
+  height: calc(60px + var(--safe-bottom));
+  box-sizing: border-box;
+}
+
+/* Плавный скользящий стеклянный контейнер активной вкладки (1:1 референс) */
+.slidingTrack {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.26s cubic-bezier(0.2, 0.9, 0.3, 1);
+  will-change: transform;
+}
+
+.slidingPill {
+  width: calc(100% - 10px);
+  max-width: 66px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+.tab {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 60px;
+  color: rgba(255, 255, 255, 0.42);
+  text-decoration: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.12s ease;
+  padding: 0 2px;
+}
+
+.tab:active {
+  transform: scale(0.92);
+}
+
+.tabInner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  max-width: 66px;
+  height: 52px;
+}
+
+.iconWrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+}
+
+.icon {
+  width: 22px;
+  height: 22px;
+  color: inherit;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+.tabLabel {
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: -0.2px;
+  line-height: 1.1;
+  color: inherit;
+  white-space: nowrap;
+  transition: color 0.2s ease, font-weight 0.2s ease;
+}
+
+/* Активная вкладка */
+.active {
+  color: #ffffff;
+}
+
+.active .icon {
+  transform: scale(1.06);
+}
+
+.active .tabLabel {
+  font-weight: 600;
+}
+
+/* Бейдж количества предметов в инвентаре */
+.badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: #ef4444;
+  border: 1.5px solid #0d0d12;
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: 0 2px 6px rgba(239, 68, 68, 0.5);
+  animation: badgePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0); }
+  100% { transform: scale(1); }
+}

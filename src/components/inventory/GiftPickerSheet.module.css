@@ -1,0 +1,139 @@
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  min-width: 0;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--rarity-common);
+  border-radius: var(--radius-md);
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    background-color var(--transition-fast),
+    border-color var(--transition-fast);
+}
+
+.row[data-rarity='common'] {
+  border-left-color: var(--rarity-common);
+}
+
+.row[data-rarity='rare'] {
+  border-left-color: var(--rarity-rare);
+}
+
+.row[data-rarity='epic'] {
+  border-left-color: var(--rarity-epic);
+}
+
+.row[data-rarity='legendary'] {
+  border-left-color: var(--rarity-legendary);
+}
+
+.row:active {
+  background: var(--surface-3);
+}
+
+.rowActive {
+  background: var(--surface-3);
+  border-color: var(--accent);
+}
+
+.rowActive[data-rarity] {
+  border-left-color: var(--accent);
+}
+
+.image {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+
+.rarity {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.selected {
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+
+.selectedMuted {
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+}
+
+.noMatches {
+  padding: var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-6) var(--space-4);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.emptyIcon {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+}
+
+.emptySecondary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+.emptyHint {
+  max-width: 260px;
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

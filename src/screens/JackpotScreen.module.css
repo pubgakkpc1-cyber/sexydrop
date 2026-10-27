@@ -1,0 +1,274 @@
+/* Solo Jackpot (5.2) — золотая тема банка, панель по Plinko UI Kit. */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px 6px 4px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.back:active {
+  color: var(--text);
+}
+
+.backIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.demoChip {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: rgba(183, 164, 249, 0.12);
+  border: 1px solid rgba(183, 164, 249, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+/* --- Полотно: банк + доля + билет --- */
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5) var(--space-4);
+  background:
+    radial-gradient(160px 120px at 80% 8%, rgba(250, 204, 21, 0.22), transparent 70%),
+    linear-gradient(170deg, #1d1b14 0%, #14161f 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.bankRow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.bankLabel {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.bankValue {
+  font-size: 40px;
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: #facc15;
+  line-height: 1.1;
+}
+
+.shareBar {
+  width: 100%;
+  height: 12px;
+  background: var(--surface-3);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.shareFill {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #35d97b, #7ce8a8);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-fast);
+}
+
+.shareRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.sharePlayer {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--success);
+  font-variant-numeric: tabular-nums;
+}
+
+.shareHouse {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.rollDisplay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.rollValue {
+  font-size: 44px;
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 2px;
+  color: var(--text);
+}
+
+.rollWon {
+  color: var(--success);
+}
+
+.rollLost {
+  color: var(--danger);
+}
+
+.rollHint {
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+}
+
+.resultWon {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--success);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.resultLost {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--danger);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- Панель вклада / тиража --- */
+
+.betPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.openStats {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-xs);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  padding: var(--space-2) var(--space-3);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.preset {
+  padding: 9px 4px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.presetActive {
+  background: rgba(250, 204, 21, 0.12);
+  border-color: rgba(250, 204, 21, 0.55);
+}
+
+.betError {
+  font-size: var(--font-size-xs);
+  color: var(--danger);
+}
+
+.placeBet {
+  height: 52px;
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.placeBet:active {
+  transform: scale(0.98);
+}
+
+.placeBet:disabled {
+  filter: grayscale(0.7) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.placeBet:not(:disabled):hover {
+  filter: brightness(1.08);
+}
+
+/* Тираж — золото: главное действие открытого раунда */
+.drawBet {
+  height: 52px;
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #1d1b14;
+  background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.drawBet:active {
+  transform: scale(0.98);
+}
+
+.drawBet:not(:disabled):hover {
+  filter: brightness(1.06);
+}
+
+.note {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

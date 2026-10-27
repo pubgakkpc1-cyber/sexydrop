@@ -1,0 +1,386 @@
+.screen {
+  min-height: 100%;
+  padding: 0 0 80px;
+  background: transparent;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Верхняя панель: Назад | Бренд/Кейс | Баланс + Пополнить */
+.topNav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: 12px;
+  gap: 6px;
+  position: relative;
+  z-index: 20;
+}
+
+.backButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  color: #f1f5f9;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 5px 11px 5px 7px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+  flex-shrink: 0;
+}
+
+.backButton:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+.backButton:active {
+  transform: scale(0.94);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.backIconWrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.backIcon {
+  width: 12px;
+  height: 12px;
+}
+
+.backText {
+  letter-spacing: -0.2px;
+}
+
+.centerBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(20, 18, 30, 0.65);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9999px;
+  padding: 4px 9px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@media (max-width: 640px) {
+  .centerBadge {
+    display: none;
+  }
+}
+
+.appBrand {
+  font-size: 11.5px;
+  font-weight: 700;
+  background: linear-gradient(135deg, #c084fc 0%, #818cf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 0.1px;
+}
+
+.badgeDivider {
+  color: rgba(255, 255, 255, 0.25);
+  font-size: 8px;
+}
+
+.caseBadgeTitle {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: 0.1px;
+}
+
+.balancePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(20, 18, 30, 0.75);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 9999px;
+  padding: 3px 4px 3px 6px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  flex-shrink: 0;
+}
+
+.balanceAvatar {
+  flex-shrink: 0;
+}
+
+.balanceTextGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.balanceValue {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #fbbf24;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
+}
+
+.depositButton {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
+  color: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  padding: 4px 8px;
+  font-size: 10.5px;
+  font-weight: 800;
+  cursor: pointer;
+  letter-spacing: -0.2px;
+  box-shadow: 0 2px 10px rgba(245, 158, 11, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  transition: transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease, filter 0.15s ease;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.depositButton:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.55);
+}
+
+.depositButton:active {
+  transform: scale(0.94);
+  filter: brightness(0.95);
+}
+
+/* Секция кнопки открытия и кулдауна */
+.actionSection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.cooldownLabel {
+  font-size: 12px;
+  color: #94a3b8;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.openButton {
+  width: 100%;
+  padding: 15px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.openButtonCta {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.45), inset 0 1px 1.5px rgba(255, 255, 255, 0.65);
+}
+
+.openButtonCta:hover:not(:disabled) {
+  filter: brightness(1.08);
+  box-shadow: 0 8px 24px rgba(245, 158, 11, 0.55), inset 0 1px 1.5px rgba(255, 255, 255, 0.8);
+}
+
+.openButtonCta:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.openButtonWaiting {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.openButtonSpinning {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  color: #94a3b8;
+  cursor: wait;
+}
+
+.buttonIcon {
+  font-size: 18px;
+}
+
+.errorHint {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: 8px;
+  text-align: center;
+}
+
+/* Сетка наград (2 колонки как в референс-видео) */
+.rewardsSection {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.rewardsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.rewardsTitle {
+  font-size: 15px;
+  font-weight: 800;
+  color: #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.rewardsCount {
+  font-size: 12px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.rewardsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+.rewardCard {
+  position: relative;
+  background: rgba(20, 18, 30, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 14px 10px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rewardCard:hover {
+  transform: translateY(-3px) scale(1.01);
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+.rewardPriceBadge {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  border-radius: 9999px;
+  padding: 3px 9px;
+  font-size: 11px;
+  font-weight: 800;
+  color: #fbbf24;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.rewardImageWrap {
+  width: 96px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px 0 8px;
+  position: relative;
+}
+
+.rewardImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.6));
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.rewardCard:hover .rewardImage {
+  transform: scale(1.08);
+}
+
+.rewardName {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  letter-spacing: -0.2px;
+}
+
+.rewardPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(168, 85, 247, 0.18);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  letter-spacing: -0.1px;
+}
+
+.rewardChance {
+  color: #e2e8f0;
+  font-size: 10.5px;
+  opacity: 0.9;
+}
+
+.emptyScreen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: #94a3b8;
+}

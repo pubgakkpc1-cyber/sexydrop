@@ -1,0 +1,49 @@
+.gram {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: var(--font-weight-semibold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.icon {
+  color: var(--gram);
+  flex-shrink: 0;
+}
+
+.sm {
+  font-size: var(--font-size-sm);
+}
+
+.sm .icon {
+  width: 13px;
+  height: 13px;
+}
+
+.md {
+  font-size: var(--font-size-md);
+}
+
+.md .icon {
+  width: 15px;
+  height: 15px;
+}
+
+.lg {
+  font-size: var(--font-size-lg);
+}
+
+.lg .icon {
+  width: 18px;
+  height: 18px;
+}
+
+.srUnit {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

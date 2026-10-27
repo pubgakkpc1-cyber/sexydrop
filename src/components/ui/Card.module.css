@@ -1,0 +1,42 @@
+.card {
+  background-color: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-1);
+  color: var(--text);
+}
+
+/* --- Отступы --- */
+.none {
+  padding: 0;
+}
+
+.sm {
+  padding: var(--space-3);
+}
+
+.md {
+  padding: var(--space-4);
+}
+
+.lg {
+  padding: var(--space-6);
+}
+
+/* --- Интерактивная карточка (нажатие) --- */
+.interactive {
+  cursor: pointer;
+  transition:
+    border-color var(--transition-fast),
+    transform var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.interactive:hover {
+  border-color: var(--border-strong);
+  background-color: var(--surface);
+}
+
+.interactive:active {
+  transform: scale(0.98);
+}

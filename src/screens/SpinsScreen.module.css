@@ -1,0 +1,313 @@
+/* Спины (4.9) — сине-бирюзовая тема, сетка 5×5, чипы символов, автоспин. */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 6px 10px 6px 4px;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+
+.back:active {
+  color: var(--text);
+}
+
+.backIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.demoChip {
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  background: rgba(183, 164, 249, 0.12);
+  border: 1px solid rgba(183, 164, 249, 0.35);
+  border-radius: var(--radius-full);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+/* --- Полотно: сетка символов 5×5 --- */
+
+.canvas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background:
+    radial-gradient(160px 120px at 78% 10%, rgba(47, 184, 255, 0.28), transparent 70%),
+    linear-gradient(170deg, #1b2230 0%, #14161f 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 7px;
+}
+
+.cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #262a36 0%, #1e222c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+}
+
+.cellImage {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+}
+
+.cellBonus {
+  font-size: 20px;
+}
+
+.cellWinner {
+  background: rgba(47, 184, 255, 0.18);
+  border-color: rgba(47, 184, 255, 0.65);
+  box-shadow: 0 0 12px rgba(47, 184, 255, 0.35);
+}
+
+/* --- Чипы символов с шансами --- */
+
+.symbols {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.symbolChip {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.symbolImage {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.symbolBonus {
+  font-size: 16px;
+}
+
+.symbolName {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-muted);
+}
+
+.symbolOdds {
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.doubleChip {
+  flex: 0 0 auto;
+  align-self: stretch;
+  padding: 6px 12px;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: var(--font-weight-bold);
+  color: var(--orange-deep);
+  background: var(--gold-bg, rgba(255, 201, 60, 0.16));
+  border: 1px solid rgba(255, 201, 60, 0.5);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: filter var(--transition-fast), border-color var(--transition-fast);
+}
+
+.doubleChipActive {
+  filter: brightness(1.25);
+  border-color: var(--gold, #ffc93c);
+}
+
+/* --- Панель ставки --- */
+
+.betPanel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-2);
+}
+
+.preset {
+  padding: 9px 4px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.presetActive {
+  background: rgba(47, 184, 255, 0.14);
+  border-color: rgba(47, 184, 255, 0.55);
+}
+
+.betError {
+  font-size: var(--font-size-xs);
+  color: var(--danger);
+}
+
+.controls {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--space-2);
+}
+
+.placeBet {
+  height: 52px;
+  font-family: inherit;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--cta-gradient);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.placeBet:active {
+  transform: scale(0.98);
+}
+
+.placeBet:disabled {
+  filter: grayscale(0.7) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.buyBonus {
+  height: 52px;
+  padding: 0 14px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: #2b1d04;
+  background: var(--gold, #ffc93c);
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  transition: filter var(--transition-fast), transform var(--transition-fast);
+}
+
+.buyBonus:active {
+  transform: scale(0.98);
+}
+
+.buyBonus:disabled {
+  filter: grayscale(0.7) brightness(0.7);
+  cursor: not-allowed;
+}
+
+.autoRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.autoLabel {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+  white-space: nowrap;
+}
+
+.autoChip {
+  flex: 1;
+  padding: 8px 2px;
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--text);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.autoChipActive {
+  background: rgba(47, 184, 255, 0.14);
+  border-color: rgba(47, 184, 255, 0.55);
+}
+
+.autoStop {
+  color: var(--danger);
+  border-color: rgba(255, 71, 87, 0.5);
+}
+
+.resultWon {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--success);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.resultLost {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--danger);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.note {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

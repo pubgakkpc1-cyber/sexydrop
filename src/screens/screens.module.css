@@ -1,0 +1,117 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.lead {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+  margin-top: calc(var(--space-2) * -1);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  position: relative;
+}
+
+.tileImage {
+  width: 100%;
+  border-radius: var(--radius-md);
+  display: block;
+}
+
+.tileName {
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-md);
+}
+
+.tileDesc {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.tilePrice {
+  font-weight: var(--font-weight-semibold);
+  color: var(--accent);
+  font-size: var(--font-size-sm);
+}
+
+.soon {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-2);
+  font-size: 9px;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+  background: rgba(13, 16, 23, 0.78);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  backdrop-filter: blur(2px);
+}
+
+.placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  text-align: center;
+  color: var(--text-muted);
+  padding: var(--space-8) var(--space-4);
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+}
+
+.placeholderIcon {
+  width: 40px;
+  height: 40px;
+  opacity: 0.5;
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+}
+
+.rowMuted {
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.note {
+  color: var(--text-faint);
+  font-size: var(--font-size-xs);
+}
+
+.backLink {
+  color: var(--accent);
+  font-size: var(--font-size-sm);
+  text-decoration: none;
+}

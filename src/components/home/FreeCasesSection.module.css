@@ -1,0 +1,161 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+/* Плитка референса: тёмный фон, цветная рамка 2px, свечение под артом. */
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 62%),
+    rgba(20, 18, 30, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.daily {
+  border-color: rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.2);
+}
+
+.hourly {
+  border-color: rgba(168, 85, 247, 0.45);
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+.headline {
+  font-size: 21px;
+  font-weight: var(--font-weight-bold);
+  font-style: italic;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.headlineGold {
+  background: linear-gradient(100deg, #ffe08a 0%, var(--gold) 55%, #ff9d0b 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.headlinePurple {
+  background: linear-gradient(100deg, #ffd7f7 0%, #f0a6ff 45%, #8ef5b2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.imageLink {
+  display: block;
+}
+
+.image {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.5));
+}
+
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.freeLabel {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.15;
+}
+
+.freePeriod {
+  font-weight: var(--font-weight-bold);
+}
+
+.claimPill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  height: 34px;
+  min-width: 86px;
+  padding: 0 var(--space-3);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #ffffff;
+  cursor: pointer;
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  transition: transform var(--transition-fast), filter var(--transition-fast);
+}
+
+.claimPill:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.claimGold {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.95) 0%, rgba(217, 119, 6, 0.95) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.claimPurple {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.95) 0%, rgba(99, 102, 241, 0.95) 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+}
+
+.waiting {
+  background: var(--surface);
+  color: var(--text-muted);
+  cursor: default;
+}
+
+.pillIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.clock {
+  opacity: 0.8;
+}
+
+.srClaim {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.demoNote {
+  font-size: var(--font-size-xs);
+  color: var(--text-faint);
+}

@@ -1,0 +1,154 @@
+.rouletteContainer {
+  position: relative;
+  width: 100%;
+  margin: 12px 0 16px;
+  user-select: none;
+}
+
+.rouletteViewport {
+  position: relative;
+  width: 100%;
+  height: 124px;
+  background: radial-gradient(circle at 50% 50%, #1c1a29 0%, #100f18 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Градиентные маски по бокам для плавного затухания карточек */
+.fadeMaskLeft,
+.fadeMaskRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 60px;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.fadeMaskLeft {
+  left: 0;
+  background: linear-gradient(to right, #100f18 0%, rgba(16, 15, 24, 0) 100%);
+}
+
+.fadeMaskRight {
+  right: 0;
+  background: linear-gradient(to left, #100f18 0%, rgba(16, 15, 24, 0) 100%);
+}
+
+/* Центральный маркер/стрелка рулетки */
+.markerWrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 24px;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.markerTop {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 10px solid #c084fc;
+  filter: drop-shadow(0 2px 6px rgba(192, 132, 252, 0.9));
+}
+
+.markerLine {
+  width: 2px;
+  flex: 1;
+  background: linear-gradient(180deg, #c084fc 0%, rgba(192, 132, 252, 0.25) 50%, #c084fc 100%);
+  box-shadow: 0 0 8px rgba(192, 132, 252, 0.8);
+}
+
+.markerBottom {
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid #c084fc;
+  filter: drop-shadow(0 -2px 6px rgba(192, 132, 252, 0.9));
+}
+
+/* Лента с подарками */
+.strip {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  will-change: transform;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Карточка подарка на рулетке */
+.tile {
+  flex-shrink: 0;
+  width: 80px;
+  height: 104px;
+  margin: 0 5px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.tile[data-rarity='common'] {
+  border-bottom: 2px solid #94a3b8;
+}
+
+.tile[data-rarity='rare'] {
+  border-bottom: 2px solid #3b82f6;
+}
+
+.tile[data-rarity='epic'] {
+  border-bottom: 2px solid #a855f7;
+}
+
+.tile[data-rarity='legendary'] {
+  border-bottom: 2px solid #f59e0b;
+}
+
+.tileImage {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+  transition: transform 0.2s ease;
+}
+
+.tileName {
+  font-size: 10px;
+  font-weight: 600;
+  color: #94a3b8;
+  max-width: 72px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 4px;
+}
+
+/* Подсветка выигравшей карточки после остановки */
+.tileWinning {
+  border: 2px solid #fbbf24 !important;
+  background: rgba(251, 191, 36, 0.12) !important;
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+  transform: scale(1.04);
+}
+
+.tileWinning .tileImage {
+  transform: scale(1.1);
+}

@@ -9,12 +9,23 @@ from fastapi.staticfiles import StaticFiles
 from app.api import api_router
 from app.core.config import get_settings
 from app.core.db import dispose_engine
+from app.core.realtime import crash_manager
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
-    yield
-    await dispose_engine()
+    settings = get_settings()
+    crash_task = None
+    if settings.app_env != "test":
+        # Server-authoritative Crash cycle; disabled under tests, which drive
+        # the manager directly with controlled `step()` calls.
+        crash_task = crash_manager.start()
+    try:
+        yield
+    finally:
+        if crash_task is not None:
+            await crash_manager.stop()
+        await dispose_engine()
 
 
 def create_app() -> FastAPI:

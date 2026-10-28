@@ -139,7 +139,9 @@
   font-size: 11.5px;
   font-weight: 800;
   color: #fbbf24;
-  letter-spacing: -0.2px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
   white-space: nowrap;
 }
 
@@ -316,6 +318,9 @@
   font-size: 11px;
   font-weight: 800;
   color: #fbbf24;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
   white-space: nowrap;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
@@ -366,13 +371,18 @@
   font-weight: 700;
   padding: 3px 10px;
   border-radius: 9999px;
-  letter-spacing: -0.1px;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
 }
 
 .rewardChance {
   color: #e2e8f0;
   font-size: 10.5px;
   opacity: 0.9;
+  letter-spacing: 0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
 }
 
 .emptyScreen {

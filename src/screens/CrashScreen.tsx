@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCrashStore, type CrashBet } from '../store/crash'
 import { useWalletStore } from '../store/wallet'
@@ -36,7 +36,7 @@ import {
   SparkleIcon,
   RocketIcon,
 } from '../components/shell/icons'
-import { giftById, gifts, type Gift } from '../data/catalog'
+import { giftById, gifts, getGiftForValue, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
 import styles from './CrashScreen.module.css'
 
@@ -217,6 +217,86 @@ export function CrashScreen() {
   const countNumber = Math.min(5, Math.max(1, Math.ceil(secondsLeft)))
   const currentTheme = COUNTDOWN_THEMES[countNumber] ?? COUNTDOWN_THEMES[1]!
   const countdownDashoffset = 364.4 * (1 - Math.max(0, Math.min(1, secondsLeft / 5.0)))
+
+  // Все ставки раунда, отсортированные от большого к маленькому (от большего к меньшему)
+  // со строгим отображением Telegram NFT подарка по стоимости ставки и выигрыша.
+  const sortedBetRows = useMemo(() => {
+    interface BetRow {
+      id: string
+      isUser: boolean
+      name: string
+      avatar: string
+      stakeMinor: number
+      targetMultiplier?: number
+      isCashed: boolean
+      multToShow: number
+      profitMinor: number
+      stakeGift: Gift
+      wonGift?: Gift
+    }
+
+    const rows: BetRow[] = []
+
+    if (myBet) {
+      const isWon = myBet.status === 'won'
+      const multToShow =
+        phase === 'crashed'
+          ? (myBet.cashedMultiplier ?? multiplier)
+          : multiplier
+      const profitMinor = isWon
+        ? (myBet.wonMinor ?? 0)
+        : phase === 'flying'
+          ? mulByMultiplier(myBet.valueMinor, multiplier)
+          : myBet.valueMinor
+
+      const stakeGift = myBet.giftId
+        ? (giftById.get(myBet.giftId) ?? getGiftForValue(myBet.valueMinor))
+        : getGiftForValue(myBet.valueMinor)
+
+      const wonGift = myBet.wonGift ?? (isWon ? getGiftForValue(profitMinor) : undefined)
+
+      rows.push({
+        id: 'user-my-bet',
+        isUser: true,
+        name: 'Вы',
+        avatar: '/avatars/user_1.png',
+        stakeMinor: myBet.valueMinor,
+        isCashed: isWon,
+        multToShow,
+        profitMinor,
+        stakeGift,
+        wonGift,
+      })
+    }
+
+    for (const p of players) {
+      const isCashed =
+        phase === 'crashed'
+          ? p.targetMultiplier <= multiplier
+          : phase === 'flying' && multiplier >= p.targetMultiplier
+      const multToShow = isCashed ? p.targetMultiplier : multiplier
+      const profitMinor = Math.round(p.stakeMinor * multToShow)
+      const stakeGift = giftById.get(p.stakeGiftId) ?? getGiftForValue(p.stakeMinor)
+      const wonGift = p.wonGiftId ? giftById.get(p.wonGiftId) : getGiftForValue(profitMinor)
+
+      rows.push({
+        id: p.id,
+        isUser: false,
+        name: p.name,
+        avatar: p.avatar,
+        stakeMinor: p.stakeMinor,
+        targetMultiplier: p.targetMultiplier,
+        isCashed,
+        multToShow,
+        profitMinor,
+        stakeGift,
+        wonGift: isCashed ? wonGift : undefined,
+      })
+    }
+
+    // Сортировка ставок от большого к маленькому (descending)
+    return rows.sort((a, b) => b.stakeMinor - a.stakeMinor)
+  }, [players, myBet, phase, multiplier])
 
   return (
     <div className={styles.screen}>
@@ -620,134 +700,94 @@ export function CrashScreen() {
         )}
       </div>
 
-      {/* 6. Список живых ставок игроков (1:1 из видео с аватарками и Telegram NFT) */}
+      {/* 6. Список живых ставок игроков (отсортирован от большого к маленькому, Telegram NFT по стоимости) */}
       <div className={styles.liveBetsSection}>
         <div className={styles.liveBetsHeader}>
           <span className={styles.liveBetsTitle}>Ставки раунда</span>
           <span className={styles.liveBetsCount}>
-            {players.length + (myBet ? 1 : 0)} игроков
+            {sortedBetRows.length} игроков
           </span>
         </div>
 
         <div className={styles.playersList}>
-          {/* Если пользователь сделал ставку — его карточка закреплена первой */}
-          {myBet && (
+          {sortedBetRows.map((row) => (
             <div
+              key={row.id}
               className={cx(
                 styles.playerCard,
-                styles.playerCardUser,
-                myBet.status === 'won' && styles.playerCardWon,
+                row.isUser && styles.playerCardUser,
+                row.isCashed && styles.playerCardWon,
               )}
             >
               <div className={styles.playerLeft}>
                 <img
-                  src="/avatars/user_1.png"
-                  alt="Вы"
+                  src={row.avatar}
+                  alt={row.name}
                   className={styles.playerAvatar}
+                  onError={(e) => {
+                    ;(e.target as HTMLImageElement).src = '/avatars/user_1.png'
+                  }}
                 />
                 <div className={styles.playerInfo}>
                   <div className={styles.playerNameRow}>
-                    <span className={styles.playerName}>Вы</span>
-                    <span className={styles.userBadge}>YOU</span>
+                    <span className={styles.playerName}>{row.name}</span>
+                    {row.isUser && <span className={styles.userBadge}>YOU</span>}
+                    <span className={styles.playerGiftLabel}>{row.stakeGift.name}</span>
                   </div>
                   <div className={styles.playerStakeRow}>
+                    <img
+                      src={row.stakeGift.image}
+                      alt={row.stakeGift.name}
+                      title={`NFT: ${row.stakeGift.name} (${formatMinor(row.stakeGift.priceMinor)} TON)`}
+                      className={styles.playerStakeGift}
+                      onError={(e) => {
+                        const el = e.currentTarget
+                        if (!el.dataset.fallback) {
+                          el.dataset.fallback = '1'
+                          el.src = el.src.replace('.svg', '.png')
+                        }
+                      }}
+                    />
                     <TonIcon className={styles.playerStakeDiamond} />
                     <span>
-                      {formatMinor(myBet.valueMinor)} ×
-                      {phase === 'crashed'
-                        ? (myBet.cashedMultiplier ?? multiplier).toFixed(2)
-                        : multiplier.toFixed(2)}
+                      {formatMinor(row.stakeMinor)} × {row.multToShow.toFixed(2)}
                     </span>
                   </div>
                 </div>
               </div>
 
               <div className={styles.playerRight}>
-                {myBet.status === 'won' ? (
-                  <span className={cx(styles.playerProfitPill, styles.profitWon)}>
-                    <TonIcon className={styles.profitTonIcon} />
-                    <span>+{formatMinor(myBet.wonMinor ?? 0)}</span>
+                <span
+                  className={cx(
+                    styles.playerProfitPill,
+                    row.isCashed && styles.profitWon,
+                  )}
+                >
+                  <TonIcon className={styles.profitTonIcon} />
+                  <span>
+                    {row.isCashed ? `+${formatMinor(row.profitMinor)}` : formatMinor(row.profitMinor)}
                   </span>
-                ) : phase === 'flying' ? (
-                  <span className={styles.playerProfitPill}>
-                    <TonIcon className={styles.profitTonIcon} />
-                    <span>{formatMinor(mulByMultiplier(myBet.valueMinor, multiplier))}</span>
-                  </span>
-                ) : (
-                  <span className={styles.playerProfitPill}>
-                    <TonIcon className={styles.profitTonIcon} />
-                    <span>{formatMinor(myBet.valueMinor)}</span>
-                  </span>
+                </span>
+
+                {/* Telegram NFT подарок по стоимости выигрыша при кешауте */}
+                {row.isCashed && row.wonGift && (
+                  <img
+                    src={row.wonGift.image}
+                    alt={row.wonGift.name}
+                    title={`Выигран NFT: ${row.wonGift.name} (${formatMinor(row.wonGift.priceMinor)} TON)`}
+                    className={styles.playerGiftWon}
+                    onError={(e) => {
+                      const el = e.currentTarget
+                      if (!el.dataset.fallback) {
+                        el.dataset.fallback = '1'
+                        el.src = el.src.replace('.svg', '.png')
+                      }
+                    }}
+                  />
                 )}
               </div>
             </div>
-          )}
-
-          {/* Игроки раунда */}
-          {players.map((p) => {
-            const isCashed =
-              phase === 'crashed'
-                ? p.targetMultiplier <= multiplier
-                : phase === 'flying' && multiplier >= p.targetMultiplier
-            const multToShow = isCashed
-              ? p.targetMultiplier
-              : phase === 'crashed'
-                ? multiplier
-                : multiplier
-            const profitMinor = Math.round(p.stakeMinor * multToShow)
-            const wonGift = p.wonGiftId ? giftById.get(p.wonGiftId) : undefined
-
-            return (
-              <div
-                key={p.id}
-                className={cx(styles.playerCard, isCashed && styles.playerCardWon)}
-              >
-                <div className={styles.playerLeft}>
-                  <img
-                    src={p.avatar}
-                    alt={p.name}
-                    className={styles.playerAvatar}
-                    onError={(e) => {
-                      ;(e.target as HTMLImageElement).src = '/avatars/user_1.png'
-                    }}
-                  />
-                  <div className={styles.playerInfo}>
-                    <div className={styles.playerNameRow}>
-                      <span className={styles.playerName}>{p.name}</span>
-                    </div>
-                    <div className={styles.playerStakeRow}>
-                      <TonIcon className={styles.playerStakeDiamond} />
-                      <span>
-                        {formatMinor(p.stakeMinor)} ×{multToShow.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className={styles.playerRight}>
-                  <span
-                    className={cx(
-                      styles.playerProfitPill,
-                      isCashed && styles.profitWon,
-                    )}
-                  >
-                    <TonIcon className={styles.profitTonIcon} />
-                    <span>{formatMinor(isCashed ? profitMinor : p.stakeMinor)}</span>
-                  </span>
-
-                  {/* Telegram NFT подарок при высоком кешауте (1:1 из видео) */}
-                  {isCashed && wonGift && (
-                    <img
-                      src={wonGift.image}
-                      alt={wonGift.name}
-                      title={`Выиграл ${wonGift.name}`}
-                      className={styles.playerGiftWon}
-                    />
-                  )}
-                </div>
-              </div>
-            )
-          })}
+          ))}
         </div>
       </div>
 

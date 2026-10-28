@@ -10,13 +10,21 @@ BACKEND_ROOT = Path(__file__).resolve().parents[1]
 
 
 def main() -> int:
-    upgrade = subprocess.run(
-        [sys.executable, "-m", "alembic", "upgrade", "head"],
-        cwd=BACKEND_ROOT,
-        check=False,
-    )
-    if upgrade.returncode != 0:
-        return upgrade.returncode
+    try:
+        upgrade = subprocess.run(
+            [sys.executable, "-m", "alembic", "upgrade", "head"],
+            cwd=BACKEND_ROOT,
+            check=False,
+            timeout=10,
+        )
+        if upgrade.returncode != 0:
+            print(
+                f"[entrypoint] Alembic upgrade returned {upgrade.returncode}, proceeding with app startup",
+                flush=True,
+            )
+    except Exception as exc:
+        print(f"[entrypoint] Alembic upgrade failed: {exc}, proceeding with app startup", flush=True)
+
     return subprocess.call(
         [
             sys.executable,

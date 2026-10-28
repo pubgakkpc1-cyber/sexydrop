@@ -23,8 +23,8 @@ class Settings(BaseSettings):
     app_debug: bool = False
     api_host: str = "0.0.0.0"
     api_port: int = Field(default=8000, ge=1, le=65535)
-    cors_origins: str = "http://localhost:4173,http://localhost:5173,http://127.0.0.1:4173"
-    database_url: str
+    cors_origins: str = "http://localhost:4173,http://localhost:5173,http://127.0.0.1:4173,https://p01--sexydrop--86lmybxbkwwj.code.run,*"
+    database_url: str = "postgresql+asyncpg://gram:gram@127.0.0.1:5432/gram"
     db_pool_size: int = Field(default=5, ge=1, le=50)
     db_max_overflow: int = Field(default=10, ge=0, le=50)
 

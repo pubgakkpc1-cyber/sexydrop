@@ -707,22 +707,8 @@ export function CrashScreen() {
                   <div className={styles.playerNameRow}>
                     <span className={styles.playerName}>{row.name}</span>
                     {row.isUser && <span className={styles.userBadge}>YOU</span>}
-                    <span className={styles.playerGiftLabel}>{row.stakeGift.name}</span>
-                  </div>
+                    </div>
                   <div className={styles.playerStakeRow}>
-                    <img
-                      src={row.stakeGift.image}
-                      alt={row.stakeGift.name}
-                      title={`NFT: ${row.stakeGift.name} (${formatMinor(row.stakeGift.priceMinor)} TON)`}
-                      className={styles.playerStakeGift}
-                      onError={(e) => {
-                        const el = e.currentTarget
-                        if (!el.dataset.fallback) {
-                          el.dataset.fallback = '1'
-                          el.src = el.src.replace('.svg', '.png')
-                        }
-                      }}
-                    />
                     <TonIcon className={styles.playerStakeDiamond} />
                     <span>
                       {formatTonMaxOneDecimal(row.stakeMinor)} × {(Math.floor(row.multToShow * 10) / 10).toFixed(1)}x
@@ -748,7 +734,8 @@ export function CrashScreen() {
 
                 {/* Telegram NFT подарок по стоимости выигрыша при кешауте */}
                 {row.isCashed && row.wonGift && (
-                  <img
+                  <div className={styles.playerGiftWonWrapper}>
+                    <img
                     src={row.wonGift.image}
                     alt={row.wonGift.name}
                     title={`Выигран NFT: ${row.wonGift.name} (${formatMinor(row.wonGift.priceMinor)} TON)`}
@@ -761,7 +748,7 @@ export function CrashScreen() {
                       }
                     }}
                   />
-                )}
+                  </div>)}
               </div>
             </div>
           ))}

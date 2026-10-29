@@ -1,1200 +1,1199 @@
-/* РАКЕТКА / Crash (4.2) — Apple Liquid Glass & Reference 1:1 Design */
-
-.screen {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding-bottom: 24px;
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-}
-
-/* --- Top Header SEXY DROP (Единый чистый бар без лишнего мусора) --- */
-
-.topHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 4px 0 2px;
-  gap: 8px;
-}
-
-.backBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.85);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
-  cursor: pointer;
-  padding: 5px 10px 5px 6px;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
-  flex-shrink: 0;
-}
-
-.backBtn:active {
-  transform: scale(0.95);
-  background: rgba(255, 255, 255, 0.12);
-}
-
-.backIcon {
-  width: 17px;
-  height: 17px;
-}
-
-.backText {
-  font-size: 13px;
-  font-weight: 600;
-  line-height: 1;
-}
-
-.brandBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 9999px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
-  user-select: none;
-}
-
-.brandFire {
-  width: 14px;
-  height: 14px;
-  color: #f97316;
-  flex-shrink: 0;
-  display: inline-block;
-}
-
-.brandTitle {
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.6px;
-  color: #ffffff;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
-}
-
-.headerRight {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.adminQuickBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 9px;
-  background: rgba(245, 158, 11, 0.15);
-  border: 1px solid rgba(245, 158, 11, 0.45);
-  border-radius: 9999px;
-  color: #fbbf24;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: all 0.15s ease;
-  flex-shrink: 0;
-}
-
-.adminQuickBtn:hover {
-  background: rgba(245, 158, 11, 0.28);
-  border-color: rgba(245, 158, 11, 0.7);
-  transform: scale(1.02);
-}
-
-.adminQuickBtn:active {
-  transform: scale(0.96);
-}
-
-.adminCrownIcon {
-  width: 13px;
-  height: 13px;
-  color: #fbbf24;
-  flex-shrink: 0;
-}
-
-.repeatBetChip {
-  background: rgba(56, 189, 248, 0.18) !important;
-  border-color: rgba(56, 189, 248, 0.5) !important;
-  color: #38bdf8 !important;
-  font-weight: 800 !important;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
-}
-
-.soundBtn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: rgba(255, 255, 255, 0.85);
-  cursor: pointer;
-  flex-shrink: 0;
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  transition: background 0.15s ease, transform 0.15s ease;
-}
-
-.soundIcon {
-  width: 15px;
-  height: 15px;
-  flex-shrink: 0;
-}
-
-.soundBtn:active {
-  transform: scale(0.92);
-  background: rgba(255, 255, 255, 0.14);
-}
-
-.balancePill {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-  cursor: pointer;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  transition: transform 0.15s ease;
-}
-
-.balancePill:active {
-  transform: scale(0.96);
-}
-
-.diamondIcon {
-  width: 15px;
-  height: 15px;
-  color: #0098ea;
-  filter: drop-shadow(0 0 6px rgba(0, 152, 234, 0.6));
-}
-
-.plusBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.14);
-  font-size: 12px;
-  line-height: 1;
-  color: #ffffff;
-  margin-left: 2px;
-}
-
-.demoChip {
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  color: #b7a4f9;
-  background: rgba(183, 164, 249, 0.14);
-  border: 1px solid rgba(183, 164, 249, 0.35);
-  border-radius: 9999px;
-  padding: 2px 7px;
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-/* Hidden semantic title for screen readers / layout */
-.srOnly {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-.screenStarfield {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* --- Flight Arena: Без рамок и коробок (чистый открытый космос) --- */
-.arena {
-  position: relative;
-  height: 270px;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  overflow: visible;
-  z-index: 2;
-  margin-bottom: 8px;
-}
-
-.arena[data-tier='cosmic'],
-.arena[data-tier='nebula'],
-.arena[data-tier='hyper'],
-.arena[data-tier='supernova'] {
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-}
-
-/* Ambient cosmic stars */
-.starField {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-}
-
-.star {
-  position: absolute;
-  border-radius: 50%;
-  background: #ffffff;
-  pointer-events: none;
-}
-
-/* Hyperspeed speed lines */
-.speedLinesContainer {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.speedLine {
-  position: absolute;
-  height: 2px;
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.6), transparent);
-  border-radius: 9999px;
-  animation: speedLineShoot 0.7s infinite linear;
-}
-
-@keyframes speedLineShoot {
-  0% {
-    transform: translateX(120px) scaleX(0.4);
-    opacity: 0;
-  }
-  30% {
-    opacity: 0.9;
-  }
-  100% {
-    transform: translateX(-380px) scaleX(1.8);
-    opacity: 0;
-  }
-}
-
-/* Rocket container & natural flight dynamics */
-.rocketWrapper {
-  position: absolute;
-  width: 130px;
-  height: 75px;
-  pointer-events: none;
-  transition: left 0.12s ease-out, top 0.12s ease-out, transform 0.2s ease-out;
-  transform-origin: center center;
-  will-change: left, top, transform;
-  z-index: 10;
-}
-
-.rocketHover {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: rocketFloat 2.4s infinite ease-in-out, rocketRumble 0.12s infinite ease-in-out;
-}
-
-@keyframes rocketFloat {
-  0%, 100% {
-    transform: translateY(0px) rotate(0deg);
-  }
-  50% {
-    transform: translateY(-7px) rotate(1.2deg);
-  }
-}
-
-@keyframes rocketRumble {
-  0%, 100% {
-    transform: translate(0, 0);
-  }
-  25% {
-    transform: translate(-0.5px, 0.4px);
-  }
-  50% {
-    transform: translate(0.4px, -0.5px);
-  }
-  75% {
-    transform: translate(-0.4px, -0.3px);
-  }
-}
-
-.rocketImg {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
-}
-
-.rocketFlameGlow {
-  position: absolute;
-  left: -12px;
-  top: 52%;
-  transform: translateY(-50%);
-  width: 48px;
-  height: 22px;
-  background: radial-gradient(ellipse at right, rgba(74, 222, 128, 0.95) 0%, rgba(56, 189, 248, 0.7) 45%, transparent 80%);
-  border-radius: 50%;
-  filter: blur(5px);
-  animation: flameFlicker 0.1s infinite alternate ease-in-out;
-  pointer-events: none;
-}
-
-@keyframes flameFlicker {
-  0% {
-    transform: translateY(-50%) scale(0.85, 0.8);
-    opacity: 0.75;
-  }
-  100% {
-    transform: translateY(-50%) scale(1.22, 1.15);
-    opacity: 1;
-  }
-}
-
-/* Milestone badges along arena */
-.milestonesRow {
-  position: absolute;
-  top: 12px;
-  right: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  pointer-events: none;
-}
-
-.milestoneBadge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 3px 8px;
-  font-size: 11px;
-  font-weight: 700;
-  border-radius: 9999px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(12px);
-  transition: all 0.3s ease;
-}
-
-.milestoneIcon {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-}
-
-.milestoneActive {
-  background: rgba(34, 197, 94, 0.18);
-  border-color: rgba(34, 197, 94, 0.45);
-  color: #4ade80;
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
-}
-
-/* Circular Countdown Timer (от 5 с мини-моушен анимацией и переливами) */
-.countdownCenter {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;
-}
-
-.countdownCircle {
-  position: relative;
-  width: 142px;
-  height: 142px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.15);
-  transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.35s ease;
-}
-
-.countdownRipple {
-  position: absolute;
-  inset: -6px;
-  border-radius: 50%;
-  border: 2px solid currentColor;
-  pointer-events: none;
-  animation: countdownRippleAnim 0.75s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
-}
-
-@keyframes countdownRippleAnim {
-  0% {
-    transform: scale(0.92);
-    opacity: 0.9;
-  }
-  100% {
-    transform: scale(1.42);
-    opacity: 0;
-  }
-}
-
-.countdownSvg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  transform: rotate(-90deg);
-}
-
-.countdownProgressCircle {
-  transition: stroke-dashoffset 0.05s linear, stroke 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.countdownNumber {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 60px;
-  font-weight: 900;
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  animation: countdownPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-  position: relative;
-  z-index: 5;
-  user-select: none;
-  transition: color 0.3s ease, text-shadow 0.3s ease;
-}
-
-@keyframes countdownPop {
-  0% {
-    transform: scale(0.68);
-  }
-  60% {
-    transform: scale(1.14);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-
-/* Flying Multiplier Display (Множитель слева, немного меньше, без рамок) */
-.flyingLeft {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.seamlessMultiplier {
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-  color: #f0f6fc;
-  pointer-events: none;
-  user-select: none;
-  line-height: 1;
-  transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.2s ease;
-}
-
-/* Crashed Display (Слева в зоне арены) */
-.crashedLeft {
-  position: absolute;
-  top: 18px;
-  left: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  pointer-events: none;
-  z-index: 10;
-  animation: crashAppear 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-}
-
-@keyframes crashAppear {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.multiplierCrashed {
-  font-size: 32px;
-  font-weight: 800;
-  letter-spacing: -0.6px;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-  color: #ef4444;
-  text-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
-  line-height: 1;
-}
-
-.crashedLabel {
-  margin-top: 4px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #ef4444;
-  text-transform: uppercase;
-  letter-spacing: 1.2px;
-  padding: 2px 8px;
-  background: rgba(239, 68, 68, 0.15);
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 9999px;
-}
-
-/* Crash Explosion Particles */
-.explosionParticle {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: explodeSpread 0.7s forwards ease-out;
-}
-
-@keyframes explodeSpread {
-  0% {
-    transform: translate(0, 0) scale(1.2);
-    opacity: 1;
-  }
-  100% {
-    transform: translate(var(--tx), var(--ty)) scale(0);
-    opacity: 0;
-  }
-}
-
-/* --- Multiplier History Row (Компактные фиксированные капсулы без скролла) --- */
-
-.historyRow {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  gap: 6px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 100%;
-  min-width: 0;
-  padding: 4px 0;
-  position: relative;
-  z-index: 5;
-}
-
-.historyPill {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  background: #14171f;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #cbd5e1;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-/* History Tiers (чистые, без фоновых размытий) */
-.tierSlate {
-  border-color: rgba(56, 189, 248, 0.38);
-  color: #7dd3fc;
-  background: #14171f;
-}
-
-.tierPurple {
-  border-color: rgba(168, 85, 247, 0.45);
-  color: #c084fc;
-  background: #14171f;
-}
-
-.tierMagenta {
-  border-color: rgba(236, 72, 153, 0.45);
-  color: #f472b6;
-  background: #14171f;
-}
-
-.tierGold {
-  border-color: rgba(245, 158, 11, 0.55);
-  color: #fbbf24;
-  background: #14171f;
-}
-
-.activeLivePill {
-  background: rgba(56, 189, 248, 0.16);
-  border-color: #38bdf8;
-  color: #38bdf8;
-}
-
-.activeLiveDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #38bdf8;
-  animation: pulseDot 1s infinite alternate;
-}
-
-/* --- Action Button (Выровненная зона действий для всех устройств) --- */
-
-.actionArea {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  min-width: 0;
-  align-items: center;
-  position: relative;
-  z-index: 5;
-}
-
-.mainActionBtn {
-  position: relative;
-  width: 100%;
-  height: 52px;
-  padding: 0 20px;
-  border: none;
-  border-radius: 16px;
-  font-size: 17px;
-  font-weight: 700;
-  color: #ffffff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-  transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
-  overflow: hidden;
-}
-
-.mainActionBtn:active {
-  transform: scale(0.98);
-}
-
-.btnGlassHighlight {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
-  border-radius: 16px 16px 0 0;
-  pointer-events: none;
-}
-
-/* State: Betting CTA */
-.btnBetting {
-  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-  box-shadow: 0 6px 22px rgba(56, 189, 248, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.3);
-}
-
-/* State: Next Round CTA (Ставка на следующий раунд) */
-.btnNextRound {
-  background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
-  border: 1px solid rgba(56, 189, 248, 0.35);
-  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
-}
-
-/* State: Flying Cashout CTA */
-.btnCashout {
-  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
-  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  animation: pulseCashout 1.2s infinite alternate;
-}
-
-@keyframes pulseCashout {
-  0% { transform: scale(1); filter: brightness(1); }
-  100% { transform: scale(1.015); filter: brightness(1.08); }
-}
-
-/* State: Bet Confirmed during countdown */
-.betLocked {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 52px;
-  padding: 0 18px;
-  border-radius: 16px;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1.5px solid rgba(56, 189, 248, 0.35);
-  color: #7dd3fc;
-  font-size: 15px;
-  font-weight: 700;
-  box-sizing: border-box;
-}
-
-/* State: Queued bet for next round */
-.queuedBetCard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 52px;
-  padding: 0 16px;
-  border-radius: 16px;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1.5px solid rgba(56, 189, 248, 0.3);
-  box-sizing: border-box;
-}
-
-.queuedBetInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-}
-
-.queuedBetBadge {
-  font-size: 10.5px;
-  font-weight: 600;
-  color: #94a3b8;
-  letter-spacing: 0.3px;
-}
-
-.queuedBetAmount {
-  font-size: 15px;
-  font-weight: 800;
-  color: #38bdf8;
-}
-
-.queuedCancelBtn {
-  padding: 6px 13px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #f87171;
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.35);
-  border-radius: 9999px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.queuedCancelBtn:active {
-  transform: scale(0.95);
-  background: rgba(239, 68, 68, 0.22);
-}
-
-.betMuted {
-  width: 100%;
-  padding: 15px 20px;
-  border-radius: 16px;
-  text-align: center;
-  background: #151821;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #94a3b8;
-  font-size: 13.5px;
-  font-weight: 600;
-  letter-spacing: 0.1px;
-  margin: 0;
-}
-
-.resultWon {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 16px;
-  text-align: center;
-  background: rgba(34, 197, 94, 0.14);
-  border: 1.5px solid rgba(34, 197, 94, 0.4);
-  color: #4ade80;
-  font-size: 15px;
-  font-weight: 700;
-  margin: 0;
-}
-
-.resultLost {
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 16px;
-  text-align: center;
-  background: rgba(239, 68, 68, 0.12);
-  border: 1.5px solid rgba(239, 68, 68, 0.35);
-  color: #f87171;
-  font-size: 15px;
-  font-weight: 700;
-  margin: 0;
-}
-
-/* Quick 0.1 TON Single Chip (Строго не длиннее 0.1) */
-.quickControlsRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-top: 4px;
-}
-
-.quickChip {
-  height: 32px;
-  padding: 0 16px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 9999px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.08);
-  border: 1px solid rgba(56, 189, 248, 0.28);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.quickChip:active {
-  transform: scale(0.95);
-  background: rgba(56, 189, 248, 0.18);
-}
-
-/* --- Live Players Bets Feed (Reference 1:1) --- */
-
-.liveBetsSection {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 4px;
-}
-
-.liveBetsHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 4px;
-}
-
-.liveBetsTitle {
-  font-size: 13px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.6);
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-}
-
-.liveBetsCount {
-  font-size: 12px;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
-}
-
-.playersList {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.playerCard {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 12px;
-  border-radius: 16px;
-  background: rgba(21, 25, 33, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: all 0.2s ease;
-}
-
-.playerCardUser {
-  background: rgba(56, 189, 248, 0.14);
-  border-color: rgba(56, 189, 248, 0.45);
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2);
-}
-
-.playerCardWon {
-  background: rgba(34, 197, 94, 0.12);
-  border-color: rgba(34, 197, 94, 0.4);
-}
-
-.playerCardActiveBlue {
-  background: rgba(56, 189, 248, 0.08);
-  border-color: rgba(56, 189, 248, 0.25);
-}
-
-.playerCardLost {
-  opacity: 0.5;
-  background: rgba(21, 25, 33, 0.4);
-  border-color: rgba(255, 255, 255, 0.04);
-}
-
-.playerLeft {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  min-width: 0;
-  flex: 1;
-}
-
-.playerAvatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 11px;
-  object-fit: cover;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  flex-shrink: 0;
-}
-
-.playerInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-.playerNameRow {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.playerName {
-  font-size: 13px;
-  font-weight: 700;
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
-}
-
-.userBadge {
-  font-size: 10px;
-  font-weight: 800;
-  padding: 1px 5px;
-  background: #3b82f6;
-  color: #ffffff;
-  border-radius: 5px;
-}
-
-.playerStakeRow {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 11px;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-  letter-spacing: 0;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.playerStakeGift {
-  width: 20px;
-  height: 20px;
-  border-radius: 5px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  padding: 1px;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.playerGiftLabel {
-  font-size: 10px;
-  font-weight: 700;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.25);
-  border-radius: 4px;
-  padding: 0 4px;
-  white-space: nowrap;
-}
-
-.playerStakeDiamond {
-  width: 11px;
-  height: 11px;
-  color: #0098ea;
-}
-
-.playerRight {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.playerProfitPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 10px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 800;
-  color: #ffffff;
-  background: #181d26;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  flex-shrink: 0;
-  white-space: nowrap;
-}
-
-.profitTonIcon {
-  width: 12px;
-  height: 12px;
-  flex-shrink: 0;
-  color: #0098ea;
-}
-
-.cosmicTitleIcon {
-  width: 22px;
-  height: 22px;
-  vertical-align: middle;
-  margin-right: 6px;
-  color: #38bdf8;
-}
-
-.profitWon {
-  background: rgba(34, 197, 94, 0.16);
-  border-color: #22c55e;
-  color: #4ade80;
-  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
-}
-
-.profitActiveBlue {
-  background: rgba(56, 189, 248, 0.14);
-  border-color: rgba(56, 189, 248, 0.45);
-  color: #7dd3fc;
-  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
-}
-
-.profitLost {
-  background: rgba(239, 68, 68, 0.12);
-  border-color: rgba(239, 68, 68, 0.3);
-  color: #f87171;
-}
-
-.playerGiftWon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  padding: 2px;
-  object-fit: contain;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  animation: giftPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes giftPop {
-  0% { transform: scale(0.4); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* Cosmic Drop Celebration Modal */
-.cosmicModalOverlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 20px;
-  animation: fadeIn 0.25s ease-out;
-}
-
-.cosmicModalCard {
-  width: 100%;
-  max-width: 320px;
-  background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f0e1a 100%);
-  border: 1.5px solid rgba(168, 85, 247, 0.5);
-  border-radius: 24px;
-  padding: 24px 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  box-shadow: 0 16px 48px rgba(168, 85, 247, 0.35);
-  animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-@keyframes modalPop {
-  0% { transform: scale(0.8); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-.cosmicRewardImg {
-  width: 96px;
-  height: 96px;
-  object-fit: contain;
-  margin: 12px 0;
-  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.8));
-  animation: floatReward 2s infinite alternate ease-in-out;
-}
-
-@keyframes floatReward {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-8px); }
-}
-
-.cosmicModalTitle {
-  font-size: 20px;
-  font-weight: 800;
-  color: #ffffff;
-  margin: 0;
-}
-
-.cosmicModalSubtitle {
-  font-size: 13px;
-  color: rgba(255, 255, 255, 0.7);
-  margin: 4px 0 16px;
-}
-
-.cosmicClaimBtn {
-  width: 100%;
-  padding: 13px;
-  border-radius: 16px;
-  font-size: 15px;
-  font-weight: 800;
-  color: #ffffff;
-  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
-  border: none;
-  cursor: pointer;
-  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
-}
-
-/* Note footer */
-.note {
-  font-size: 11px;
-  line-height: 1.5;
-  color: rgba(255, 255, 255, 0.35);
-  text-align: center;
-  margin: 8px 0 0;
-}
+/* РАКЕТКА / Crash (4.2) — Apple Liquid Glass & Reference 1:1 Design */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-bottom: 24px;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* --- Top Header SEXY DROP (Единый чистый бар без лишнего мусора) --- */
+
+.topHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 0 2px;
+  gap: 8px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9999px;
+  cursor: pointer;
+  padding: 5px 10px 5px 6px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.backBtn:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.backIcon {
+  width: 17px;
+  height: 17px;
+}
+
+.backText {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.brandBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 9999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  user-select: none;
+}
+
+.brandFire {
+  width: 14px;
+  height: 14px;
+  color: #f97316;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.brandTitle {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.adminQuickBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: 9999px;
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.adminQuickBtn:hover {
+  background: rgba(245, 158, 11, 0.28);
+  border-color: rgba(245, 158, 11, 0.7);
+  transform: scale(1.02);
+}
+
+.adminQuickBtn:active {
+  transform: scale(0.96);
+}
+
+.adminCrownIcon {
+  width: 13px;
+  height: 13px;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.repeatBetChip {
+  background: rgba(56, 189, 248, 0.18) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  color: #38bdf8 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
+.soundBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  flex-shrink: 0;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.soundIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.soundBtn:active {
+  transform: scale(0.92);
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.balancePill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease;
+}
+
+.balancePill:active {
+  transform: scale(0.96);
+}
+
+.diamondIcon {
+  width: 15px;
+  height: 15px;
+  color: #0098ea;
+  filter: drop-shadow(0 0 6px rgba(0, 152, 234, 0.6));
+}
+
+.plusBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 12px;
+  line-height: 1;
+  color: #ffffff;
+  margin-left: 2px;
+}
+
+.demoChip {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: #b7a4f9;
+  background: rgba(183, 164, 249, 0.14);
+  border: 1px solid rgba(183, 164, 249, 0.35);
+  border-radius: 9999px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Hidden semantic title for screen readers / layout */
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.screenStarfield {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* --- Flight Arena: Без рамок и коробок (чистый открытый космос) --- */
+.arena {
+  position: relative;
+  height: 270px;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible;
+  z-index: 2;
+  margin-bottom: 8px;
+}
+
+.arena[data-tier='cosmic'],
+.arena[data-tier='nebula'],
+.arena[data-tier='hyper'],
+.arena[data-tier='supernova'] {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Ambient cosmic stars */
+.starField {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff;
+  pointer-events: none;
+}
+
+/* Hyperspeed speed lines */
+.speedLinesContainer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.speedLine {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.8), rgba(56, 189, 248, 0.6), transparent);
+  border-radius: 9999px;
+  animation: speedLineShoot 0.7s infinite linear;
+}
+
+@keyframes speedLineShoot {
+  0% {
+    transform: translateX(120px) scaleX(0.4);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(-380px) scaleX(1.8);
+    opacity: 0;
+  }
+}
+
+/* Rocket container & natural flight dynamics */
+.rocketWrapper {
+  position: absolute;
+  width: 130px;
+  height: 75px;
+  pointer-events: none;
+  transition: left 0.12s ease-out, top 0.12s ease-out, transform 0.2s ease-out;
+  transform-origin: center center;
+  will-change: left, top, transform;
+  z-index: 10;
+}
+
+.rocketHover {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: rocketFloat 2.4s infinite ease-in-out, rocketRumble 0.12s infinite ease-in-out;
+}
+
+@keyframes rocketFloat {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-7px) rotate(1.2deg);
+  }
+}
+
+@keyframes rocketRumble {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-0.5px, 0.4px);
+  }
+  50% {
+    transform: translate(0.4px, -0.5px);
+  }
+  75% {
+    transform: translate(-0.4px, -0.3px);
+  }
+}
+
+.rocketImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 18px rgba(0, 0, 0, 0.6));
+}
+
+.rocketFlameGlow {
+  position: absolute;
+  left: -12px;
+  top: 52%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 22px;
+  background: radial-gradient(ellipse at right, rgba(74, 222, 128, 0.95) 0%, rgba(56, 189, 248, 0.7) 45%, transparent 80%);
+  border-radius: 50%;
+  filter: blur(5px);
+  animation: flameFlicker 0.1s infinite alternate ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes flameFlicker {
+  0% {
+    transform: translateY(-50%) scale(0.85, 0.8);
+    opacity: 0.75;
+  }
+  100% {
+    transform: translateY(-50%) scale(1.22, 1.15);
+    opacity: 1;
+  }
+}
+
+/* Milestone badges along arena */
+.milestonesRow {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  pointer-events: none;
+}
+
+.milestoneBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(12px);
+  transition: all 0.3s ease;
+}
+
+.milestoneIcon {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.milestoneActive {
+  background: rgba(34, 197, 94, 0.18);
+  border-color: rgba(34, 197, 94, 0.45);
+  color: #4ade80;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.4);
+}
+
+/* Circular Countdown Timer (от 5 с мини-моушен анимацией и переливами) */
+.countdownCenter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.countdownCircle {
+  position: relative;
+  width: 142px;
+  height: 142px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), inset 0 2px 6px rgba(255, 255, 255, 0.15);
+  transition: background 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 0.35s ease;
+}
+
+.countdownRipple {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  pointer-events: none;
+  animation: countdownRippleAnim 0.75s cubic-bezier(0.1, 0.8, 0.2, 1) forwards;
+}
+
+@keyframes countdownRippleAnim {
+  0% {
+    transform: scale(0.92);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1.42);
+    opacity: 0;
+  }
+}
+
+.countdownSvg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.countdownProgressCircle {
+  transition: stroke-dashoffset 0.05s linear, stroke 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.countdownNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  font-weight: 900;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  animation: countdownPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: relative;
+  z-index: 5;
+  user-select: none;
+  transition: color 0.3s ease, text-shadow 0.3s ease;
+}
+
+@keyframes countdownPop {
+  0% {
+    transform: scale(0.68);
+  }
+  60% {
+    transform: scale(1.14);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Flying Multiplier Display (Множитель слева, немного меньше, без рамок) */
+.flyingLeft {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.seamlessMultiplier {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  color: #f0f6fc;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+  transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.2s ease;
+}
+
+/* Crashed Display (Слева в зоне арены) */
+.crashedLeft {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 10;
+  animation: crashAppear 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+@keyframes crashAppear {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.multiplierCrashed {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  color: #ef4444;
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
+  line-height: 1;
+}
+
+.crashedLabel {
+  margin-top: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  padding: 2px 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 9999px;
+}
+
+/* Crash Explosion Particles */
+.explosionParticle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: explodeSpread 0.7s forwards ease-out;
+}
+
+@keyframes explodeSpread {
+  0% {
+    transform: translate(0, 0) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(var(--tx), var(--ty)) scale(0);
+    opacity: 0;
+  }
+}
+
+/* --- Multiplier History Row (Компактные фиксированные капсулы без скролла) --- */
+
+.historyRow {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding: 4px 0;
+  position: relative;
+  z-index: 5;
+}
+
+.historyPill {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  background: #14171f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+/* History Tiers (чистые, без фоновых размытий) */
+.tierSlate {
+  border-color: rgba(56, 189, 248, 0.38);
+  color: #7dd3fc;
+  background: #14171f;
+}
+
+.tierPurple {
+  border-color: rgba(168, 85, 247, 0.45);
+  color: #c084fc;
+  background: #14171f;
+}
+
+.tierMagenta {
+  border-color: rgba(236, 72, 153, 0.45);
+  color: #f472b6;
+  background: #14171f;
+}
+
+.tierGold {
+  border-color: rgba(245, 158, 11, 0.55);
+  color: #fbbf24;
+  background: #14171f;
+}
+
+.activeLivePill {
+  background: rgba(56, 189, 248, 0.16);
+  border-color: #38bdf8;
+  color: #38bdf8;
+}
+
+.activeLiveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #38bdf8;
+  animation: pulseDot 1s infinite alternate;
+}
+
+/* --- Action Button (Выровненная зона действий для всех устройств) --- */
+
+.actionArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  min-width: 0;
+  align-items: center;
+  position: relative;
+  z-index: 5;
+}
+
+.mainActionBtn {
+  position: relative;
+  width: 100%;
+  height: 52px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
+  overflow: hidden;
+}
+
+.mainActionBtn:active {
+  transform: scale(0.98);
+}
+
+.btnGlassHighlight {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 16px 16px 0 0;
+  pointer-events: none;
+}
+
+/* State: Betting CTA */
+.btnBetting {
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  box-shadow: 0 6px 22px rgba(56, 189, 248, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* State: Next Round CTA (Ставка на следующий раунд) */
+.btnNextRound {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+/* State: Flying Cashout CTA */
+.btnCashout {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  animation: pulseCashout 1.2s infinite alternate;
+}
+
+@keyframes pulseCashout {
+  0% { transform: scale(1); filter: brightness(1); }
+  100% { transform: scale(1.015); filter: brightness(1.08); }
+}
+
+/* State: Bet Confirmed during countdown */
+.betLocked {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 16px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  color: #7dd3fc;
+  font-size: 15px;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+/* State: Queued bet for next round */
+.queuedBetCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1.5px solid rgba(56, 189, 248, 0.3);
+  box-sizing: border-box;
+}
+
+.queuedBetInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.queuedBetBadge {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+}
+
+.queuedBetAmount {
+  font-size: 15px;
+  font-weight: 800;
+  color: #38bdf8;
+}
+
+.queuedCancelBtn {
+  padding: 6px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.queuedCancelBtn:active {
+  transform: scale(0.95);
+  background: rgba(239, 68, 68, 0.22);
+}
+
+.betMuted {
+  width: 100%;
+  padding: 15px 20px;
+  border-radius: 16px;
+  text-align: center;
+  background: #151821;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+  margin: 0;
+}
+
+.resultWon {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  text-align: center;
+  background: rgba(34, 197, 94, 0.14);
+  border: 1.5px solid rgba(34, 197, 94, 0.4);
+  color: #4ade80;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.resultLost {
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  text-align: center;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1.5px solid rgba(239, 68, 68, 0.35);
+  color: #f87171;
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+/* Quick 0.1 TON Single Chip (Строго не длиннее 0.1) */
+.quickControlsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: 4px;
+}
+
+.quickChip {
+  height: 32px;
+  padding: 0 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quickChip:active {
+  transform: scale(0.95);
+  background: rgba(56, 189, 248, 0.18);
+}
+
+/* --- Live Players Bets Feed (Reference 1:1) --- */
+
+.liveBetsSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.liveBetsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 4px;
+}
+
+.liveBetsTitle {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.liveBetsCount {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.playersList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.playerCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: rgba(18, 22, 30, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.2s ease;
+}
+
+.playerCardUser {
+  background: rgba(0, 152, 234, 0.12);
+  border-color: rgba(0, 152, 234, 0.45);
+  box-shadow: 0 4px 16px rgba(0, 152, 234, 0.18);
+}
+
+.playerCardWon {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.38);
+}
+
+.playerCardActiveBlue {
+  background: rgba(0, 152, 234, 0.08);
+  border-color: rgba(0, 152, 234, 0.28);
+}
+
+.playerCardLost {
+  opacity: 0.45;
+  background: rgba(18, 22, 30, 0.45);
+  border-color: rgba(255, 255, 255, 0.04);
+}
+
+.playerLeft {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-width: 0;
+  flex: 1;
+}
+
+.playerAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  flex-shrink: 0;
+}
+
+.playerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.playerNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.playerName {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 135px;
+  letter-spacing: 0.15px;
+}
+
+.userBadge {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 1px 5px;
+  background: #0098ea;
+  color: #ffffff;
+  border-radius: 5px;
+  letter-spacing: 0.3px;
+}
+
+.playerStakeRow {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  letter-spacing: 0;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.playerStakeDiamond {
+  width: 12px;
+  height: 12px;
+  color: #0098ea;
+  flex-shrink: 0;
+}
+
+.playerRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.playerProfitPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+  color: #ffffff;
+  background: #141822;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.profitTonIcon {
+  width: 13px;
+  height: 13px;
+  flex-shrink: 0;
+  color: #0098ea;
+}
+
+.profitWon {
+  background: rgba(34, 197, 94, 0.15);
+  border-color: rgba(34, 197, 94, 0.5);
+  color: #4ade80;
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.25);
+}
+
+.profitWon .profitTonIcon {
+  color: #4ade80;
+}
+
+.profitActiveBlue {
+  background: rgba(0, 152, 234, 0.14);
+  border-color: rgba(0, 152, 234, 0.45);
+  color: #ffffff;
+  box-shadow: 0 0 10px rgba(0, 152, 234, 0.2);
+}
+
+.profitLost {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.playerGiftWonWrapper {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.playerGiftWon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
+  animation: giftPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.cosmicTitleIcon {
+  width: 22px;
+  height: 22px;
+  vertical-align: middle;
+  margin-right: 6px;
+  color: #38bdf8;
+}
+
+@keyframes giftPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* Cosmic Drop Celebration Modal */
+.cosmicModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.cosmicModalCard {
+  width: 100%;
+  max-width: 320px;
+  background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0f0e1a 100%);
+  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  border-radius: 24px;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-shadow: 0 16px 48px rgba(168, 85, 247, 0.35);
+  animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes modalPop {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.cosmicRewardImg {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  margin: 12px 0;
+  filter: drop-shadow(0 0 20px rgba(168, 85, 247, 0.8));
+  animation: floatReward 2s infinite alternate ease-in-out;
+}
+
+@keyframes floatReward {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-8px); }
+}
+
+.cosmicModalTitle {
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.cosmicModalSubtitle {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 4px 0 16px;
+}
+
+.cosmicClaimBtn {
+  width: 100%;
+  padding: 13px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4);
+}
+
+/* Note footer */
+.note {
+  font-size: 11px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.35);
+  text-align: center;
+  margin: 8px 0 0;
+}

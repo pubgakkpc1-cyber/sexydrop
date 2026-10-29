@@ -1,0 +1,55 @@
+import { describe, it, expect } from 'vitest'
+import { render } from '@testing-library/react'
+import { Rocket3DCanvas, ROCKET_SKINS } from './Rocket3DCanvas'
+
+describe('Rocket3DCanvas (3D Rocket, SEXY decal & 3 NFT Plush Pepe pilots)', () => {
+  it('содержит ровно 3 уникальные модели ракеты и 3 вида NFT плюш Пепе', () => {
+    expect(ROCKET_SKINS).toHaveLength(3)
+
+    // Модель 0: Хроно Титан + Пепе Кадет
+    const skin0 = ROCKET_SKINS[0]!
+    expect(skin0.name).toBe('Chrono Titanium')
+    expect(skin0.nameRu).toBe('Хроно Титан')
+    expect(skin0.pilotNameRu).toBe('Пепе Кадет')
+    expect(skin0.pilotType).toBe(0)
+    expect(skin0.decalSubtext).toBe('MK-III TON')
+
+    // Модель 1: Изумрудный Вайпер + Кибер Пепе с визором
+    const skin1 = ROCKET_SKINS[1]!
+    expect(skin1.name).toBe('Emerald Viper')
+    expect(skin1.nameRu).toBe('Изумрудный Вайпер')
+    expect(skin1.pilotNameRu).toBe('Кибер Пепе')
+    expect(skin1.pilotType).toBe(1)
+    expect(skin1.decalSubtext).toBe('VIP DROP')
+
+    // Модель 2: Супернова 24K + Король Пепе в золотой короне
+    const skin2 = ROCKET_SKINS[2]!
+    expect(skin2.name).toBe('Supernova Gold')
+    expect(skin2.nameRu).toBe('Супернова 24K')
+    expect(skin2.pilotNameRu).toBe('Король Пепе')
+    expect(skin2.pilotType).toBe(2)
+    expect(skin2.decalSubtext).toBe('ROYAL 999')
+  })
+
+  it('ререндерится без ошибок во всех фазах полета и с разными раундами', () => {
+    const { container, rerender } = render(
+      <Rocket3DCanvas phase="betting" multiplier={1.0} roundId={1} />,
+    )
+    const canvas = container.querySelector('canvas')
+    expect(canvas).toBeInTheDocument()
+
+    // Фаза полёта с разными скинами
+    rerender(<Rocket3DCanvas phase="flying" multiplier={1.5} roundId={1} skinIndex={0} />)
+    expect(canvas).toBeInTheDocument()
+
+    rerender(<Rocket3DCanvas phase="flying" multiplier={2.8} roundId={2} skinIndex={1} />)
+    expect(canvas).toBeInTheDocument()
+
+    rerender(<Rocket3DCanvas phase="flying" multiplier={10.4} roundId={3} skinIndex={2} />)
+    expect(canvas).toBeInTheDocument()
+
+    // Фаза краша (взрыв и ударная волна)
+    rerender(<Rocket3DCanvas phase="crashed" multiplier={1.0} roundId={3} />)
+    expect(canvas).toBeInTheDocument()
+  })
+})

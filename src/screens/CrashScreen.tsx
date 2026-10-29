@@ -23,7 +23,7 @@ import {
 } from '../lib/sound'
 import { getWebApp, getTelegramUser } from '../lib/telegram'
 import { BetSheet, LAST_CRASH_BET_KEY } from '../components/games/BetSheet'
-import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
+import { Rocket3DCanvas, ROCKET_SKINS } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
   ChevronLeftIcon,
@@ -123,6 +123,39 @@ export function CrashScreen() {
     }
     return '0.1'
   })
+
+  // Скин ракеты и картунный NFT пилот Пепе (0: Chrono Titanium, 1: Emerald Viper, 2: Supernova 24K, auto: авто-ротация каждый раунд)
+  const [selectedSkin, setSelectedSkin] = useState<number | 'auto'>(() => {
+    try {
+      const saved = localStorage.getItem('sexydrop_crash_skin')
+      if (saved === '0' || saved === '1' || saved === '2') return Number(saved)
+    } catch {
+      // ignore
+    }
+    return 'auto'
+  })
+
+  const handleToggleSkin = () => {
+    setSelectedSkin((prev) => {
+      let next: number | 'auto'
+      if (prev === 'auto') next = 0
+      else if (prev === 0) next = 1
+      else if (prev === 1) next = 2
+      else next = 'auto'
+      try {
+        localStorage.setItem('sexydrop_crash_skin', String(next))
+      } catch {
+        // ignore
+      }
+      return next
+    })
+  }
+
+  const activeSkinIndex =
+    selectedSkin === 'auto'
+      ? Math.abs(roundId ?? 0) % ROCKET_SKINS.length
+      : selectedSkin
+  const activeSkin = ROCKET_SKINS[activeSkinIndex] ?? ROCKET_SKINS[0]!
 
   // Динамический фон арены по тирам множителя
   const bgTier = useMemo(() => {
@@ -410,8 +443,27 @@ export function CrashScreen() {
         data-tier={bgTier}
         aria-label="Арена полёта ракеты"
       >
+        {/* Индикатор и селектор скина 3D ракеты и NFT пилота Пепе */}
+        <button
+          type="button"
+          className={styles.skinPill}
+          onClick={handleToggleSkin}
+          title="Сменить модель ракеты и картунного пилота Пепе"
+          aria-label={`Модель ракеты: ${activeSkin.nameRu}, пилот: ${activeSkin.pilotNameRu}`}
+        >
+          <RocketIcon className={styles.skinPillIcon} />
+          <span className={styles.skinPillText}>
+            {selectedSkin === 'auto' ? '⚡ ' : ''}{activeSkin.nameRu} · {activeSkin.pilotNameRu}
+          </span>
+        </button>
+
         {/* Высокодетализированная 3D Ракета, цикличная пульсация двигателя, плазменный шлейф, пролетающие звезды и взрыв */}
-        <Rocket3DCanvas phase={phase} multiplier={multiplier} />
+        <Rocket3DCanvas
+          phase={phase}
+          multiplier={multiplier}
+          roundId={roundId}
+          skinIndex={selectedSkin === 'auto' ? undefined : selectedSkin}
+        />
 
         {/* Фоновые звёзды */}
         <div className={styles.starField} aria-hidden>

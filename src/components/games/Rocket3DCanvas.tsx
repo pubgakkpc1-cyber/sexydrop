@@ -169,11 +169,9 @@ export function Rocket3DCanvas({
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const prevPhaseRef = useRef<CrashPhase>(phase)
 
-  // Держим свежие пропсы для цикла анимации
+  // Держим свежие пропсы для цикла анимации (синхронное обновление)
   const propsRef = useRef({ phase, multiplier, roundId, skinIndex, fullscreen })
-  useEffect(() => {
-    propsRef.current = { phase, multiplier, roundId, skinIndex, fullscreen }
-  }, [phase, multiplier, roundId, skinIndex, fullscreen])
+  propsRef.current = { phase, multiplier, roundId, skinIndex, fullscreen }
 
   // Внутреннее состояние анимации
   const stateRef = useRef<{
@@ -379,6 +377,7 @@ export function Rocket3DCanvas({
     let animId: number
 
     const render = () => {
+      animId = requestAnimationFrame(render)
       if (!ctx || !canvas) return
       const currentProps = propsRef.current
       const currentPhase = currentProps.phase
@@ -406,62 +405,62 @@ export function Rocket3DCanvas({
       }
 
       ctx.save()
-      ctx.scale(dpr, dpr)
+      try {
+        ctx.scale(dpr, dpr)
 
-      const state = stateRef.current
-      state.time += 0.016
+        const state = stateRef.current
+        state.time += 0.016
 
-      // Тряска экрана при взрыве
-      if (state.shake > 0.1) {
-        const ox = (Math.random() - 0.5) * state.shake
-        const oy = (Math.random() - 0.5) * state.shake
-        ctx.translate(ox, oy)
-        state.shake *= 0.9
-      } else {
-        state.shake = 0
-      }
-
-      // Очистка холста
-      ctx.clearRect(-20, -20, width + 40, height + 40)
-
-      // --- 1. Пролетающие фоновые звёзды ПО ВСЕМУ ЭКРАНУ (Starfield) ---
-      const flightSpeedFactor =
-        currentPhase === 'flying' ? Math.min(6.5, 1.2 + Math.log2(currentMult) * 1.6) : 0.65
-
-      ctx.save()
-      for (const star of state.stars) {
-        star.x -= star.speed * flightSpeedFactor
-        if (star.x < 0) {
-          star.x = width + Math.random() * 50
-          star.y = Math.random() * height
-        }
-
-        if (currentPhase === 'flying' && star.layer >= 2) {
-          const streakLen = star.speed * flightSpeedFactor * 4.5
-          const grad = ctx.createLinearGradient(star.x, star.y, star.x + streakLen, star.y)
-          grad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`)
-          grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
-          ctx.strokeStyle = grad
-          ctx.lineWidth = star.size * 0.75
-          ctx.beginPath()
-          ctx.moveTo(star.x, star.y)
-          ctx.lineTo(star.x + streakLen, star.y)
-          ctx.stroke()
+        // Тряска экрана при взрыве
+        if (state.shake > 0.1) {
+          const ox = (Math.random() - 0.5) * state.shake
+          const oy = (Math.random() - 0.5) * state.shake
+          ctx.translate(ox, oy)
+          state.shake *= 0.9
         } else {
-          ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`
-          ctx.beginPath()
-          ctx.arc(star.x, star.y, star.size / 2, 0, Math.PI * 2)
-          ctx.fill()
+          state.shake = 0
         }
-      }
-      ctx.restore()
 
-      // Во время отсчёта (betting) ракета не отображается (показывается только таймер)
-      if (currentPhase === 'betting') {
-        state.trail = []
+        // Очистка холста
+        ctx.clearRect(-20, -20, width + 40, height + 40)
+
+        // --- 1. Пролетающие фоновые звёзды ПО ВСЕМУ ЭКРАНУ (Starfield) ---
+        const flightSpeedFactor =
+          currentPhase === 'flying' ? Math.min(6.5, 1.2 + Math.log2(currentMult) * 1.6) : 0.65
+
+        ctx.save()
+        for (const star of state.stars) {
+          star.x -= star.speed * flightSpeedFactor
+          if (star.x < 0) {
+            star.x = width + Math.random() * 50
+            star.y = Math.random() * height
+          }
+
+          if (currentPhase === 'flying' && star.layer >= 2) {
+            const streakLen = star.speed * flightSpeedFactor * 4.5
+            const grad = ctx.createLinearGradient(star.x, star.y, star.x + streakLen, star.y)
+            grad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`)
+            grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
+            ctx.strokeStyle = grad
+            ctx.lineWidth = star.size * 0.75
+            ctx.beginPath()
+            ctx.moveTo(star.x, star.y)
+            ctx.lineTo(star.x + streakLen, star.y)
+            ctx.stroke()
+          } else {
+            ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`
+            ctx.beginPath()
+            ctx.arc(star.x, star.y, star.size / 2, 0, Math.PI * 2)
+            ctx.fill()
+          }
+        }
         ctx.restore()
-        return
-      }
+
+        // Во время отсчёта (betting) ракета не отображается (показывается только таймер)
+        if (currentPhase === 'betting') {
+          state.trail = []
+          return
+        }
 
       // Позиция ракеты внутри арены полёта (плавный взлёт с космодрома и уверенный полёт)
       let currentX: number
@@ -472,14 +471,14 @@ export function Rocket3DCanvas({
       const launchProgress = Math.min(1, Math.max(0, (currentMult - 1.0) / 0.35))
       const easeLaunch = 1 - Math.pow(1 - launchProgress, 3)
 
-      const launchX = width * 0.12
-      const launchY = height * 0.88
-      const launchAngle = -38
+      const launchX = width * 0.14
+      const launchY = height * 0.82
+      const launchAngle = -35
 
       const cruiseProgress = Math.min(1, Math.max(0, Math.log2(Math.max(1, currentMult)) / 3.0))
-      const targetCruiseX = width * (0.42 + cruiseProgress * 0.20)
-      const targetCruiseY = height * (0.50 - cruiseProgress * 24)
-      const cruiseAngle = -16 + cruiseProgress * 6
+      const targetCruiseX = width * (0.54 + cruiseProgress * 0.16)
+      const targetCruiseY = height * (0.48 - cruiseProgress * 20)
+      const cruiseAngle = -15 + cruiseProgress * 5
 
       // Естественные микро-колебания полёта (без намёков на краш, чтобы нельзя было абузить)
       const hoverY = Math.sin(state.time * 3.6) * 3.2
@@ -1152,9 +1151,10 @@ export function Rocket3DCanvas({
         }
         ctx.restore()
       }
-
-      animId = requestAnimationFrame(render)
+    } finally {
+      ctx.restore()
     }
+  }
 
     animId = requestAnimationFrame(render)
     return () => cancelAnimationFrame(animId)

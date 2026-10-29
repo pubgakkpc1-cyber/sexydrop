@@ -850,44 +850,6 @@
   margin: 0;
 }
 
-/* Quick Bet Controls */
-.quickControlsRow {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-}
-
-.quickChipsGroup {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  width: 100%;
-  flex-wrap: wrap;
-}
-
-.quickChip {
-  height: 36px;
-  padding: 0 12px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 10px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #e2e8f0;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.quickChip:active {
-  transform: scale(0.94);
-  background: rgba(255, 255, 255, 0.14);
-}
-
 /* --- Live Players Bets Feed (Reference 1:1) --- */
 
 .liveBetsSection {

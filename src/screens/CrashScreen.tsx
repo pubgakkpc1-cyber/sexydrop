@@ -7,8 +7,6 @@ import { formatMinor, mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
   cashout,
-  placeGramBet,
-  queueNextRoundGramBet,
   cancelQueuedNextRoundBet,
   startCrashEngine,
   stopCrashEngine,
@@ -22,7 +20,7 @@ import {
   playCashoutWin,
 } from '../lib/sound'
 import { getWebApp, getTelegramUser } from '../lib/telegram'
-import { BetSheet, LAST_CRASH_BET_KEY } from '../components/games/BetSheet'
+import { BetSheet } from '../components/games/BetSheet'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
@@ -153,14 +151,6 @@ export function CrashScreen() {
     cleanUsername === 'zapixxgarant' ||
     (typeof window !== 'undefined' && window.localStorage?.getItem('sexydrop_admin') === 'true')
 
-  // Запомненная последняя ставка
-  const [lastBetAmount, setLastBetAmount] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return window.localStorage?.getItem(LAST_CRASH_BET_KEY) || '0.1'
-    }
-    return '0.1'
-  })
-
   // Динамический фон арены по тирам множителя
   const bgTier = useMemo(() => {
     if (phase !== 'flying' && phase !== 'crashed') return 'cosmic'
@@ -261,24 +251,6 @@ export function CrashScreen() {
           setCosmicReward(chosen)
         }
       }
-    }
-  }
-
-  // Быстрая ставка TON в один клик с запоминанием последней ставки
-  const handleQuickBet = (amountGram: number) => {
-    const amountMinor = Math.round(amountGram * 1000)
-    try {
-      window.localStorage?.setItem(LAST_CRASH_BET_KEY, String(amountGram))
-      setLastBetAmount(String(amountGram))
-    } catch {
-      /* no-op */
-    }
-    if (phase === 'betting') {
-      if (myBet !== null) return
-      placeGramBet(amountMinor, makeRequestId())
-    } else {
-      if (queuedNextBet !== null) return
-      queueNextRoundGramBet(amountMinor, makeRequestId())
     }
   }
 
@@ -704,61 +676,6 @@ export function CrashScreen() {
               <span>Поставить на след. раунд</span>
             </button>
           ))}
-
-        {/* Быстрые фишки ставок (без автовывода) */}
-        {((phase === 'betting' && myBet === null) ||
-          (phase === 'flying' && myBet === null && queuedNextBet === null) ||
-          (phase === 'crashed' && queuedNextBet === null)) && (
-          <div className={styles.quickControlsRow}>
-            <div className={styles.quickChipsGroup}>
-              {lastBetAmount && parseFloat(lastBetAmount) > 0 && (
-                <button
-                  type="button"
-                  className={cx(styles.quickChip, styles.repeatBetChip)}
-                  onClick={() => handleQuickBet(parseFloat(lastBetAmount))}
-                  title="Повторить последнюю ставку"
-                >
-                  ⚡ {lastBetAmount} TON
-                </button>
-              )}
-              <button
-                type="button"
-                className={styles.quickChip}
-                onClick={() => handleQuickBet(0.1)}
-              >
-                +0.1
-              </button>
-              <button
-                type="button"
-                className={styles.quickChip}
-                onClick={() => handleQuickBet(0.5)}
-              >
-                +0.5
-              </button>
-              <button
-                type="button"
-                className={styles.quickChip}
-                onClick={() => handleQuickBet(1.0)}
-              >
-                +1.0
-              </button>
-              <button
-                type="button"
-                className={styles.quickChip}
-                onClick={() => handleQuickBet(2.0)}
-              >
-                +2.0
-              </button>
-              <button
-                type="button"
-                className={styles.quickChip}
-                onClick={() => handleQuickBet(5.0)}
-              >
-                +5.0
-              </button>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* 6. Список живых ставок игроков (отсортирован от большого к маленькому, Telegram NFT по стоимости) */}

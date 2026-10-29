@@ -78,7 +78,6 @@ export function CraftScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Крафт</h1>
@@ -159,9 +158,8 @@ export function CraftScreen() {
       </button>
 
       <p className={styles.note}>
-        Demo Mode: цели — предметы дороже {(GAME_RTP * 100).toFixed(0)}% суммы входа,
-        шанс p = {GAME_RTP}·S/цена цели, EV крафта = {GAME_RTP}·S ровно. Проигрыш сжигает
-        входные предметы. Серверный крафт — TIER 7 (7.6).
+        Крафт: цели — предметы дороже {(GAME_RTP * 100).toFixed(0)}% суммы входа,
+        шанс p = {GAME_RTP}·S/цена цели. При успехе вы получаете более ценный NFT.
       </p>
 
       <BottomSheet open={outcome !== null} onClose={() => setOutcome(null)} title="Результат">

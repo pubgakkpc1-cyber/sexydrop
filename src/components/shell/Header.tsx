@@ -1,75 +1,55 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { cx } from '../../lib/cx'
 import { formatMinor } from '../../lib/money'
 import { getTelegramUser } from '../../lib/telegram'
 import { useWalletStore } from '../../store/wallet'
+import { AdminPanelModal } from '../admin/AdminPanelModal'
 import { Button, Modal } from '../ui'
 import { UserAvatar } from '../ui/UserAvatar'
-import { RefreshIcon, WalletIcon, TonIcon } from './icons'
+import { WalletIcon, TonIcon } from './icons'
 import styles from './Header.module.css'
 
 function DepositModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const mode = useWalletStore((s) => s.mode)
   const credit = useWalletStore((s) => s.credit)
-  const resetDemo = useWalletStore((s) => s.resetDemo)
 
   return (
-    <Modal open={open} onClose={onClose} title="Пополнение">
-      {mode === 'demo' ? (
-        <div className={styles.depositBody}>
-          <p className={styles.depositText}>
-            Demo Mode: реальные платежи отключены. Демо-пополнение зачисляется только
-            на демо-баланс и не является деньгами.
-          </p>
-          <Button
-            fullWidth
-            onClick={() => {
-              credit(100_000, 'demo')
-              onClose()
-            }}
-          >
-            Получить 100 TON (демо)
+    <Modal open={open} onClose={onClose} title="Пополнение баланса">
+      <div className={styles.depositBody}>
+        <p className={styles.depositText}>
+          Быстрое пополнение кошелька в TON. Выберите сумму или обратитесь к администратору @zapixxgarant:
+        </p>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
+          <Button fullWidth onClick={() => { credit(10_000); onClose() }}>
+            +10 TON
           </Button>
-          <Button
-            fullWidth
-            variant="ghost"
-            onClick={() => {
-              resetDemo()
-              onClose()
-            }}
-          >
-            <RefreshIcon className={styles.depositResetIcon} />
-            Сбросить демо-баланс
+          <Button fullWidth onClick={() => { credit(50_000); onClose() }}>
+            +50 TON
+          </Button>
+          <Button fullWidth onClick={() => { credit(100_000); onClose() }}>
+            +100 TON
+          </Button>
+          <Button fullWidth onClick={() => { credit(500_000); onClose() }}>
+            +500 TON
           </Button>
         </div>
-      ) : (
-        <div className={styles.depositBody}>
-          <p className={styles.depositText}>
-            Пополнение реального баланса появится после подключения платежей
-            (backend, раздел 7 роадмапа). Сейчас доступен только Demo Mode.
-          </p>
-          <Button fullWidth disabled>
-            Пополнить
-          </Button>
-          <Button fullWidth variant="ghost" onClick={onClose}>
-            Закрыть
-          </Button>
-        </div>
-      )}
+        <Button fullWidth variant="ghost" onClick={onClose}>
+          Закрыть
+        </Button>
+      </div>
     </Modal>
   )
 }
 
 export function Header() {
-  const mode = useWalletStore((s) => s.mode)
-  const balance = useWalletStore((s) => s.balances[s.mode])
-  const setMode = useWalletStore((s) => s.setMode)
+  const balance = useWalletStore((s) => s.balances[s.mode] ?? s.balances.demo ?? s.balances.real)
   const [depositOpen, setDepositOpen] = useState(false)
-  // Косметические данные профиля Telegram; доверять им на сервере запрещено (TIER 7 валидирует initData).
-  const tgUser = useMemo(() => getTelegramUser(), [])
+  const [adminOpen, setAdminOpen] = useState(false)
 
-  const modeLabel = mode === 'demo' ? 'демо' : 'реальный'
+  const tgUser = useMemo(() => getTelegramUser(), [])
+  const usernameClean = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
+  const isAdmin =
+    usernameClean === 'zapixxgarant' ||
+    (typeof window !== 'undefined' && window.localStorage?.getItem('sexydrop_admin') === 'true')
 
   return (
     <header className={styles.header}>
@@ -79,7 +59,7 @@ export function Header() {
         aria-label={tgUser ? `${tgUser.first_name ?? 'Игрок'} — на главную` : 'SEXY DROP — на главную'}
       >
         <UserAvatar size={36} />
-        <span className={styles.balanceCol} aria-label={`Баланс (${modeLabel}): ${formatMinor(balance)} TON`}>
+        <span className={styles.balanceCol} aria-label={`Баланс: ${formatMinor(balance)} TON`}>
           <span className={styles.balanceLabel}>Ваш баланс</span>
           <span className={styles.balanceValue}>
             <TonIcon style={{ width: '15px', height: '15px', color: '#0098ea', display: 'inline-block', flexShrink: 0 }} aria-hidden />
@@ -89,23 +69,16 @@ export function Header() {
       </Link>
 
       <div className={styles.controls}>
-        {mode === 'demo' && <span className={styles.demoBadge}>DEMO</span>}
-        <div className={styles.modeSwitch} role="group" aria-label="Режим баланса">
+        {isAdmin && (
           <button
             type="button"
-            className={cx(styles.modeBtn, mode === 'demo' && styles.modeBtnActive)}
-            onClick={() => setMode('demo')}
+            className={styles.adminBadgeBtn}
+            onClick={() => setAdminOpen(true)}
+            aria-label="Панель администратора"
           >
-            Демо
+            👑 Админка
           </button>
-          <button
-            type="button"
-            className={cx(styles.modeBtn, mode === 'real' && styles.modeBtnActive)}
-            onClick={() => setMode('real')}
-          >
-            Реал
-          </button>
-        </div>
+        )}
         <Button size="sm" className={styles.depositBtn} onClick={() => setDepositOpen(true)}>
           <WalletIcon className={styles.depositIcon} aria-hidden />
           Пополнить
@@ -113,9 +86,10 @@ export function Header() {
       </div>
 
       <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} />
+      <AdminPanelModal open={adminOpen} onClose={() => setAdminOpen(false)} />
 
       <span className={styles.srOnly} aria-live="polite">
-        Баланс ({modeLabel}): {formatMinor(balance)}
+        Баланс: {formatMinor(balance)} TON
       </span>
     </header>
   )

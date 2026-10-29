@@ -16,13 +16,12 @@ beforeEach(() => {
 })
 
 describe('RatingScreen (6.1: реальные данные, без синтетики)', () => {
-  it('empty-state без раундов + честная заметка о TIER 7', () => {
+  it('empty-state без раундов + таблица лидеров', () => {
     render(<RatingScreen />)
     expect(screen.getByText('Рейтинг')).toBeInTheDocument()
     expect(screen.getByText('Данных пока нет')).toBeInTheDocument()
     expect(screen.getByText(/Сыграйте раунд в PLAY/)).toBeInTheDocument()
-    expect(screen.getByText(/фиктивные игроки запрещены спецификацией/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByRole('table', { name: 'Рейтинг игроков' })).toBeInTheDocument()
   })
 
   it('таблица показывает реальную статистику профиля (вы после раундов)', () => {
@@ -40,7 +39,7 @@ describe('RatingScreen (6.1: реальные данные, без синтет�
     expect(screen.getByText('15 TON')).toBeInTheDocument() // оборот
     expect(screen.getByText('−2.3 TON')).toBeInTheDocument() // профит (со знаком)
     expect(screen.getByText(/PVP-матчей: 3/)).toBeInTheDocument()
-    expect(screen.getByText(/ставки подарками/)).toBeInTheDocument()
+    expect(screen.getByText(/Таблица лидеров обновляется/)).toBeInTheDocument()
   })
 
   it('профит со знаком плюс отображается корректно', () => {

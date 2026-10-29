@@ -95,6 +95,29 @@
   transform: translateY(-1px);
 }
 
+.adminBadgeBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 34px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
+  color: #fff;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  padding: 0 10px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.adminBadgeBtn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
 .controls {
   display: flex;
   align-items: center;

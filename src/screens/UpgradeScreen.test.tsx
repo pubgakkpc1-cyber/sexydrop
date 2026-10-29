@@ -35,12 +35,10 @@ afterEach(() => {
 })
 
 describe('UpgradeScreen (4.4: UI апгрейда)', () => {
-  it('шапка: Назад, DEMO-чип, честная формула и TIER 7 заметка', () => {
+  it('шапка: Назад, заголовок и честная формула', () => {
     renderScreen()
     expect(screen.getByText('Апгрейд')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
-    expect(screen.getByText(/шанс p = min\(1/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Апгрейд: шанс p = min\(1/)).toBeInTheDocument()
   })
 
   it('пустой инвентарь: «Выбрать» недоступна, CTA выключена', () => {

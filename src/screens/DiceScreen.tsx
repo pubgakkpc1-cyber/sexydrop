@@ -116,7 +116,6 @@ export function DiceScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Дайс</h1>
@@ -256,9 +255,8 @@ export function DiceScreen() {
       </div>
 
       <p className={styles.note}>
-        Demo Mode: ролл 0–9999 локально, шанс p = {(chancePctScaled / 100).toFixed(2)}%,
-        множитель = floor4({GAME_RTP}/p) — округление только вниз, EV = {GAME_RTP} ставки.
-        Серверный ролл и Provably Fair — TIER 7 (7.6).
+        Честная игра: шанс p = {(chancePctScaled / 100).toFixed(2)}%,
+        множитель = floor4({GAME_RTP}/p) — мгновенная выплата при выигрыше.
       </p>
     </div>
   )

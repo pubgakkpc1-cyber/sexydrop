@@ -5,7 +5,6 @@ import { makeRequestId } from '../lib/requestId'
 import { flipTvt } from '../services/demoTvtService'
 import { useWalletStore } from '../store/wallet'
 import { usePvpRoundsStore } from '../store/pvpRounds'
-import { GAME_RTP } from '../lib/gameConfig'
 import { Input } from '../components/ui'
 import { ChevronLeftIcon, IceIcon, FlameIcon, TonIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
@@ -97,7 +96,6 @@ export function TvtScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>TVT: Лёд vs Огонь</h1>
@@ -219,10 +217,8 @@ export function TvtScreen() {
       </div>
 
       <p className={styles.note}>
-        Demo Mode: соперник — казна с раскрытыми шансами; вторую сторону всегда держит
-        казино, фиктивных игроков нет. Монета 50/50, выплата floor(ставка × 1.96),
-        EV = {GAME_RTP} ставки; выбор стороны не меняет шанс (честно). Реальные
-        противники и серверный бросок — TIER 7 (7.6/7.8).
+        TVT: выберите сторону (Лёд или Огонь). Монета 50/50,
+        выплата = ставка × 1.96 при победе вашей стороны.
       </p>
     </div>
   )

@@ -150,7 +150,6 @@ export function MinesScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Мины</h1>
@@ -294,9 +293,8 @@ export function MinesScreen() {
       </div>
 
       <p className={styles.note}>
-        Demo Mode: раскладка мин — локальный ГСЧ при старте раунда, множитель =
-        floor2({GAME_RTP}·C(25,k)/C(25−m,k)) — округление только вниз, забор закрывает раунд.
-        Серверная раскладка и Provably Fair — TIER 7 (7.6).
+        Честная игра: множитель = floor2({GAME_RTP}·C(25,k)/C(25−m,k)) —
+        забирайте выигрыш в любой момент до взрыва мины.
       </p>
     </div>
   )

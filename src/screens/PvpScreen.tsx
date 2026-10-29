@@ -22,7 +22,7 @@ export function PvpScreen() {
   return (
     <div className={styles.screen}>
       <h1 className={styles.title}>PVP HUB</h1>
-      <p className={styles.lead}>Дуэли и джекпот — соперник казна (Demo)</p>
+      <p className={styles.lead}>Дуэли и джекпот — играйте и побеждайте</p>
 
       {jackpotOpen && jackpot && (
         <Link to="/pvp/jackpot" className={pvpStyles.activeRound} data-testid="active-round">
@@ -78,8 +78,7 @@ export function PvpScreen() {
       >
         <SwordsIcon className={pvpStyles.rulesIcon} />
         <span>
-          Оба режима Demo: шанс и EV опубликованы на экранах, округления только вниз.
-          Реальные игроки и серверные раунды — TIER 7 (7.6/7.8).
+          Честные правила: шанс и коэффициенты открыты, мгновенные выплаты при победе.
         </span>
       </button>
     </div>

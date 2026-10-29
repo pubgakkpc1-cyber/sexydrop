@@ -1,0 +1,83 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 4px 0;
+}
+
+.adminBadge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: rgba(255, 184, 0, 0.12);
+  border: 1px solid rgba(255, 184, 0, 0.35);
+  border-radius: 12px;
+  color: #ffb800;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.adminIcon {
+  font-size: 16px;
+}
+
+.quickPills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pill {
+  flex: 1;
+  min-width: 50px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-variant-numeric: tabular-nums;
+}
+
+.pill:hover,
+.pill:focus-visible {
+  background: rgba(0, 152, 234, 0.2);
+  border-color: #0098ea;
+  color: #38bdf8;
+}
+
+.statusMessage {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.success {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  color: #34d399;
+}
+
+.error {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #f87171;
+}
+
+.submitBtn {
+  background: linear-gradient(135deg, #0098ea 0%, #0077b6 100%) !important;
+  color: #fff !important;
+  font-weight: 700 !important;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0, 152, 234, 0.35) !important;
+}
+
+.submitBtn:hover {
+  filter: brightness(1.1);
+}

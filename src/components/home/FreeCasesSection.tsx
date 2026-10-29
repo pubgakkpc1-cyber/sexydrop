@@ -88,9 +88,6 @@ export function FreeCasesSection() {
           )
         })}
       </div>
-      <span className={styles.demoNote}>
-        Demo Mode: кулдауны хранятся локально. Серверная проверка права получения — backend (TIER 7).
-      </span>
       <ResultModal giftId={resultGiftId} onClose={() => setResultGiftId(null)} />
     </section>
   )

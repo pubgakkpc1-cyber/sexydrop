@@ -63,7 +63,6 @@ export function CaseOpeningOverlay({ caseDefinition, result, onClose }: CaseOpen
 
   return (
     <div className={styles.backdrop} role="dialog" aria-modal="true" aria-label="Открытие кейса">
-      <span className={styles.demoChip}>Demo Mode — результат сгенерирован локально</span>
       <div className={styles.caseImageWrap}>
         <img className={styles.caseImage} src={caseDefinition.image} alt="" />
       </div>

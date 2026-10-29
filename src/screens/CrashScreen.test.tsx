@@ -54,13 +54,11 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     expect(isCrashEngineRunning()).toBe(false)
   })
 
-  it('окно ставок: CTA «Сделать ставку», обратный отсчёт, DEMO-чип и честная заметка', () => {
+  it('окно ставок: CTA «Сделать ставку», обратный отсчёт и честная заметка', () => {
     renderScreen()
     expect(screen.getByRole('button', { name: 'Сделать ставку' })).toBeInTheDocument()
     expect(screen.getByText(/Старт через/)).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
-    expect(screen.getByText(/RTP 0\.98/)).toBeInTheDocument()
-    expect(screen.getByText(/серверные раунды/i)).toBeInTheDocument()
+    expect(screen.getByText(/множитель растёт плавно/i)).toBeInTheDocument()
   })
 
   it('CTA открывает шит ставки с переключателем Подарки / TON', async () => {
@@ -120,6 +118,6 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     advanceEngine(5000)
 
     expect(screen.getByText(/Раунд идёт — ставку можно сделать в следующем/)).toBeInTheDocument()
-    expect(screen.getByText(/других игроков в демо нет/i)).toBeInTheDocument()
+    expect(screen.getByText(/Ставки других игроков раунда обновляются/i)).toBeInTheDocument()
   })
 })

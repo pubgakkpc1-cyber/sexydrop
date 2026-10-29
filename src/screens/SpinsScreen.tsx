@@ -13,7 +13,6 @@ import { formatMinor, toMinor, type Minor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import { buyBonus, spinSpins, type SpinsSpinOk } from '../services/demoSpinsService'
 import { useWalletStore } from '../store/wallet'
-import { GAME_RTP } from '../lib/gameConfig'
 import { Input } from '../components/ui'
 import { ChevronLeftIcon, SparkleIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
@@ -216,7 +215,6 @@ export function SpinsScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Спины</h1>
@@ -362,17 +360,9 @@ export function SpinsScreen() {
       </div>
 
       <p className={styles.note}>
-        Demo Mode: исход спина — взвешенный выбор символа (9 подарков + бонус), подсветка
-        ячейки — косметика. Бонус-символ не платит сам: даёт бесплатный спин подарков со
-        ставкой ×{(bonusFreeStakeRatio(doubleChance)).toFixed(2)} при «×2» — иначе ×1.
-        Множители = floor2({GAME_RTP}/(p·10)) — округление только вниз, EV ≤ {GAME_RTP}.
-        Серверный ГСЧ и Provably Fair — TIER 7 (7.6).
+        Спины: вращайте барабан для получения редких подарков и бонусов.
+        Множители рассчитываются по таблице выплат.
       </p>
     </div>
   )
-}
-
-/** Доля ставки бонусного спина (для заметки). */
-function bonusFreeStakeRatio(doubleChance: boolean): number {
-  return doubleChance ? 88 / 160 : 1
 }

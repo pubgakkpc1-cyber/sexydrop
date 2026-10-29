@@ -35,12 +35,10 @@ afterEach(() => {
 })
 
 describe('CraftScreen (4.5: UI крафта)', () => {
-  it('шапка: Назад, DEMO-чип, честная формула EV и TIER 7 заметка', () => {
+  it('шапка: Назад, заголовок и честная заметка', () => {
     renderScreen()
     expect(screen.getByText('Крафт')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
-    expect(screen.getByText(/EV крафта = 0\.98·S ровно/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Крафт: цели — предметы дороже/)).toBeInTheDocument()
   })
 
   it('пустой инвентарь: честное состояние и выключенная CTA', () => {

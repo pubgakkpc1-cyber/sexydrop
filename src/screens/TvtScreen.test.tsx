@@ -43,14 +43,11 @@ afterEach(() => {
 })
 
 describe('TvtScreen (5.3: стороны, монета 50/50 ×1.96)', () => {
-  it('шапка, Demo chip, стороны, честная заметка с EV и TIER 7', () => {
+  it('шапка, стороны, честная заметка', () => {
     renderScreen()
     expect(screen.getByText('TVT: Лёд vs Огонь')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Лёд/ })).toHaveAttribute('aria-pressed', 'true')
-    expect(screen.getByText(/EV = 0\.98 ставки/)).toBeInTheDocument()
-    expect(screen.getByText(/фиктивных игроков нет/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/TVT: выберите сторону/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Бросить монету · 1 TON' })).toBeEnabled()
   })
 

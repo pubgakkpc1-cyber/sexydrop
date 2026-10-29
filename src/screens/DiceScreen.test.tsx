@@ -36,13 +36,11 @@ describe('DiceScreen (4.7: поля пересчитывают друг друг
   it('шапка, направление, цель 5099 > , шанс 49%, множитель x2, честная заметка', () => {
     renderScreen()
     expect(screen.getByText('Дайс')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Больше X' })).toHaveAttribute('aria-pressed', 'true')
     expect(screen.getByText('> 5099')).toBeInTheDocument()
     expect(screen.getByText('49%')).toBeInTheDocument()
     expect(screen.getByLabelText('Множитель')).toHaveValue('2')
-    expect(screen.getByText(/EV = 0\.98/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Честная игра: шанс p =/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Бросить · 1 GRAM' })).toBeEnabled()
   })
 

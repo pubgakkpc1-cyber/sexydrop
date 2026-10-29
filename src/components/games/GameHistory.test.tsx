@@ -40,7 +40,7 @@ describe('GameHistory (4.3: общая история ставок)', () => {
     expect(screen.getByText(/карман 5\/9 · x0\.39/)).toBeInTheDocument()
     expect(screen.getByText('+0.41 TON')).toBeInTheDocument()
     expect(screen.getByText('−0.61 TON')).toBeInTheDocument()
-    expect(screen.getByText(/серверная история раундов — TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/История ваших последних раундов/)).toBeInTheDocument()
   })
 
   it('показывает не более 20 записей (новые в начале)', () => {

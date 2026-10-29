@@ -57,7 +57,7 @@ describe('InviteScreen (6.5: честный код, без фиктивной с
     expect(screen.getByText('—')).toBeInTheDocument()
     expect(screen.getByText(/Откройте мини-апп в Telegram/)).toBeInTheDocument()
     expect(screen.getByText(/Фиктивные коды и счётчики запрещены/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Реферальная программа/)).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Скопировать/ })).not.toBeInTheDocument()
   })
 

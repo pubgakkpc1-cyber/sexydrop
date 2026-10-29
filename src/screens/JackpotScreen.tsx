@@ -10,7 +10,6 @@ import {
 } from '../services/demoJackpotService'
 import { useWalletStore } from '../store/wallet'
 import { usePvpRoundsStore } from '../store/pvpRounds'
-import { GAME_RTP } from '../lib/gameConfig'
 import { Input } from '../components/ui'
 import { ChevronLeftIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
@@ -89,7 +88,6 @@ export function JackpotScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Solo Jackpot</h1>
@@ -269,10 +267,8 @@ export function JackpotScreen() {
       </div>
 
       <p className={styles.note}>
-        Demo Mode: соперник — казна с раскрытыми шансами, реальных игроков нет.
-        Шанс = доля ставки в банке: p = floor({(GAME_RTP * 100).toFixed(0)}·s/(s+h))/10000,
-        выплата — весь банк, EV = p·банк − s = −2% внесённого. Production: серверный
-        тираж с CSPRNG и Provably Fair — TIER 7 (7.6).
+        Джекпот: шанс победы равен доле вашей ставки в общем банке.
+        Победитель забирает весь банк раунда!
       </p>
     </div>
   )

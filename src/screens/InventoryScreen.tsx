@@ -107,7 +107,7 @@ export function InventoryScreen() {
             Открыть кейсы
           </Button>
           <p className={filterStyles.emptyHint}>
-            Demo Mode: предметы создаются локально и не являются ценностями
+            Открывайте кейсы и играйте, чтобы получать ценные подарки
           </p>
         </div>
       ) : (

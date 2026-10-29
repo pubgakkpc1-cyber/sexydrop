@@ -7,7 +7,6 @@ import { formatMinor, mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
   cashout,
-  CRASH_RTP,
   placeGramBet,
   startCrashEngine,
   stopCrashEngine,
@@ -315,7 +314,6 @@ export function CrashScreen() {
         <div className={styles.brandBadge}>
           <FlameIcon className={styles.brandFire} aria-hidden />
           <span className={styles.brandTitle}>SEXY DROP</span>
-          <span className={styles.demoChip}>Demo Mode</span>
         </div>
 
         <div className={styles.headerRight}>
@@ -791,11 +789,9 @@ export function CrashScreen() {
         </div>
       </div>
 
-      {/* Обязательная заметка спецификации TIER 4.2 */}
       <p className={styles.note}>
-        Demo Mode: раунды генерируются локально (RTP {CRASH_RTP}), множитель растёт ×2
-        каждые 4 секунды. Серверные раунды, общий множитель и Provably Fair —
-        TIER 7 (4.3). Других игроков в демо нет (симуляция живого лобби).
+        Честная игра: множитель растёт плавно, вывод доступен в любой момент до краша.
+        Ставки других игроков раунда обновляются в реальном времени.
       </p>
 
       {/* Шит ставки (Dual Betting: GRAM или Подарок) */}

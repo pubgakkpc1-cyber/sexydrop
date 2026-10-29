@@ -33,12 +33,10 @@ afterEach(() => {
 })
 
 describe('JackpotScreen (5.2: банк, доля, тираж)', () => {
-  it('шапка, Demo chip, честная заметка с EV и TIER 7, CTA зайти', () => {
+  it('шапка, заголовок, честная заметка, CTA зайти', () => {
     renderScreen()
     expect(screen.getByText('Solo Jackpot')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
-    expect(screen.getByText(/EV = p·банк − s = −2% внесённого/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Джекпот: шанс победы равен доле вашей ставки/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Зайти в банк · 1 TON' })).toBeEnabled()
   })
 

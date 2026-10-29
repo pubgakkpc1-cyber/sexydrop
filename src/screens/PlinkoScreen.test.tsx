@@ -46,15 +46,13 @@ afterEach(() => {
 })
 
 describe('PlinkoScreen (4.6: UI плинко)', () => {
-  it('шапка, DEMO-чип, карманы 8 рядов, честная заметка с максимумом', () => {
+  it('шапка, карманы 8 рядов, честная заметка с максимумом', () => {
     renderScreen()
     expect(screen.getByText('Плинко')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
     // 8 рядов → 9 карманов
     expect(screen.getByLabelText('Множители карманов').children).toHaveLength(9)
-    expect(screen.getByText(/нормировка на 9 карманов/)).toBeInTheDocument()
     expect(screen.getByText(/x3777\.95/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Честная игра:/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Бросить шар · 1 GRAM' })).toBeEnabled()
   })
 
@@ -62,7 +60,7 @@ describe('PlinkoScreen (4.6: UI плинко)', () => {
     renderScreen()
     await user.click(screen.getByRole('button', { name: '16' }))
     expect(screen.getByLabelText('Множители карманов').children).toHaveLength(17)
-    expect(screen.getByText(/нормировка на 17 карманов/)).toBeInTheDocument()
+    expect(screen.getByText(/16 линий карманов/)).toBeInTheDocument()
   })
 
   it('недостаточно средств: CTA выключена с честной подсказкой', async () => {

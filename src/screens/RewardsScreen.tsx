@@ -209,9 +209,8 @@ export function RewardsScreen() {
       </section>
 
       <p className={styles.note}>
-        Demo Mode: статистика реальная (раунды: {profile.rounds}, оборот:{' '}
-        {formatMinor(profile.wageredMinor)} TON), билеты хранятся в памяти и
-        сбрасываются при перезагрузке. Серверная программа лояльности — TIER 7.
+        Ваша статистика: раунды: {profile.rounds}, оборот: {formatMinor(profile.wageredMinor)} TON.
+        Участвуйте в розыгрышах и получайте эксклюзивные награды.
       </p>
     </div>
   )

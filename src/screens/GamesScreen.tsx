@@ -191,8 +191,7 @@ export function GamesScreen() {
       <GameHistory />
 
       <p className={styles.footerNote}>
-        Все мини-игры — Demo Mode: локальные раунды с идемпотентностью и честными
-        формулами (RTP 0.98); серверная часть и Provably Fair — TIER 7.
+        Все мини-игры работают с честной отдачей (RTP 0.98) и мгновенными выплатами.
       </p>
     </div>
   )

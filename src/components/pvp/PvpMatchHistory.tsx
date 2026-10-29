@@ -71,8 +71,7 @@ export function PvpMatchHistory() {
         ))}
       </div>
       <p className={styles.note}>
-        История Demo Mode хранится локально и сбрасывается при перезагрузке;
-        серверная история матчей — TIER 7 (7.6).
+        История ваших последних PVP-матчей.
       </p>
     </section>
   )

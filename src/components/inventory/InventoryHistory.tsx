@@ -113,8 +113,7 @@ export function InventoryHistory() {
         <p className={styles.note}>Показаны последние {shown.length} из {history.length} событий</p>
       )}
       <p className={styles.note}>
-        Журнал Demo Mode хранится локально и сбрасывается при перезагрузке; серверная
-        история — TIER 7.
+        Журнал операций с подарками и инвентарём.
       </p>
     </section>
   )

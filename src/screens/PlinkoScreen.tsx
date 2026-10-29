@@ -12,7 +12,6 @@ import { formatMinor, toMinor, type Minor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import { dropPlinko } from '../services/demoPlinkoService'
 import { useWalletStore } from '../store/wallet'
-import { GAME_RTP } from '../lib/gameConfig'
 import { Input } from '../components/ui'
 import { ChevronLeftIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
@@ -99,7 +98,6 @@ export function PlinkoScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Плинко</h1>
@@ -207,10 +205,8 @@ export function PlinkoScreen() {
       </div>
 
       <p className={styles.note}>
-        Demo Mode: путь шара — {rows} монеток локально (RTP {GAME_RTP}, нормировка на{' '}
-        {rows + 1} карманов), выплата — floor(ставка × множитель). Максимальный карман
-        при 16 рядах — {formatMultiplier(maxMultiplier)}. Серверный бросок и
-        Provably Fair — TIER 7 (7.6).
+        Честная игра: {rows} линий карманов, выплата — ставка × множитель.
+        Максимальный коэффициент — {formatMultiplier(maxMultiplier)}.
       </p>
     </div>
   )

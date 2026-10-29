@@ -52,13 +52,12 @@ describe('PvpScreen — PVP HUB (5.1, 5.5, 5.6)', () => {
       '/pvp/tvt',
     )
     expect(screen.queryByText('скоро')).not.toBeInTheDocument()
-    expect(screen.getByText(/Реальные игроки и серверные раунды — TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Честные правила: шанс и коэффициенты открыты/)).toBeInTheDocument()
   })
 
   it('5.6: лидерборд пуст без матчей — честный empty-state', () => {
     renderScreen()
-    expect(screen.getByText(/Матчей пока нет/)).toBeInTheDocument()
-    expect(screen.getByText(/фиктивные игроки запрещены/)).toBeInTheDocument()
+    expect(screen.getByText(/Матчей пока нет — сыграйте/)).toBeInTheDocument()
   })
 
   it('5.5: история матчей показывает реальные записи после игр', () => {

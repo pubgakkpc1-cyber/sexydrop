@@ -64,8 +64,7 @@ export function PvpLeaderboard() {
         </table>
       )}
       <p className={styles.note}>
-        В Demo Mode реальные данные только у вас; таблица всех игроков подключается
-        с backend (TIER 7, 7.6) — фиктивные игроки запрещены.
+        Таблица лидеров PVP по суммарному выигрышу и активности.
       </p>
     </section>
   )

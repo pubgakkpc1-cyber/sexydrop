@@ -46,7 +46,7 @@ describe('GamesScreen (PLAY HUB по кадру frame_126)', () => {
     // Максимум плинко честно выведен из формулы
     expect(screen.getByText(/Выигрывай до x3777\.95/)).toBeInTheDocument()
     // Честная заметка хаба
-    expect(screen.getByText(/Demo Mode: локальные раунды/)).toBeInTheDocument()
+    expect(screen.getByText(/Все мини-игры работают с честной отдачей/)).toBeInTheDocument()
   })
 
   it('баннер «Улучшение» ведёт на /games/upgrade', async () => {

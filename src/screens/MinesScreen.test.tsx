@@ -33,10 +33,9 @@ afterEach(() => {
 })
 
 describe('MinesScreen (4.8: доска 5×5, забор, честные исходы)', () => {
-  it('шапка, доска 25 клеток, конфиг мин, честная заметка с TIER 7', () => {
+  it('шапка, доска 25 клеток, конфиг мин, честная заметка', () => {
     renderScreen()
     expect(screen.getByText('Мины')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
     expect(screen.getByRole('group', { name: 'Поле 25 клеток' })).toBeInTheDocument()
     for (let i = 1; i <= 25; i += 1) {
       expect(screen.getByRole('button', { name: `Клетка ${i}` })).toBeInTheDocument()
@@ -45,7 +44,7 @@ describe('MinesScreen (4.8: доска 5×5, забор, честные исхо
     expect(screen.getByRole('button', { name: '3', pressed: true })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '24' })).toBeInTheDocument()
     expect(screen.getByText(/Шанс на клетку: 88%/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Честная игра: множитель =/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Начать · 1 TON' })).toBeEnabled()
   })
 

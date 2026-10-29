@@ -81,7 +81,6 @@ export function UpgradeScreen() {
         <button type="button" className={styles.back} onClick={() => navigate(-1)}>
           <ChevronLeftIcon className={styles.backIcon} aria-hidden /> Назад
         </button>
-        <span className={styles.demoChip}>Demo Mode</span>
       </div>
 
       <h1 className={styles.title}>Апгрейд</h1>
@@ -213,8 +212,8 @@ export function UpgradeScreen() {
       </button>
 
       <p className={styles.note}>
-        Demo Mode: шанс p = min(1, цена источника / цена цели × {GAME_RTP}); проигрыш
-        сжигает предмет. Серверный расчёт и Provably Fair — TIER 7 (7.6).
+        Апгрейд: шанс p = min(1, цена источника / цена цели × {GAME_RTP}).
+        Улучшайте свои предметы до легендарных NFT.
       </p>
 
       <GiftPickerSheet

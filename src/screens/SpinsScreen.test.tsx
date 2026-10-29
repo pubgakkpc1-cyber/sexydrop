@@ -47,7 +47,6 @@ describe('SpinsScreen (4.9: колесо, бонус M2, покупка бону
   it('шапка, сетка 25 ячеек, чипы символов с множителями, честная заметка', () => {
     renderScreen()
     expect(screen.getByText('Спины')).toBeInTheDocument()
-    expect(screen.getByText('Demo Mode')).toBeInTheDocument()
     expect(screen.getByRole('group', { name: 'Сетка 25 ячеек' })).toBeInTheDocument()
     for (let i = 1; i <= 25; i += 1) {
       expect(screen.getByLabelText(`Ячейка ${i}`)).toBeInTheDocument()
@@ -59,8 +58,7 @@ describe('SpinsScreen (4.9: колесо, бонус M2, покупка бону
     expect(screen.getByText('x0.43')).toBeInTheDocument()
     expect(screen.getByText('10.0%')).toBeInTheDocument() // шанс бонуса
     expect(screen.getByRole('button', { name: /Купить бонус · 0\.997 TON/ })).toBeEnabled()
-    expect(screen.getByText(/EV ≤ 0\.98/)).toBeInTheDocument()
-    expect(screen.getByText(/TIER 7/)).toBeInTheDocument()
+    expect(screen.getByText(/Спины: вращайте барабан/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Крутить · 1 TON' })).toBeEnabled()
   })
 

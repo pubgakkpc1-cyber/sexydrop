@@ -49,6 +49,15 @@ interface DebrisShard {
   maxLife: number
 }
 
+interface SpeedStreak {
+  x: number
+  y: number
+  len: number
+  speed: number
+  alpha: number
+  width: number
+}
+
 export interface RocketSkinConfig {
   id: number
   name: string
@@ -178,6 +187,7 @@ export function Rocket3DCanvas({
     time: number
     shake: number
     stars: Star[]
+    speedStreaks: SpeedStreak[]
     trail: TrailParticle[]
     explosion: ExplosionParticle[]
     debris: DebrisShard[]
@@ -185,10 +195,14 @@ export function Rocket3DCanvas({
     shockwaveAlpha: number
     flashAlpha: number
     rocketPos: { x: number; y: number; angle: number }
+    flightSeconds: number
+    lastFrameTime: number
+    rocketSmooth: { x: number; y: number; angle: number }
   }>({
     time: 0,
     shake: 0,
     stars: [],
+    speedStreaks: [],
     trail: [],
     explosion: [],
     debris: [],
@@ -196,6 +210,9 @@ export function Rocket3DCanvas({
     shockwaveAlpha: 0,
     flashAlpha: 0,
     rocketPos: { x: 0, y: 0, angle: 0 },
+    flightSeconds: 0,
+    lastFrameTime: 0,
+    rocketSmooth: { x: 0, y: 0, angle: 0 },
   })
 
   // Инициализация фоновых звёзд по всему экрану (Starfield)
@@ -216,12 +233,28 @@ export function Rocket3DCanvas({
     stateRef.current.stars = stars
   }, [])
 
-  // Триггер взрыва и распада ракеты на кусочки при переходе в crashed
+  // Триггер смены фаз (старт полета, взрыв и распад ракеты на кусочки)
   useEffect(() => {
-    if (prevPhaseRef.current !== 'crashed' && phase === 'crashed') {
-      const state = stateRef.current
-      const rx = state.rocketPos.x || 300
-      const ry = state.rocketPos.y || 200
+    const state = stateRef.current
+    if (phase === 'betting') {
+      state.trail = []
+      state.speedStreaks = []
+      state.explosion = []
+      state.debris = []
+      state.shake = 0
+      state.flightSeconds = 0
+      state.rocketSmooth = { x: 0, y: 0, angle: 0 }
+    } else if (prevPhaseRef.current !== 'flying' && phase === 'flying') {
+      state.flightSeconds = 0
+      state.trail = []
+      state.speedStreaks = []
+      state.explosion = []
+      state.debris = []
+      state.shake = 0
+      state.rocketSmooth = { x: 0, y: 0, angle: 0 }
+    } else if (prevPhaseRef.current !== 'crashed' && phase === 'crashed') {
+      const rx = state.rocketPos.x > 0 ? state.rocketPos.x : (typeof window !== 'undefined' ? window.innerWidth * 0.52 : 200)
+      const ry = state.rocketPos.y > 0 ? state.rocketPos.y : (typeof window !== 'undefined' ? window.innerHeight * 0.36 : 100)
 
       state.shake = 22 // амплитуда тряски
       state.flashAlpha = 0.9 // вспышка взрыва
@@ -409,7 +442,11 @@ export function Rocket3DCanvas({
         ctx.scale(dpr, dpr)
 
         const state = stateRef.current
-        state.time += 0.016
+        const now = performance.now()
+        const lastTime = state.lastFrameTime || now
+        const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) / 1000))
+        state.lastFrameTime = now
+        state.time += dt
 
         // Тряска экрана при взрыве
         if (state.shake > 0.1) {
@@ -426,7 +463,7 @@ export function Rocket3DCanvas({
 
         // --- 1. Пролетающие фоновые звёзды ПО ВСЕМУ ЭКРАНУ (Starfield) ---
         const flightSpeedFactor =
-          currentPhase === 'flying' ? Math.min(6.5, 1.2 + Math.log2(currentMult) * 1.6) : 0.65
+          currentPhase === 'flying' ? Math.min(6.5, 1.2 + Math.log2(Math.max(1, currentMult)) * 1.6) : 0.65
 
         ctx.save()
         for (const star of state.stars) {
@@ -456,82 +493,133 @@ export function Rocket3DCanvas({
         }
         ctx.restore()
 
+        // --- 1.1 Космические полосы скорости (Speed Streaks) в фазе полёта ---
+        if (currentPhase === 'flying') {
+          if (state.speedStreaks.length < 10 && Math.random() < 0.35) {
+            state.speedStreaks.push({
+              x: width + 20,
+              y: height * 0.12 + Math.random() * (height * 0.72),
+              len: 30 + Math.random() * 55,
+              speed: (14 + Math.random() * 16) * Math.min(2.5, 1 + Math.log2(Math.max(1, currentMult)) * 0.4),
+              alpha: 0.25 + Math.random() * 0.4,
+              width: 1.2 + Math.random() * 1.0,
+            })
+          }
+
+          ctx.save()
+          for (let i = state.speedStreaks.length - 1; i >= 0; i--) {
+            const s = state.speedStreaks[i]!
+            s.x -= s.speed
+            if (s.x + s.len < -20) {
+              state.speedStreaks.splice(i, 1)
+              continue
+            }
+            ctx.strokeStyle = `rgba(255, 255, 255, ${s.alpha})`
+            ctx.lineWidth = s.width
+            ctx.lineCap = 'round'
+            ctx.beginPath()
+            ctx.moveTo(s.x, s.y)
+            ctx.lineTo(s.x + s.len, s.y)
+            ctx.stroke()
+          }
+          ctx.restore()
+        }
+
         // Во время отсчёта (betting) ракета не отображается (показывается только таймер)
         if (currentPhase === 'betting') {
           state.trail = []
+          state.speedStreaks = []
           return
         }
 
-      // Позиция ракеты внутри арены полёта (плавный взлёт с космодрома и уверенный полёт)
-      let currentX: number
-      let currentY: number
-      let currentAngle: number
+        // --- 2. Позиция ракеты: Плавный взлёт на старте и ОСТАНОВКА НА БАРЬЕРЕ ---
+        state.flightSeconds += dt
 
-      // 1. Плавный взлёт с левого нижнего угла (Старт ракеты)
-      const launchProgress = Math.min(1, Math.max(0, (currentMult - 1.0) / 0.35))
-      const easeLaunch = 1 - Math.pow(1 - launchProgress, 3)
+        // Точка старта (нижняя левая область арены)
+        const launchX = width * 0.20
+        const launchY = height * 0.58
+        const launchAngle = -28
 
-      const launchX = width * 0.14
-      const launchY = height * 0.82
-      const launchAngle = -35
+        // Точка круизного барьера (центр/верх арены — ракета доходит сюда и ОСТАНАВЛИВАЕТСЯ)
+        const barrierX = width * 0.52
+        const barrierY = height * 0.36
+        const barrierAngle = -6
 
-      const cruiseProgress = Math.min(1, Math.max(0, Math.log2(Math.max(1, currentMult)) / 3.0))
-      const targetCruiseX = width * (0.54 + cruiseProgress * 0.16)
-      const targetCruiseY = height * (0.48 - cruiseProgress * 20)
-      const cruiseAngle = -15 + cruiseProgress * 5
+        // Плавный и аккуратный взлёт на старте: ровно за ~1.2 секунды ракета подходит к барьеру
+        const riseDuration = 1.2
+        const riseProgress = Math.min(1, state.flightSeconds / riseDuration)
+        // easeOutCubic: быстрый мягкий подъём с замедлением до полной остановки
+        const easeRise = 1 - Math.pow(1 - riseProgress, 3)
 
-      // Естественные микро-колебания полёта (без намёков на краш, чтобы нельзя было абузить)
-      const hoverY = Math.sin(state.time * 3.6) * 3.2
-      const hoverAngle = Math.sin(state.time * 2.8) * 1.6
+        // Целевые координаты (строго останавливаются у барьера, НЕ улетают!)
+        const targetX = launchX + (barrierX - launchX) * easeRise
+        const targetY = launchY + (barrierY - launchY) * easeRise
+        const targetAngle = launchAngle + (barrierAngle - launchAngle) * easeRise
 
-      currentX = launchX + (targetCruiseX - launchX) * easeLaunch
-      currentY = launchY + (targetCruiseY - launchY) * easeLaunch + hoverY * easeLaunch
-      currentAngle = launchAngle + (cruiseAngle - launchAngle) * easeLaunch + hoverAngle * easeLaunch
+        // Естественные микро-колебания полёта на барьере
+        const hoverY = Math.sin(state.flightSeconds * 3.2) * 2.5
+        const hoverAngle = Math.sin(state.flightSeconds * 2.0) * 1.0
 
-      state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
+        // Frame-rate independent экспоненциальное сглаживание (полное исключение лагов и телепортов!)
+        const lerpFactor = 1 - Math.exp(-dt * 14)
+        if (state.rocketSmooth.x === 0 && state.rocketSmooth.y === 0) {
+          state.rocketSmooth.x = targetX
+          state.rocketSmooth.y = targetY + hoverY
+          state.rocketSmooth.angle = targetAngle + hoverAngle
+        } else {
+          state.rocketSmooth.x += (targetX - state.rocketSmooth.x) * lerpFactor
+          state.rocketSmooth.y += (targetY + hoverY - state.rocketSmooth.y) * lerpFactor
+          state.rocketSmooth.angle += (targetAngle + hoverAngle - state.rocketSmooth.angle) * lerpFactor
+        }
 
-      // --- 2. Неоновая дуговая траектория полёта и шлейф плазмы (В точности по референсу ZAP GIFTS) ---
-      if (currentPhase === 'flying') {
-        const rad = (currentAngle * Math.PI) / 180
-        const nozzleDist = 52 * 1.22
-        const nozzleX = currentX - Math.cos(rad) * nozzleDist
-        const nozzleY = currentY - Math.sin(rad) * nozzleDist
+        const currentX = state.rocketSmooth.x
+        const currentY = state.rocketSmooth.y
+        const currentAngle = state.rocketSmooth.angle
 
-        // Старт дуги из точки запуска в левом нижнем углу
-        const startArcX = width * 0.08
-        const startArcY = height * 0.88
+        state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
 
-        // Плавная выпуклая аэродинамическая контрольная точка
-        const ctrlX = startArcX + (nozzleX - startArcX) * 0.58
-        const ctrlY = startArcY
+        // --- 2. Неоновая дуговая траектория полёта и шлейф плазмы ---
+        if (currentPhase === 'flying') {
+          const rad = (currentAngle * Math.PI) / 180
+          const nozzleDist = 50 * 1.22
+          const nozzleX = currentX - Math.cos(rad) * nozzleDist
+          const nozzleY = currentY - Math.sin(rad) * nozzleDist
 
-        ctx.save()
-        ctx.lineCap = 'round'
+          // Старт дуги из точки запуска в левом нижнем секторе
+          const startArcX = width * 0.08
+          const startArcY = height * 0.72
 
-        // 1. Внешнее мягкое неоновое свечение шлейфа (Electric Glow)
-        ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)'
-        ctx.lineWidth = 10
-        ctx.shadowColor = skin.accentColor
-        ctx.shadowBlur = 18
-        ctx.beginPath()
-        ctx.moveTo(startArcX, startArcY)
-        ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
-        ctx.stroke()
+          // Плавная выпуклая контрольная точка
+          const ctrlX = startArcX + (nozzleX - startArcX) * 0.52
+          const ctrlY = startArcY + (nozzleY - startArcY) * 0.15
 
-        // 2. Внутреннее яркое градиентное ядро дуги (плавное появление от старта к соплу)
-        const arcGrad = ctx.createLinearGradient(startArcX, startArcY, nozzleX, nozzleY)
-        arcGrad.addColorStop(0, 'rgba(56, 189, 248, 0.05)')
-        arcGrad.addColorStop(0.35, 'rgba(56, 189, 248, 0.55)')
-        arcGrad.addColorStop(1, skin.accentGlow)
-        ctx.strokeStyle = arcGrad
-        ctx.lineWidth = 3.6
-        ctx.shadowBlur = 8
-        ctx.shadowColor = skin.accentGlow
-        ctx.beginPath()
-        ctx.moveTo(startArcX, startArcY)
-        ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
-        ctx.stroke()
-        ctx.restore()
+          ctx.save()
+          ctx.lineCap = 'round'
+
+          // 1. Внешнее мягкое неоновое свечение шлейфа (Electric Glow)
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)'
+          ctx.lineWidth = 10
+          ctx.shadowColor = skin.accentColor
+          ctx.shadowBlur = 18
+          ctx.beginPath()
+          ctx.moveTo(startArcX, startArcY)
+          ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
+          ctx.stroke()
+
+          // 2. Внутреннее яркое градиентное ядро дуги (плавное появление от старта к соплу)
+          const arcGrad = ctx.createLinearGradient(startArcX, startArcY, nozzleX, nozzleY)
+          arcGrad.addColorStop(0, 'rgba(56, 189, 248, 0.05)')
+          arcGrad.addColorStop(0.35, 'rgba(56, 189, 248, 0.55)')
+          arcGrad.addColorStop(1, skin.accentGlow)
+          ctx.strokeStyle = arcGrad
+          ctx.lineWidth = 3.6
+          ctx.shadowBlur = 8
+          ctx.shadowColor = skin.accentGlow
+          ctx.beginPath()
+          ctx.moveTo(startArcX, startArcY)
+          ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
+          ctx.stroke()
+          ctx.restore()
 
         // 3. Аккуратные частицы плазмы непосредственно за соплом
         if (Math.random() < 0.65) {

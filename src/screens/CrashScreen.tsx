@@ -251,11 +251,6 @@ export function CrashScreen() {
     }
   }, [phase, secondsLeft])
 
-  // Естественные координаты для взрыва
-  const flightProgress = Math.min(1, Math.max(0, Math.log2(multiplier) / 2.8))
-  const rocketLeft = 28 + flightProgress * 20
-  const rocketTop = 56 - flightProgress * 6
-
   // Обработка ручного вывода
   const handleCashout = () => {
     playCashoutWin()
@@ -548,29 +543,6 @@ export function CrashScreen() {
           <div className={styles.crashedLeft}>
             <span className={styles.multiplierCrashed}>x{multiplier.toFixed(2)}</span>
             <span className={styles.crashedLabel}>Улетел!</span>
-            {/* Частицы взрыва */}
-            {Array.from({ length: 16 }).map((_, idx) => {
-              const angle = (idx / 16) * 360
-              const rad = (angle * Math.PI) / 180
-              const dist = 55 + (idx % 4) * 20
-              return (
-                <span
-                  key={idx}
-                  className={styles.explosionParticle}
-                  style={
-                    {
-                      left: `${rocketLeft}%`,
-                      top: `${rocketTop}%`,
-                      width: `${4 + (idx % 3) * 2}px`,
-                      height: `${4 + (idx % 3) * 2}px`,
-                      background: idx % 2 === 0 ? '#ef4444' : '#f59e0b',
-                      '--tx': `${Math.cos(rad) * dist}px`,
-                      '--ty': `${Math.sin(rad) * dist}px`,
-                    } as React.CSSProperties
-                  }
-                />
-              )
-            })}
           </div>
         )}
       </div>

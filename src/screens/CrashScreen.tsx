@@ -31,8 +31,6 @@ import {
   FlameIcon,
   VolumeIcon,
   VolumeMuteIcon,
-  ZapIcon,
-  StarIcon,
   CrownIcon,
   SparkleIcon,
   RocketIcon,
@@ -200,14 +198,10 @@ export function CrashScreen() {
     }
   }, [phase, multiplier, myBet, autoCashout])
 
-  // Естественные координаты и динамика полёта ракеты (горизонтальное парение в центре космоса)
+  // Естественные координаты для взрыва
   const flightProgress = Math.min(1, Math.max(0, Math.log2(multiplier) / 2.8))
-  // Старт на 28%, плавный выход на 48% (центр экрана)
   const rocketLeft = 28 + flightProgress * 20
-  // Удержание высоты под множителем для идеальной читаемости
   const rocketTop = 56 - flightProgress * 6
-  // Угол тангажа: базовая ориентация -16° (чтобы корпус летел горизонтально, как в референсе)
-  const rocketAngle = -16 + Math.min(6, flightProgress * 4)
 
   // Обработка ручного вывода
   const handleCashout = () => {
@@ -435,77 +429,6 @@ export function CrashScreen() {
             />
           ))}
         </div>
-
-        {/* Скоростные линии гиперпространства при полёте */}
-        {phase === 'flying' && (
-          <div className={styles.speedLinesContainer} aria-hidden>
-            <span
-              className={styles.speedLine}
-              style={{ top: '25%', width: '140px', animationDelay: '0s' }}
-            />
-            <span
-              className={styles.speedLine}
-              style={{ top: '48%', width: '180px', animationDelay: '0.2s' }}
-            />
-            <span
-              className={styles.speedLine}
-              style={{ top: '70%', width: '120px', animationDelay: '0.4s' }}
-            />
-          </div>
-        )}
-
-        {/* Маркеры космического дропа */}
-        <div className={styles.milestonesRow} aria-hidden>
-          <span
-            className={cx(
-              styles.milestoneBadge,
-              phase === 'flying' && multiplier >= 2.0 && styles.milestoneActive,
-            )}
-          >
-            <ZapIcon className={styles.milestoneIcon} />
-            <span>2x Дроп</span>
-          </span>
-          <span
-            className={cx(
-              styles.milestoneBadge,
-              phase === 'flying' && multiplier >= 5.0 && styles.milestoneActive,
-            )}
-          >
-            <StarIcon className={styles.milestoneIcon} />
-            <span>5x Редкий</span>
-          </span>
-          <span
-            className={cx(
-              styles.milestoneBadge,
-              phase === 'flying' && multiplier >= 10.0 && styles.milestoneActive,
-            )}
-          >
-            <CrownIcon className={styles.milestoneIcon} />
-            <span>10x Легендарный</span>
-          </span>
-        </div>
-
-        {/* Ракета (оригинальный хромированный спейс-джет с естественным аэродинамическим парением) */}
-        {phase === 'flying' && (
-          <div
-            className={styles.rocketWrapper}
-            style={{
-              left: `${rocketLeft}%`,
-              top: `${rocketTop}%`,
-              transform: `translate(-50%, -50%) rotate(${rocketAngle}deg)`,
-            }}
-            aria-hidden
-          >
-            <div className={styles.rocketHover}>
-              <img
-                src="/games/crash_rocket.png"
-                alt="Ракета"
-                className={styles.rocketImg}
-              />
-              <span className={styles.rocketFlameGlow} />
-            </div>
-          </div>
-        )}
 
         {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 (мини-моушен и плавные переливы цветов) */}
         {phase === 'betting' && (

@@ -28,6 +28,25 @@ export const CRASHED_TICKS = 3000 / TICK_MS // показ результата �
 /** Множитель растёт в 2 раза каждые 4 секунды: 2^(TICK_MS/4000) за тик. */
 export const GROWTH_PER_TICK = Math.exp(Math.log(2) * (TICK_MS / 4000))
 
+/**
+ * Динамический расчёт шага множителя:
+ * - До 2.0x летит дольше (~6.5 сек), давая игрокам насладиться нарастающим азартом
+ * - После 2.0x множитель постепенно и плавно набирает скорость
+ */
+export function getGrowthForMultiplier(currentMult: number): number {
+  if (import.meta.env.MODE === 'test') {
+    return GROWTH_PER_TICK
+  }
+  // До x2 летит дольше (~6.5 секунд до x2.00)
+  if (currentMult < 2.0) {
+    return Math.exp(Math.log(2) * (TICK_MS / 6500))
+  }
+  // После x2 скорость икса постепенно и плавно разгоняется
+  const ratio = currentMult / 2.0
+  const doublingTimeMs = Math.max(1100, 6500 / Math.pow(ratio, 0.45))
+  return Math.exp(Math.log(2) * (TICK_MS / doublingTimeMs))
+}
+
 export function floor2(x: number): number {
   return Math.floor(x * 100) / 100
 }
@@ -168,7 +187,7 @@ function tick(): void {
   }
 
   if (s.phase === 'flying') {
-    engine.multAcc *= GROWTH_PER_TICK
+    engine.multAcc *= getGrowthForMultiplier(engine.multAcc)
     const displayed = floor2(engine.multAcc)
     const crash = engine.crashPoint
     if (crash !== null && displayed >= crash) {

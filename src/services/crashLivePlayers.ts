@@ -23,7 +23,7 @@ const PLAYER_PROFILES = [
   { name: 'Pavel_D', avatar: '/avatars/user_5.png', defaultStake: 500 },
   { name: 'Shazy', avatar: '/avatars/user_7.png', defaultStake: 300 },
   { name: 'Al_Sheikh', avatar: '/avatars/user_8.png', defaultStake: 200 },
-  { name: 'Artem_TON', avatar: '/avatars/user_12.png', defaultStake: 150 },
+  { name: 'Artem_TON', avatar: '/avatars/user_12.png', defaultStake: 100 },
   { name: 'EGO_TRADER', avatar: '/avatars/user_1.png', defaultStake: 100 },
 ]
 

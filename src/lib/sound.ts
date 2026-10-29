@@ -159,6 +159,144 @@ export function playRocketLaunch(): void {
   }
 }
 
+interface ActiveFlightAudio {
+  osc1: OscillatorNode
+  osc2: OscillatorNode
+  noiseNode: AudioBufferSourceNode
+  filter: BiquadFilterNode
+  masterGain: GainNode
+  ctx: AudioContext
+}
+
+let activeFlightAudio: ActiveFlightAudio | null = null
+
+/**
+ * Непрерывный космический звук полёта ракеты (гул двигателя и аэродинамический вихрь).
+ * Плавный старт, непрерывный цикл, частота нарастает по мере разгона множителя.
+ */
+export function startRocketFlightSound(initialMultiplier = 1.0): void {
+  if (isSoundMuted) return
+  try {
+    stopRocketFlightSound()
+    const ctx = getAudioContext()
+    if (!ctx) return
+    const now = ctx.currentTime
+
+    // 1. Низкочастотный рокот сопла двигателя (саб-осцилляторы)
+    const osc1 = ctx.createOscillator()
+    const osc2 = ctx.createOscillator()
+    osc1.type = 'sawtooth'
+    osc2.type = 'triangle'
+
+    const factor = Math.min(2.8, 1 + Math.log2(Math.max(1, initialMultiplier)) * 0.35)
+    osc1.frequency.setValueAtTime(62 * factor, now)
+    osc2.frequency.setValueAtTime(42 * factor, now)
+
+    // 2. Аэродинамический шум разреженного космоса и плазменного потока (Looping Pink/Filtered Noise)
+    const sampleRate = ctx.sampleRate || 44100
+    const bufferSize = Math.floor(sampleRate * 2.0)
+    const buffer = ctx.createBuffer(1, bufferSize, sampleRate)
+    const data = buffer.getChannelData(0)
+    let last = 0.0
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1
+      last = (last + 0.03 * white) / 1.03
+      data[i] = last * 3.2
+    }
+
+    const noiseNode = ctx.createBufferSource()
+    noiseNode.buffer = buffer
+    noiseNode.loop = true
+
+    // 3. Резонансный НЧ-фильтр для ощущения турбины
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'lowpass'
+    const cutoff = Math.min(1400, 320 + Math.log2(Math.max(1, initialMultiplier)) * 360)
+    filter.frequency.setValueAtTime(cutoff, now)
+    filter.Q.setValueAtTime(1.8, now)
+
+    // 4. Мастер-громкость с мягкой огибающей появления (без щелчка)
+    const masterGain = ctx.createGain()
+    masterGain.gain.setValueAtTime(0.001, now)
+    masterGain.gain.linearRampToValueAtTime(0.18, now + 0.15)
+
+    // Коммутация узлов
+    osc1.connect(filter)
+    osc2.connect(filter)
+    noiseNode.connect(filter)
+    filter.connect(masterGain)
+    masterGain.connect(ctx.destination)
+
+    osc1.start(now)
+    osc2.start(now)
+    noiseNode.start(now)
+
+    activeFlightAudio = {
+      osc1,
+      osc2,
+      noiseNode,
+      filter,
+      masterGain,
+      ctx,
+    }
+  } catch {
+    /* безопасность при сбое Web Audio */
+  }
+}
+
+/**
+ * Динамическая модуляция звука полёта по текущему множителю (усиление тяги).
+ */
+export function updateRocketFlightSound(multiplier: number): void {
+  if (!activeFlightAudio || isSoundMuted) return
+  try {
+    const { osc1, osc2, filter, masterGain, ctx } = activeFlightAudio
+    const now = ctx.currentTime
+    const factor = Math.min(2.8, 1 + Math.log2(Math.max(1, multiplier)) * 0.35)
+    osc1.frequency.setTargetAtTime(62 * factor, now, 0.08)
+    osc2.frequency.setTargetAtTime(42 * factor, now, 0.08)
+
+    const cutoff = Math.min(1400, 320 + Math.log2(Math.max(1, multiplier)) * 360)
+    filter.frequency.setTargetAtTime(cutoff, now, 0.08)
+
+    const targetGain = Math.min(0.24, 0.16 + Math.log2(Math.max(1, multiplier)) * 0.04)
+    masterGain.gain.setTargetAtTime(targetGain, now, 0.08)
+  } catch {
+    /* no-op */
+  }
+}
+
+/**
+ * Мгновенная плавная остановка звука полёта при взрыве или выходе с экрана.
+ */
+export function stopRocketFlightSound(): void {
+  if (!activeFlightAudio) return
+  try {
+    const { osc1, osc2, noiseNode, masterGain, ctx } = activeFlightAudio
+    const now = ctx.currentTime
+    masterGain.gain.cancelScheduledValues(now)
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now)
+    masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.06)
+
+    setTimeout(() => {
+      try {
+        osc1.stop()
+        osc2.stop()
+        noiseNode.stop()
+        osc1.disconnect()
+        osc2.disconnect()
+        noiseNode.disconnect()
+      } catch {
+        /* no-op */
+      }
+    }, 70)
+  } catch {
+    /* no-op */
+  } finally {
+    activeFlightAudio = null
+  }
+}
+
 /**
  * Глубокий кинематографичный космический взрыв при краше ракеты.
  * Комбинирует саб-бас импульс, фильтрованный шум взрывной волны и детонационный щелчок.

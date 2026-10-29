@@ -7,6 +7,8 @@ import { formatMinor, mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
   cashout,
+  placeGramBet,
+  queueNextRoundGramBet,
   cancelQueuedNextRoundBet,
   startCrashEngine,
   stopCrashEngine,
@@ -16,6 +18,9 @@ import { generateRoundPlayers, type SimulatedPlayer } from '../services/crashLiv
 import {
   playCountdownTick,
   playRocketLaunch,
+  startRocketFlightSound,
+  updateRocketFlightSound,
+  stopRocketFlightSound,
   playCrashBoom,
   playCashoutWin,
 } from '../lib/sound'
@@ -72,6 +77,12 @@ const COUNTDOWN_THEMES: Record<number, CountdownTheme> = {
     bgGlow: 'radial-gradient(circle, rgba(239, 68, 68, 0.32) 0%, rgba(14, 13, 20, 0.9) 70%)',
     ringGradient: 'url(#countdownGrad1)',
   },
+}
+
+/** Форматирование сумм TON: не длиннее 0.1 (максимум 1 знак после точки, без лишних плюсов) */
+function formatTonMaxOneDecimal(minor: number): string {
+  const val = Math.floor((minor / 1000) * 10) / 10
+  return Number.isInteger(val) ? `${val}` : val.toFixed(1)
 }
 
 function ScreenStarfield() {
@@ -183,10 +194,11 @@ export function CrashScreen() {
   const prevSecRef = useRef<number>(-1)
 
   // Запуск локального движка: в живом приложении ракетка всегда активна (24/7);
-  // в vitest-тестах останавливается для изоляции окружения
+  // в vitest-тестах останавливается для изоляции окружения; звук полёта глушится при размонтировании
   useEffect(() => {
     startCrashEngine()
     return () => {
+      stopRocketFlightSound()
       if (import.meta.env.MODE === 'test') {
         stopCrashEngine()
       }
@@ -207,14 +219,25 @@ export function CrashScreen() {
     if (prevPhase !== phase) {
       if (phase === 'flying') {
         playRocketLaunch()
+        startRocketFlightSound(multiplier)
         getWebApp()?.HapticFeedback?.impactOccurred('heavy')
       } else if (phase === 'crashed') {
+        stopRocketFlightSound()
         playCrashBoom()
         getWebApp()?.HapticFeedback?.notificationOccurred('error')
+      } else if (phase === 'betting') {
+        stopRocketFlightSound()
       }
       prevPhaseRef.current = phase
     }
-  }, [phase])
+  }, [phase, multiplier])
+
+  // Динамическое усиление звука турбины полёта при разгоне множителя
+  useEffect(() => {
+    if (phase === 'flying') {
+      updateRocketFlightSound(multiplier)
+    }
+  }, [phase, multiplier])
 
   // Тики обратного отсчёта
   useEffect(() => {
@@ -251,6 +274,18 @@ export function CrashScreen() {
           setCosmicReward(chosen)
         }
       }
+    }
+  }
+
+  // Быстрая ставка TON в один клик: только +0.1 TON (не длиннее чем 0.1)
+  const handleQuickBet = (amountGram = 0.1) => {
+    const amountMinor = Math.round(amountGram * 1000)
+    if (phase === 'betting') {
+      if (myBet !== null) return
+      placeGramBet(amountMinor, makeRequestId())
+    } else {
+      if (queuedNextBet !== null) return
+      queueNextRoundGramBet(amountMinor, makeRequestId())
     }
   }
 
@@ -637,8 +672,8 @@ export function CrashScreen() {
             >
               <span className={styles.btnGlassHighlight} />
               <span>
-                Забрать x{multiplier.toFixed(2)} (+
-                {formatMinor(mulByMultiplier(myBet.valueMinor, multiplier))} TON)
+                Забрать x{multiplier.toFixed(2)} (
+                {formatTonMaxOneDecimal(mulByMultiplier(myBet.valueMinor, multiplier))} TON)
               </span>
             </button>
           ) : (
@@ -654,7 +689,7 @@ export function CrashScreen() {
                 <span className={styles.queuedBetBadge}>Ожидает следующий раунд</span>
                 <strong className={styles.queuedBetAmount}>
                   {queuedNextBet.kind === 'gram'
-                    ? `${formatMinor(queuedNextBet.valueMinor)} TON`
+                    ? `${formatTonMaxOneDecimal(queuedNextBet.valueMinor)} TON`
                     : (giftById.get(queuedNextBet.giftId ?? '')?.name ?? 'Подарок')}
                 </strong>
               </div>
@@ -676,6 +711,22 @@ export function CrashScreen() {
               <span>Поставить на след. раунд</span>
             </button>
           ))}
+
+        {/* Быстрая ставка TON (строго только +0.1, не длиннее чем 0.1) */}
+        {((phase === 'betting' && myBet === null) ||
+          (phase === 'flying' && myBet === null && queuedNextBet === null) ||
+          (phase === 'crashed' && queuedNextBet === null)) && (
+          <div className={styles.quickControlsRow}>
+            <button
+              type="button"
+              className={styles.quickChip}
+              onClick={() => handleQuickBet(0.1)}
+              title="Быстрая ставка 0.1 TON"
+            >
+              +0.1 TON
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 6. Список живых ставок игроков (отсортирован от большого к маленькому, Telegram NFT по стоимости) */}
@@ -730,7 +781,7 @@ export function CrashScreen() {
                     />
                     <TonIcon className={styles.playerStakeDiamond} />
                     <span>
-                      {formatMinor(row.stakeMinor)} × {(Math.floor(row.multToShow * 10) / 10).toFixed(1)}x
+                      {formatTonMaxOneDecimal(row.stakeMinor)} × {(Math.floor(row.multToShow * 10) / 10).toFixed(1)}x
                     </span>
                   </div>
                 </div>
@@ -747,7 +798,7 @@ export function CrashScreen() {
                 >
                   <TonIcon className={styles.profitTonIcon} />
                   <span>
-                    {row.isCashed ? `+${formatMinor(row.profitMinor)}` : formatMinor(row.profitMinor)}
+                    {formatTonMaxOneDecimal(row.profitMinor)}
                   </span>
                 </span>
 
@@ -875,7 +926,7 @@ function ResultLine({
     if (myBet.wonGift) {
       return (
         <p className={styles.resultWon}>
-          Выигран NFT {myBet.wonGift.name} ({formatMinor(myBet.wonMinor ?? 0)} TON)
+          Выигран NFT {myBet.wonGift.name} ({formatTonMaxOneDecimal(myBet.wonMinor ?? 0)} TON)
         </p>
       )
     }

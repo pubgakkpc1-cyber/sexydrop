@@ -49,6 +49,28 @@ interface DebrisShard {
   maxLife: number
 }
 
+
+function safeRoundRect(
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+) {
+  if (typeof (ctx as unknown as { roundRect?: unknown }).roundRect === 'function') {
+    ctx.roundRect(x, y, w, h, r)
+  } else {
+    const radius = Math.min(r, w / 2, h / 2)
+    ctx.moveTo(x + radius, y)
+    ctx.arcTo(x + w, y, x + w, y + h, radius)
+    ctx.arcTo(x + w, y + h, x, y + h, radius)
+    ctx.arcTo(x, y + h, x, y, radius)
+    ctx.arcTo(x, y, x + w, y, radius)
+    ctx.closePath()
+  }
+}
+
 interface SpeedStreak {
   x: number
   y: number
@@ -935,7 +957,7 @@ export function Rocket3DCanvas({
           ctx.shadowColor = '#38bdf8'
           ctx.shadowBlur = 6
           ctx.beginPath()
-          ctx.roundRect(px - 5.8, py - 5.8, 12.5, 4.8, 1.8)
+          safeRoundRect(ctx, px - 5.8, py - 5.8, 12.5, 4.8, 1.8)
           ctx.fill()
           ctx.stroke()
           ctx.strokeStyle = '#ffffff'
@@ -1206,10 +1228,12 @@ export function Rocket3DCanvas({
         }
         ctx.restore()
       }
-    } finally {
-      ctx.restore()
+    } catch (e) {
+        /* prevent frame crash on mobile WebViews */
+      } finally {
+        ctx.restore()
+      }
     }
-  }
 
     animId = requestAnimationFrame(render)
     return () => cancelAnimationFrame(animId)

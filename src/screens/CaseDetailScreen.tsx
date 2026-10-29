@@ -331,6 +331,15 @@ export function CaseDetailScreen() {
               {/* Название */}
               <strong className={styles.rewardName}>{gift.name}</strong>
 
+              {/* Модель и фон (Backdrop) официального NFT с Fragment */}
+              {(gift.model || gift.backdrop) && (
+                <div className={styles.rewardModelBadge}>
+                  {gift.model && <span>{gift.model}</span>}
+                  {gift.model && gift.backdrop && <span className={styles.rewardModelDot}>·</span>}
+                  {gift.backdrop && <span>{gift.backdrop}</span>}
+                </div>
+              )}
+
               {/* Нижняя пилюля «Случайный» (как на фото) */}
               <div className={styles.rewardPill}>
                 <span>Случайный</span>

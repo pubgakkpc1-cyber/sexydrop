@@ -4,10 +4,10 @@
   gap: var(--space-2);
   padding: var(--space-2) var(--space-3);
   padding-top: calc(var(--space-2) + var(--safe-top));
-  background: rgba(14, 12, 22, 0.82);
+  background: rgba(12, 22, 18, 0.85);
   backdrop-filter: blur(24px) saturate(190%);
   -webkit-backdrop-filter: blur(24px) saturate(190%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(46, 213, 115, 0.16);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
   flex-shrink: 0;
   min-height: 60px;
@@ -75,23 +75,23 @@
   height: 15px;
 }
 
-/* Пилюля «Пополнить» из референса: светло-сиреневая, полностью скруглённая.
-   Двойной класс перекрывает фон варианта primary без !important. */
+/* Пилюля «Пополнить»: матовый светлый арбузно-зелёный */
 .depositBtn.depositBtn {
   height: 34px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #2ed573 0%, #10b981 100%);
   border: 1px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 14px rgba(46, 213, 115, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 700;
+  color: #0c1612;
   padding: 0 var(--space-3);
   transition: all var(--transition-fast);
 }
 
 .depositBtn.depositBtn:hover:not(:disabled) {
-  background: linear-gradient(135deg, #9d71ff 0%, #7579ff 100%);
-  box-shadow: 0 6px 18px rgba(139, 92, 246, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+  background: linear-gradient(135deg, #4ade80 0%, #2ed573 100%);
+  box-shadow: 0 6px 18px rgba(46, 213, 115, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.7);
   transform: translateY(-1px);
 }
 

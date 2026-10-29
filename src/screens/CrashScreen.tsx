@@ -21,7 +21,7 @@ import {
 } from '../lib/sound'
 import { getWebApp, getTelegramUser } from '../lib/telegram'
 import { BetSheet, LAST_CRASH_BET_KEY } from '../components/games/BetSheet'
-import { Rocket3DCanvas, ROCKET_SKINS } from '../components/games/Rocket3DCanvas'
+import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
   ChevronLeftIcon,
@@ -77,6 +77,66 @@ const COUNTDOWN_THEMES: Record<number, CountdownTheme> = {
   },
 }
 
+function ScreenStarfield() {
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas || typeof canvas.getContext !== 'function') return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    let animId: number
+    const dpr = Math.min(2, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)
+
+    const stars: Array<{ x: number; y: number; size: number; speed: number; opacity: number }> = []
+    const count = 85
+    const initW = typeof window !== 'undefined' ? window.innerWidth : 420
+    const initH = typeof window !== 'undefined' ? window.innerHeight : 840
+
+    for (let i = 0; i < count; i++) {
+      stars.push({
+        x: Math.random() * initW,
+        y: Math.random() * initH,
+        size: 0.8 + Math.random() * 2.2,
+        speed: 0.35 + Math.random() * 1.6,
+        opacity: 0.25 + Math.random() * 0.7,
+      })
+    }
+
+    const render = () => {
+      const w = window.innerWidth || 360
+      const h = window.innerHeight || 800
+      if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+        canvas.width = w * dpr
+        canvas.height = h * dpr
+      }
+      ctx.save()
+      ctx.scale(dpr, dpr)
+      ctx.clearRect(0, 0, w, h)
+
+      for (const s of stars) {
+        s.x -= s.speed
+        if (s.x < 0) {
+          s.x = w + Math.random() * 25
+          s.y = Math.random() * h
+        }
+        ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`
+        ctx.beginPath()
+        ctx.arc(s.x, s.y, s.size / 2, 0, Math.PI * 2)
+        ctx.fill()
+      }
+      ctx.restore()
+      animId = requestAnimationFrame(render)
+    }
+
+    animId = requestAnimationFrame(render)
+    return () => cancelAnimationFrame(animId)
+  }, [])
+
+  return <canvas ref={canvasRef} className={styles.screenStarfield} aria-hidden />
+}
+
 export function CrashScreen() {
   const navigate = useNavigate()
   const { phase, ticksLeft, multiplier, history, myBet, roundId } = useCrashStore()
@@ -103,39 +163,6 @@ export function CrashScreen() {
     return '0.1'
   })
 
-  // Скин ракеты и картунный NFT пилот Пепе (0: Chrono Titanium, 1: Emerald Viper, 2: Supernova 24K, auto: авто-ротация каждый раунд)
-  const [selectedSkin, setSelectedSkin] = useState<number | 'auto'>(() => {
-    try {
-      const saved = localStorage.getItem('sexydrop_crash_skin')
-      if (saved === '0' || saved === '1' || saved === '2') return Number(saved)
-    } catch {
-      // ignore
-    }
-    return 'auto'
-  })
-
-  const handleToggleSkin = () => {
-    setSelectedSkin((prev) => {
-      let next: number | 'auto'
-      if (prev === 'auto') next = 0
-      else if (prev === 0) next = 1
-      else if (prev === 1) next = 2
-      else next = 'auto'
-      try {
-        localStorage.setItem('sexydrop_crash_skin', String(next))
-      } catch {
-        // ignore
-      }
-      return next
-    })
-  }
-
-  const activeSkinIndex =
-    selectedSkin === 'auto'
-      ? Math.abs(roundId ?? 0) % ROCKET_SKINS.length
-      : selectedSkin
-  const activeSkin = ROCKET_SKINS[activeSkinIndex] ?? ROCKET_SKINS[0]!
-
   // Динамический фон арены по тирам множителя
   const bgTier = useMemo(() => {
     if (phase !== 'flying' && phase !== 'crashed') return 'cosmic'
@@ -145,19 +172,19 @@ export function CrashScreen() {
     return 'cosmic'
   }, [phase, multiplier])
 
-  // Плавный переход цвета и свечения множителя (Matte Blue & Gold & Purple)
+  // Плавный переход цвета и свечения множителя (Watermelon Green & Gold & Purple)
   const multColor = useMemo(() => {
     if (multiplier >= 10.0) return '#c084fc'
     if (multiplier >= 5.0) return '#ffd700'
-    if (multiplier >= 2.0) return '#38bdf8'
-    return '#f0f6fc'
+    if (multiplier >= 2.0) return '#2ed573'
+    return '#f0fdf4'
   }, [multiplier])
 
   const multGlow = useMemo(() => {
     if (multiplier >= 10.0) return '0 0 24px rgba(192, 132, 252, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
     if (multiplier >= 5.0) return '0 0 22px rgba(255, 215, 0, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 2.0) return '0 0 20px rgba(56, 189, 248, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    return '0 0 16px rgba(240, 246, 252, 0.4), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 2.0) return '0 0 20px rgba(46, 213, 115, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    return '0 0 16px rgba(240, 253, 244, 0.4), 0 2px 10px rgba(0, 0, 0, 0.8)'
   }, [multiplier])
 
   // Пул живых игроков раунда
@@ -365,7 +392,10 @@ export function CrashScreen() {
 
   return (
     <div className={styles.screen}>
-      {/* 1. Верхний чистый бар (убрана надпись SEXY DROP и звук по запросу) */}
+      {/* Фоновый звёздный космос на весь экран под всеми элементами */}
+      <ScreenStarfield />
+
+      {/* 1. Верхний чистый бар (без лишних квадратов, только Назад и Баланс) */}
       <div className={styles.topHeader}>
         <button
           type="button"
@@ -375,20 +405,6 @@ export function CrashScreen() {
         >
           <ChevronLeftIcon className={styles.backIcon} aria-hidden />
           <span className={styles.backText}>Назад</span>
-        </button>
-
-        {/* Селектор скина 3D ракеты и NFT пилота Пепе в центре шапки */}
-        <button
-          type="button"
-          className={styles.skinPill}
-          onClick={handleToggleSkin}
-          title="Сменить модель ракеты и картунного пилота Пепе"
-          aria-label={`Модель ракеты: ${activeSkin.nameRu}, пилот: ${activeSkin.pilotNameRu}`}
-        >
-          <RocketIcon className={styles.skinPillIcon} />
-          <span className={styles.skinPillText}>
-            {selectedSkin === 'auto' ? '⚡ ' : ''}{activeSkin.nameRu} · {activeSkin.pilotNameRu}
-          </span>
         </button>
 
         <div className={styles.headerRight}>
@@ -419,23 +435,18 @@ export function CrashScreen() {
 
       <h1 className={styles.srOnly}>Ракетка</h1>
 
-      {/* 3. Космическая Арена Полёта Ракеты (Клик в фазе ставок меняет скин) */}
+      {/* 3. Космическая Арена Полёта Ракеты */}
       <div
         className={styles.arena}
         data-phase={phase}
         data-tier={bgTier}
         aria-label="Арена полёта ракеты"
-        onClick={() => {
-          if (phase === 'betting') handleToggleSkin()
-        }}
-        title={phase === 'betting' ? 'Нажмите, чтобы сменить модель ракеты' : undefined}
       >
-        {/* Высокодетализированная 3D Ракета с NFT Plush Pepe и неоновой траекторией */}
+        {/* Высокодетализированная 3D Ракета с NFT Plush Pepe и неоновой траекторией (скины меняются автоматически каждый раунд) */}
         <Rocket3DCanvas
           phase={phase}
           multiplier={multiplier}
           roundId={roundId}
-          skinIndex={selectedSkin === 'auto' ? undefined : selectedSkin}
         />
 
         {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 */}

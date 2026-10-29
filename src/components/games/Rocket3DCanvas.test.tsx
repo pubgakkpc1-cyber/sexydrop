@@ -6,26 +6,26 @@ describe('Rocket3DCanvas (3D Rocket, SEXY decal & 3 NFT Plush Pepe pilots)', () 
   it('содержит ровно 3 уникальные модели ракеты и 3 вида NFT плюш Пепе', () => {
     expect(ROCKET_SKINS).toHaveLength(3)
 
-    // Модель 0: Хроно Титан + Пепе Кадет
+    // Модель 0: Хроно Арбуз + Пепе Кадет
     const skin0 = ROCKET_SKINS[0]!
-    expect(skin0.name).toBe('Chrono Titanium')
-    expect(skin0.nameRu).toBe('Хроно Титан')
+    expect(skin0.name).toBe('Chrono Watermelon')
+    expect(skin0.nameRu).toBe('Хроно Арбуз')
     expect(skin0.pilotNameRu).toBe('Пепе Кадет')
     expect(skin0.pilotType).toBe(0)
-    expect(skin0.decalSubtext).toBe('MK-I · TON')
+    expect(skin0.decalSubtext).toBe('SEXY · TON')
 
-    // Модель 1: Кибер Стелс + Кибер Пепе с визором
+    // Модель 1: Кибер Мелон + Кибер Пепе с визором
     const skin1 = ROCKET_SKINS[1]!
-    expect(skin1.name).toBe('Cyber Stealth')
-    expect(skin1.nameRu).toBe('Кибер Стелс')
+    expect(skin1.name).toBe('Cyber Melon')
+    expect(skin1.nameRu).toBe('Кибер Мелон')
     expect(skin1.pilotNameRu).toBe('Кибер Пепе')
     expect(skin1.pilotType).toBe(1)
-    expect(skin1.decalSubtext).toBe('CYBER · 99')
+    expect(skin1.decalSubtext).toBe('MELON · 99')
 
-    // Модель 2: Сапфир 24K + Король Пепе в золотой короне
+    // Модель 2: Империал 24K + Король Пепе в золотой короне
     const skin2 = ROCKET_SKINS[2]!
-    expect(skin2.name).toBe('Royal Sapphire')
-    expect(skin2.nameRu).toBe('Сапфир 24K')
+    expect(skin2.name).toBe('Royal Emerald')
+    expect(skin2.nameRu).toBe('Империал 24K')
     expect(skin2.pilotNameRu).toBe('Король Пепе')
     expect(skin2.pilotType).toBe(2)
     expect(skin2.decalSubtext).toBe('ROYAL · VIP')

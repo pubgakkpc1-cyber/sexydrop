@@ -1,9 +1,9 @@
 .nav {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  background: #0d0d12;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  background: #0c1612;
+  border-top: 1px solid rgba(46, 213, 115, 0.16);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.45);
   padding-bottom: var(--safe-bottom);
   flex-shrink: 0;
   position: relative;
@@ -34,9 +34,9 @@
   max-width: 66px;
   height: 52px;
   border-radius: 14px;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  background: rgba(46, 213, 115, 0.14);
+  border: 1px solid rgba(46, 213, 115, 0.32);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(123, 237, 159, 0.2);
 }
 
 .tab {
@@ -46,7 +46,7 @@
   align-items: center;
   justify-content: center;
   height: 60px;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(240, 253, 244, 0.45);
   text-decoration: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -97,15 +97,17 @@
 
 /* Активная вкладка */
 .active {
-  color: #ffffff;
+  color: var(--accent);
 }
 
 .active .icon {
-  transform: scale(1.06);
+  transform: scale(1.08);
+  filter: drop-shadow(0 2px 8px rgba(46, 213, 115, 0.4));
 }
 
 .active .tabLabel {
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--accent);
 }
 
 /* Бейдж количества предметов в инвентаре */

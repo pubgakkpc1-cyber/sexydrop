@@ -36,6 +36,26 @@ export interface CrashState {
 }
 
 export const MAX_HISTORY = 12
+export const CRASH_HISTORY_KEY = 'sexydrop_crash_history'
+
+export const DEFAULT_CRASH_HISTORY = [2.75, 1.42, 5.18, 1.15, 3.84, 1.08, 12.40, 2.15, 1.63, 4.22, 1.95, 8.50]
+
+export function loadInitialCrashHistory(): number[] {
+  if (typeof window === 'undefined') return DEFAULT_CRASH_HISTORY
+  try {
+    const saved = localStorage.getItem(CRASH_HISTORY_KEY)
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        const valid = parsed.map(Number).filter((n) => !isNaN(n) && n >= 1)
+        if (valid.length > 0) return valid.slice(0, MAX_HISTORY)
+      }
+    }
+  } catch {
+    // fallback
+  }
+  return DEFAULT_CRASH_HISTORY
+}
 
 /**
  * Состояние краш-игры «Ракетка». В Demo Mode фазы и исходы генерирует локальный
@@ -48,6 +68,6 @@ export const useCrashStore = create<CrashState>(() => ({
   ticksLeft: 100, // 5 секунд обратного отсчёта (100 тиков по 50мс)
   multiplier: 1,
   crashPoint: null,
-  history: [],
+  history: loadInitialCrashHistory(),
   myBet: null,
 }))

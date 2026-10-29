@@ -205,12 +205,16 @@ function tick(): void {
           detail: `краш x${crash.toFixed(2)}`,
         })
       }
+      const updatedHistory = [crash, ...s.history].slice(0, MAX_HISTORY)
+      try {
+        localStorage.setItem('sexydrop_crash_history', JSON.stringify(updatedHistory))
+      } catch {}
       useCrashStore.setState({
         phase: 'crashed',
         multiplier: crash,
         crashPoint: crash,
         ticksLeft: CRASHED_TICKS,
-        history: [crash, ...s.history].slice(0, MAX_HISTORY),
+        history: updatedHistory,
         myBet,
       })
     } else {

@@ -4,36 +4,36 @@
  */
 
 :root {
-  /* --- Цвета: поверхности (Премиальный матовый серый Matte Graphite & Slate) --- */
-  --bg: #0d1117;
-  --card: #161b22;
-  --surface: #1c2128;
-  --modal: #161b22;
-  --surface-3: #21262d;
-  --tile: #161b22;
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(59, 130, 246, 0.35);
+  /* --- Цвета: поверхности (Премиальный матовый серый с арбузным оттенком) --- */
+  --bg: #0c1612;
+  --card: #12221b;
+  --surface: #172c23;
+  --modal: #12221b;
+  --surface-3: #1d362b;
+  --tile: #0f1c16;
+  --border: rgba(46, 213, 115, 0.16);
+  --border-strong: rgba(46, 213, 115, 0.38);
 
   /* --- Цвета: текст --- */
-  --text: #f0f6fc;
-  --text-muted: #8b949e;
-  --text-faint: #6e7681;
+  --text: #f0fdf4;
+  --text-muted: #8ba89a;
+  --text-faint: #5d7a6e;
 
-  /* --- Цвета: акценты (Премиальный матовый синий Matte Electric Blue) --- */
-  --accent: #3b82f6;
-  --accent-strong: #2563eb;
-  --accent-vivid: #60a5fa;
-  --accent-contrast: #ffffff;
+  /* --- Цвета: акценты (Светлый матовый зелёный как арбуз #2ed573 / #4ade80) --- */
+  --accent: #2ed573;
+  --accent-strong: #26af5f;
+  --accent-vivid: #4ade80;
+  --accent-contrast: #0c1612;
 
-  /* Матовая синяя градиентная CTA («Сделать ставку», «Забрать выигрыш») */
-  --cta-from: #2563eb;
-  --cta-to: #1d4ed8;
-  --cta-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-  --gram: #38bdf8;
-  --price-blue: #38bdf8;
-  --price-indigo: #3b82f6;
-  --price-green: #38bdf8;
-  --success: #3b82f6;
+  /* Матовая арбузно-зелёная градиентная CTA («Сделать ставку», «Забрать выигрыш») */
+  --cta-from: #2ed573;
+  --cta-to: #10b981;
+  --cta-gradient: linear-gradient(135deg, #2ed573 0%, #10b981 100%);
+  --gram: #2ed573;
+  --price-blue: #2ed573;
+  --price-indigo: #2ed573;
+  --price-green: #2ed573;
+  --success: #2ed573;
   --danger: #ef4444;
   --danger-strong: #dc2626;
   --gold: #d4af37;
@@ -42,20 +42,17 @@
   --orange-deep: #ea580c;
 
   /* --- Цвета: редкости (каталог подарков) --- */
-  --rarity-common: #8b949e;
-  --rarity-rare: #3b82f6;
+  --rarity-common: #8ba89a;
+  --rarity-rare: #2ed573;
   --rarity-epic: #a855f7;
   --rarity-legendary: #d4af37;
 
-  /* --- Matte Gray & Matte Blue Palette --- */
-  --matte-bg: #0d1117;
-  --matte-card: #161b22;
-  --matte-card-elevated: #1c2128;
-  --matte-blue: #3b82f6;
-  --matte-blue-glow: rgba(59, 130, 246, 0.35);
-  --matte-blue-light: #60a5fa;
-  --matte-gray-border: rgba(255, 255, 255, 0.08);
-  --matte-gray-glass: rgba(22, 27, 34, 0.78);
+  /* --- Light Matte Watermelon Green Palette --- */
+  --watermelon-green: #2ed573;
+  --watermelon-glow: rgba(46, 213, 115, 0.4);
+  --watermelon-mint: #7bed9f;
+  --watermelon-dark: #10b981;
+  --watermelon-glass: rgba(18, 34, 27, 0.78);
 
   /* --- Отступы (шкала 4px) --- */
   --space-1: 4px;

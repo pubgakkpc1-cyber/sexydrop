@@ -36,6 +36,19 @@ interface ExplosionParticle {
   angle: number
 }
 
+interface DebrisShard {
+  type: 'nose' | 'wing_top' | 'wing_bot' | 'canopy' | 'fuselage_shard' | 'nozzle' | 'pepe_bubble'
+  x: number
+  y: number
+  vx: number
+  vy: number
+  angle: number
+  spin: number
+  alpha: number
+  life: number
+  maxLife: number
+}
+
 export interface RocketSkinConfig {
   id: number
   name: string
@@ -141,6 +154,7 @@ interface Rocket3DCanvasProps {
   multiplier: number
   roundId?: number
   skinIndex?: number
+  fullscreen?: boolean
   className?: string
 }
 
@@ -149,16 +163,17 @@ export function Rocket3DCanvas({
   multiplier,
   roundId,
   skinIndex,
+  fullscreen = true,
   className,
 }: Rocket3DCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const prevPhaseRef = useRef<CrashPhase>(phase)
 
   // Держим свежие пропсы для цикла анимации
-  const propsRef = useRef({ phase, multiplier, roundId, skinIndex })
+  const propsRef = useRef({ phase, multiplier, roundId, skinIndex, fullscreen })
   useEffect(() => {
-    propsRef.current = { phase, multiplier, roundId, skinIndex }
-  }, [phase, multiplier, roundId, skinIndex])
+    propsRef.current = { phase, multiplier, roundId, skinIndex, fullscreen }
+  }, [phase, multiplier, roundId, skinIndex, fullscreen])
 
   // Внутреннее состояние анимации
   const stateRef = useRef<{
@@ -167,6 +182,7 @@ export function Rocket3DCanvas({
     stars: Star[]
     trail: TrailParticle[]
     explosion: ExplosionParticle[]
+    debris: DebrisShard[]
     shockwaveRadius: number
     shockwaveAlpha: number
     flashAlpha: number
@@ -177,23 +193,24 @@ export function Rocket3DCanvas({
     stars: [],
     trail: [],
     explosion: [],
+    debris: [],
     shockwaveRadius: 0,
     shockwaveAlpha: 0,
     flashAlpha: 0,
     rocketPos: { x: 0, y: 0, angle: 0 },
   })
 
-  // Инициализация фоновых звёзд (Starfield)
+  // Инициализация фоновых звёзд по всему экрану (Starfield)
   useEffect(() => {
     const stars: Star[] = []
-    const count = 75
+    const count = 90
     for (let i = 0; i < count; i++) {
       const layer = Math.random() < 0.6 ? 1 : Math.random() < 0.85 ? 2 : 3
       stars.push({
-        x: Math.random() * 1000,
-        y: Math.random() * 600,
+        x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+        y: Math.random() * (typeof window !== 'undefined' ? window.innerHeight : 900),
         size: layer === 1 ? 1 + Math.random() : layer === 2 ? 1.8 + Math.random() : 2.8 + Math.random() * 1.5,
-        speed: layer === 1 ? 0.4 + Math.random() * 0.3 : layer === 2 ? 1.2 + Math.random() * 0.6 : 2.5 + Math.random() * 1.2,
+        speed: layer === 1 ? 0.35 + Math.random() * 0.25 : layer === 2 ? 1.0 + Math.random() * 0.5 : 2.2 + Math.random() * 1.1,
         opacity: layer === 1 ? 0.35 + Math.random() * 0.3 : layer === 2 ? 0.6 + Math.random() * 0.3 : 0.85 + Math.random() * 0.15,
         layer,
       })
@@ -201,40 +218,149 @@ export function Rocket3DCanvas({
     stateRef.current.stars = stars
   }, [])
 
-  // Триггер взрыва при переходе в crashed
+  // Триггер взрыва и распада ракеты на кусочки при переходе в crashed
   useEffect(() => {
     if (prevPhaseRef.current !== 'crashed' && phase === 'crashed') {
       const state = stateRef.current
       const rx = state.rocketPos.x || 300
       const ry = state.rocketPos.y || 200
 
-      state.shake = 18 // амплитуда тряски
-      state.flashAlpha = 0.85 // вспышка
-      state.shockwaveRadius = 15
+      state.shake = 22 // амплитуда тряски
+      state.flashAlpha = 0.9 // вспышка взрыва
+      state.shockwaveRadius = 16
       state.shockwaveAlpha = 1.0
 
-      // Создаём 55 частиц взрыва
+      // 1. Создаём частицы огненного взрыва
       const exp: ExplosionParticle[] = []
-      const colors = ['#ffffff', '#38bdf8', '#00ff88', '#fbbf24', '#ef4444', '#fb923c']
-      for (let i = 0; i < 55; i++) {
+      const colors = ['#ffffff', '#00ff88', '#38bdf8', '#fbbf24', '#ef4444', '#fb923c']
+      for (let i = 0; i < 65; i++) {
         const angle = Math.random() * Math.PI * 2
-        const speed = 2 + Math.random() * 9
-        const maxLife = 40 + Math.floor(Math.random() * 35)
+        const speed = 2.5 + Math.random() * 10
+        const maxLife = 40 + Math.floor(Math.random() * 40)
         exp.push({
           x: rx,
           y: ry,
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
-          size: 3 + Math.random() * 6,
+          size: 3 + Math.random() * 7,
           alpha: 1,
           color: colors[Math.floor(Math.random() * colors.length)] ?? '#fbbf24',
           life: 0,
           maxLife,
-          spin: (Math.random() - 0.5) * 0.3,
+          spin: (Math.random() - 0.5) * 0.35,
           angle: Math.random() * Math.PI * 2,
         })
       }
       state.explosion = exp
+
+      // 2. Создаём РАЗЛЕТАЮЩИЕСЯ КУСКИ РАКЕТЫ (Debris Shards):
+      // Носовой конус, дельта-крылья, стекло кабины, сопло, обшивка с надписью SEXY, и капсула с Пепе!
+      const debris: DebrisShard[] = [
+        // Носовой конус — летит вперед и вверх
+        {
+          type: 'nose',
+          x: rx + 25,
+          y: ry - 4,
+          vx: 4.5 + Math.random() * 2.5,
+          vy: -5.5 - Math.random() * 2.5,
+          angle: 0.2,
+          spin: 0.14,
+          alpha: 1,
+          life: 0,
+          maxLife: 80,
+        },
+        // Верхнее крыло — взлетает вверх
+        {
+          type: 'wing_top',
+          x: rx - 10,
+          y: ry - 18,
+          vx: -2 + Math.random() * 2,
+          vy: -7 - Math.random() * 2.5,
+          angle: -0.4,
+          spin: -0.16,
+          alpha: 1,
+          life: 0,
+          maxLife: 75,
+        },
+        // Нижнее крыло — отлетает вниз
+        {
+          type: 'wing_bot',
+          x: rx - 10,
+          y: ry + 16,
+          vx: -1.5 + Math.random() * 2,
+          vy: 6 + Math.random() * 3,
+          angle: 0.5,
+          spin: 0.18,
+          alpha: 1,
+          life: 0,
+          maxLife: 75,
+        },
+        // Осколок стекла фонаря кабины
+        {
+          type: 'canopy',
+          x: rx + 8,
+          y: ry - 10,
+          vx: 2.2 + Math.random() * 2.5,
+          vy: -4 - Math.random() * 2,
+          angle: 0.1,
+          spin: 0.22,
+          alpha: 1,
+          life: 0,
+          maxLife: 70,
+        },
+        // Титановое сопло двигателя — отлетает назад
+        {
+          type: 'nozzle',
+          x: rx - 35,
+          y: ry,
+          vx: -6.5 - Math.random() * 2.5,
+          vy: -1 + Math.random() * 3,
+          angle: -0.2,
+          spin: -0.12,
+          alpha: 1,
+          life: 0,
+          maxLife: 85,
+        },
+        // Обломки обшивки фюзеляжа с маркировкой
+        {
+          type: 'fuselage_shard',
+          x: rx - 5,
+          y: ry + 5,
+          vx: -3 + Math.random() * 3,
+          vy: -3.5 + Math.random() * 4,
+          angle: 0,
+          spin: 0.15,
+          alpha: 1,
+          life: 0,
+          maxLife: 70,
+        },
+        {
+          type: 'fuselage_shard',
+          x: rx - 15,
+          y: ry - 5,
+          vx: 3 + Math.random() * 2,
+          vy: 3 + Math.random() * 3,
+          angle: 0.8,
+          spin: -0.2,
+          alpha: 1,
+          life: 0,
+          maxLife: 70,
+        },
+        // Спасательная капсула с картунным Пепе!
+        {
+          type: 'pepe_bubble',
+          x: rx,
+          y: ry - 14,
+          vx: 1.2 + Math.random() * 2,
+          vy: -6 - Math.random() * 2,
+          angle: 0,
+          spin: 0.08,
+          alpha: 1,
+          life: 0,
+          maxLife: 95,
+        },
+      ]
+      state.debris = debris
     }
     prevPhaseRef.current = phase
   }, [phase])
@@ -265,9 +391,14 @@ export function Rocket3DCanvas({
           : Math.abs(currentProps.roundId ?? 0) % ROCKET_SKINS.length
       const skin = ROCKET_SKINS[activeSkinIndex] ?? ROCKET_SKINS[0]!
 
-      const width = canvas.clientWidth || 360
-      const height = canvas.clientHeight || 280
-      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      // Размеры холста (при fullscreen — на всё окно экрана)
+      const width = currentProps.fullscreen && typeof window !== 'undefined'
+        ? window.innerWidth
+        : (canvas.clientWidth || 360)
+      const height = currentProps.fullscreen && typeof window !== 'undefined'
+        ? window.innerHeight
+        : (canvas.clientHeight || 280)
+      const dpr = Math.min(2, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)
 
       if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
         canvas.width = width * dpr
@@ -293,9 +424,9 @@ export function Rocket3DCanvas({
       // Очистка холста
       ctx.clearRect(-20, -20, width + 40, height + 40)
 
-      // --- 1. Пролетающие фоновые звёзды (Starfield с эффектом скорости) ---
+      // --- 1. Пролетающие фоновые звёзды ПО ВСЕМУ ЭКРАНУ (Starfield) ---
       const flightSpeedFactor =
-        currentPhase === 'flying' ? Math.min(6, 1.2 + Math.log2(currentMult) * 1.5) : 0.6
+        currentPhase === 'flying' ? Math.min(6.5, 1.2 + Math.log2(currentMult) * 1.6) : 0.65
 
       ctx.save()
       for (const star of state.stars) {
@@ -325,10 +456,11 @@ export function Rocket3DCanvas({
       }
       ctx.restore()
 
-      // Позиция ракеты на арене
+      // Позиция ракеты в верхней зоне арены полёта
       const progress = Math.min(1, Math.max(0, Math.log2(currentMult) / 2.8))
-      const targetX = width * (0.32 + progress * 0.22)
-      const targetY = height * (0.58 - progress * 0.08)
+      const targetX = width * (0.34 + progress * 0.22)
+      const arenaYCenter = currentProps.fullscreen ? Math.min(height * 0.35, 240) : height * 0.55
+      const targetY = arenaYCenter - progress * 16
 
       // Плавное парение (аэродинамическое покачивание)
       const hoverY = Math.sin(state.time * 4) * 4
@@ -361,7 +493,7 @@ export function Rocket3DCanvas({
             vy: Math.sin(pAngle) * pSpeed,
             size: 4 + Math.random() * 5,
             alpha: 0.9,
-            color: skin.trailColors[Math.floor(Math.random() * skin.trailColors.length)] ?? '#38bdf8',
+            color: skin.trailColors[Math.floor(Math.random() * skin.trailColors.length)] ?? '#00ff88',
             life: 0,
             maxLife: 28 + Math.floor(Math.random() * 18),
           })
@@ -393,7 +525,7 @@ export function Rocket3DCanvas({
       }
       ctx.restore()
 
-      // --- 3. Отрисовка высокодетализированной 3D Ракеты с NFT Plush Pepe ---
+      // --- 3. Отрисовка высокодетализированной 3D Ракеты с NFT Plush Pepe (в полёте) ---
       if (currentPhase === 'flying') {
         ctx.save()
         ctx.translate(currentX, currentY)
@@ -453,7 +585,6 @@ export function Rocket3DCanvas({
         ctx.stroke()
 
         // 3.3. 3D Дельта-Крылья ракеты (Aerospace Delta Wings)
-        // Нижнее (дальнее) крыло
         ctx.fillStyle = skin.wingFill[1]
         ctx.strokeStyle = skin.wingBorder
         ctx.lineWidth = 1.2
@@ -465,7 +596,6 @@ export function Rocket3DCanvas({
         ctx.fill()
         ctx.stroke()
 
-        // Верхнее (ближнее) крыло с градиентом и отсветом
         const wingGrad = ctx.createLinearGradient(-24, -8, -46, -38)
         wingGrad.addColorStop(0, skin.wingFill[0])
         wingGrad.addColorStop(1, skin.wingFill[1])
@@ -480,7 +610,6 @@ export function Rocket3DCanvas({
         ctx.fill()
         ctx.stroke()
 
-        // Габаритный неоновый маркер на конце крыла
         ctx.fillStyle = skin.wingtipLight
         ctx.shadowColor = skin.wingtipLight
         ctx.shadowBlur = 8
@@ -504,15 +633,14 @@ export function Rocket3DCanvas({
         ctx.lineWidth = 1.4
 
         ctx.beginPath()
-        ctx.moveTo(56, 0) // Нос
-        ctx.bezierCurveTo(45, -19, 10, -22, -50, -16) // Верхняя дуга
-        ctx.lineTo(-50, 16) // Корма
-        ctx.bezierCurveTo(10, 22, 45, 19, 56, 0) // Нижняя дуга
+        ctx.moveTo(56, 0)
+        ctx.bezierCurveTo(45, -19, 10, -22, -50, -16)
+        ctx.lineTo(-50, 16)
+        ctx.bezierCurveTo(10, 22, 45, 19, 56, 0)
         ctx.closePath()
         ctx.fill()
         ctx.stroke()
 
-        // Аэродинамические швы и обшивка фюзеляжа
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)'
         ctx.lineWidth = 0.8
         ctx.beginPath()
@@ -525,7 +653,6 @@ export function Rocket3DCanvas({
         ctx.bezierCurveTo(-14, -5, -14, 5, -16, 20)
         ctx.stroke()
 
-        // Неоновая кибер-полоса вдоль борта
         ctx.strokeStyle = skin.accentColor
         ctx.lineWidth = 2.2
         ctx.shadowColor = skin.accentGlow
@@ -537,41 +664,33 @@ export function Rocket3DCanvas({
         ctx.shadowBlur = 0
 
         // 3.5. Реалистичная надпись "SEXY" (Aerospace Stencil Decal)
-        // Небольшая, стильная, аэрокосмическая маркировка на борту
         ctx.save()
-        // Металлическая подложка для читаемости
         ctx.fillStyle = 'rgba(0, 0, 0, 0.45)'
         ctx.beginPath()
         ctx.roundRect(-30, 2.5, 34, 12.5, 2.5)
         ctx.fill()
 
-        // Тень от букв (вдавленный эффект тиснения)
         ctx.font = "900 10px 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Inter', sans-serif"
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'
         ctx.fillText('SEXY', -13, 8.8)
 
-        // Основной текст SEXY в цвете обшивки скина
         ctx.fillStyle = skin.decalColor
         ctx.fillText('SEXY', -13, 7.8)
 
-        // Микро-маркировка под надписью (реализм аэрокосмического корабля)
         ctx.font = "700 3.8px -apple-system, BlinkMacSystemFont, sans-serif"
         ctx.fillStyle = skin.accentColor
         ctx.fillText(skin.decalSubtext, -13, 12.6)
         ctx.restore()
 
-        // 3.6. Пилот: Картунный NFT Plush Pepe внутри кабины
-        // Приборная панель и руль
+        // 3.6. Пилот: Мультяшный NFT Plush Pepe в кабине
         ctx.save()
-        // Внутренний интерьер кабины
         ctx.fillStyle = '#090d16'
         ctx.beginPath()
         ctx.ellipse(12, -7, 18, 9, 0, 0, Math.PI * 2)
         ctx.fill()
 
-        // Миниатюрные светящиеся датчики телеметрии кабины
         ctx.fillStyle = '#10b981'
         ctx.beginPath()
         ctx.arc(24, -3, 1.2, 0, Math.PI * 2)
@@ -585,7 +704,6 @@ export function Rocket3DCanvas({
         ctx.arc(20, -3, 1.2, 0, Math.PI * 2)
         ctx.fill()
 
-        // Штурвал управления полетом
         ctx.strokeStyle = '#475569'
         ctx.lineWidth = 1.4
         ctx.beginPath()
@@ -593,14 +711,11 @@ export function Rocket3DCanvas({
         ctx.lineTo(23, -2)
         ctx.stroke()
 
-        // Картунный NFT Плюш Пепе (строго мультяшный NFT стиль)
         const pepeBob = Math.sin(state.time * 6.5) * 0.7
         const px = 12
         const py = -9 + pepeBob
 
-        // Туловище / костюм пилота
         if (skin.pilotType === 0) {
-          // Космонавт Пепе: белый скафандр с бирюзовым воротником
           ctx.fillStyle = '#e2e8f0'
           ctx.beginPath()
           ctx.ellipse(px + 2, py + 7, 9, 5, 0, 0, Math.PI * 2)
@@ -610,7 +725,6 @@ export function Rocket3DCanvas({
           ctx.ellipse(px + 2, py + 4.5, 6, 2, 0, 0, Math.PI * 2)
           ctx.fill()
         } else if (skin.pilotType === 1) {
-          // Киберпанк Пепе: темный кибер-комбинезон с неоновыми швами
           ctx.fillStyle = '#0f172a'
           ctx.beginPath()
           ctx.ellipse(px + 2, py + 7, 9, 5, 0, 0, Math.PI * 2)
@@ -622,7 +736,6 @@ export function Rocket3DCanvas({
           ctx.lineTo(px + 8, py + 7)
           ctx.stroke()
         } else {
-          // Королевский Пепе: фиолетовая королевская мантия с золотом
           ctx.fillStyle = '#581c87'
           ctx.beginPath()
           ctx.ellipse(px + 2, py + 7, 9, 5, 0, 0, Math.PI * 2)
@@ -633,14 +746,12 @@ export function Rocket3DCanvas({
           ctx.fill()
         }
 
-        // Лапки Пепе держат штурвал
         ctx.fillStyle = '#4ade80'
         ctx.beginPath()
         ctx.arc(px + 4, py + 5.5, 2.2, 0, Math.PI * 2)
         ctx.arc(px + 10, py + 5.5, 2.2, 0, Math.PI * 2)
         ctx.fill()
 
-        // Голова Плюш Пепе (картунная форма лягушонка)
         const headGrad = ctx.createLinearGradient(px - 8, py - 8, px + 8, py + 6)
         if (skin.pilotType === 2) {
           headGrad.addColorStop(0, '#34d399')
@@ -658,13 +769,11 @@ export function Rocket3DCanvas({
         ctx.fill()
         ctx.stroke()
 
-        // Нижняя губа/щеки Пепе (характерная светлая область)
         ctx.fillStyle = '#86efac'
         ctx.beginPath()
         ctx.ellipse(px + 1, py + 2.6, 6.2, 2.6, 0, 0, Math.PI * 2)
         ctx.fill()
 
-        // Фирменная улыбка Пепе
         ctx.strokeStyle = '#14532d'
         ctx.lineWidth = 1.1
         ctx.beginPath()
@@ -672,7 +781,6 @@ export function Rocket3DCanvas({
         ctx.quadraticCurveTo(px, py + 4.2, px + 5, py + 2.0)
         ctx.stroke()
 
-        // Плюшевый декоративный шов (NFT Plush seam)
         ctx.strokeStyle = 'rgba(20, 83, 45, 0.45)'
         ctx.lineWidth = 0.7
         ctx.beginPath()
@@ -682,9 +790,7 @@ export function Rocket3DCanvas({
         ctx.lineTo(px - 4, py - 0.5)
         ctx.stroke()
 
-        // Большие картунные глаза Пепе
         const drawCartoonEye = (ex: number, ey: number) => {
-          // Белок глаза
           ctx.fillStyle = '#ffffff'
           ctx.strokeStyle = '#14532d'
           ctx.lineWidth = 0.8
@@ -693,19 +799,16 @@ export function Rocket3DCanvas({
           ctx.fill()
           ctx.stroke()
 
-          // Зрачок (смотрит вперед-вверх на полет)
           ctx.fillStyle = '#0f172a'
           ctx.beginPath()
           ctx.arc(ex + 1.0, ey - 0.5, 1.8, 0, Math.PI * 2)
           ctx.fill()
 
-          // Блик в глазу (мультяшная искра)
           ctx.fillStyle = '#ffffff'
           ctx.beginPath()
           ctx.arc(ex + 0.5, ey - 1.2, 0.8, 0, Math.PI * 2)
           ctx.fill()
 
-          // Верхнее зеленое веко
           ctx.fillStyle = '#16a34a'
           ctx.beginPath()
           ctx.arc(ex, ey - 1.8, 3.2, Math.PI, Math.PI * 2)
@@ -715,9 +818,7 @@ export function Rocket3DCanvas({
         drawCartoonEye(px - 2.8, py - 3.8)
         drawCartoonEye(px + 3.6, py - 3.8)
 
-        // 3 ОСОБЫХ АТРИБУТА ПИЛОТОВ:
         if (skin.pilotType === 0) {
-          // Пилот 0: Классический кадет — авиагарнитура с синим огоньком
           ctx.fillStyle = '#38bdf8'
           ctx.beginPath()
           ctx.arc(px - 6.5, py - 1.5, 1.8, 0, Math.PI * 2)
@@ -726,7 +827,6 @@ export function Rocket3DCanvas({
           ctx.lineWidth = 0.6
           ctx.stroke()
         } else if (skin.pilotType === 1) {
-          // Пилот 1: Киберпанк Пепе — светящийся неоновый визор на глазах
           ctx.save()
           ctx.fillStyle = 'rgba(0, 255, 136, 0.82)'
           ctx.strokeStyle = '#00ff88'
@@ -738,7 +838,6 @@ export function Rocket3DCanvas({
           ctx.fill()
           ctx.stroke()
 
-          // Диагональный блик на кибер-визоре
           ctx.strokeStyle = '#ffffff'
           ctx.lineWidth = 1.2
           ctx.beginPath()
@@ -746,7 +845,6 @@ export function Rocket3DCanvas({
           ctx.lineTo(px + 2, py - 5.6)
           ctx.stroke()
 
-          // Микрофон пилота
           ctx.strokeStyle = '#64748b'
           ctx.lineWidth = 1.0
           ctx.beginPath()
@@ -755,7 +853,6 @@ export function Rocket3DCanvas({
           ctx.stroke()
           ctx.restore()
         } else {
-          // Пилот 2: Король Пепе — миниатюрная 24K золотая корона с рубином
           ctx.save()
           const crownGrad = ctx.createLinearGradient(px - 5, py - 12, px + 5, py - 7)
           crownGrad.addColorStop(0, '#ffd700')
@@ -764,20 +861,18 @@ export function Rocket3DCanvas({
           ctx.strokeStyle = '#78350f'
           ctx.lineWidth = 0.8
 
-          // 3 зубца золотой короны
           ctx.beginPath()
           ctx.moveTo(px - 4.5, py - 7.5)
-          ctx.lineTo(px - 5.5, py - 12.5) // Левый зубец
+          ctx.lineTo(px - 5.5, py - 12.5)
           ctx.lineTo(px - 1.5, py - 9.5)
-          ctx.lineTo(px + 0.5, py - 14.0) // Центральный высокий зубец
+          ctx.lineTo(px + 0.5, py - 14.0)
           ctx.lineTo(px + 2.5, py - 9.5)
-          ctx.lineTo(px + 6.0, py - 12.5) // Правый зубец
+          ctx.lineTo(px + 6.0, py - 12.5)
           ctx.lineTo(px + 5.0, py - 7.5)
           ctx.closePath()
           ctx.fill()
           ctx.stroke()
 
-          // Рубиновый камень в центре короны
           ctx.fillStyle = '#ef4444'
           ctx.beginPath()
           ctx.arc(px + 0.5, py - 9.8, 1.4, 0, Math.PI * 2)
@@ -790,7 +885,7 @@ export function Rocket3DCanvas({
         }
         ctx.restore()
 
-        // 3.7. Стекло фонаря кабины (Cockpit Glass Canopy с реалистичными бликами поверх Пепе)
+        // 3.7. Стекло фонаря кабины
         const canopyGrad = ctx.createLinearGradient(6, -18, 22, 2)
         canopyGrad.addColorStop(0, skin.canopyGradient[0])
         canopyGrad.addColorStop(0.5, skin.canopyGradient[1])
@@ -808,7 +903,6 @@ export function Rocket3DCanvas({
         ctx.fill()
         ctx.stroke()
 
-        // Световые изогнутые блики на стекле (Apple Liquid Glass Specular Glare)
         ctx.strokeStyle = skin.canopyReflection
         ctx.lineWidth = 1.6
         ctx.beginPath()
@@ -821,7 +915,6 @@ export function Rocket3DCanvas({
         ctx.ellipse(23, -8, 5, 1.8, -0.28, Math.PI * 0.8, Math.PI * 1.8)
         ctx.stroke()
 
-        // Заклепки на титановом ободе фонаря
         ctx.fillStyle = skin.accentColor
         ctx.beginPath()
         ctx.arc(-3, -3.5, 0.9, 0, Math.PI * 2)
@@ -832,32 +925,150 @@ export function Rocket3DCanvas({
         ctx.restore()
       }
 
-      // --- 4. Анимация Взрыва при Crash (Shockwave & Debris) ---
+      // --- 4. Анимация Взрыва и Разлетающихся Обломков Ракеты (Crash Debris & Shatter) ---
       if (currentPhase === 'crashed') {
         const rx = state.rocketPos.x || width / 2
-        const ry = state.rocketPos.y || height / 2
+        const ry = state.rocketPos.y || (currentProps.fullscreen ? Math.min(height * 0.35, 240) : height / 2)
 
+        // Вспышка взрыва
         if (state.flashAlpha > 0.01) {
-          ctx.fillStyle = `rgba(255, 255, 255, ${state.flashAlpha * 0.4})`
+          ctx.fillStyle = `rgba(255, 255, 255, ${state.flashAlpha * 0.45})`
           ctx.fillRect(-20, -20, width + 40, height + 40)
           state.flashAlpha *= 0.88
         }
 
+        // Ударная волна взрыва (Shockwave Ring)
         if (state.shockwaveAlpha > 0.02) {
           ctx.save()
           ctx.strokeStyle = `rgba(239, 68, 68, ${state.shockwaveAlpha})`
           ctx.lineWidth = 3
           ctx.shadowColor = '#ef4444'
-          ctx.shadowBlur = 12
+          ctx.shadowBlur = 14
           ctx.beginPath()
           ctx.arc(rx, ry, state.shockwaveRadius, 0, Math.PI * 2)
           ctx.stroke()
           ctx.restore()
 
-          state.shockwaveRadius += 4.5
+          state.shockwaveRadius += 5
           state.shockwaveAlpha *= 0.92
         }
 
+        // 4.1. Отрисовка разлетающихся обломков ракеты (Debris Shatter)
+        ctx.save()
+        for (let i = state.debris.length - 1; i >= 0; i--) {
+          const d = state.debris[i]!
+          d.life++
+          d.x += d.vx
+          d.y += d.vy
+          d.vy += 0.16 // гравитация
+          d.vx *= 0.985 // сопротивление
+          d.angle += d.spin
+          d.alpha = Math.max(0, 1 - d.life / d.maxLife)
+
+          if (d.life >= d.maxLife || d.alpha <= 0.02) {
+            state.debris.splice(i, 1)
+            continue
+          }
+
+          ctx.save()
+          ctx.translate(d.x, d.y)
+          ctx.rotate(d.angle)
+          ctx.globalAlpha = d.alpha
+
+          if (d.type === 'nose') {
+            // Металлический носовой конус
+            ctx.fillStyle = skin.hullGradient[1]
+            ctx.strokeStyle = skin.hullBorder
+            ctx.lineWidth = 1.2
+            ctx.beginPath()
+            ctx.moveTo(18, 0)
+            ctx.lineTo(-8, -9)
+            ctx.lineTo(-8, 9)
+            ctx.closePath()
+            ctx.fill()
+            ctx.stroke()
+          } else if (d.type === 'wing_top' || d.type === 'wing_bot') {
+            // Оторванное дельта-крыло с неоновым огоньком
+            ctx.fillStyle = skin.wingFill[0]
+            ctx.strokeStyle = skin.wingBorder
+            ctx.lineWidth = 1.4
+            ctx.beginPath()
+            ctx.moveTo(-12, 0)
+            ctx.lineTo(12, -18)
+            ctx.lineTo(6, 6)
+            ctx.closePath()
+            ctx.fill()
+            ctx.stroke()
+            ctx.fillStyle = skin.wingtipLight
+            ctx.beginPath()
+            ctx.arc(12, -18, 2.2, 0, Math.PI * 2)
+            ctx.fill()
+          } else if (d.type === 'canopy') {
+            // Осколок стекла фонаря
+            ctx.fillStyle = skin.canopyGradient[0]
+            ctx.strokeStyle = skin.canopyBorder
+            ctx.lineWidth = 1.2
+            ctx.beginPath()
+            ctx.moveTo(-10, -4)
+            ctx.quadraticCurveTo(0, -12, 10, 0)
+            ctx.quadraticCurveTo(0, 4, -10, -4)
+            ctx.fill()
+            ctx.stroke()
+          } else if (d.type === 'nozzle') {
+            // Сопло двигателя
+            ctx.fillStyle = skin.nozzleFill
+            ctx.strokeStyle = skin.nozzleRing
+            ctx.lineWidth = 1.5
+            ctx.beginPath()
+            ctx.ellipse(0, 0, 5, 9, 0, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.stroke()
+          } else if (d.type === 'fuselage_shard') {
+            // Обломок обшивки фюзеляжа
+            ctx.fillStyle = skin.hullGradient[2]
+            ctx.strokeStyle = skin.accentColor
+            ctx.lineWidth = 1.2
+            ctx.beginPath()
+            ctx.rect(-9, -6, 18, 12)
+            ctx.fill()
+            ctx.stroke()
+            ctx.fillStyle = skin.decalColor
+            ctx.font = '700 5px sans-serif'
+            ctx.fillText('SE', -4, 2)
+          } else if (d.type === 'pepe_bubble') {
+            // Спасательная капсула с картунным Пепе со спиральными глазами
+            ctx.fillStyle = 'rgba(56, 189, 248, 0.35)'
+            ctx.strokeStyle = '#38bdf8'
+            ctx.lineWidth = 1.4
+            ctx.beginPath()
+            ctx.arc(0, 0, 11, 0, Math.PI * 2)
+            ctx.fill()
+            ctx.stroke()
+
+            ctx.fillStyle = '#4ade80'
+            ctx.beginPath()
+            ctx.arc(0, 1, 6.5, 0, Math.PI * 2)
+            ctx.fill()
+
+            ctx.fillStyle = '#ffffff'
+            ctx.beginPath()
+            ctx.arc(-2.5, -1, 2.5, 0, Math.PI * 2)
+            ctx.arc(2.5, -1, 2.5, 0, Math.PI * 2)
+            ctx.fill()
+
+            ctx.strokeStyle = '#0f172a'
+            ctx.lineWidth = 0.8
+            ctx.beginPath()
+            ctx.arc(-2.5, -1, 1.2, 0, Math.PI * 1.5)
+            ctx.arc(2.5, -1, 1.2, 0, Math.PI * 1.5)
+            ctx.stroke()
+          }
+
+          ctx.restore()
+        }
+        ctx.restore()
+
+        // 4.2. Отрисовка частиц огня и искр взрыва
         ctx.save()
         for (let i = state.explosion.length - 1; i >= 0; i--) {
           const exp = state.explosion[i]!
@@ -898,13 +1109,13 @@ export function Rocket3DCanvas({
       ref={canvasRef}
       className={className}
       style={{
-        position: 'absolute',
+        position: fullscreen ? 'fixed' : 'absolute',
         top: 0,
         left: 0,
-        width: '100%',
-        height: '100%',
+        width: fullscreen ? '100vw' : '100%',
+        height: fullscreen ? '100vh' : '100%',
         pointerEvents: 'none',
-        zIndex: 2,
+        zIndex: fullscreen ? 0 : 2,
       }}
       aria-hidden
     />

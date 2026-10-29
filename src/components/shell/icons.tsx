@@ -352,23 +352,12 @@ export function RocketArtIcon(props: IconProps) {
 }
 
 /**
- * 19. TON Crystal Icon (Official TON faceted diamond crystal)
+ * 19. Официальный 2D знак TON (Official TON Foundation 2D Diamond Logo)
  */
 export function TonIcon(props: IconProps) {
   return (
-    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
-      <path
-        d="M12 3 L4 8.5 L12 21 L20 8.5 Z"
-        fill="currentColor"
-        fillOpacity="0.2"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path d="M12 3 V21" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M4 8.5 H20" stroke="currentColor" strokeWidth="1.5" />
-      <polygon points="12,3 8,8.5 12,21" fill="currentColor" fillOpacity="0.25" />
-      <polygon points="12,3 16,8.5 12,21" fill="currentColor" fillOpacity="0.4" />
+    <svg {...base(props)} viewBox="0 0 56 56" fill="currentColor">
+      <path d="M37.5603 15.6277H18.4386C14.9228 15.6277 12.6944 19.4202 14.4632 22.4861L26.2644 42.9409C27.0345 44.2765 28.9644 44.2765 29.7345 42.9409L41.5381 22.4861C43.3045 19.4251 41.0761 15.6277 37.5627 15.6277H37.5603ZM26.2548 36.8068L23.6847 31.8327L17.4833 20.7414C17.0742 20.0315 17.5795 19.1218 18.4362 19.1218H26.2524V36.8092L26.2548 36.8068ZM38.5108 20.739L32.3118 31.8351L29.7417 36.8068V19.1194H37.5579C38.4146 19.1194 38.9199 20.0291 38.5108 20.739Z" />
     </svg>
   )
 }

@@ -18,8 +18,6 @@ import {
   playRocketLaunch,
   playCrashBoom,
   playCashoutWin,
-  isSoundEnabled,
-  setSoundMuted,
 } from '../lib/sound'
 import { getWebApp, getTelegramUser } from '../lib/telegram'
 import { BetSheet, LAST_CRASH_BET_KEY } from '../components/games/BetSheet'
@@ -28,9 +26,6 @@ import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
   ChevronLeftIcon,
   TonIcon,
-  FlameIcon,
-  VolumeIcon,
-  VolumeMuteIcon,
   CrownIcon,
   SparkleIcon,
   RocketIcon,
@@ -38,21 +33,6 @@ import {
 import { giftById, gifts, getGiftForValue, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
 import styles from './CrashScreen.module.css'
-
-// Сгенерированные фоновые звёзды арены
-const STARS = [
-  { left: '12%', top: '22%', size: 2, opacity: 0.7 },
-  { left: '28%', top: '65%', size: 1.5, opacity: 0.5 },
-  { left: '45%', top: '18%', size: 2.5, opacity: 0.8 },
-  { left: '60%', top: '78%', size: 1.5, opacity: 0.6 },
-  { left: '72%', top: '28%', size: 3, opacity: 0.85 },
-  { left: '84%', top: '55%', size: 2, opacity: 0.65 },
-  { left: '92%', top: '15%', size: 1.5, opacity: 0.75 },
-  { left: '18%', top: '82%', size: 2, opacity: 0.5 },
-  { left: '38%', top: '42%', size: 1, opacity: 0.4 },
-  { left: '54%', top: '88%', size: 2, opacity: 0.7 },
-  { left: '78%', top: '85%', size: 1.5, opacity: 0.5 },
-]
 
 // Предустановленные значения автовывода
 const AUTO_CASHOUT_OPTIONS = [null, 1.5, 2.0, 3.0, 5.0]
@@ -105,7 +85,6 @@ export function CrashScreen() {
 
   const [betSheetOpen, setBetSheetOpen] = useState(false)
   const [adminModalOpen, setAdminModalOpen] = useState(false)
-  const [soundActive, setSoundActive] = useState(() => isSoundEnabled())
   const [autoCashout, setAutoCashout] = useState<number | null>(null)
   const [cosmicReward, setCosmicReward] = useState<Gift | null>(null)
 
@@ -165,6 +144,21 @@ export function CrashScreen() {
     if (multiplier >= 2.0) return 'nebula'
     return 'cosmic'
   }, [phase, multiplier])
+
+  // Плавный переход цвета и свечения множителя (в стиле референса, без фона)
+  const multColor = useMemo(() => {
+    if (multiplier >= 10.0) return '#c084fc'
+    if (multiplier >= 5.0) return '#ffd700'
+    if (multiplier >= 2.0) return '#00ff88'
+    return '#ffffff'
+  }, [multiplier])
+
+  const multGlow = useMemo(() => {
+    if (multiplier >= 10.0) return '0 0 28px rgba(192, 132, 252, 0.8), 0 4px 18px rgba(0, 0, 0, 0.7)'
+    if (multiplier >= 5.0) return '0 0 26px rgba(255, 215, 0, 0.75), 0 4px 18px rgba(0, 0, 0, 0.7)'
+    if (multiplier >= 2.0) return '0 0 24px rgba(0, 255, 136, 0.75), 0 4px 18px rgba(0, 0, 0, 0.7)'
+    return '0 0 20px rgba(255, 255, 255, 0.45), 0 4px 18px rgba(0, 0, 0, 0.7)'
+  }, [multiplier])
 
   // Пул живых игроков раунда
   const [players, setPlayers] = useState<SimulatedPlayer[]>([])
@@ -270,13 +264,6 @@ export function CrashScreen() {
     placeGramBet(amountMinor, makeRequestId())
   }
 
-  // Переключение звука
-  const toggleSound = () => {
-    const next = !soundActive
-    setSoundActive(next)
-    setSoundMuted(!next)
-  }
-
   // Тема обратного отсчёта от 5 с плавными неоновыми переливами
   const countNumber = Math.min(5, Math.max(1, Math.ceil(secondsLeft)))
   const currentTheme = COUNTDOWN_THEMES[countNumber] ?? COUNTDOWN_THEMES[1]!
@@ -378,7 +365,7 @@ export function CrashScreen() {
 
   return (
     <div className={styles.screen}>
-      {/* 1. Верхний чистый бар SEXY DROP (убран мусор, единая строка) */}
+      {/* 1. Верхний чистый бар (убрана надпись SEXY DROP и звук по запросу) */}
       <div className={styles.topHeader}>
         <button
           type="button"
@@ -390,10 +377,19 @@ export function CrashScreen() {
           <span className={styles.backText}>Назад</span>
         </button>
 
-        <div className={styles.brandBadge}>
-          <FlameIcon className={styles.brandFire} aria-hidden />
-          <span className={styles.brandTitle}>SEXY DROP</span>
-        </div>
+        {/* Селектор скина 3D ракеты и NFT пилота Пепе в центре шапки */}
+        <button
+          type="button"
+          className={styles.skinPill}
+          onClick={handleToggleSkin}
+          title="Сменить модель ракеты и картунного пилота Пепе"
+          aria-label={`Модель ракеты: ${activeSkin.nameRu}, пилот: ${activeSkin.pilotNameRu}`}
+        >
+          <RocketIcon className={styles.skinPillIcon} />
+          <span className={styles.skinPillText}>
+            {selectedSkin === 'auto' ? '⚡ ' : ''}{activeSkin.nameRu} · {activeSkin.pilotNameRu}
+          </span>
+        </button>
 
         <div className={styles.headerRight}>
           {isAdmin && (
@@ -407,19 +403,6 @@ export function CrashScreen() {
               <span>Админ</span>
             </button>
           )}
-
-          <button
-            type="button"
-            className={styles.soundBtn}
-            onClick={toggleSound}
-            aria-label={soundActive ? 'Выключить звук' : 'Включить звук'}
-          >
-            {soundActive ? (
-              <VolumeIcon className={styles.soundIcon} />
-            ) : (
-              <VolumeMuteIcon className={styles.soundIcon} />
-            )}
-          </button>
 
           <button
             type="button"
@@ -443,44 +426,50 @@ export function CrashScreen() {
         data-tier={bgTier}
         aria-label="Арена полёта ракеты"
       >
-        {/* Индикатор и селектор скина 3D ракеты и NFT пилота Пепе */}
-        <button
-          type="button"
-          className={styles.skinPill}
-          onClick={handleToggleSkin}
-          title="Сменить модель ракеты и картунного пилота Пепе"
-          aria-label={`Модель ракеты: ${activeSkin.nameRu}, пилот: ${activeSkin.pilotNameRu}`}
-        >
-          <RocketIcon className={styles.skinPillIcon} />
-          <span className={styles.skinPillText}>
-            {selectedSkin === 'auto' ? '⚡ ' : ''}{activeSkin.nameRu} · {activeSkin.pilotNameRu}
-          </span>
-        </button>
+        {/* Индикатор этапов NFT Дропа (2x Дроп, 5x Редкий, 10x Легендарный) */}
+        <div className={styles.nftMilestonesRow} aria-label="Этапы NFT Дропа">
+          <div
+            className={cx(
+              styles.milestonePill,
+              multiplier >= 2.0 && styles.milestoneActive2x,
+            )}
+          >
+            <span className={styles.milestoneIcon}>⚡</span>
+            <span className={styles.milestoneVal}>2x</span>
+            <span className={styles.milestoneName}>Дроп NFT</span>
+          </div>
 
-        {/* Высокодетализированная 3D Ракета, цикличная пульсация двигателя, плазменный шлейф, пролетающие звезды и взрыв */}
+          <div
+            className={cx(
+              styles.milestonePill,
+              multiplier >= 5.0 && styles.milestoneActive5x,
+            )}
+          >
+            <span className={styles.milestoneIcon}>⭐</span>
+            <span className={styles.milestoneVal}>5x</span>
+            <span className={styles.milestoneName}>Редкий</span>
+          </div>
+
+          <div
+            className={cx(
+              styles.milestonePill,
+              multiplier >= 10.0 && styles.milestoneActive10x,
+            )}
+          >
+            <span className={styles.milestoneIcon}>👑</span>
+            <span className={styles.milestoneVal}>10x</span>
+            <span className={styles.milestoneName}>Легендарный</span>
+          </div>
+        </div>
+
+        {/* Высокодетализированная 3D Ракета, полноэкранный звездный космос и обломки при взрыве */}
         <Rocket3DCanvas
           phase={phase}
           multiplier={multiplier}
           roundId={roundId}
           skinIndex={selectedSkin === 'auto' ? undefined : selectedSkin}
+          fullscreen
         />
-
-        {/* Фоновые звёзды */}
-        <div className={styles.starField} aria-hidden>
-          {STARS.map((s, i) => (
-            <span
-              key={i}
-              className={styles.star}
-              style={{
-                left: s.left,
-                top: s.top,
-                width: `${s.size}px`,
-                height: `${s.size}px`,
-                opacity: s.opacity,
-              }}
-            />
-          ))}
-        </div>
 
         {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 (мини-моушен и плавные переливы цветов) */}
         {phase === 'betting' && (
@@ -563,12 +552,18 @@ export function CrashScreen() {
           </div>
         )}
 
-        {/* ФАЗА 2: Полёт — компактный технологичный множитель */}
+        {/* ФАЗА 2: Полёт — Большой стильный множитель, влитый в космос без рамок */}
         {phase === 'flying' && (
           <div className={styles.flyingCenter}>
-            <div className={styles.compactMultiplierChip}>
-              <span className={styles.multiplierFlying}>x{multiplier.toFixed(2)}</span>
-            </div>
+            <span
+              className={styles.seamlessMultiplier}
+              style={{
+                color: multColor,
+                textShadow: multGlow,
+              }}
+            >
+              x{multiplier.toFixed(2)}
+            </span>
           </div>
         )}
 
@@ -604,7 +599,7 @@ export function CrashScreen() {
         )}
       </div>
 
-      {/* 4. История крашей (Горизонтальные капсулы 1:1 из видео) */}
+      {/* 4. История крашей (Горизонтальные компактные капсулы, без скролла) */}
       <div className={styles.historyRow} aria-label="История крашей">
         {/* В фазе ставок показываем бейдж BET; в фазе полёта — живой множитель */}
         {phase === 'betting' && (
@@ -619,8 +614,8 @@ export function CrashScreen() {
           </span>
         )}
 
-        {/* Предыдущие раунды с цветными рамками по величине */}
-        {history.map((val, idx) => {
+        {/* Предыдущие 7 раундов с цветными рамками по величине (не скроллятся) */}
+        {history.slice(0, 7).map((val, idx) => {
           let tierClass = styles.tierSlate
           if (val >= 10.0) tierClass = styles.tierGold
           else if (val >= 5.0) tierClass = styles.tierMagenta

@@ -617,88 +617,88 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 4px 9px;
+  padding: 4px 10px;
   border-radius: 9999px;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.2px;
-  background: rgba(11, 25, 20, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #14171f;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   color: #cbd5e1;
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: all 0.25s ease;
+  transition: all 0.2s ease;
   user-select: none;
 }
 
-/* History Tiers */
+/* History Tiers (чистые, без фоновых размытий) */
 .tierSlate {
-  border-color: rgba(56, 189, 248, 0.4);
+  border-color: rgba(56, 189, 248, 0.38);
   color: #7dd3fc;
-  background: rgba(56, 189, 248, 0.08);
+  background: #14171f;
 }
 
 .tierPurple {
-  border-color: rgba(168, 85, 247, 0.5);
+  border-color: rgba(168, 85, 247, 0.45);
   color: #c084fc;
-  background: rgba(168, 85, 247, 0.1);
+  background: #14171f;
 }
 
 .tierMagenta {
-  border-color: rgba(236, 72, 153, 0.5);
+  border-color: rgba(236, 72, 153, 0.45);
   color: #f472b6;
-  background: rgba(236, 72, 153, 0.1);
+  background: #14171f;
 }
 
 .tierGold {
-  border-color: rgba(245, 158, 11, 0.6);
+  border-color: rgba(245, 158, 11, 0.55);
   color: #fbbf24;
-  background: rgba(245, 158, 11, 0.14);
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.3);
+  background: #14171f;
 }
 
 .activeLivePill {
-  background: rgba(46, 213, 115, 0.22);
-  border-color: #2ed573;
-  color: #7bed9f;
-  box-shadow: 0 0 14px rgba(46, 213, 115, 0.45);
+  background: rgba(56, 189, 248, 0.16);
+  border-color: #38bdf8;
+  color: #38bdf8;
 }
 
 .activeLiveDot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #2ed573;
-  box-shadow: 0 0 8px #2ed573;
+  background: #38bdf8;
   animation: pulseDot 1s infinite alternate;
 }
 
-/* --- Action Button --- */
+/* --- Action Button (Выровненная зона действий для всех устройств) --- */
 
 .actionArea {
   display: flex;
   flex-direction: column;
   gap: 10px;
   width: 100%;
-  max-width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
   min-width: 0;
+  align-items: center;
+  position: relative;
+  z-index: 5;
 }
 
 .mainActionBtn {
   position: relative;
   width: 100%;
-  padding: 16px 20px;
+  height: 52px;
+  padding: 0 20px;
   border: none;
-  border-radius: 20px;
-  font-size: 18px;
-  font-weight: 800;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
   color: #ffffff;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.25);
   transition: transform 0.12s ease, filter 0.15s ease, box-shadow 0.15s ease;
   overflow: hidden;
 }
@@ -713,21 +713,28 @@
   left: 0;
   right: 0;
   height: 50%;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0) 100%);
-  border-radius: 20px 20px 0 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 16px 16px 0 0;
   pointer-events: none;
 }
 
 /* State: Betting CTA */
 .btnBetting {
-  background: linear-gradient(135deg, #2ed573 0%, #10b981 100%);
-  box-shadow: 0 8px 28px rgba(46, 213, 115, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
+  box-shadow: 0 6px 22px rgba(56, 189, 248, 0.38), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+/* State: Next Round CTA (Ставка на следующий раунд) */
+.btnNextRound {
+  background: linear-gradient(135deg, #0ea5e9 0%, #0369a1 100%);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 6px 22px rgba(14, 165, 233, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
 /* State: Flying Cashout CTA */
 .btnCashout {
-  background: linear-gradient(135deg, #2ed573 0%, #059669 100%);
-  box-shadow: 0 8px 28px rgba(46, 213, 115, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 6px 22px rgba(34, 197, 94, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.35);
   animation: pulseCashout 1.2s infinite alternate;
 }
 
@@ -742,36 +749,85 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  padding: 14px 18px;
-  border-radius: 18px;
-  background: rgba(46, 213, 115, 0.14);
-  border: 1.5px solid rgba(46, 213, 115, 0.35);
-  color: #7bed9f;
+  height: 52px;
+  padding: 0 18px;
+  border-radius: 16px;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1.5px solid rgba(56, 189, 248, 0.35);
+  color: #7dd3fc;
   font-size: 15px;
   font-weight: 700;
+  box-sizing: border-box;
+}
+
+/* State: Queued bet for next round */
+.queuedBetCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 52px;
+  padding: 0 16px;
+  border-radius: 16px;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1.5px solid rgba(56, 189, 248, 0.3);
+  box-sizing: border-box;
+}
+
+.queuedBetInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.queuedBetBadge {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.3px;
+}
+
+.queuedBetAmount {
+  font-size: 15px;
+  font-weight: 800;
+  color: #38bdf8;
+}
+
+.queuedCancelBtn {
+  padding: 6px 13px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.queuedCancelBtn:active {
+  transform: scale(0.95);
+  background: rgba(239, 68, 68, 0.22);
 }
 
 .betMuted {
   width: 100%;
-  padding: 16px 20px;
-  border-radius: 18px;
+  padding: 15px 20px;
+  border-radius: 16px;
   text-align: center;
-  background: rgba(18, 34, 27, 0.78);
-  border: 1px solid rgba(46, 213, 115, 0.14);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  color: rgba(240, 253, 244, 0.7);
+  background: #151821;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #94a3b8;
   font-size: 13.5px;
   font-weight: 600;
   letter-spacing: 0.1px;
   margin: 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .resultWon {
   width: 100%;
   padding: 14px 18px;
-  border-radius: 18px;
+  border-radius: 16px;
   text-align: center;
   background: rgba(34, 197, 94, 0.14);
   border: 1.5px solid rgba(34, 197, 94, 0.4);
@@ -784,7 +840,7 @@
 .resultLost {
   width: 100%;
   padding: 14px 18px;
-  border-radius: 18px;
+  border-radius: 16px;
   text-align: center;
   background: rgba(239, 68, 68, 0.12);
   border: 1.5px solid rgba(239, 68, 68, 0.35);
@@ -794,32 +850,33 @@
   margin: 0;
 }
 
-/* Quick Bet & Auto-Cashout Controls */
+/* Quick Bet Controls */
 .quickControlsRow {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
+  justify-content: center;
+  width: 100%;
 }
 
 .quickChipsGroup {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-
-.quickChipsGroup::-webkit-scrollbar {
-  display: none;
+  width: 100%;
+  flex-wrap: wrap;
 }
 
 .quickChip {
-  padding: 5px 11px;
-  border-radius: 9999px;
-  font-size: 12px;
+  height: 36px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-size: 13px;
   font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
+  color: #e2e8f0;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.12);
   cursor: pointer;
@@ -827,23 +884,8 @@
 }
 
 .quickChip:active {
-  transform: scale(0.92);
+  transform: scale(0.94);
   background: rgba(255, 255, 255, 0.14);
-}
-
-.autoCashoutPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  padding: 5px 10px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #b7a4f9;
-  background: rgba(183, 164, 249, 0.12);
-  border: 1px solid rgba(183, 164, 249, 0.3);
-  cursor: pointer;
-  white-space: nowrap;
 }
 
 /* --- Live Players Bets Feed (Reference 1:1) --- */
@@ -888,32 +930,32 @@
   justify-content: space-between;
   padding: 8px 12px;
   border-radius: 16px;
-  background: rgba(18, 34, 27, 0.75);
-  border: 1px solid rgba(46, 213, 115, 0.12);
+  background: rgba(21, 25, 33, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   transition: all 0.2s ease;
 }
 
 .playerCardUser {
-  background: rgba(46, 213, 115, 0.16);
-  border-color: rgba(46, 213, 115, 0.45);
-  box-shadow: 0 4px 16px rgba(46, 213, 115, 0.25);
+  background: rgba(56, 189, 248, 0.14);
+  border-color: rgba(56, 189, 248, 0.45);
+  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2);
 }
 
 .playerCardWon {
-  background: rgba(46, 213, 115, 0.14);
-  border-color: rgba(46, 213, 115, 0.45);
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.4);
 }
 
 .playerCardActiveBlue {
-  background: rgba(46, 213, 115, 0.08);
-  border-color: rgba(46, 213, 115, 0.28);
+  background: rgba(56, 189, 248, 0.08);
+  border-color: rgba(56, 189, 248, 0.25);
 }
 
 .playerCardLost {
   opacity: 0.5;
-  background: rgba(18, 34, 27, 0.4);
+  background: rgba(21, 25, 33, 0.4);
   border-color: rgba(255, 255, 255, 0.04);
 }
 
@@ -1023,8 +1065,8 @@
   font-size: 12px;
   font-weight: 800;
   color: #ffffff;
-  background: rgba(18, 34, 27, 0.78);
-  border: 1px solid rgba(46, 213, 115, 0.14);
+  background: #181d26;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   flex-shrink: 0;
   white-space: nowrap;
 }
@@ -1033,7 +1075,7 @@
   width: 12px;
   height: 12px;
   flex-shrink: 0;
-  color: #2ed573;
+  color: #38bdf8;
 }
 
 .cosmicTitleIcon {
@@ -1041,21 +1083,21 @@
   height: 22px;
   vertical-align: middle;
   margin-right: 6px;
-  color: #2ed573;
+  color: #38bdf8;
 }
 
 .profitWon {
-  background: rgba(46, 213, 115, 0.22);
-  border-color: #2ed573;
-  color: #7bed9f;
-  box-shadow: 0 0 10px rgba(46, 213, 115, 0.35);
+  background: rgba(34, 197, 94, 0.16);
+  border-color: #22c55e;
+  color: #4ade80;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
 }
 
 .profitActiveBlue {
-  background: rgba(46, 213, 115, 0.16);
-  border-color: rgba(46, 213, 115, 0.45);
-  color: #7bed9f;
-  box-shadow: 0 0 10px rgba(46, 213, 115, 0.28);
+  background: rgba(56, 189, 248, 0.14);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: #7dd3fc;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
 }
 
 .profitLost {

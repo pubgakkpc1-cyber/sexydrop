@@ -1,8 +1,8 @@
 .nav {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  background: #0c1612;
-  border-top: 1px solid rgba(46, 213, 115, 0.16);
+  background: #0e1117;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.45);
   padding-bottom: var(--safe-bottom);
   flex-shrink: 0;
@@ -34,9 +34,9 @@
   max-width: 66px;
   height: 52px;
   border-radius: 14px;
-  background: rgba(46, 213, 115, 0.14);
-  border: 1px solid rgba(46, 213, 115, 0.32);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(123, 237, 159, 0.2);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .tab {
@@ -46,7 +46,7 @@
   align-items: center;
   justify-content: center;
   height: 60px;
-  color: rgba(240, 253, 244, 0.45);
+  color: rgba(248, 250, 252, 0.45);
   text-decoration: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -102,7 +102,7 @@
 
 .active .icon {
   transform: scale(1.08);
-  filter: drop-shadow(0 2px 8px rgba(46, 213, 115, 0.4));
+  filter: drop-shadow(0 2px 8px rgba(56, 189, 248, 0.45));
 }
 
 .active .tabLabel {

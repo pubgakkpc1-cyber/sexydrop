@@ -226,13 +226,32 @@ function tick(): void {
   // crashed: пауза показа результата, затем новое окно ставок.
   const ticksLeft = s.ticksLeft - 1
   if (ticksLeft <= 0) {
-    useCrashStore.setState({
-      phase: 'betting',
-      ticksLeft: BETTING_TICKS,
-      multiplier: 1,
-      crashPoint: null,
-      myBet: null,
-    })
+    const queued = s.queuedNextBet
+    if (queued) {
+      useCrashStore.setState({
+        phase: 'betting',
+        ticksLeft: BETTING_TICKS,
+        multiplier: 1,
+        crashPoint: null,
+        myBet: {
+          kind: queued.kind,
+          valueMinor: queued.valueMinor,
+          uid: queued.uid,
+          giftId: queued.giftId,
+          status: 'active',
+        },
+        queuedNextBet: null,
+      })
+    } else {
+      useCrashStore.setState({
+        phase: 'betting',
+        ticksLeft: BETTING_TICKS,
+        multiplier: 1,
+        crashPoint: null,
+        myBet: null,
+        queuedNextBet: null,
+      })
+    }
   } else {
     useCrashStore.setState({ ticksLeft })
   }
@@ -289,6 +308,80 @@ export function placeGramBet(amountMinor: Minor, clientRequestId: string): Place
 }
 
 export const placeTonBet = placeGramBet
+
+/** Запланировать ставку TON на следующий раунд (если текущий уже летит). */
+export function queueNextRoundGramBet(amountMinor: Minor, clientRequestId: string): PlaceBetResult {
+  return processOnce(clientRequestId, () => {
+    const s = useCrashStore.getState()
+    if (s.phase === 'betting') {
+      return placeGramBet(amountMinor, clientRequestId)
+    }
+    if (s.queuedNextBet !== null) {
+      return { status: 'rejected', reason: 'duplicate' } as const
+    }
+    if (!Number.isSafeInteger(amountMinor) || amountMinor < 100) {
+      return { status: 'rejected', reason: 'invalid_amount' } as const
+    }
+    const wallet = useWalletStore.getState()
+    if (wallet.getBalance() < amountMinor) {
+      return { status: 'rejected', reason: 'insufficient_funds' } as const
+    }
+    wallet.debit(amountMinor)
+    useCrashStore.setState({
+      queuedNextBet: {
+        kind: 'gram',
+        valueMinor: amountMinor,
+        requestId: clientRequestId,
+      },
+    })
+    return { status: 'ok' } as const
+  })
+}
+
+/** Запланировать ставку подарком на следующий раунд. */
+export function queueNextRoundGiftBet(uid: string, clientRequestId: string): PlaceBetResult {
+  return processOnce(clientRequestId, () => {
+    const s = useCrashStore.getState()
+    if (s.phase === 'betting') {
+      return placeGiftBet(uid, clientRequestId)
+    }
+    if (s.queuedNextBet !== null) {
+      return { status: 'rejected', reason: 'duplicate' } as const
+    }
+    const inventory = useInventoryStore.getState()
+    const item = inventory.items.find((candidate) => candidate.uid === uid)
+    const price = item ? giftById.get(item.giftId)?.priceMinor : undefined
+    if (!item || price === undefined) {
+      return { status: 'rejected', reason: 'unknown_item' } as const
+    }
+    inventory.removeUids([uid], 'crash-bet')
+    useCrashStore.setState({
+      queuedNextBet: {
+        kind: 'gift',
+        valueMinor: price,
+        uid,
+        giftId: item.giftId,
+        requestId: clientRequestId,
+      },
+    })
+    return { status: 'ok' } as const
+  })
+}
+
+/** Отменить запланированную ставку на следующий раунд с возвратом средств. */
+export function cancelQueuedNextRoundBet(): boolean {
+  const s = useCrashStore.getState()
+  const queued = s.queuedNextBet
+  if (!queued) return false
+
+  if (queued.kind === 'gram') {
+    useWalletStore.getState().credit(queued.valueMinor)
+  } else if (queued.kind === 'gift' && queued.giftId) {
+    useInventoryStore.getState().addGifts([queued.giftId], 'crash-drop')
+  }
+  useCrashStore.setState({ queuedNextBet: null })
+  return true
+}
 
 /** Ставка подарком из инвентаря: предмет конвертируется в каталог-цену. */
 export function placeGiftBet(uid: string, clientRequestId: string): PlaceBetResult {

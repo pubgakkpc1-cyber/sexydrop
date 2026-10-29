@@ -8,6 +8,8 @@ import { makeRequestId } from '../lib/requestId'
 import {
   cashout,
   placeGramBet,
+  queueNextRoundGramBet,
+  cancelQueuedNextRoundBet,
   startCrashEngine,
   stopCrashEngine,
   TICK_MS,
@@ -33,9 +35,6 @@ import {
 import { giftById, gifts, getGiftForValue, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
 import styles from './CrashScreen.module.css'
-
-// Предустановленные значения автовывода
-const AUTO_CASHOUT_OPTIONS = [null, 1.5, 2.0, 3.0, 5.0]
 
 interface CountdownTheme {
   color: string
@@ -139,13 +138,12 @@ function ScreenStarfield() {
 
 export function CrashScreen() {
   const navigate = useNavigate()
-  const { phase, ticksLeft, multiplier, history, myBet, roundId } = useCrashStore()
+  const { phase, ticksLeft, multiplier, history, myBet, roundId, queuedNextBet } = useCrashStore()
   const wallet = useWalletStore()
   const balance = wallet.balances[wallet.mode]
 
   const [betSheetOpen, setBetSheetOpen] = useState(false)
   const [adminModalOpen, setAdminModalOpen] = useState(false)
-  const [autoCashout, setAutoCashout] = useState<number | null>(null)
   const [cosmicReward, setCosmicReward] = useState<Gift | null>(null)
 
   // Проверка супер-администратора (@zapixxgarant)
@@ -172,19 +170,19 @@ export function CrashScreen() {
     return 'cosmic'
   }, [phase, multiplier])
 
-  // Плавный переход цвета и свечения множителя (Watermelon Green & Gold & Purple)
+  // Плавный переход цвета и свечения множителя
   const multColor = useMemo(() => {
     if (multiplier >= 10.0) return '#c084fc'
-    if (multiplier >= 5.0) return '#ffd700'
-    if (multiplier >= 2.0) return '#2ed573'
-    return '#f0fdf4'
+    if (multiplier >= 5.0) return '#fbbf24'
+    if (multiplier >= 2.0) return '#38bdf8'
+    return '#f8fafc'
   }, [multiplier])
 
   const multGlow = useMemo(() => {
     if (multiplier >= 10.0) return '0 0 24px rgba(192, 132, 252, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 5.0) return '0 0 22px rgba(255, 215, 0, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 2.0) return '0 0 20px rgba(46, 213, 115, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    return '0 0 16px rgba(240, 253, 244, 0.4), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 5.0) return '0 0 22px rgba(251, 191, 36, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 2.0) return '0 0 20px rgba(56, 189, 248, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    return '0 0 16px rgba(248, 250, 252, 0.35), 0 2px 10px rgba(0, 0, 0, 0.8)'
   }, [multiplier])
 
   // Пул живых игроков раунда
@@ -240,18 +238,6 @@ export function CrashScreen() {
     }
   }, [phase, secondsLeft])
 
-  // Авто-вывод (Auto-Cashout)
-  useEffect(() => {
-    if (
-      phase === 'flying' &&
-      myBet?.status === 'active' &&
-      autoCashout !== null &&
-      multiplier >= autoCashout
-    ) {
-      handleCashout()
-    }
-  }, [phase, multiplier, myBet, autoCashout])
-
   // Естественные координаты для взрыва
   const flightProgress = Math.min(1, Math.max(0, Math.log2(multiplier) / 2.8))
   const rocketLeft = 28 + flightProgress * 20
@@ -280,7 +266,6 @@ export function CrashScreen() {
 
   // Быстрая ставка TON в один клик с запоминанием последней ставки
   const handleQuickBet = (amountGram: number) => {
-    if (phase !== 'betting' || myBet !== null) return
     const amountMinor = Math.round(amountGram * 1000)
     try {
       window.localStorage?.setItem(LAST_CRASH_BET_KEY, String(amountGram))
@@ -288,7 +273,13 @@ export function CrashScreen() {
     } catch {
       /* no-op */
     }
-    placeGramBet(amountMinor, makeRequestId())
+    if (phase === 'betting') {
+      if (myBet !== null) return
+      placeGramBet(amountMinor, makeRequestId())
+    } else {
+      if (queuedNextBet !== null) return
+      queueNextRoundGramBet(amountMinor, makeRequestId())
+    }
   }
 
   // Тема обратного отсчёта от 5 с плавными неоновыми переливами
@@ -637,7 +628,34 @@ export function CrashScreen() {
 
         {phase === 'flying' &&
           (myBet === null ? (
-            <p className={styles.betMuted}>Раунд идёт — ставку можно сделать в следующем</p>
+            queuedNextBet ? (
+              <div className={styles.queuedBetCard}>
+                <div className={styles.queuedBetInfo}>
+                  <span className={styles.queuedBetBadge}>Ожидает следующий раунд</span>
+                  <strong className={styles.queuedBetAmount}>
+                    {queuedNextBet.kind === 'gram'
+                      ? `${formatMinor(queuedNextBet.valueMinor)} TON`
+                      : (giftById.get(queuedNextBet.giftId ?? '')?.name ?? 'Подарок')}
+                  </strong>
+                </div>
+                <button
+                  type="button"
+                  className={styles.queuedCancelBtn}
+                  onClick={cancelQueuedNextRoundBet}
+                >
+                  Отменить
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                className={cx(styles.mainActionBtn, styles.btnNextRound)}
+                onClick={() => setBetSheetOpen(true)}
+              >
+                <span className={styles.btnGlassHighlight} />
+                <span>Поставить на след. раунд</span>
+              </button>
+            )
           ) : myBet.status === 'active' ? (
             <button
               type="button"
@@ -656,14 +674,41 @@ export function CrashScreen() {
           ))}
 
         {phase === 'crashed' &&
-          (myBet !== null ? (
+          (myBet !== null && myBet.status !== 'active' ? (
             <ResultLine myBet={myBet} />
+          ) : queuedNextBet ? (
+            <div className={styles.queuedBetCard}>
+              <div className={styles.queuedBetInfo}>
+                <span className={styles.queuedBetBadge}>Ожидает следующий раунд</span>
+                <strong className={styles.queuedBetAmount}>
+                  {queuedNextBet.kind === 'gram'
+                    ? `${formatMinor(queuedNextBet.valueMinor)} TON`
+                    : (giftById.get(queuedNextBet.giftId ?? '')?.name ?? 'Подарок')}
+                </strong>
+              </div>
+              <button
+                type="button"
+                className={styles.queuedCancelBtn}
+                onClick={cancelQueuedNextRoundBet}
+              >
+                Отменить
+              </button>
+            </div>
           ) : (
-            <p className={styles.betMuted}>Раунд завершился</p>
+            <button
+              type="button"
+              className={cx(styles.mainActionBtn, styles.btnNextRound)}
+              onClick={() => setBetSheetOpen(true)}
+            >
+              <span className={styles.btnGlassHighlight} />
+              <span>Поставить на след. раунд</span>
+            </button>
           ))}
 
-        {/* Быстрые фишки ставок и автовывод */}
-        {phase === 'betting' && myBet === null && (
+        {/* Быстрые фишки ставок (без автовывода) */}
+        {((phase === 'betting' && myBet === null) ||
+          (phase === 'flying' && myBet === null && queuedNextBet === null) ||
+          (phase === 'crashed' && queuedNextBet === null)) && (
           <div className={styles.quickControlsRow}>
             <div className={styles.quickChipsGroup}>
               {lastBetAmount && parseFloat(lastBetAmount) > 0 && (
@@ -712,20 +757,6 @@ export function CrashScreen() {
                 +5.0
               </button>
             </div>
-
-            <button
-              type="button"
-              className={styles.autoCashoutPill}
-              onClick={() => {
-                const nextIdx =
-                  (AUTO_CASHOUT_OPTIONS.indexOf(autoCashout) + 1) %
-                  AUTO_CASHOUT_OPTIONS.length
-                setAutoCashout(AUTO_CASHOUT_OPTIONS[nextIdx] ?? null)
-              }}
-              title="Переключить авто-вывод"
-            >
-              <span>Авто: {autoCashout ? `${autoCashout}x` : 'Выкл'}</span>
-            </button>
           </div>
         )}
       </div>

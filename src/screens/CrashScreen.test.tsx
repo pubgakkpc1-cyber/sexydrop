@@ -117,7 +117,7 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     renderScreen()
     advanceEngine(5000)
 
-    expect(screen.getByText(/Раунд идёт — ставку можно сделать в следующем/)).toBeInTheDocument()
+    expect(screen.getByText(/Поставить на след. раунд/)).toBeInTheDocument()
     expect(screen.getByText(/Ставки других игроков раунда обновляются/i)).toBeInTheDocument()
   })
 })

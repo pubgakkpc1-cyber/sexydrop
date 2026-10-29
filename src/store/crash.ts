@@ -20,6 +20,14 @@ export interface CrashBet {
   wonGift?: Gift
 }
 
+export interface QueuedNextBet {
+  kind: 'gram' | 'gift'
+  valueMinor: Minor
+  giftId?: string
+  uid?: string
+  requestId: string
+}
+
 export interface CrashState {
   phase: CrashPhase
   roundId: number
@@ -33,6 +41,8 @@ export interface CrashState {
   history: number[]
   /** Ставка текущего раунда (одна ставка на раунд). */
   myBet: CrashBet | null
+  /** Запланированная ставка на следующий раунд (если раунд уже летит). */
+  queuedNextBet: QueuedNextBet | null
 }
 
 export const MAX_HISTORY = 12
@@ -70,4 +80,5 @@ export const useCrashStore = create<CrashState>(() => ({
   crashPoint: null,
   history: loadInitialCrashHistory(),
   myBet: null,
+  queuedNextBet: null,
 }))

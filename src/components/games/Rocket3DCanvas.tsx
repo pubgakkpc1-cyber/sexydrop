@@ -77,74 +77,74 @@ export interface RocketSkinConfig {
 export const ROCKET_SKINS: RocketSkinConfig[] = [
   {
     id: 0,
-    name: 'Chrono Watermelon',
-    nameRu: 'Хроно Арбуз',
+    name: 'Chrono Titanium',
+    nameRu: 'Хроно Титан',
     pilotNameRu: 'Пепе Кадет',
     hullGradient: ['#ffffff', '#cbd5e1', '#334155', '#0f172a'],
-    hullBorder: 'rgba(46, 213, 115, 0.65)',
-    accentColor: '#2ed573',
-    accentGlow: '#7bed9f',
+    hullBorder: 'rgba(56, 189, 248, 0.7)',
+    accentColor: '#38bdf8',
+    accentGlow: '#00c6ff',
     wingFill: ['#1e293b', '#0f172a'],
-    wingBorder: '#2ed573',
-    wingtipLight: '#7bed9f',
+    wingBorder: '#38bdf8',
+    wingtipLight: '#38bdf8',
     nozzleFill: '#111827',
-    nozzleRing: '#2ed573',
-    decalColor: '#7bed9f',
+    nozzleRing: '#38bdf8',
+    decalColor: '#38bdf8',
     decalSubtext: 'SEXY · TON',
-    canopyGradient: ['rgba(46, 213, 115, 0.22)', 'rgba(38, 175, 95, 0.32)', 'rgba(15, 23, 42, 0.5)'],
-    canopyBorder: '#7bed9f',
+    canopyGradient: ['rgba(56, 189, 248, 0.25)', 'rgba(2, 132, 199, 0.35)', 'rgba(15, 23, 42, 0.6)'],
+    canopyBorder: '#38bdf8',
     canopyReflection: 'rgba(255, 255, 255, 0.9)',
-    flameCore: ['#ffffff', '#7bed9f', '#2ed573', 'rgba(46, 213, 115, 0)'],
-    flameAura: ['rgba(46, 213, 115, 0.85)', 'rgba(38, 175, 95, 0.4)'],
-    trailColors: ['#2ed573', '#7bed9f', '#ffffff', '#26af5f', '#a8ffc8'],
+    flameCore: ['#ffffff', '#38bdf8', '#0284c7', 'rgba(2, 132, 199, 0)'],
+    flameAura: ['rgba(56, 189, 248, 0.85)', 'rgba(2, 132, 199, 0.4)'],
+    trailColors: ['#38bdf8', '#00c6ff', '#ffffff', '#0284c7', '#93c5fd'],
     pilotType: 0,
   },
   {
     id: 1,
-    name: 'Cyber Melon',
-    nameRu: 'Кибер Мелон',
+    name: 'Cyber Stealth',
+    nameRu: 'Кибер Стелс',
     pilotNameRu: 'Кибер Пепе',
-    hullGradient: ['#1e2c24', '#14201a', '#0b1611', '#050a08'],
-    hullBorder: 'rgba(74, 222, 128, 0.7)',
-    accentColor: '#4ade80',
-    accentGlow: '#2ed573',
-    wingFill: ['#14201a', '#050a08'],
-    wingBorder: '#4ade80',
-    wingtipLight: '#86efac',
-    nozzleFill: '#050a08',
-    nozzleRing: '#4ade80',
-    decalColor: '#4ade80',
-    decalSubtext: 'MELON · 99',
-    canopyGradient: ['rgba(74, 222, 128, 0.22)', 'rgba(46, 213, 115, 0.3)', 'rgba(11, 22, 17, 0.5)'],
-    canopyBorder: '#86efac',
-    canopyReflection: 'rgba(230, 255, 240, 0.92)',
-    flameCore: ['#ffffff', '#86efac', '#2ed573', 'rgba(46, 213, 115, 0)'],
-    flameAura: ['rgba(74, 222, 128, 0.85)', 'rgba(46, 213, 115, 0.4)'],
-    trailColors: ['#4ade80', '#2ed573', '#ffffff', '#86efac', '#7bed9f'],
+    hullGradient: ['#282e3d', '#1a1f29', '#10131a', '#080a0e'],
+    hullBorder: 'rgba(129, 140, 248, 0.75)',
+    accentColor: '#818cf8',
+    accentGlow: '#38bdf8',
+    wingFill: ['#161922', '#0a0d13'],
+    wingBorder: '#818cf8',
+    wingtipLight: '#a5b4fc',
+    nozzleFill: '#0a0d13',
+    nozzleRing: '#818cf8',
+    decalColor: '#818cf8',
+    decalSubtext: 'STEALTH · 99',
+    canopyGradient: ['rgba(129, 140, 248, 0.25)', 'rgba(56, 189, 248, 0.35)', 'rgba(11, 15, 24, 0.6)'],
+    canopyBorder: '#a5b4fc',
+    canopyReflection: 'rgba(240, 245, 255, 0.92)',
+    flameCore: ['#ffffff', '#a5b4fc', '#818cf8', 'rgba(129, 140, 248, 0)'],
+    flameAura: ['rgba(129, 140, 248, 0.85)', 'rgba(56, 189, 248, 0.4)'],
+    trailColors: ['#818cf8', '#38bdf8', '#ffffff', '#a5b4fc', '#c7d2fe'],
     pilotType: 1,
   },
   {
     id: 2,
-    name: 'Royal Emerald',
+    name: 'Imperial 24K',
     nameRu: 'Империал 24K',
     pilotNameRu: 'Король Пепе',
     hullGradient: ['#fef08a', '#d4af37', '#451a03', '#1c1917'],
-    hullBorder: 'rgba(212, 175, 55, 0.75)',
-    accentColor: '#ffd700',
-    accentGlow: '#fbbf24',
+    hullBorder: 'rgba(245, 158, 11, 0.8)',
+    accentColor: '#fbbf24',
+    accentGlow: '#f59e0b',
     wingFill: ['#1e293b', '#0f172a'],
-    wingBorder: '#ffd700',
-    wingtipLight: '#ffd700',
+    wingBorder: '#fbbf24',
+    wingtipLight: '#fde68a',
     nozzleFill: '#0f172a',
-    nozzleRing: '#ffd700',
-    decalColor: '#ffd700',
+    nozzleRing: '#fbbf24',
+    decalColor: '#fbbf24',
     decalSubtext: 'ROYAL · VIP',
-    canopyGradient: ['rgba(251, 191, 36, 0.28)', 'rgba(46, 213, 115, 0.3)', 'rgba(15, 23, 42, 0.55)'],
-    canopyBorder: '#fef08a',
+    canopyGradient: ['rgba(251, 191, 36, 0.28)', 'rgba(245, 158, 11, 0.35)', 'rgba(15, 23, 42, 0.6)'],
+    canopyBorder: '#fde68a',
     canopyReflection: 'rgba(255, 250, 220, 0.95)',
-    flameCore: ['#ffffff', '#fbbf24', '#2ed573', 'rgba(46, 213, 115, 0)'],
-    flameAura: ['rgba(251, 191, 36, 0.85)', 'rgba(46, 213, 115, 0.45)'],
-    trailColors: ['#ffd700', '#2ed573', '#ffffff', '#7bed9f', '#fbbf24'],
+    flameCore: ['#ffffff', '#fde68a', '#fbbf24', 'rgba(245, 158, 11, 0)'],
+    flameAura: ['rgba(251, 191, 36, 0.85)', 'rgba(245, 158, 11, 0.45)'],
+    trailColors: ['#fbbf24', '#f59e0b', '#ffffff', '#fde68a', '#d97706'],
     pilotType: 2,
   },
 ]
@@ -456,27 +456,38 @@ export function Rocket3DCanvas({
       }
       ctx.restore()
 
-      // Позиция ракеты внутри арены полёта (всегда видна и в фазе ставок, и в полёте)
+      // Во время отсчёта (betting) ракета не отображается (показывается только таймер)
+      if (currentPhase === 'betting') {
+        state.trail = []
+        ctx.restore()
+        return
+      }
+
+      // Позиция ракеты внутри арены полёта (плавный взлёт с космодрома и уверенный полёт)
       let currentX: number
       let currentY: number
       let currentAngle: number
 
-      if (currentPhase === 'betting') {
-        currentX = width * 0.28
-        currentY = height * 0.60 + Math.sin(state.time * 3.5) * 3
-        currentAngle = -12 + Math.sin(state.time * 2.5) * 1.5
-      } else {
-        const progress = Math.min(1, Math.max(0, Math.log2(currentMult) / 2.8))
-        const targetX = width * (0.38 + progress * 0.22)
-        const targetY = height * 0.52 - progress * 24
+      // 1. Плавный взлёт с левого нижнего угла (Старт ракеты)
+      const launchProgress = Math.min(1, Math.max(0, (currentMult - 1.0) / 0.35))
+      const easeLaunch = 1 - Math.pow(1 - launchProgress, 3)
 
-        const hoverY = Math.sin(state.time * 4) * 4
-        const hoverAngle = Math.sin(state.time * 3) * 2.5
+      const launchX = width * 0.12
+      const launchY = height * 0.88
+      const launchAngle = -38
 
-        currentX = targetX
-        currentY = targetY + hoverY
-        currentAngle = -15 + Math.min(10, progress * 6) + hoverAngle
-      }
+      const cruiseProgress = Math.min(1, Math.max(0, Math.log2(Math.max(1, currentMult)) / 3.0))
+      const targetCruiseX = width * (0.42 + cruiseProgress * 0.20)
+      const targetCruiseY = height * (0.50 - cruiseProgress * 24)
+      const cruiseAngle = -16 + cruiseProgress * 6
+
+      // Естественные микро-колебания полёта (без намёков на краш, чтобы нельзя было абузить)
+      const hoverY = Math.sin(state.time * 3.6) * 3.2
+      const hoverAngle = Math.sin(state.time * 2.8) * 1.6
+
+      currentX = launchX + (targetCruiseX - launchX) * easeLaunch
+      currentY = launchY + (targetCruiseY - launchY) * easeLaunch + hoverY * easeLaunch
+      currentAngle = launchAngle + (cruiseAngle - launchAngle) * easeLaunch + hoverAngle * easeLaunch
 
       state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
 
@@ -487,73 +498,75 @@ export function Rocket3DCanvas({
         const nozzleX = currentX - Math.cos(rad) * nozzleDist
         const nozzleY = currentY - Math.sin(rad) * nozzleDist
 
-        // Изогнутая неоновая траектория полёта (от левого нижнего угла к соплу ракеты)
+        // Старт дуги из точки запуска в левом нижнем углу
         const startArcX = width * 0.08
-        const startArcY = height * 0.86
-        const ctrlX = (startArcX + nozzleX) * 0.42
-        const ctrlY = Math.max(startArcY, nozzleY) + 18
+        const startArcY = height * 0.88
+
+        // Плавная выпуклая аэродинамическая контрольная точка
+        const ctrlX = startArcX + (nozzleX - startArcX) * 0.58
+        const ctrlY = startArcY
 
         ctx.save()
         ctx.lineCap = 'round'
 
-        // 1. Мягкое неоновое свечение шлейфа (Watermelon Neon Glow)
-        ctx.strokeStyle = 'rgba(46, 213, 115, 0.35)'
-        ctx.lineWidth = 11
-        ctx.shadowColor = '#2ed573'
-        ctx.shadowBlur = 20
+        // 1. Внешнее мягкое неоновое свечение шлейфа (Electric Glow)
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)'
+        ctx.lineWidth = 10
+        ctx.shadowColor = skin.accentColor
+        ctx.shadowBlur = 18
         ctx.beginPath()
         ctx.moveTo(startArcX, startArcY)
         ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
         ctx.stroke()
 
-        // 2. Внутренняя яркая арбузно-зелёная сердцевина дуги
+        // 2. Внутреннее яркое градиентное ядро дуги (плавное появление от старта к соплу)
         const arcGrad = ctx.createLinearGradient(startArcX, startArcY, nozzleX, nozzleY)
-        arcGrad.addColorStop(0, 'rgba(46, 213, 115, 0.4)')
-        arcGrad.addColorStop(0.55, '#2ed573')
-        arcGrad.addColorStop(1, '#7bed9f')
+        arcGrad.addColorStop(0, 'rgba(56, 189, 248, 0.05)')
+        arcGrad.addColorStop(0.35, 'rgba(56, 189, 248, 0.55)')
+        arcGrad.addColorStop(1, skin.accentGlow)
         ctx.strokeStyle = arcGrad
-        ctx.lineWidth = 4.8
-        ctx.shadowBlur = 6
-        ctx.shadowColor = '#7bed9f'
+        ctx.lineWidth = 3.6
+        ctx.shadowBlur = 8
+        ctx.shadowColor = skin.accentGlow
         ctx.beginPath()
         ctx.moveTo(startArcX, startArcY)
         ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
         ctx.stroke()
         ctx.restore()
 
-        // 3. Плотные частицы выхлопа плазмы и искр
-        for (let i = 0; i < 4; i++) {
-          const spread = (Math.random() - 0.5) * 11
+        // 3. Аккуратные частицы плазмы непосредственно за соплом
+        if (Math.random() < 0.65) {
+          const spread = (Math.random() - 0.5) * 8
           const perpX = -Math.sin(rad) * spread
           const perpY = Math.cos(rad) * spread
-          const pSpeed = 4.5 + Math.random() * 6.5
-          const pAngle = rad + Math.PI + (Math.random() - 0.5) * 0.4
+          const pSpeed = 3.2 + Math.random() * 4.5
+          const pAngle = rad + Math.PI + (Math.random() - 0.5) * 0.25
 
           state.trail.push({
             x: nozzleX + perpX,
             y: nozzleY + perpY,
             vx: Math.cos(pAngle) * pSpeed,
             vy: Math.sin(pAngle) * pSpeed,
-            size: 4 + Math.random() * 6,
-            alpha: 0.95,
-            color: skin.trailColors[Math.floor(Math.random() * skin.trailColors.length)] ?? '#2ed573',
+            size: 3 + Math.random() * 4.5,
+            alpha: 0.85,
+            color: skin.trailColors[Math.floor(Math.random() * skin.trailColors.length)] ?? skin.accentColor,
             life: 0,
-            maxLife: 28 + Math.floor(Math.random() * 18),
+            maxLife: 18 + Math.floor(Math.random() * 12),
           })
         }
       }
 
-      // Отрисовка частиц шлейфа
+      // Отрисовка частиц выхлопа
       ctx.save()
       for (let i = state.trail.length - 1; i >= 0; i--) {
         const p = state.trail[i]!
         p.life++
         p.x += p.vx
         p.y += p.vy
-        p.vx *= 0.94
-        p.vy *= 0.94
+        p.vx *= 0.95
+        p.vy *= 0.95
         p.alpha = Math.max(0, 1 - p.life / p.maxLife)
-        p.size *= 1.025
+        p.size *= 0.98
 
         if (p.life >= p.maxLife || p.alpha <= 0.02) {
           state.trail.splice(i, 1)
@@ -561,30 +574,27 @@ export function Rocket3DCanvas({
         }
 
         ctx.fillStyle = p.color
-        ctx.globalAlpha = p.alpha * 0.75
+        ctx.globalAlpha = p.alpha * 0.7
         ctx.beginPath()
         ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2)
         ctx.fill()
       }
       ctx.restore()
 
-      // --- 3. Отрисовка высокодетализированной 3D Ракеты с NFT Plush Pepe (в полёте И на старте) ---
-      if (currentPhase === 'flying' || currentPhase === 'betting') {
+      // --- 3. Отрисовка высокодетализированной 3D Ракеты с NFT Plush Pepe (только в полёте) ---
+      if (currentPhase === 'flying') {
         ctx.save()
         ctx.translate(currentX, currentY)
         ctx.rotate((currentAngle * Math.PI) / 180)
 
         // Зацикленное пульсирование/дыхание двигателя (Engine Breathing Cycle)
-        const breathe = 1.0 + Math.sin(state.time * 6.5) * 0.038
+        const breathe = 1.0 + Math.sin(state.time * 6.5) * 0.035
         ctx.scale(1.22 * breathe, 1.22 * breathe)
 
-        // 3.1. Реактивное пламя двигателя (в полёте — форсаж, на старте — прогрев сопла)
-        const isBetting = currentPhase === 'betting'
-        const flameFlicker = 0.88 + Math.random() * 0.25
-        const flameLen = isBetting
-          ? (22 + Math.sin(state.time * 6) * 5) * flameFlicker
-          : (68 + Math.min(42, currentMult * 4)) * flameFlicker
-        const flameWidth = (isBetting ? 10 : 17) * breathe
+        // 3.1. Реактивное пламя двигателя форсажа
+        const flameFlicker = 0.9 + Math.random() * 0.2
+        const flameLen = (65 + Math.min(38, currentMult * 3.5)) * flameFlicker
+        const flameWidth = 16 * breathe
 
         // Внешняя аристократическая аура пламени
         const flameAuraGrad = ctx.createRadialGradient(-50, 0, 5, -50 - flameLen * 0.6, 0, flameLen)

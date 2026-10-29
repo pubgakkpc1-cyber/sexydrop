@@ -5,7 +5,13 @@ import { useInventoryStore } from '../../store/inventory'
 import { useWalletStore } from '../../store/wallet'
 import { formatMinor, toMinor, type Minor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
-import { placeGiftBet, placeGramBet } from '../../services/demoCrashService'
+import {
+  placeGiftBet,
+  placeGramBet,
+  queueNextRoundGiftBet,
+  queueNextRoundGramBet,
+} from '../../services/demoCrashService'
+import { useCrashStore } from '../../store/crash'
 import { BottomSheet, Button, GramAmount, Input } from '../ui'
 import { CubeIcon, GiftIcon, TonIcon } from '../shell/icons'
 import { cx } from '../../lib/cx'
@@ -75,11 +81,17 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
   const selectedRow = selectedUid === null ? null : (giftRows.find(({ item }) => item.uid === selectedUid) ?? null)
   const insufficient = amountMinor === null || balance < amountMinor
 
+  const phase = useCrashStore((s) => s.phase)
+  const isNextRound = phase !== 'betting'
+
   const confirm = () => {
     setError(null)
     if (tab === 'gram') {
       if (amountMinor === null || insufficient) return
-      const result = placeGramBet(amountMinor, makeRequestId())
+      const result = isNextRound
+        ? queueNextRoundGramBet(amountMinor, makeRequestId())
+        : placeGramBet(amountMinor, makeRequestId())
+
       if (result.status === 'ok') {
         try {
           window.localStorage?.setItem(LAST_CRASH_BET_KEY, amountInput)
@@ -93,7 +105,10 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
       return
     }
     if (!selectedRow) return
-    const result = placeGiftBet(selectedRow.item.uid, makeRequestId())
+    const result = isNextRound
+      ? queueNextRoundGiftBet(selectedRow.item.uid, makeRequestId())
+      : placeGiftBet(selectedRow.item.uid, makeRequestId())
+
     if (result.status === 'ok') {
       onClose()
     } else {
@@ -102,7 +117,11 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
   }
 
   return (
-    <BottomSheet open={open} onClose={onClose} title="Сделать ставку">
+    <BottomSheet
+      open={open}
+      onClose={onClose}
+      title={isNextRound ? 'Ставка на след. раунд' : 'Сделать ставку'}
+    >
       {/* Переключатель Dual Betting Подарки / TON */}
       <div className={styles.segmented} role="group" aria-label="Тип ставки">
         <button
@@ -226,9 +245,9 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
         variant="cta"
         disabled={tab === 'gram' ? amountMinor === null || insufficient || amountMinor < 100 : !selectedRow}
         onClick={confirm}
-        aria-label={confirmLabel(tab, amountMinor, selectedRow?.gift.name)}
+        aria-label={confirmLabel(tab, amountMinor, selectedRow?.gift.name, isNextRound)}
       >
-        {confirmLabel(tab, amountMinor, selectedRow?.gift.name)}
+        {confirmLabel(tab, amountMinor, selectedRow?.gift.name, isNextRound)}
       </Button>
     </BottomSheet>
   )
@@ -242,9 +261,11 @@ function confirmLabel(
   tab: BetSheetTab,
   amountMinor: Minor | null,
   giftName: string | undefined,
+  isNextRound: boolean = false,
 ): string {
+  const prefix = isNextRound ? 'На след. раунд: ' : 'Поставить '
   if (tab === 'gram') {
-    return amountMinor !== null ? `Поставить ${formatMinor(amountMinor)} TON` : 'Сделать ставку'
+    return amountMinor !== null ? `${prefix}${formatMinor(amountMinor)} TON` : isNextRound ? 'Поставить на след. раунд' : 'Сделать ставку'
   }
-  return giftName ? `Поставить ${giftName}` : 'Выберите подарок'
+  return giftName ? `${prefix}${giftName}` : 'Выберите подарок'
 }

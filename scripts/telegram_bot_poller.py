@@ -117,10 +117,13 @@ while True:
                             json={
                                 "chat_id": chat_id,
                                 "text": (
-                                    "✅ **Успешно начислено!**\n\n"
-                                    f"👤 Игрок: **@{target_username}**\n"
-                                    f"💰 Начислено: **{amount} TON**\n"
-                                    f"💳 Новый баланс: **{new_bal} TON**"
+                                    "🟢 **Транзакция успешно выполнена!**\n"
+                                    "────────────────────────\n"
+                                    f"👤 Получатель: **@{target_username}**\n"
+                                    f"💎 Начислено: **{amount} TON**\n"
+                                    f"💳 Новый баланс: **{new_bal} TON**\n"
+                                    "────────────────────────\n"
+                                    "⚡ Запись внесена в Ledger базы данных."
                                 ),
                                 "parse_mode": "Markdown",
                             },
@@ -135,17 +138,17 @@ while True:
                                     json={
                                         "chat_id": recip_tg_id,
                                         "text": (
-                                            f"🎉 **Вам начислено {amount} TON!**\n\n"
-                                            f"Администратор @{ADMIN_USERNAME} пополнил ваш баланс.\n"
+                                            f"🎉 **Вам начислено +{amount} TON!**\n\n"
+                                            f"👑 Администратор @{ADMIN_USERNAME} пополнил ваш баланс.\n"
                                             f"💳 Ваш текущий баланс: **{new_bal} TON**\n\n"
-                                            "🚀 Заходите в игру и побеждайте!"
+                                            "🟢 Заходите в игру и побеждайте!"
                                         ),
                                         "parse_mode": "Markdown",
                                         "reply_markup": {
                                             "inline_keyboard": [
                                                 [
                                                     {
-                                                        "text": "🚀 Открыть SEXY DROP",
+                                                        "text": "🟢 Открыть SEXY DROP",
                                                         "web_app": {"url": app_url},
                                                     }
                                                 ]
@@ -237,16 +240,21 @@ while True:
                     httpx.post(f"{api_url}/sendMessage", json={"chat_id": chat_id, "text": f"Ошибка: {e}"})
                 continue
 
-            # Standard player welcome message (NO DEMO MENTIONS!)
+            # Standard player welcome message (Luxury Emerald Green Theme)
             msg_text = (
-                "🎰 **Добро пожаловать в SEXY DROP!**\n\n"
-                "✨ Полный функционал проекта готов к игре:\n"
-                "• Все кейсы с ценными NFT-дропами\n"
-                "• Игра «Ракетка» (Crash) с плавным полётом\n"
-                "• Все игры (Dice, Mines, Plinko, Upgrade, Craft, Spins, PvP)\n"
-                "• Баланс и ставки строго в **TON**\n"
-                "• Тёмный неоновый дизайн без лишнего визуального шума\n\n"
-                "👇 Нажми на кнопку ниже, чтобы запустить игру:"
+                "🟢 **SEXY DROP — Luxury Crypto Casino & NFT Drops**\n"
+                "────────────────────────\n\n"
+                "💎 **Премиальная платформа в Telegram на базе TON**\n\n"
+                "⚡ **Доступные игровые режимы:**\n"
+                "• 🚀 **Ракетка (Crash)** — 3D космо-джет, общий полёт 24/7\n"
+                "• 🎁 **Кейсы & NFT** — дроп реальных ценных подарков\n"
+                "• 🎲 **Dice, Mines & Plinko** — честный Provably Fair алгоритм\n"
+                "• ⚔️ **PvP Hub & TVT** — дуэли и командные битвы игроков\n"
+                "• 🔄 **Upgrade & Craft** — апгрейд предметов в редкие артефакты\n\n"
+                "💳 Все ставки и мгновенные выплаты строго в **TON**\n"
+                "🛡️ Защищённая бухгалтерская книга транзакций (Ledger)\n\n"
+                "────────────────────────\n"
+                "👇 *Нажмите кнопку ниже для запуска:* "
             )
 
             payload = {
@@ -257,13 +265,13 @@ while True:
                     "inline_keyboard": [
                         [
                             {
-                                "text": "🚀 Играть в SEXY DROP",
+                                "text": "🟢 Играть в SEXY DROP (TON)",
                                 "web_app": {"url": app_url},
                             }
                         ],
                         [
                             {
-                                "text": "🌐 Открыть в браузере",
+                                "text": "💎 Открыть в браузере",
                                 "url": app_url,
                             }
                         ],

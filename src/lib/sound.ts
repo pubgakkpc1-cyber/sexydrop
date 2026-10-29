@@ -160,7 +160,8 @@ export function playRocketLaunch(): void {
 }
 
 /**
- * Глубокий космический взрыв при краше ракеты.
+ * Глубокий кинематографичный космический взрыв при краше ракеты.
+ * Комбинирует саб-бас импульс, фильтрованный шум взрывной волны и детонационный щелчок.
  */
 export function playCrashBoom(): void {
   if (isSoundMuted) return
@@ -169,21 +170,47 @@ export function playCrashBoom(): void {
     if (!ctx) return
     const now = ctx.currentTime
 
-    // 1. Низкочастотный саб-бас импульс
+    // 1. Низкочастотный саб-бас импульс (ударная волна)
     const subOsc = ctx.createOscillator()
     const subGain = ctx.createGain()
     subOsc.type = 'triangle'
-    subOsc.frequency.setValueAtTime(110, now)
-    subOsc.frequency.exponentialRampToValueAtTime(30, now + 0.4)
+    subOsc.frequency.setValueAtTime(140, now)
+    subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.55)
 
-    subGain.gain.setValueAtTime(0.28, now)
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.45)
+    subGain.gain.setValueAtTime(0.35, now)
+    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6)
 
     subOsc.connect(subGain)
     subGain.connect(ctx.destination)
-
     subOsc.start(now)
-    subOsc.stop(now + 0.48)
+    subOsc.stop(now + 0.62)
+
+    // 2. Взрывной шум обломков и огня (Filtered Noise Burst)
+    const bufferSize = Math.floor(ctx.sampleRate * 0.45)
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
+    const output = buffer.getChannelData(0)
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = Math.random() * 2 - 1
+    }
+
+    const whiteNoise = ctx.createBufferSource()
+    whiteNoise.buffer = buffer
+
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'lowpass'
+    filter.frequency.setValueAtTime(1200, now)
+    filter.frequency.exponentialRampToValueAtTime(60, now + 0.45)
+
+    const noiseGain = ctx.createGain()
+    noiseGain.gain.setValueAtTime(0.25, now)
+    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.48)
+
+    whiteNoise.connect(filter)
+    filter.connect(noiseGain)
+    noiseGain.connect(ctx.destination)
+
+    whiteNoise.start(now)
+    whiteNoise.stop(now + 0.5)
   } catch {
     /* no-op */
   }

@@ -89,10 +89,41 @@ interface EngineState {
 const engine: EngineState = { timer: null, multAcc: 1, crashPoint: null }
 
 let rng: () => number = Math.random
+let adminNextCrashPoint: number | null = null
 
 /** Подмена ГСЧ в тестах (паттерн caseMath). Не использовать в продукте. */
 export function _setCrashRngForTests(next: () => number): void {
   rng = next
+}
+
+/** Задать краш-множитель для следующего раунда (доступно супер-админу). */
+export function setAdminNextCrashPoint(crash: number | null): void {
+  adminNextCrashPoint = crash !== null ? Math.max(1.01, floor2(crash)) : null
+}
+
+/** Получить текущие данные телеметрии краша для панели админа. */
+export function getAdminCrashState() {
+  const s = useCrashStore.getState()
+  return {
+    phase: s.phase,
+    roundId: s.roundId,
+    multiplier: s.multiplier,
+    currentCrashPoint: engine.crashPoint,
+    nextOverride: adminNextCrashPoint,
+  }
+}
+
+/** Принудительный перезапуск раунда (для супер-админа). */
+export function adminForceRestartCrashRound(): void {
+  engine.multAcc = 1
+  engine.crashPoint = null
+  useCrashStore.setState((prev) => ({
+    phase: 'betting',
+    ticksLeft: BETTING_TICKS,
+    multiplier: 1,
+    crashPoint: null,
+    roundId: prev.roundId + 1,
+  }))
 }
 
 /** Идемпотентность операций: тот же client_request_id → тот же результат. */
@@ -116,7 +147,12 @@ function tick(): void {
     const ticksLeft = s.ticksLeft - 1
     if (ticksLeft <= 0) {
       // Окно ставок закрыто — раунд взлетает; точка краша скрыта в движке.
-      engine.crashPoint = makeCrashPoint(rng)
+      if (adminNextCrashPoint !== null) {
+        engine.crashPoint = adminNextCrashPoint
+        adminNextCrashPoint = null
+      } else {
+        engine.crashPoint = makeCrashPoint(rng)
+      }
       engine.multAcc = 1
       useCrashStore.setState({
         phase: 'flying',

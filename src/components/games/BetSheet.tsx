@@ -14,6 +14,7 @@ import styles from './BetSheet.module.css'
 export type BetSheetTab = 'gifts' | 'gram'
 
 const PRESETS: readonly Minor[] = [100, 500, 1000, 5000] // 0.1 / 0.5 / 1 / 5 GRAM
+export const LAST_CRASH_BET_KEY = 'sexydrop_crash_last_bet'
 
 export interface BetSheetProps {
   open: boolean
@@ -31,15 +32,21 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
   const items = useInventoryStore((s) => s.items)
 
   const [tab, setTab] = useState<BetSheetTab>('gram')
-  const [amountInput, setAmountInput] = useState('0.1')
+  const [amountInput, setAmountInput] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.localStorage?.getItem(LAST_CRASH_BET_KEY) || '0.1'
+    }
+    return '0.1'
+  })
   const [selectedUid, setSelectedUid] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  // Каждое открытие — чистое состояние.
+  // Каждое открытие — чистое состояние с подгрузкой последней ставки.
   useEffect(() => {
     if (open) {
       setTab('gram')
-      setAmountInput('0.1')
+      const saved = typeof window !== 'undefined' ? window.localStorage?.getItem(LAST_CRASH_BET_KEY) : null
+      setAmountInput(saved || '0.1')
       setSelectedUid(null)
       setError(null)
     }
@@ -74,6 +81,11 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
       if (amountMinor === null || insufficient) return
       const result = placeGramBet(amountMinor, makeRequestId())
       if (result.status === 'ok') {
+        try {
+          window.localStorage?.setItem(LAST_CRASH_BET_KEY, amountInput)
+        } catch {
+          /* no-op */
+        }
         onClose()
       } else {
         setError('Не удалось принять ставку — попробуйте ещё раз')

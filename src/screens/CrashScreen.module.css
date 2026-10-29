@@ -92,6 +92,49 @@
   flex-shrink: 0;
 }
 
+.adminQuickBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 9px;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.45);
+  border-radius: 9999px;
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.adminQuickBtn:hover {
+  background: rgba(245, 158, 11, 0.28);
+  border-color: rgba(245, 158, 11, 0.7);
+  transform: scale(1.02);
+}
+
+.adminQuickBtn:active {
+  transform: scale(0.96);
+}
+
+.adminCrownIcon {
+  width: 13px;
+  height: 13px;
+  color: #fbbf24;
+  flex-shrink: 0;
+}
+
+.repeatBetChip {
+  background: rgba(56, 189, 248, 0.18) !important;
+  border-color: rgba(56, 189, 248, 0.5) !important;
+  color: #38bdf8 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+}
+
 .soundBtn {
   display: inline-flex;
   align-items: center;
@@ -200,6 +243,31 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12);
   overflow: hidden;
+  transition: background 0.8s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.8s ease, box-shadow 0.8s ease;
+}
+
+/* Background Tiers for Arena (Динамическая смена фона по иксам) */
+.arena[data-tier='cosmic'] {
+  background: radial-gradient(circle at 60% 40%, rgba(30, 27, 75, 0.5) 0%, rgba(9, 9, 15, 0.98) 75%), #07070c;
+  border-color: rgba(99, 102, 241, 0.22);
+}
+
+.arena[data-tier='nebula'] {
+  background: radial-gradient(circle at 60% 40%, rgba(112, 26, 117, 0.55) 0%, rgba(15, 8, 30, 0.98) 75%), #0b0518;
+  border-color: rgba(168, 85, 247, 0.4);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 28px rgba(168, 85, 247, 0.22);
+}
+
+.arena[data-tier='hyper'] {
+  background: radial-gradient(circle at 60% 40%, rgba(8, 145, 178, 0.55) 0%, rgba(4, 18, 32, 0.98) 75%), #03101c;
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.6), 0 0 32px rgba(56, 189, 248, 0.3);
+}
+
+.arena[data-tier='supernova'] {
+  background: radial-gradient(circle at 60% 40%, rgba(217, 119, 6, 0.6) 0%, rgba(28, 10, 4, 0.98) 75%), #150502;
+  border-color: rgba(245, 158, 11, 0.65);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.7), 0 0 40px rgba(245, 158, 11, 0.45);
 }
 
 /* Ambient cosmic stars */
@@ -448,7 +516,7 @@
   }
 }
 
-/* Flying Multiplier Display */
+/* Flying Multiplier Display (Компактный технологичный икс) */
 .flyingCenter {
   position: absolute;
   top: 24px;
@@ -462,14 +530,40 @@
   z-index: 5;
 }
 
+.compactMultiplierChip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 18px;
+  background: rgba(14, 18, 30, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 9999px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 16px rgba(56, 189, 248, 0.25);
+  animation: chipPulse 2s infinite alternate ease-in-out;
+}
+
+@keyframes chipPulse {
+  0% {
+    border-color: rgba(56, 189, 248, 0.35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 14px rgba(56, 189, 248, 0.2);
+  }
+  100% {
+    border-color: rgba(56, 189, 248, 0.6);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), 0 0 22px rgba(56, 189, 248, 0.4);
+  }
+}
+
 .multiplierFlying {
-  font-size: 44px;
+  font-size: 26px;
   font-weight: 800;
-  letter-spacing: 0;
+  letter-spacing: -0.2px;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
   color: #ffffff;
-  text-shadow: 0 4px 24px rgba(56, 189, 248, 0.6);
+  text-shadow: 0 0 14px rgba(56, 189, 248, 0.75);
+  line-height: 1;
 }
 
 /* Crashed Display (Big bold typography matching video frame 11) */
@@ -840,6 +934,17 @@
   border-color: rgba(34, 197, 94, 0.3);
 }
 
+.playerCardActiveBlue {
+  background: rgba(2, 132, 199, 0.08);
+  border-color: rgba(56, 189, 248, 0.28);
+}
+
+.playerCardLost {
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
 .playerLeft {
   display: flex;
   align-items: center;
@@ -971,6 +1076,19 @@
   background: rgba(34, 197, 94, 0.18);
   border-color: rgba(34, 197, 94, 0.45);
   color: #4ade80;
+}
+
+.profitActiveBlue {
+  background: rgba(2, 132, 199, 0.22);
+  border-color: rgba(56, 189, 248, 0.55);
+  color: #38bdf8;
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.28);
+}
+
+.profitLost {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #f87171;
 }
 
 .playerGiftWon {

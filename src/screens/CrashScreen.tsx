@@ -21,8 +21,10 @@ import {
   isSoundEnabled,
   setSoundMuted,
 } from '../lib/sound'
-import { getWebApp } from '../lib/telegram'
-import { BetSheet } from '../components/games/BetSheet'
+import { getWebApp, getTelegramUser } from '../lib/telegram'
+import { BetSheet, LAST_CRASH_BET_KEY } from '../components/games/BetSheet'
+import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
+import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
   ChevronLeftIcon,
   TonIcon,
@@ -104,9 +106,34 @@ export function CrashScreen() {
   const balance = wallet.balances[wallet.mode]
 
   const [betSheetOpen, setBetSheetOpen] = useState(false)
+  const [adminModalOpen, setAdminModalOpen] = useState(false)
   const [soundActive, setSoundActive] = useState(() => isSoundEnabled())
   const [autoCashout, setAutoCashout] = useState<number | null>(null)
   const [cosmicReward, setCosmicReward] = useState<Gift | null>(null)
+
+  // Проверка супер-администратора (@zapixxgarant)
+  const tgUser = useMemo(() => getTelegramUser(), [])
+  const cleanUsername = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
+  const isAdmin =
+    cleanUsername === 'zapixxgarant' ||
+    (typeof window !== 'undefined' && window.localStorage?.getItem('sexydrop_admin') === 'true')
+
+  // Запомненная последняя ставка
+  const [lastBetAmount, setLastBetAmount] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return window.localStorage?.getItem(LAST_CRASH_BET_KEY) || '0.1'
+    }
+    return '0.1'
+  })
+
+  // Динамический фон арены по тирам множителя
+  const bgTier = useMemo(() => {
+    if (phase !== 'flying' && phase !== 'crashed') return 'cosmic'
+    if (multiplier >= 10.0) return 'supernova'
+    if (multiplier >= 5.0) return 'hyper'
+    if (multiplier >= 2.0) return 'nebula'
+    return 'cosmic'
+  }, [phase, multiplier])
 
   // Пул живых игроков раунда
   const [players, setPlayers] = useState<SimulatedPlayer[]>([])
@@ -115,10 +142,15 @@ export function CrashScreen() {
   const prevPhaseRef = useRef(phase)
   const prevSecRef = useRef<number>(-1)
 
-  // Запуск локального движка при входе
+  // Запуск локального движка: в живом приложении ракетка всегда активна (24/7);
+  // в vitest-тестах останавливается для изоляции окружения
   useEffect(() => {
     startCrashEngine()
-    return () => stopCrashEngine()
+    return () => {
+      if (import.meta.env.MODE === 'test') {
+        stopCrashEngine()
+      }
+    }
   }, [])
 
   // Обновление игроков при смене раунда
@@ -198,10 +230,16 @@ export function CrashScreen() {
     }
   }
 
-  // Быстрая ставка GRAM в один клик
+  // Быстрая ставка TON в один клик с запоминанием последней ставки
   const handleQuickBet = (amountGram: number) => {
     if (phase !== 'betting' || myBet !== null) return
     const amountMinor = Math.round(amountGram * 1000)
+    try {
+      window.localStorage?.setItem(LAST_CRASH_BET_KEY, String(amountGram))
+      setLastBetAmount(String(amountGram))
+    } catch {
+      /* no-op */
+    }
     placeGramBet(amountMinor, makeRequestId())
   }
 
@@ -293,8 +331,22 @@ export function CrashScreen() {
       })
     }
 
-    // Сортировка ставок от большого к маленькому (descending)
-    return rows.sort((a, b) => b.stakeMinor - a.stakeMinor)
+    // Сортировка:
+    // 1. Выигравшие игроки (isCashed) — ВВЕРХУ (выше всех)
+    // 2. Активные ставки (в полёте) — ПОСЕРЕДИНЕ
+    // 3. Слившие игроки (в фазе краша без кешаута) — В САМЫЙ НИЗ
+    // Внутри каждой группы — сортировка по величине ставки (descending)
+    return rows.sort((a, b) => {
+      const isLostA = phase === 'crashed' && !a.isCashed
+      const isLostB = phase === 'crashed' && !b.isCashed
+      const priorityA = a.isCashed ? 1 : isLostA ? 3 : 2
+      const priorityB = b.isCashed ? 1 : isLostB ? 3 : 2
+
+      if (priorityA !== priorityB) {
+        return priorityA - priorityB
+      }
+      return b.stakeMinor - a.stakeMinor
+    })
   }, [players, myBet, phase, multiplier])
 
   return (
@@ -317,6 +369,18 @@ export function CrashScreen() {
         </div>
 
         <div className={styles.headerRight}>
+          {isAdmin && (
+            <button
+              type="button"
+              className={styles.adminQuickBtn}
+              onClick={() => setAdminModalOpen(true)}
+              aria-label="Панель администратора"
+            >
+              <CrownIcon className={styles.adminCrownIcon} />
+              <span>Админ</span>
+            </button>
+          )}
+
           <button
             type="button"
             className={styles.soundBtn}
@@ -346,7 +410,15 @@ export function CrashScreen() {
       <h1 className={styles.srOnly}>Ракетка</h1>
 
       {/* 3. Космическая Арена Полёта Ракеты */}
-      <div className={styles.arena} data-phase={phase} aria-label="Арена полёта ракеты">
+      <div
+        className={styles.arena}
+        data-phase={phase}
+        data-tier={bgTier}
+        aria-label="Арена полёта ракеты"
+      >
+        {/* Высокодетализированная 3D Ракета, цикличная пульсация двигателя, плазменный шлейф, пролетающие звезды и взрыв */}
+        <Rocket3DCanvas phase={phase} multiplier={multiplier} />
+
         {/* Фоновые звёзды */}
         <div className={styles.starField} aria-hidden>
           {STARS.map((s, i) => (
@@ -516,10 +588,12 @@ export function CrashScreen() {
           </div>
         )}
 
-        {/* ФАЗА 2: Полёт — текущий множитель */}
+        {/* ФАЗА 2: Полёт — компактный технологичный множитель */}
         {phase === 'flying' && (
           <div className={styles.flyingCenter}>
-            <span className={styles.multiplierFlying}>x{multiplier.toFixed(2)}</span>
+            <div className={styles.compactMultiplierChip}>
+              <span className={styles.multiplierFlying}>x{multiplier.toFixed(2)}</span>
+            </div>
           </div>
         )}
 
@@ -644,6 +718,16 @@ export function CrashScreen() {
         {phase === 'betting' && myBet === null && (
           <div className={styles.quickControlsRow}>
             <div className={styles.quickChipsGroup}>
+              {lastBetAmount && parseFloat(lastBetAmount) > 0 && (
+                <button
+                  type="button"
+                  className={cx(styles.quickChip, styles.repeatBetChip)}
+                  onClick={() => handleQuickBet(parseFloat(lastBetAmount))}
+                  title="Повторить последнюю ставку"
+                >
+                  ⚡ {lastBetAmount} TON
+                </button>
+              )}
               <button
                 type="button"
                 className={styles.quickChip}
@@ -715,6 +799,8 @@ export function CrashScreen() {
                 styles.playerCard,
                 row.isUser && styles.playerCardUser,
                 row.isCashed && styles.playerCardWon,
+                !row.isCashed && phase === 'flying' && styles.playerCardActiveBlue,
+                phase === 'crashed' && !row.isCashed && styles.playerCardLost,
               )}
             >
               <div className={styles.playerLeft}>
@@ -748,7 +834,7 @@ export function CrashScreen() {
                     />
                     <TonIcon className={styles.playerStakeDiamond} />
                     <span>
-                      {formatMinor(row.stakeMinor)} × {row.multToShow.toFixed(2)}
+                      {formatMinor(row.stakeMinor)} × {(Math.floor(row.multToShow * 10) / 10).toFixed(1)}x
                     </span>
                   </div>
                 </div>
@@ -759,6 +845,8 @@ export function CrashScreen() {
                   className={cx(
                     styles.playerProfitPill,
                     row.isCashed && styles.profitWon,
+                    !row.isCashed && phase === 'flying' && styles.profitActiveBlue,
+                    phase === 'crashed' && !row.isCashed && styles.profitLost,
                   )}
                 >
                   <TonIcon className={styles.profitTonIcon} />
@@ -796,6 +884,11 @@ export function CrashScreen() {
 
       {/* Шит ставки (Dual Betting: GRAM или Подарок) */}
       <BetSheet open={betSheetOpen} onClose={() => setBetSheetOpen(false)} />
+
+      {/* Мини-админка для @zapixxgarant */}
+      {isAdmin && (
+        <CrashMiniAdminModal open={adminModalOpen} onClose={() => setAdminModalOpen(false)} />
+      )}
 
       {/* Модальное окно Космического Дропа / Победы с равноценным NFT */}
       {cosmicReward && (

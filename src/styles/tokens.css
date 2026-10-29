@@ -48,6 +48,17 @@
   --rarity-epic: #a855f7;
   --rarity-legendary: #f5b942;
 
+  /* --- Emerald High Roller Palette (Luxury Web3 Casino Theme) --- */
+  --emerald-void: #07110e;
+  --emerald-card: #0b1e19;
+  --emerald-card-elevated: #102c24;
+  --emerald-neon: #00ff88;
+  --emerald-glow: rgba(0, 255, 136, 0.35);
+  --emerald-mint: #79ffd2;
+  --luxury-gold: #d4af37;
+  --luxury-gold-glow: rgba(212, 175, 55, 0.4);
+  --emerald-text-primary: #f0fdf4;
+
   /* --- Отступы (шкала 4px) --- */
   --space-1: 4px;
   --space-2: 8px;

@@ -38,7 +38,7 @@ while True:
             sender_username = (from_user.get("username") or "").lstrip("@").lower()
             text = (msg.get("text") or "").strip()
 
-            # Always ensure chat menu button is set for this chat
+            # Always ensure chat menu button is set for this chat (Emerald High Roller VIP)
             try:
                 httpx.post(
                     f"{api_url}/setChatMenuButton",
@@ -46,7 +46,7 @@ while True:
                         "chat_id": chat_id,
                         "menu_button": {
                             "type": "web_app",
-                            "text": "Открыть SEXY DROP",
+                            "text": "🟢 SEXY DROP | VIP",
                             "web_app": {"url": app_url},
                         },
                     },
@@ -67,11 +67,14 @@ while True:
                         json={
                             "chat_id": chat_id,
                             "text": (
-                                "ℹ️ **Формат команды для выдачи TON:**\n"
+                                "⚜️ **EMERALD HIGH ROLLER ADMIN — ВЫДАЧА TON**\n"
+                                "────────────────────────\n"
+                                "Формат команды:\n"
                                 "`/give @username <сумма>`\n\n"
-                                "Пример:\n"
-                                "`/give @durov 25.5`\n"
-                                "`/give test_user 100`"
+                                "Примеры:\n"
+                                "• `/give @durov 50`\n"
+                                "• `/give zapixxgarant 100`\n"
+                                "────────────────────────"
                             ),
                             "parse_mode": "Markdown",
                         },
@@ -89,7 +92,8 @@ while True:
                         f"{api_url}/sendMessage",
                         json={
                             "chat_id": chat_id,
-                            "text": "❌ Ошибка: укажите корректное положительное число для суммы TON.",
+                            "text": "❌ **Ошибка:** Укажите положительное число для суммы TON.",
+                            "parse_mode": "Markdown",
                         },
                         timeout=5.0,
                     )
@@ -103,7 +107,7 @@ while True:
                         json={
                             "username": target_username,
                             "amount_ton": float(amount),
-                            "description": f"Выдача администратором @{ADMIN_USERNAME}",
+                            "description": f"Выдача High Roller администратором @{ADMIN_USERNAME}",
                         },
                         timeout=10.0,
                     )
@@ -117,13 +121,14 @@ while True:
                             json={
                                 "chat_id": chat_id,
                                 "text": (
-                                    "🟢 **Транзакция успешно выполнена!**\n"
+                                    "🟢 ══════════════════════ 🟢\n"
+                                    "⚜️ **EMERALD VIP: НАЧИСЛЕНИЕ ВЫПОЛНЕНО**\n"
                                     "────────────────────────\n"
-                                    f"👤 Получатель: **@{target_username}**\n"
-                                    f"💎 Начислено: **{amount} TON**\n"
+                                    f"👤 Игрок: **@{target_username}**\n"
+                                    f"💎 Начислено: **+{amount} TON**\n"
                                     f"💳 Новый баланс: **{new_bal} TON**\n"
-                                    "────────────────────────\n"
-                                    "⚡ Запись внесена в Ledger базы данных."
+                                    "🛡️ Транзакция зафиксирована в Ledger\n"
+                                    "🟢 ══════════════════════ 🟢"
                                 ),
                                 "parse_mode": "Markdown",
                             },
@@ -138,17 +143,21 @@ while True:
                                     json={
                                         "chat_id": recip_tg_id,
                                         "text": (
-                                            f"🎉 **Вам начислено +{amount} TON!**\n\n"
-                                            f"👑 Администратор @{ADMIN_USERNAME} пополнил ваш баланс.\n"
-                                            f"💳 Ваш текущий баланс: **{new_bal} TON**\n\n"
-                                            "🟢 Заходите в игру и побеждайте!"
+                                            "🟢 ══════════════════════ 🟢\n"
+                                            "🎉 **ВАШ БАЛАНС ПОПОЛНЕН!** ⚜️\n"
+                                            "────────────────────────\n"
+                                            f"👑 Главный администратор @{ADMIN_USERNAME} начислил вам:\n"
+                                            f"💎 **+{amount} TON**\n\n"
+                                            f"💳 Ваш текущий баланс: **{new_bal} TON**\n"
+                                            "────────────────────────\n"
+                                            "🚀 Заходите в игру и побеждайте в статусе VIP!"
                                         ),
                                         "parse_mode": "Markdown",
                                         "reply_markup": {
                                             "inline_keyboard": [
                                                 [
                                                     {
-                                                        "text": "🟢 Открыть SEXY DROP",
+                                                        "text": "🟢 Открыть SEXY DROP (TON)",
                                                         "web_app": {"url": app_url},
                                                     }
                                                 ]
@@ -166,8 +175,8 @@ while True:
                             json={
                                 "chat_id": chat_id,
                                 "text": (
-                                    f"❌ Пользователь **@{target_username}** не найден в базе данных.\n\n"
-                                    "Пользователь должен хотя бы один раз запустить бота @sexydropbot, чтобы у него создался кошелёк."
+                                    f"❌ Игрок **@{target_username}** пока не зарегистрирован в базе данных.\n\n"
+                                    "Ему нужно отправить команду /start в @sexydropbot, чтобы активировать кошелёк."
                                 ),
                                 "parse_mode": "Markdown",
                             },
@@ -179,7 +188,7 @@ while True:
                             f"{api_url}/sendMessage",
                             json={
                                 "chat_id": chat_id,
-                                "text": f"❌ Ошибка при начислении: {detail}",
+                                "text": f"❌ Ошибка начисления: {detail}",
                             },
                             timeout=5.0,
                         )
@@ -189,7 +198,7 @@ while True:
                         f"{api_url}/sendMessage",
                         json={
                             "chat_id": chat_id,
-                            "text": f"❌ Ошибка соединения с сервером: {e}",
+                            "text": f"❌ Ошибка соединения с бэкендом: {e}",
                         },
                         timeout=5.0,
                     )
@@ -201,13 +210,16 @@ while True:
                     json={
                         "chat_id": chat_id,
                         "text": (
-                            f"👑 **Панель Администратора (@{ADMIN_USERNAME})**\n\n"
-                            "Вам доступны команды управления:\n"
-                            "• `/give @username <сумма>` — выдать TON по юзернейму\n"
-                            "• `/users` — список зарегистрированных игроков\n\n"
-                            "Примеры:\n"
-                            "`/give @ivan 15`\n"
-                            "`/give zapixxgarant 100`"
+                            "👑 ⚜️ **EMERALD HIGH ROLLER ADMIN PANEL** ⚜️ 👑\n"
+                            f"Администратор: @{ADMIN_USERNAME}\n"
+                            "────────────────────────\n\n"
+                            "⚡ **Команды быстрого управления:**\n"
+                            "• `/give @username <сумма>` — выдать TON игроку\n"
+                            "• `/users` — список зарегистрированных игроков и балансов\n"
+                            "• `/admin` — справка по управлению\n\n"
+                            "💎 **Внутри Web App:**\n"
+                            "В шапке и в Ракетке доступна кнопка `👑 Админ` для живой телеметрии и настройки краша!\n"
+                            "────────────────────────"
                         ),
                         "parse_mode": "Markdown",
                     },
@@ -223,7 +235,10 @@ while True:
                         timeout=10.0,
                     )
                     users_list = res.json()
-                    lines = [f"👥 **Всего игроков в базе:** {len(users_list)}\n"]
+                    lines = [
+                        "👥 ⚜️ **РЕЕСТР ИГРОКОВ (EMERALD LEDGER)** ⚜️",
+                        f"Всего пользователей: **{len(users_list)}**\n",
+                    ]
                     for u in users_list[:15]:
                         u_name = f"@{u['username']}" if u.get("username") else f"ID: {u['telegram_id']}"
                         lines.append(f"• {u_name} ({u.get('first_name') or 'Игрок'}): **{u.get('balance_ton', '0.000')} TON**")
@@ -240,19 +255,20 @@ while True:
                     httpx.post(f"{api_url}/sendMessage", json={"chat_id": chat_id, "text": f"Ошибка: {e}"})
                 continue
 
-            # Standard player welcome message (Luxury Emerald Green Theme)
+            # Standard player welcome message (Emerald High Roller Luxury Theme)
             msg_text = (
-                "🟢 **SEXY DROP — Luxury Crypto Casino & NFT Drops**\n"
+                "🟢 ⚜️ **SEXY DROP — EMERALD HIGH ROLLER** ⚜️ 🟢\n"
                 "────────────────────────\n\n"
-                "💎 **Премиальная платформа в Telegram на базе TON**\n\n"
-                "⚡ **Доступные игровые режимы:**\n"
-                "• 🚀 **Ракетка (Crash)** — 3D космо-джет, общий полёт 24/7\n"
-                "• 🎁 **Кейсы & NFT** — дроп реальных ценных подарков\n"
-                "• 🎲 **Dice, Mines & Plinko** — честный Provably Fair алгоритм\n"
-                "• ⚔️ **PvP Hub & TVT** — дуэли и командные битвы игроков\n"
-                "• 🔄 **Upgrade & Craft** — апгрейд предметов в редкие артефакты\n\n"
-                "💳 Все ставки и мгновенные выплаты строго в **TON**\n"
-                "🛡️ Защищённая бухгалтерская книга транзакций (Ledger)\n\n"
+                "💎 **Премиальная Web3 платформа в Telegram**\n"
+                "🍀 Баланс, ставки и моментальный вывод строго в **TON**\n\n"
+                "⚡ **Игровые режимы платформы:**\n"
+                "• 🚀 **Ракетка (Crash 3D)** — объёмный космо-джет, общий полёт 24/7\n"
+                "• 🎁 **VIP NFT-Кейсы** — дроп реальных коллекционных подарков\n"
+                "• 🎲 **Classic Live Hub** — Mines, Plinko, Dice, Spins\n"
+                "• ⚔️ **PvP Hub** — Solo Jackpot и TVT (Ice vs Fire)\n"
+                "• 🔄 **Upgrade & Craft** — превращение предметов в ценные NFT\n\n"
+                "🛡️ Двусторонняя бухгалтерская книга транзакций (Ledger)\n"
+                "✨ Без лишнего шума — только чистый азарт и крупные иксы!\n\n"
                 "────────────────────────\n"
                 "👇 *Нажмите кнопку ниже для запуска:* "
             )
@@ -271,7 +287,7 @@ while True:
                         ],
                         [
                             {
-                                "text": "💎 Открыть в браузере",
+                                "text": "⚜️ Открыть в браузере",
                                 "url": app_url,
                             }
                         ],

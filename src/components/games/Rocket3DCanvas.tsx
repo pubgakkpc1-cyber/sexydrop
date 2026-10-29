@@ -472,12 +472,45 @@ export function Rocket3DCanvas({
 
       state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
 
-      // --- 2. Шлейф плазмы и выхлопа (Trail Particles) в полёте ---
+      // --- 2. Неоновая дуговая траектория полёта (1:1 по референсу) и шлейф плазмы ---
       if (currentPhase === 'flying') {
         const rad = (currentAngle * Math.PI) / 180
         const nozzleDist = 52
         const nozzleX = currentX - Math.cos(rad) * nozzleDist
         const nozzleY = currentY - Math.sin(rad) * nozzleDist
+
+        // Изогнутая неоновая траектория полёта (по референсу ZAP GIFTS)
+        const startArcX = width * 0.12
+        const startArcY = currentProps.fullscreen ? Math.min(height * 0.46, 310) : height * 0.72
+        const ctrlX = (startArcX + nozzleX) * 0.46
+        const ctrlY = Math.max(startArcY, nozzleY) + 24
+
+        ctx.save()
+        ctx.lineCap = 'round'
+
+        // 1. Мягкое неоновое свечение дуги
+        ctx.strokeStyle = 'rgba(37, 99, 235, 0.28)'
+        ctx.lineWidth = 7.5
+        ctx.shadowColor = '#38bdf8'
+        ctx.shadowBlur = 14
+        ctx.beginPath()
+        ctx.moveTo(startArcX, startArcY)
+        ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
+        ctx.stroke()
+
+        // 2. Яркая неоновая сердцевина дуги
+        const arcGrad = ctx.createLinearGradient(startArcX, startArcY, nozzleX, nozzleY)
+        arcGrad.addColorStop(0, 'rgba(37, 99, 235, 0.45)')
+        arcGrad.addColorStop(0.65, '#2563eb')
+        arcGrad.addColorStop(1, '#38bdf8')
+        ctx.strokeStyle = arcGrad
+        ctx.lineWidth = 3.6
+        ctx.shadowBlur = 0
+        ctx.beginPath()
+        ctx.moveTo(startArcX, startArcY)
+        ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
+        ctx.stroke()
+        ctx.restore()
 
         for (let i = 0; i < 3; i++) {
           const spread = (Math.random() - 0.5) * 9

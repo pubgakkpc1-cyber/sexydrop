@@ -426,7 +426,7 @@ export function CrashScreen() {
         data-tier={bgTier}
         aria-label="Арена полёта ракеты"
       >
-        {/* Индикатор этапов NFT Дропа (2x Дроп, 5x Редкий, 10x Легендарный) */}
+        {/* Индикатор этапов NFT Дропа (2x Дроп, 5x Редкий, 10x Легендарный 1:1 по референсу) */}
         <div className={styles.nftMilestonesRow} aria-label="Этапы NFT Дропа">
           <div
             className={cx(
@@ -435,8 +435,7 @@ export function CrashScreen() {
             )}
           >
             <span className={styles.milestoneIcon}>⚡</span>
-            <span className={styles.milestoneVal}>2x</span>
-            <span className={styles.milestoneName}>Дроп NFT</span>
+            <span className={styles.milestoneLabel}>2x Дроп</span>
           </div>
 
           <div
@@ -446,8 +445,7 @@ export function CrashScreen() {
             )}
           >
             <span className={styles.milestoneIcon}>⭐</span>
-            <span className={styles.milestoneVal}>5x</span>
-            <span className={styles.milestoneName}>Редкий</span>
+            <span className={styles.milestoneLabel}>5x Редкий</span>
           </div>
 
           <div
@@ -457,8 +455,7 @@ export function CrashScreen() {
             )}
           >
             <span className={styles.milestoneIcon}>👑</span>
-            <span className={styles.milestoneVal}>10x</span>
-            <span className={styles.milestoneName}>Легендарный</span>
+            <span className={styles.milestoneLabel}>10x Легендарный</span>
           </div>
         </div>
 

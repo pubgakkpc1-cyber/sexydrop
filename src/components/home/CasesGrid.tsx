@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { paidCases } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { cx } from '../../lib/cx'
-import { DiamondIcon, SparkleIcon } from '../shell/icons'
+import { TonIcon, SparkleIcon } from '../shell/icons'
 import styles from './CasesGrid.module.css'
 
 /**
@@ -38,7 +38,7 @@ export function CasesGrid() {
               <span className={styles.bar}>
                 <span className={styles.name}>{gameCase.name}</span>
                 <span className={cx(styles.pricePill, cheap ? styles.pillGreen : styles.pillPurple)}>
-                  <DiamondIcon className={styles.pillIcon} aria-hidden />
+                  <TonIcon className={styles.pillIcon} aria-hidden />
                   {formatMinor(gameCase.priceMinor)}
                 </span>
               </span>

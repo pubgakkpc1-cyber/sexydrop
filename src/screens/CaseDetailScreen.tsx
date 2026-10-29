@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CaseRoulette } from '../components/cases/CaseRoulette'
 import { CaseWinModal } from '../components/cases/CaseWinModal'
+import { FreeQuestModal } from '../components/cases/FreeQuestModal'
 import {
   ChevronLeftIcon,
   ClockIcon,
@@ -9,6 +10,7 @@ import {
   GiftIcon,
   CubeIcon,
   TonIcon,
+  LockIcon,
 } from '../components/shell/icons'
 import { UserAvatar } from '../components/ui/UserAvatar'
 import { caseById, giftById, type FreeCaseId, type Gift } from '../data/catalog'
@@ -17,7 +19,7 @@ import { formatMinor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import { claimFreeCase, openCase } from '../services/demoCaseService'
 import { hapticImpact } from '../lib/telegram'
-import { useFreeCasesStore } from '../store/freeCases'
+import { useFreeCasesStore, getMsk23ResetInfo } from '../store/freeCases'
 import { useWalletStore } from '../store/wallet'
 import styles from './CaseDetailScreen.module.css'
 
@@ -27,24 +29,15 @@ function formatCountdown(ms: number): string {
   const minutes = Math.floor((totalSeconds % 3600) / 60)
   const seconds = totalSeconds % 60
   if (hours > 0) {
-    return `${hours}h ${minutes}m ${seconds}s`
+    return `${hours}ч ${String(minutes).padStart(2, '0')}м ${String(seconds).padStart(2, '0')}с`
   }
-  return `${minutes}m ${seconds}s`
+  return `${minutes}м ${String(seconds).padStart(2, '0')}с`
 }
 
 function formatChance(bps: number): string {
   return `${(bps / 100).toFixed(2)}%`
 }
 
-/**
- * Экран кейса (по референсу видео 1:1):
- * 1. Шапка: Назад, бренд Epic Gift, баланс + пополнить.
- * 2. Верхний тикер последних ТОП дропов.
- * 3. Встроенная горизонтальная рулетка с центральной стрелкой-маркером, физикой замедления и звуками.
- * 4. Блок действия: таймер кулдауна («Возвращайтесь через ...») либо яркая кнопка «Открыть».
- * 5. Сетка наград в 2 колонки с золотой рамкой, ценой и плашкой «Случайный».
- * 6. Модалка победы с возможностью забрать подарок или мгновенно продать за GRAM.
- */
 export function CaseDetailScreen() {
   const { caseId } = useParams()
   const navigate = useNavigate()
@@ -52,12 +45,14 @@ export function CaseDetailScreen() {
 
   const balance = useWalletStore((s) => s.balances[s.mode])
   const lastClaimAt = useFreeCasesStore((s) => s.lastClaimAt)
+  const quest = useFreeCasesStore((s) => s.quest)
 
   const [now, setNow] = useState(() => Date.now())
   const [isSpinning, setIsSpinning] = useState(false)
   const [targetGiftId, setTargetGiftId] = useState<string | null>(null)
   const [spinResult, setSpinResult] = useState<{ gift: Gift; uid: string } | null>(null)
   const [winModalOpen, setWinModalOpen] = useState(false)
+  const [questModalOpen, setQuestModalOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   // Таймер для обновления кулдауна каждую секунду
@@ -77,13 +72,20 @@ export function CaseDetailScreen() {
     )
   }
 
-  // Расчёт кулдауна для бесплатных кейсов
+  // Расчёт кулдауна для бесплатных кейсов (ежедневный сброс в 23:00 МСК)
   const isFreeCase = gameCase.freeCooldownMs !== null
   const freeCaseId = isFreeCase ? (gameCase.id as FreeCaseId) : null
+  const isDailyFree = freeCaseId === 'free24'
+  const isQuestFree = freeCaseId === 'free'
+
+  const resetInfo = getMsk23ResetInfo(now)
   const lastClaim = freeCaseId ? lastClaimAt[freeCaseId] : 0
-  const availableAt = freeCaseId && lastClaim > 0 ? lastClaim + (gameCase.freeCooldownMs ?? 0) : 0
-  const onCooldown = isFreeCase && availableAt > now
-  const cooldownRemainingMs = onCooldown ? availableAt - now : 0
+  const isAvailable = isFreeCase ? resetInfo.isAvailable(lastClaim) : true
+  const onCooldown = isFreeCase && !isAvailable
+  const cooldownRemainingMs = onCooldown ? resetInfo.remainingMs : 0
+
+  const hasPendingQuestReward =
+    isQuestFree && quest.pendingReward !== null && now < quest.pendingReward.expiresAt
 
   const affordable = balance >= gameCase.priceMinor
 
@@ -111,11 +113,11 @@ export function CaseDetailScreen() {
           setIsSpinning(true)
         }
       } else {
-        setError('Кейс пока на кулдауне')
+        setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
       }
     } else {
       if (!affordable) {
-        setError('Недостаточно TON — пополните баланс')
+        navigate('/deposit')
         return
       }
       const result = openCase(gameCase.id, makeRequestId())
@@ -134,7 +136,11 @@ export function CaseDetailScreen() {
 
   const handleSpinComplete = () => {
     setIsSpinning(false)
-    setWinModalOpen(true)
+    if (isQuestFree) {
+      setQuestModalOpen(true)
+    } else {
+      setWinModalOpen(true)
+    }
   }
 
   const handleCloseWinModal = () => {
@@ -143,9 +149,15 @@ export function CaseDetailScreen() {
     setTargetGiftId(null)
   }
 
+  const handleCloseQuestModal = () => {
+    setQuestModalOpen(false)
+    setSpinResult(null)
+    setTargetGiftId(null)
+  }
+
   return (
     <div className={styles.screen}>
-      {/* 1. Верхняя панель в стиле Apple Liquid Glass */}
+      {/* 1. Верхняя панель (по референсу фото) */}
       <header className={styles.topNav}>
         <button
           type="button"
@@ -162,36 +174,65 @@ export function CaseDetailScreen() {
           <span className={styles.backText}>Назад</span>
         </button>
 
-        <div className={styles.centerBadge}>
-          <span className={styles.appBrand}>SEXY DROP</span>
-          <span className={styles.badgeDivider}>•</span>
-          <span className={styles.caseBadgeTitle}>{gameCase.name}</span>
+        <div className={styles.brandTitle}>
+          <span>SEXY DROP</span>
         </div>
 
-        <div className={styles.balancePill}>
-          <UserAvatar size={24} className={styles.balanceAvatar} />
-          <div className={styles.balanceTextGroup}>
-            <span className={styles.balanceValue}>
-              <TonIcon style={{ width: '13px', height: '13px', display: 'inline', verticalAlign: '-1px', marginRight: '3px' }} />
-              {formatMinor(balance)} TON
+        <div className={styles.headerRight}>
+          <UserAvatar size={32} className={styles.userAvatar} />
+          <div className={styles.balanceCol}>
+            <span className={styles.balanceLabel}>Ваш баланс</span>
+            <span className={styles.balanceVal}>
+              <TonIcon style={{ width: '13px', height: '13px', marginRight: '3px' }} />
+              {formatMinor(balance)}
             </span>
           </div>
+
           <button
             type="button"
-            className={styles.depositButton}
+            className={styles.depositPill}
             onClick={() => {
               hapticImpact('light')
               navigate('/deposit')
             }}
-            title="Пополнить баланс"
-            aria-label="Пополнить баланс"
           >
             + Пополнить
           </button>
         </div>
       </header>
 
-      {/* 2. Горизонтальная рулетка с анимацией и центральной стрелкой */}
+      {/* 2. Заголовок кейса (как на фото) */}
+      <div className={styles.caseHeading}>
+        <h1 className={styles.caseTitle}>{gameCase.name} Кейс</h1>
+        <p className={styles.caseSubtitle}>
+          {isDailyFree
+            ? 'Ежедневный сундук · Доступно 1 раз в 24 часа (сброс в 23:00 МСК)'
+            : isQuestFree
+            ? 'Фри кейс с заданием · Пригласите 5 друзей с TG Premium (3 дня на активацию)'
+            : 'Официальные Telegram подарки · Мгновенный вывод или продажа за TON'}
+        </p>
+      </div>
+
+      {/* Плашка напоминания активного квеста, если подарок заблокирован */}
+      {hasPendingQuestReward && (
+        <div
+          className={styles.questReminderBanner}
+          onClick={() => setQuestModalOpen(true)}
+          role="button"
+          tabIndex={0}
+        >
+          <div className={styles.reminderLeft}>
+            <LockIcon className={styles.reminderLockIcon} />
+            <div className={styles.reminderTexts}>
+              <strong className={styles.reminderTitle}>У вас есть выигранный подарок на замке!</strong>
+              <span className={styles.reminderSub}>Нажмите, чтобы открыть задания для активации (3 дня)</span>
+            </div>
+          </div>
+          <span className={styles.reminderBtn}>Открыть</span>
+        </div>
+      )}
+
+      {/* 3. Горизонтальная рулетка */}
       <CaseRoulette
         caseDefinition={gameCase}
         targetGiftId={targetGiftId}
@@ -199,63 +240,76 @@ export function CaseDetailScreen() {
         onSpinComplete={handleSpinComplete}
       />
 
-      {/* 4. Блок статуса и кнопки открытия */}
+      {/* 4. Главная кнопка действия */}
       <div className={styles.actionSection}>
-        {onCooldown ? (
-          <>
-            <span className={styles.cooldownLabel}>Возвращайтесь через</span>
-            <button
-              type="button"
-              className={`${styles.openButton} ${styles.openButtonWaiting}`}
-              disabled
-            >
-              <span className={styles.buttonIcon}>
-                <ClockIcon style={{ width: '18px', height: '18px' }} />
-              </span>
-              <span>{formatCountdown(cooldownRemainingMs)}</span>
-            </button>
-          </>
-        ) : isSpinning ? (
+        {isSpinning ? (
           <button
             type="button"
             className={`${styles.openButton} ${styles.openButtonSpinning}`}
             disabled
           >
             <span className={styles.buttonIcon}>
-              <SlotIcon style={{ width: '18px', height: '18px' }} />
+              <SlotIcon style={{ width: '19px', height: '19px' }} />
             </span>
             <span>Крутим...</span>
           </button>
-        ) : (
-          <>
+        ) : onCooldown ? (
+          <div className={styles.cooldownContainer}>
+            <span className={styles.cooldownNote}>Возвращайтесь через</span>
             <button
               type="button"
-              className={`${styles.openButton} ${styles.openButtonCta}`}
-              disabled={!isFreeCase && !affordable}
-              onClick={handleOpen}
+              className={`${styles.openButton} ${styles.openButtonWaiting}`}
+              disabled
             >
-              <span className={styles.buttonIcon}>
-                <GiftIcon style={{ width: '18px', height: '18px' }} />
-              </span>
-              <span>
-                {isFreeCase
-                  ? 'Открыть бесплатно'
-                  : affordable
-                  ? `Открыть за ${formatMinor(gameCase.priceMinor)} TON`
-                  : 'Недостаточно TON'}
-              </span>
+              <ClockIcon style={{ width: '18px', height: '18px', marginRight: '6px' }} />
+              <span>{formatCountdown(cooldownRemainingMs)}</span>
             </button>
-            {error && <span className={styles.errorHint}>{error}</span>}
-          </>
+            <span className={styles.mskResetHint}>Сундук всегда обновляется в 23:00 по МСК</span>
+          </div>
+        ) : hasPendingQuestReward ? (
+          <button
+            type="button"
+            className={`${styles.openButton} ${styles.openButtonQuest}`}
+            onClick={() => setQuestModalOpen(true)}
+          >
+            <LockIcon style={{ width: '19px', height: '19px', marginRight: '6px' }} />
+            <span>Активировать выигрыш (Квест 3 дня)</span>
+          </button>
+        ) : !isFreeCase && !affordable ? (
+          /* Не хватает баланса — кнопка как на фото «Пополнить баланс» */
+          <button
+            type="button"
+            className={`${styles.openButton} ${styles.openButtonDeposit}`}
+            onClick={() => navigate('/deposit')}
+          >
+            <span>Пополнить баланс</span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className={`${styles.openButton} ${styles.openButtonCta}`}
+            onClick={handleOpen}
+          >
+            <span className={styles.buttonIcon}>
+              <GiftIcon style={{ width: '19px', height: '19px' }} />
+            </span>
+            <span>
+              {isFreeCase
+                ? 'Открыть бесплатно'
+                : `Открыть за ${formatMinor(gameCase.priceMinor)} TON`}
+            </span>
+          </button>
         )}
+
+        {error && <span className={styles.errorHint}>{error}</span>}
       </div>
 
-      {/* 5. Сетка наград в 2 колонки (как в референс-видео) */}
+      {/* 5. Сетка наград (по референсу фото: 2 колонки, золотая рамка, черная плашка цены, плашка «Случайный») */}
       <section className={styles.rewardsSection} aria-label="Содержимое кейса">
         <div className={styles.rewardsHeader}>
           <h2 className={styles.rewardsTitle}>
-            <CubeIcon style={{ width: '17px', height: '17px', display: 'inline', verticalAlign: '-2px', marginRight: '6px' }} />
-            <span>{isFreeCase ? 'Ежедневные награды' : 'Содержимое кейса'}</span>
+            <CubeIcon style={{ width: '19px', height: '19px', verticalAlign: '-3px', marginRight: '7px', color: '#c084fc' }} />
+            <span>Коллекции в этом кейсе</span>
           </h2>
           <span className={styles.rewardsCount}>{rewardRows.length} предметов</span>
         </div>
@@ -263,14 +317,21 @@ export function CaseDetailScreen() {
         <div className={styles.rewardsGrid}>
           {rewardRows.map(({ gift, chance }) => (
             <div key={gift.id} className={styles.rewardCard}>
+              {/* Плашка цены в правом верхнем углу (как на фото) */}
               <span className={styles.rewardPriceBadge}>
-                <TonIcon style={{ width: '11px', height: '11px', display: 'inline', verticalAlign: '-1px', marginRight: '2px' }} />
-                {formatMinor(gift.priceMinor)} TON
+                {formatMinor(gift.priceMinor)}
+                <TonIcon style={{ width: '11px', height: '11px', marginLeft: '3px' }} />
               </span>
+
+              {/* 3D изображение предмета */}
               <div className={styles.rewardImageWrap}>
-                <img className={styles.rewardImage} src={gift.image} alt={gift.name} />
+                <img className={styles.rewardImage} src={gift.image} alt={gift.name} loading="lazy" />
               </div>
+
+              {/* Название */}
               <strong className={styles.rewardName}>{gift.name}</strong>
+
+              {/* Нижняя пилюля «Случайный» (как на фото) */}
               <div className={styles.rewardPill}>
                 <span>Случайный</span>
                 <span className={styles.rewardChance}>· {formatChance(chance)}</span>
@@ -280,13 +341,18 @@ export function CaseDetailScreen() {
         </div>
       </section>
 
-      {/* 6. Модалка победы */}
+      {/* 6. Модалка обычной победы */}
       {winModalOpen && spinResult && (
         <CaseWinModal
           gift={spinResult.gift}
           uid={spinResult.uid}
           onClose={handleCloseWinModal}
         />
+      )}
+
+      {/* 7. Модалка квеста с замком для кейса FREE */}
+      {questModalOpen && (
+        <FreeQuestModal onClose={handleCloseQuestModal} />
       )}
     </div>
   )

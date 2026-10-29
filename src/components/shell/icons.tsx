@@ -585,3 +585,44 @@ export function IceIcon(props: IconProps) {
     </svg>
   )
 }
+
+/**
+ * 33. Замок (Lock Icon)
+ */
+export function LockIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
+      <rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8 11V7C8 4.79 9.79 3 12 3C14.21 3 16 4.79 16 7V11" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="16" r="1.5" fill="currentColor" />
+    </svg>
+  )
+}
+
+/**
+ * 34. Открытый замок (Lock Open Icon)
+ */
+export function LockOpenIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
+      <rect x="5" y="11" width="14" height="10" rx="2.5" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8 11V7C8 4.79 9.79 3 12 3C14.21 3 16 4.79 16 7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="16" r="1.5" fill="currentColor" />
+    </svg>
+  )
+}
+
+/**
+ * 35. Группа пользователей / Друзья (Users Icon)
+ */
+export function UsersIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
+      <path d="M16 21V19C16 17.9 15.1 17 14 17H7C5.9 17 5 17.9 5 19V21" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="10.5" cy="9.5" r="3.5" stroke="currentColor" strokeWidth="1.8" fill="currentColor" fillOpacity="0.2" />
+      <path d="M19 19V17C18.9 16.2 18.4 15.5 17.7 15.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path d="M15 6.2C15.8 6.5 16.3 7.3 16.3 8.2C16.3 9.1 15.8 9.9 15 10.2" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+

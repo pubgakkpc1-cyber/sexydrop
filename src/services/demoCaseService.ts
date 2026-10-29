@@ -76,7 +76,7 @@ export function claimFreeCase(
       throw new Error(`Not a free case: ${caseId}`)
     }
     const freeCases = useFreeCasesStore.getState()
-    const nextAvailableAt = freeCases.nextAvailableAt(caseId)
+    const nextAvailableAt = freeCases.nextAvailableAt(caseId, now)
     if (nextAvailableAt > now) {
       return { status: 'cooldown', nextAvailableAt } as const
     }

@@ -7,8 +7,6 @@ import { formatMinor, mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
   cashout,
-  placeGramBet,
-  queueNextRoundGramBet,
   cancelQueuedNextRoundBet,
   startCrashEngine,
   stopCrashEngine,
@@ -272,17 +270,6 @@ export function CrashScreen() {
     }
   }
 
-  // Быстрая ставка TON в один клик: только +0.1 TON (не длиннее чем 0.1)
-  const handleQuickBet = (amountGram = 0.1) => {
-    const amountMinor = Math.round(amountGram * 1000)
-    if (phase === 'betting') {
-      if (myBet !== null) return
-      placeGramBet(amountMinor, makeRequestId())
-    } else {
-      if (queuedNextBet !== null) return
-      queueNextRoundGramBet(amountMinor, makeRequestId())
-    }
-  }
 
   // Тема обратного отсчёта от 5 с плавными неоновыми переливами
   const countNumber = Math.min(5, Math.max(1, Math.ceil(secondsLeft)))
@@ -684,21 +671,6 @@ export function CrashScreen() {
             </button>
           ))}
 
-        {/* Быстрая ставка TON (строго только +0.1, не длиннее чем 0.1) */}
-        {((phase === 'betting' && myBet === null) ||
-          (phase === 'flying' && myBet === null && queuedNextBet === null) ||
-          (phase === 'crashed' && queuedNextBet === null)) && (
-          <div className={styles.quickControlsRow}>
-            <button
-              type="button"
-              className={styles.quickChip}
-              onClick={() => handleQuickBet(0.1)}
-              title="Быстрая ставка 0.1 TON"
-            >
-              +0.1 TON
-            </button>
-          </div>
-        )}
       </div>
 
       {/* 6. Список живых ставок игроков (отсортирован от большого к маленькому, Telegram NFT по стоимости) */}

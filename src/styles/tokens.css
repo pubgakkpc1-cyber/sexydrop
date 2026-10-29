@@ -4,36 +4,36 @@
  */
 
 :root {
-  /* --- Цвета: поверхности (Изумрудный глубокий тёмный Emerald High Roller) --- */
-  --bg: #07110e;
-  --card: #0b1a15;
-  --surface: #10241e;
-  --modal: #0d1e18;
-  --surface-3: #163229;
-  --tile: #091612;
-  --border: rgba(0, 255, 136, 0.12);
-  --border-strong: rgba(0, 255, 136, 0.28);
+  /* --- Цвета: поверхности (Премиальный матовый серый Matte Graphite & Slate) --- */
+  --bg: #0d1117;
+  --card: #161b22;
+  --surface: #1c2128;
+  --modal: #161b22;
+  --surface-3: #21262d;
+  --tile: #161b22;
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(59, 130, 246, 0.35);
 
   /* --- Цвета: текст --- */
-  --text: #f0fdf4;
-  --text-muted: #86a798;
-  --text-faint: #4e6b60;
+  --text: #f0f6fc;
+  --text-muted: #8b949e;
+  --text-faint: #6e7681;
 
-  /* --- Цвета: акценты (Изумрудный Неон #00FF88 и Золото #D4AF37) --- */
-  --accent: #00ff88;
-  --accent-strong: #00e67a;
-  --accent-vivid: #10b981;
-  --accent-contrast: #07110e;
+  /* --- Цвета: акценты (Премиальный матовый синий Matte Electric Blue) --- */
+  --accent: #3b82f6;
+  --accent-strong: #2563eb;
+  --accent-vivid: #60a5fa;
+  --accent-contrast: #ffffff;
 
-  /* Изумрудная градиентная CTA («Сделать ставку», «Забрать выигрыш») */
-  --cta-from: #00ff88;
-  --cta-to: #059669;
-  --cta-gradient: linear-gradient(135deg, #00ff88 0%, #059669 100%);
-  --gram: #00ff88;
-  --price-blue: #00ff88;
-  --price-indigo: #00ff88;
-  --price-green: #00ff88;
-  --success: #00ff88;
+  /* Матовая синяя градиентная CTA («Сделать ставку», «Забрать выигрыш») */
+  --cta-from: #2563eb;
+  --cta-to: #1d4ed8;
+  --cta-gradient: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  --gram: #38bdf8;
+  --price-blue: #38bdf8;
+  --price-indigo: #3b82f6;
+  --price-green: #38bdf8;
+  --success: #3b82f6;
   --danger: #ef4444;
   --danger-strong: #dc2626;
   --gold: #d4af37;
@@ -42,21 +42,20 @@
   --orange-deep: #ea580c;
 
   /* --- Цвета: редкости (каталог подарков) --- */
-  --rarity-common: #86a798;
-  --rarity-rare: #00ff88;
+  --rarity-common: #8b949e;
+  --rarity-rare: #3b82f6;
   --rarity-epic: #a855f7;
   --rarity-legendary: #d4af37;
 
-  /* --- Emerald High Roller Palette (Luxury Web3 Casino Theme) --- */
-  --emerald-void: #07110e;
-  --emerald-card: #0b1e19;
-  --emerald-card-elevated: #102c24;
-  --emerald-neon: #00ff88;
-  --emerald-glow: rgba(0, 255, 136, 0.35);
-  --emerald-mint: #79ffd2;
-  --luxury-gold: #d4af37;
-  --luxury-gold-glow: rgba(212, 175, 55, 0.4);
-  --emerald-text-primary: #f0fdf4;
+  /* --- Matte Gray & Matte Blue Palette --- */
+  --matte-bg: #0d1117;
+  --matte-card: #161b22;
+  --matte-card-elevated: #1c2128;
+  --matte-blue: #3b82f6;
+  --matte-blue-glow: rgba(59, 130, 246, 0.35);
+  --matte-blue-light: #60a5fa;
+  --matte-gray-border: rgba(255, 255, 255, 0.08);
+  --matte-gray-glass: rgba(22, 27, 34, 0.78);
 
   /* --- Отступы (шкала 4px) --- */
   --space-1: 4px;

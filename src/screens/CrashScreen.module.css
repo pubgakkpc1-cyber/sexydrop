@@ -238,99 +238,35 @@
 .arena {
   position: relative;
   height: 290px;
-  border-radius: 24px;
-  background: transparent;
-  border: none;
-  box-shadow: none;
-  overflow: visible;
-  transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 20px;
+  background: rgba(22, 27, 34, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), inset 0 0 40px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+  transition: all 0.5s ease;
 }
 
 /* Background Tiers for Arena (Динамическая смена фона по иксам) */
 .arena[data-tier='cosmic'] {
-  background: transparent;
+  background: rgba(22, 27, 34, 0.78);
 }
 
 .arena[data-tier='nebula'] {
-  background: transparent;
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.82) 0%, rgba(30, 58, 138, 0.25) 100%);
+  border-color: rgba(59, 130, 246, 0.3);
 }
 
 .arena[data-tier='hyper'] {
-  background: transparent;
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.85) 0%, rgba(212, 175, 55, 0.2) 100%);
+  border-color: rgba(212, 175, 55, 0.35);
 }
 
 .arena[data-tier='supernova'] {
-  background: transparent;
-}
-
-/* NFT Drop Milestones Row (2x Дроп, 5x Редкий, 10x Легендарный) */
-.nftMilestonesRow {
-  position: absolute;
-  top: 10px;
-  left: 0;
-  right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  z-index: 6;
-  pointer-events: none;
-}
-
-.milestonePill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 12px;
-  border-radius: 9999px;
-  background: rgba(15, 23, 20, 0.82);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  color: #94a3b8;
-  font-size: 11.5px;
-  font-weight: 700;
-  letter-spacing: 0.15px;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
-}
-
-.milestoneIcon {
-  font-size: 11.5px;
-  line-height: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.milestoneLabel {
-  font-weight: 700;
-  letter-spacing: 0.2px;
-  white-space: nowrap;
-}
-
-.milestoneActive2x {
-  background: rgba(0, 255, 136, 0.18);
-  border-color: #00ff88;
-  color: #00ff88;
-  box-shadow: 0 0 16px rgba(0, 255, 136, 0.5), inset 0 0 8px rgba(0, 255, 136, 0.2);
-  transform: scale(1.05);
-}
-
-.milestoneActive5x {
-  background: rgba(251, 191, 36, 0.2);
-  border-color: #ffd700;
-  color: #ffd700;
-  box-shadow: 0 0 18px rgba(251, 191, 36, 0.55), inset 0 0 8px rgba(251, 191, 36, 0.2);
-  transform: scale(1.05);
-}
-
-.milestoneActive10x {
-  background: rgba(192, 132, 252, 0.25);
-  border-color: #c084fc;
-  color: #f3e8ff;
-  box-shadow: 0 0 22px rgba(192, 132, 252, 0.65), inset 0 0 8px rgba(192, 132, 252, 0.3);
-  transform: scale(1.06);
+  background: linear-gradient(135deg, rgba(22, 27, 34, 0.85) 0%, rgba(147, 51, 234, 0.25) 100%);
+  border-color: rgba(192, 132, 252, 0.4);
 }
 
 /* Ambient cosmic stars */
@@ -579,69 +515,68 @@
   }
 }
 
-/* Flying Multiplier Display (Большой стильный множитель, влитый в космос без фона) */
-.flyingCenter {
+/* Flying Multiplier Display (Множитель слева, немного меньше, без рамок) */
+.flyingLeft {
   position: absolute;
-  top: 52px;
-  left: 0;
-  right: 0;
+  top: 18px;
+  left: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
   pointer-events: none;
-  z-index: 5;
+  z-index: 10;
 }
 
 .seamlessMultiplier {
-  font-size: 48px;
-  font-weight: 900;
-  letter-spacing: -1.2px;
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
-  color: #ffffff;
+  color: #f0f6fc;
   pointer-events: none;
   user-select: none;
   line-height: 1;
-  transition: color 0.6s ease, text-shadow 0.6s ease, transform 0.2s ease;
+  transition: color 0.4s ease, text-shadow 0.4s ease, transform 0.2s ease;
 }
 
-/* Crashed Display (Big bold typography matching video frame 11) */
-.crashedCenter {
+/* Crashed Display (Слева в зоне арены) */
+.crashedLeft {
   position: absolute;
-  inset: 0;
+  top: 18px;
+  left: 20px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  align-items: flex-start;
   pointer-events: none;
+  z-index: 10;
   animation: crashAppear 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 @keyframes crashAppear {
-  0% { transform: scale(0.7); opacity: 0; }
+  0% { transform: scale(0.8); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
 }
 
 .multiplierCrashed {
-  font-size: 64px;
+  font-size: 32px;
   font-weight: 800;
-  letter-spacing: 0;
+  letter-spacing: -0.6px;
   font-variant-numeric: tabular-nums;
   font-feature-settings: 'tnum' 1, 'lnum' 1;
-  color: #22c55e;
-  text-shadow: 0 0 28px rgba(34, 197, 94, 0.7);
+  color: #ef4444;
+  text-shadow: 0 0 20px rgba(239, 68, 68, 0.7);
   line-height: 1;
 }
 
 .crashedLabel {
-  margin-top: 6px;
-  font-size: 14px;
+  margin-top: 4px;
+  font-size: 11px;
   font-weight: 700;
   color: #ef4444;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  padding: 3px 12px;
+  letter-spacing: 1.2px;
+  padding: 2px 8px;
   background: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
   border-radius: 9999px;
@@ -728,18 +663,18 @@
 }
 
 .activeLivePill {
-  background: rgba(0, 255, 136, 0.18);
-  border-color: #00ff88;
-  color: #00ff88;
-  box-shadow: 0 0 14px rgba(0, 255, 136, 0.45);
+  background: rgba(37, 99, 235, 0.22);
+  border-color: #3b82f6;
+  color: #60a5fa;
+  box-shadow: 0 0 14px rgba(59, 130, 246, 0.45);
 }
 
 .activeLiveDot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #00ff88;
-  box-shadow: 0 0 8px #00ff88;
+  background: #38bdf8;
+  box-shadow: 0 0 8px #38bdf8;
   animation: pulseDot 1s infinite alternate;
 }
 
@@ -796,8 +731,8 @@
 
 /* State: Flying Cashout CTA */
 .btnCashout {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  box-shadow: 0 8px 28px rgba(16, 185, 129, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 50%, #1d4ed8 100%);
+  box-shadow: 0 8px 28px rgba(37, 99, 235, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
   animation: pulseCashout 1.2s infinite alternate;
 }
 
@@ -814,8 +749,8 @@
   width: 100%;
   padding: 14px 18px;
   border-radius: 18px;
-  background: rgba(59, 130, 246, 0.12);
-  border: 1.5px solid rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.14);
+  border: 1.5px solid rgba(59, 130, 246, 0.4);
   color: #93c5fd;
   font-size: 15px;
   font-weight: 700;
@@ -826,16 +761,16 @@
   padding: 16px 20px;
   border-radius: 18px;
   text-align: center;
-  background: rgba(14, 28, 22, 0.78);
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(22, 27, 34, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(240, 246, 252, 0.65);
   font-size: 13.5px;
   font-weight: 600;
   letter-spacing: 0.1px;
   margin: 0;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 .resultWon {
@@ -958,7 +893,7 @@
   justify-content: space-between;
   padding: 8px 12px;
   border-radius: 16px;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(22, 27, 34, 0.75);
   border: 1px solid rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
@@ -966,14 +901,14 @@
 }
 
 .playerCardUser {
-  background: rgba(59, 130, 246, 0.12);
-  border-color: rgba(59, 130, 246, 0.35);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.2);
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.45);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.25);
 }
 
 .playerCardWon {
-  background: rgba(34, 197, 94, 0.08);
-  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(37, 99, 235, 0.12);
+  border-color: rgba(59, 130, 246, 0.45);
 }
 
 .playerCardActiveBlue {
@@ -983,8 +918,8 @@
 
 .playerCardLost {
   opacity: 0.5;
-  background: rgba(255, 255, 255, 0.02);
-  border-color: rgba(255, 255, 255, 0.05);
+  background: rgba(22, 27, 34, 0.4);
+  border-color: rgba(255, 255, 255, 0.04);
 }
 
 .playerLeft {
@@ -1115,9 +1050,10 @@
 }
 
 .profitWon {
-  background: rgba(34, 197, 94, 0.18);
-  border-color: rgba(34, 197, 94, 0.45);
-  color: #4ade80;
+  background: rgba(37, 99, 235, 0.22);
+  border-color: #3b82f6;
+  color: #93c5fd;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.35);
 }
 
 .profitActiveBlue {

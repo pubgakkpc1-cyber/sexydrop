@@ -12,23 +12,23 @@ describe('Rocket3DCanvas (3D Rocket, SEXY decal & 3 NFT Plush Pepe pilots)', () 
     expect(skin0.nameRu).toBe('Хроно Титан')
     expect(skin0.pilotNameRu).toBe('Пепе Кадет')
     expect(skin0.pilotType).toBe(0)
-    expect(skin0.decalSubtext).toBe('MK-III TON')
+    expect(skin0.decalSubtext).toBe('MK-I · TON')
 
-    // Модель 1: Изумрудный Вайпер + Кибер Пепе с визором
+    // Модель 1: Кибер Стелс + Кибер Пепе с визором
     const skin1 = ROCKET_SKINS[1]!
-    expect(skin1.name).toBe('Emerald Viper')
-    expect(skin1.nameRu).toBe('Изумрудный Вайпер')
+    expect(skin1.name).toBe('Cyber Stealth')
+    expect(skin1.nameRu).toBe('Кибер Стелс')
     expect(skin1.pilotNameRu).toBe('Кибер Пепе')
     expect(skin1.pilotType).toBe(1)
-    expect(skin1.decalSubtext).toBe('VIP DROP')
+    expect(skin1.decalSubtext).toBe('CYBER · 99')
 
-    // Модель 2: Супернова 24K + Король Пепе в золотой короне
+    // Модель 2: Сапфир 24K + Король Пепе в золотой короне
     const skin2 = ROCKET_SKINS[2]!
-    expect(skin2.name).toBe('Supernova Gold')
-    expect(skin2.nameRu).toBe('Супернова 24K')
+    expect(skin2.name).toBe('Royal Sapphire')
+    expect(skin2.nameRu).toBe('Сапфир 24K')
     expect(skin2.pilotNameRu).toBe('Король Пепе')
     expect(skin2.pilotType).toBe(2)
-    expect(skin2.decalSubtext).toBe('ROYAL 999')
+    expect(skin2.decalSubtext).toBe('ROYAL · VIP')
   })
 
   it('ререндерится без ошибок во всех фазах полета и с разными раундами', () => {

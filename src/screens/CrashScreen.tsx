@@ -145,19 +145,19 @@ export function CrashScreen() {
     return 'cosmic'
   }, [phase, multiplier])
 
-  // Плавный переход цвета и свечения множителя (в стиле референса, без фона)
+  // Плавный переход цвета и свечения множителя (Matte Blue & Gold & Purple)
   const multColor = useMemo(() => {
     if (multiplier >= 10.0) return '#c084fc'
     if (multiplier >= 5.0) return '#ffd700'
-    if (multiplier >= 2.0) return '#00ff88'
-    return '#ffffff'
+    if (multiplier >= 2.0) return '#38bdf8'
+    return '#f0f6fc'
   }, [multiplier])
 
   const multGlow = useMemo(() => {
-    if (multiplier >= 10.0) return '0 0 28px rgba(192, 132, 252, 0.8), 0 4px 18px rgba(0, 0, 0, 0.7)'
-    if (multiplier >= 5.0) return '0 0 26px rgba(255, 215, 0, 0.75), 0 4px 18px rgba(0, 0, 0, 0.7)'
-    if (multiplier >= 2.0) return '0 0 24px rgba(0, 255, 136, 0.75), 0 4px 18px rgba(0, 0, 0, 0.7)'
-    return '0 0 20px rgba(255, 255, 255, 0.45), 0 4px 18px rgba(0, 0, 0, 0.7)'
+    if (multiplier >= 10.0) return '0 0 24px rgba(192, 132, 252, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 5.0) return '0 0 22px rgba(255, 215, 0, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 2.0) return '0 0 20px rgba(56, 189, 248, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    return '0 0 16px rgba(240, 246, 252, 0.4), 0 2px 10px rgba(0, 0, 0, 0.8)'
   }, [multiplier])
 
   // Пул живых игроков раунда
@@ -419,56 +419,26 @@ export function CrashScreen() {
 
       <h1 className={styles.srOnly}>Ракетка</h1>
 
-      {/* 3. Космическая Арена Полёта Ракеты */}
+      {/* 3. Космическая Арена Полёта Ракеты (Клик в фазе ставок меняет скин) */}
       <div
         className={styles.arena}
         data-phase={phase}
         data-tier={bgTier}
         aria-label="Арена полёта ракеты"
+        onClick={() => {
+          if (phase === 'betting') handleToggleSkin()
+        }}
+        title={phase === 'betting' ? 'Нажмите, чтобы сменить модель ракеты' : undefined}
       >
-        {/* Индикатор этапов NFT Дропа (2x Дроп, 5x Редкий, 10x Легендарный 1:1 по референсу) */}
-        <div className={styles.nftMilestonesRow} aria-label="Этапы NFT Дропа">
-          <div
-            className={cx(
-              styles.milestonePill,
-              multiplier >= 2.0 && styles.milestoneActive2x,
-            )}
-          >
-            <span className={styles.milestoneIcon}>⚡</span>
-            <span className={styles.milestoneLabel}>2x Дроп</span>
-          </div>
-
-          <div
-            className={cx(
-              styles.milestonePill,
-              multiplier >= 5.0 && styles.milestoneActive5x,
-            )}
-          >
-            <span className={styles.milestoneIcon}>⭐</span>
-            <span className={styles.milestoneLabel}>5x Редкий</span>
-          </div>
-
-          <div
-            className={cx(
-              styles.milestonePill,
-              multiplier >= 10.0 && styles.milestoneActive10x,
-            )}
-          >
-            <span className={styles.milestoneIcon}>👑</span>
-            <span className={styles.milestoneLabel}>10x Легендарный</span>
-          </div>
-        </div>
-
-        {/* Высокодетализированная 3D Ракета, полноэкранный звездный космос и обломки при взрыве */}
+        {/* Высокодетализированная 3D Ракета с NFT Plush Pepe и неоновой траекторией */}
         <Rocket3DCanvas
           phase={phase}
           multiplier={multiplier}
           roundId={roundId}
           skinIndex={selectedSkin === 'auto' ? undefined : selectedSkin}
-          fullscreen
         />
 
-        {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 (мини-моушен и плавные переливы цветов) */}
+        {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 */}
         {phase === 'betting' && (
           <div className={styles.countdownCenter}>
             <div
@@ -542,16 +512,16 @@ export function CrashScreen() {
               </span>
             </div>
 
-            {/* Скрыто визуально (без мини-текста снизу, как требовалось), доступно для ассистивных технологий и тестов */}
+            {/* Скрыто визуально, доступно для ассистивных технологий и тестов */}
             <span className={styles.srOnly}>
               Старт через {secondsLeft.toFixed(1)}с
             </span>
           </div>
         )}
 
-        {/* ФАЗА 2: Полёт — Большой стильный множитель, влитый в космос без рамок */}
+        {/* ФАЗА 2: Полёт — Множитель слева, немного меньше, без рамок */}
         {phase === 'flying' && (
-          <div className={styles.flyingCenter}>
+          <div className={styles.flyingLeft}>
             <span
               className={styles.seamlessMultiplier}
               style={{
@@ -564,9 +534,9 @@ export function CrashScreen() {
           </div>
         )}
 
-        {/* ФАЗА 3: Краш — взрыв и гигантский множитель (1:1 из кадра 11) */}
+        {/* ФАЗА 3: Краш — слева */}
         {phase === 'crashed' && (
-          <div className={styles.crashedCenter}>
+          <div className={styles.crashedLeft}>
             <span className={styles.multiplierCrashed}>x{multiplier.toFixed(2)}</span>
             <span className={styles.crashedLabel}>Улетел!</span>
             {/* Частицы взрыва */}

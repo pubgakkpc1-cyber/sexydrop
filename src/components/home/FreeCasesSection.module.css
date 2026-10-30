@@ -339,3 +339,55 @@
   overflow: visible;
   text-overflow: clip;
 }
+
+/* ===== Матовый стиль ===== */
+.tile {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.shimmerEffect {
+  display: none;
+}
+
+.tileDaily {
+  background: #221e18;
+  border-color: rgba(214, 160, 70, 0.35);
+  box-shadow: none;
+}
+
+.tileQuest {
+  background: #1f1b26;
+  border-color: rgba(150, 110, 210, 0.35);
+  box-shadow: none;
+}
+
+.tileDaily:hover,
+.tileQuest:hover {
+  box-shadow: none;
+}
+
+.pillReadyGold {
+  background: rgba(214, 160, 70, 0.22);
+  box-shadow: none;
+}
+
+.pillReadyPurple {
+  background: rgba(150, 110, 210, 0.22);
+  box-shadow: none;
+}
+
+.pulseDot {
+  box-shadow: none;
+}
+
+.artGlow {
+  opacity: 0.45;
+}
+
+/* «0 TON» всегда целиком в одну строку и не обрезается краем карточки */
+.freeZeroBadge {
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 100%;
+}

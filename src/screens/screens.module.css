@@ -115,3 +115,20 @@
   font-size: var(--font-size-sm);
   text-decoration: none;
 }
+
+/* Каждый раздел главной лежит на своей матовой подложке — так они разделены между собой */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: 14px;
+  border-radius: 26px;
+  background: #18171c;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.panelTitle {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  padding: 0 2px;
+}

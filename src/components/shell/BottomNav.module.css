@@ -136,3 +136,10 @@
   0% { transform: scale(0); }
   100% { transform: scale(1); }
 }
+
+/* ===== Матовый стиль ===== */
+.slidingPill {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}

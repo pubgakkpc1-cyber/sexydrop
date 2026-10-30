@@ -200,3 +200,24 @@
     display: none;
   }
 }
+
+/* ===== Матовый стиль ===== */
+.header {
+  background: #131217;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  box-shadow: none;
+}
+
+.depositBtn.depositBtn {
+  background: #4a79b8;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: none;
+  color: #ffffff;
+}
+
+.depositBtn.depositBtn:hover:not(:disabled) {
+  background: #5887c6;
+  box-shadow: none;
+  transform: none;
+}

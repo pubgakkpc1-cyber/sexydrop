@@ -867,3 +867,15 @@
 .rewardModelDot {
   opacity: 0.5;
 }
+
+/* Узкие экраны (≤360px): шапка не должна выходить за рамки */
+@media (max-width: 360px) {
+  .brandTitle {
+    display: none;
+  }
+
+  .headerRight {
+    min-width: 0;
+    gap: 6px;
+  }
+}

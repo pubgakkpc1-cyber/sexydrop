@@ -23,3 +23,8 @@ backend/.venv
 scratch/
 current_build_check.png
 
+
+# одноразовые скрипты автоматизации панели (содержат токены) — не коммитить
+scripts/*.py
+!scripts/generate_catalog.py
+!scripts/generate_catalog_art.py

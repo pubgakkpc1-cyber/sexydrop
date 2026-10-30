@@ -1,3 +1,4 @@
+import { authHeaders } from '../../lib/auth'
 import { useState } from 'react'
 import { getTelegramUser } from '../../lib/telegram'
 import { useWalletStore } from '../../store/wallet'
@@ -39,7 +40,7 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-User': 'zapixxgarant',
+          ...(await authHeaders()),
         },
         body: JSON.stringify({
           username: cleanUser,
@@ -70,7 +71,7 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
           text: data.detail || 'Ошибка при начислении TON.',
         })
       }
-    } catch (err: unknown) {
+    } catch {
       // In standalone client demo fallback
       credit(Math.round(numAmount * 1000))
       setStatus({

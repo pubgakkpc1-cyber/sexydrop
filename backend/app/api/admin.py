@@ -4,7 +4,7 @@ from decimal import Decimal
 from typing import Annotated, Optional
 import uuid
 
-from fastapi import APIRouter, Depends, Header, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from pydantic import BaseModel, Field
 from sqlalchemy import desc, func, select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -49,13 +49,8 @@ class AdminUserItem(BaseModel):
 async def verify_admin(
     credentials: Annotated[Optional[object], Depends(_bearer)],
     session: Annotated[AsyncSession, Depends(get_session)],
-    x_admin_user: Annotated[Optional[str], Header(alias="X-Admin-User")] = None,
 ) -> str:
-    # 1. Check direct X-Admin-User header
-    if x_admin_user and x_admin_user.lower().lstrip("@") in ADMIN_USERNAMES:
-        return x_admin_user.lower().lstrip("@")
-
-    # 2. Check Bearer JWT token
+    # Admin rights come only from a signed Bearer JWT; client headers are never trusted.
     if credentials and getattr(credentials, "credentials", None):
         try:
             payload = decode_access_token(credentials.credentials)

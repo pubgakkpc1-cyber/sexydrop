@@ -297,3 +297,8 @@
   text-align: center;
   margin-top: 4px;
 }
+
+/* Таблица не выходит за скруглённую рамку: на узких экранах скроллится внутри */
+.tableCard {
+  overflow-x: auto;
+}

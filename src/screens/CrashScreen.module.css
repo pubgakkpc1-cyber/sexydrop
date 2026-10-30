@@ -2310,3 +2310,14 @@
 .quickBetPill:active {
   transform: scale(0.96);
 }
+
+/* Плашки ставок и карточки игроков не вылезают за рамку на узких экранах */
+.playerInfo {
+  flex: 1 1 auto;
+}
+
+.playerBetPill {
+  max-width: 100%;
+  box-sizing: border-box;
+  white-space: nowrap;
+}

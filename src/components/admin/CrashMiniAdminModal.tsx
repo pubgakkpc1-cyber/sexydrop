@@ -1,3 +1,4 @@
+import { authHeaders } from '../../lib/auth'
 import { useState, useEffect } from 'react'
 import { Modal, Button, Input } from '../ui'
 import {
@@ -59,11 +60,11 @@ export function CrashMiniAdminModal({ open, onClose }: CrashMiniAdminModalProps)
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-Admin-User': 'zapixxgarant',
+          ...(await authHeaders()),
         },
         body: JSON.stringify({
           username: cleanUser,
-          amount_gram: amount,
+          amount_ton: amount,
           description: `Выдача через Crash Mini Admin (@${cleanUser})`,
         }),
       })

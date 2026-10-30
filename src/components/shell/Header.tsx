@@ -1,48 +1,17 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { formatMinor } from '../../lib/money'
 import { getTelegramUser } from '../../lib/telegram'
 import { useWalletStore } from '../../store/wallet'
 import { AdminPanelModal } from '../admin/AdminPanelModal'
-import { Button, Modal } from '../ui'
+import { Button } from '../ui'
 import { UserAvatar } from '../ui/UserAvatar'
 import { DiamondIcon, WalletIcon, TonIcon } from './icons'
 import styles from './Header.module.css'
 
-function DepositModal({ open, onClose }: { open: boolean; onClose: () => void }) {
-  const credit = useWalletStore((s) => s.credit)
-
-  return (
-    <Modal open={open} onClose={onClose} title="Пополнение баланса">
-      <div className={styles.depositBody}>
-        <p className={styles.depositText}>
-          Быстрое пополнение кошелька в TON. Выберите сумму или обратитесь к администратору @zapixxgarant:
-        </p>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '8px' }}>
-          <Button fullWidth onClick={() => { credit(10_000); onClose() }}>
-            +10 TON
-          </Button>
-          <Button fullWidth onClick={() => { credit(50_000); onClose() }}>
-            +50 TON
-          </Button>
-          <Button fullWidth onClick={() => { credit(100_000); onClose() }}>
-            +100 TON
-          </Button>
-          <Button fullWidth onClick={() => { credit(500_000); onClose() }}>
-            +500 TON
-          </Button>
-        </div>
-        <Button fullWidth variant="ghost" onClick={onClose}>
-          Закрыть
-        </Button>
-      </div>
-    </Modal>
-  )
-}
-
 export function Header() {
   const balance = useWalletStore((s) => s.balances[s.mode] ?? s.balances.demo ?? s.balances.real)
-  const [depositOpen, setDepositOpen] = useState(false)
+  const navigate = useNavigate()
   const [adminOpen, setAdminOpen] = useState(false)
 
   const tgUser = useMemo(() => getTelegramUser(), [])
@@ -89,13 +58,12 @@ export function Header() {
             👑 Админка
           </button>
         )}
-        <Button size="sm" className={styles.depositBtn} onClick={() => setDepositOpen(true)}>
+        <Button size="sm" className={styles.depositBtn} onClick={() => navigate('/deposit')}>
           <WalletIcon className={styles.depositIcon} aria-hidden />
           Пополнить
         </Button>
       </div>
 
-      <DepositModal open={depositOpen} onClose={() => setDepositOpen(false)} />
       <AdminPanelModal open={adminOpen} onClose={() => setAdminOpen(false)} />
 
       <span className={styles.srOnly} aria-live="polite">

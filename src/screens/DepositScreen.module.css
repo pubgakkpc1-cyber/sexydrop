@@ -1,0 +1,433 @@
+/* Пополнение баланса: матовые серые карточки, красный акцент */
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.back {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 16px;
+  background: #242427;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.backIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+/* --- Вкладки --- */
+
+.tabs {
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 20px;
+  background: #242427;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 70px;
+  padding: 10px 10px 9px;
+  border: none;
+  border-radius: 14px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tabActive {
+  background: #b83a3f;
+  color: #ffffff;
+}
+
+.tabIcon {
+  width: 24px;
+  height: 24px;
+}
+
+/* --- Панели --- */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.demo {
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: #242427;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 12.5px;
+  line-height: 1.4;
+}
+
+.label {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.inputRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  min-height: 56px;
+  border-radius: 16px;
+  background: #242427;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #ffffff;
+  font-size: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.output {
+  display: block;
+  line-height: 56px;
+}
+
+.inputIcon {
+  width: 22px;
+  height: 22px;
+  color: #b8bcc6;
+}
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.presetsRow {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+.preset {
+  min-height: 44px;
+  border: none;
+  border-radius: 12px;
+  background: #2b2b2f;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.preset:active {
+  background: #353539;
+}
+
+.primary {
+  min-height: 56px;
+  border: none;
+  border-radius: 16px;
+  background: #b83a3f;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:disabled {
+  background: #4a2a2c;
+  color: rgba(255, 255, 255, 0.45);
+  cursor: not-allowed;
+}
+
+.rate {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.rate strong {
+  color: #ffffff;
+}
+
+.toast {
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: #1f3a2a;
+  border: 1px solid rgba(65, 166, 102, 0.5);
+  color: #7fd9a1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.note {
+  font-size: 12.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.45);
+  text-align: center;
+}
+
+/* --- Конвертер --- */
+
+.convertCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 20px;
+  background: #1c1c1f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.unit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.unitIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.swap {
+  align-self: center;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #2b2b2f;
+}
+
+.swapIcon {
+  width: 20px;
+  height: 20px;
+  color: #d1595e;
+  transform: rotate(90deg);
+}
+
+/* --- Подарки --- */
+
+.giftHero {
+  display: flex;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 20px;
+  background: #1c1c1f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.giftIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: #b83a3f;
+}
+
+.giftIconSvg {
+  width: 28px;
+  height: 28px;
+  color: #ffffff;
+}
+
+.giftTitle {
+  font-size: 19px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.giftSub {
+  margin-top: 2px;
+  font-size: 15px;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.accordion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 52px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 14px;
+  background: #242427;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.accordionHint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.chev {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.15s ease;
+}
+
+.chevDown {
+  transform: rotate(180deg);
+}
+
+.steps {
+  padding: 14px;
+  border-radius: 16px;
+  background: #1c1c1f;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.stepList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stepList li {
+  display: flex;
+  gap: 14px;
+}
+
+.stepList strong {
+  display: block;
+  font-size: 16px;
+  color: #ffffff;
+}
+
+.stepList p {
+  margin: 2px 0 0;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.stepNum {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #b83a3f;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0 0;
+  padding: 14px 0 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  list-style: none;
+}
+
+.perks li {
+  display: flex;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.perks b {
+  color: #5fc98a;
+  font-weight: 600;
+}
+
+.perkIcon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #5fc98a;
+}
+
+@media (max-width: 350px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .back {
+    width: 46px;
+    height: 46px;
+  }
+
+  .presetsRow {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Все пять вкладок помещаются в ширину экрана */
+.tab {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 10px 2px 9px;
+  font-size: 11.5px;
+}
+
+.tabIcon {
+  width: 22px;
+  height: 22px;
+}

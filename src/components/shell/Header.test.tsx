@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { MemoryRouter } from 'react-router-dom'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { useWalletStore } from '../../store/wallet'
 import { Header } from './Header'
 
@@ -12,8 +12,6 @@ function renderHeader() {
     </MemoryRouter>,
   )
 }
-
-const getState = () => useWalletStore.getState()
 
 beforeEach(() => {
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 100_000 } })
@@ -29,12 +27,17 @@ describe('Header (аватар, «Ваш баланс», TON, Пополнить
     expect(screen.getByRole('button', { name: 'Пополнить' })).toBeInTheDocument()
   })
 
-  it('пополнение зачисляет баланс без демо-надписей', async () => {
-    renderHeader()
+  it('«Пополнить» открывает экран пополнения', async () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route path="/" element={<Header />} />
+          <Route path="/deposit" element={<div>Экран пополнения</div>} />
+        </Routes>
+      </MemoryRouter>,
+    )
     await userEvent.click(screen.getByRole('button', { name: 'Пополнить' }))
-    expect(screen.getByText(/Быстрое пополнение кошелька в TON/)).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: '+100 TON' }))
-    expect(getState().getBalance()).toBe(200_000)
+    expect(screen.getByText('Экран пополнения')).toBeInTheDocument()
   })
 
   it('показывает кнопку Админки для @zapixxgarant', () => {

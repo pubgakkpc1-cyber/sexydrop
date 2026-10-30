@@ -441,7 +441,7 @@ export function CrashScreen() {
           <button
             type="button"
             className={styles.balancePill}
-            onClick={() => navigate('/profile')}
+            onClick={() => navigate('/deposit')}
             aria-label="Пополнить баланс"
           >
             <TonIcon className={styles.diamondIcon} />

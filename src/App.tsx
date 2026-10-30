@@ -5,6 +5,7 @@ import { SplashScreen } from './components/shell/SplashScreen'
 import DevUiScreen from './screens/DevUiScreen'
 import { CaseDetailScreen } from './screens/CaseDetailScreen'
 import { CrashScreen } from './screens/CrashScreen'
+import { DepositScreen } from './screens/DepositScreen'
 import { CraftScreen } from './screens/CraftScreen'
 import { DiceScreen } from './screens/DiceScreen'
 import { GamesScreen } from './screens/GamesScreen'
@@ -31,6 +32,7 @@ function App() {
         <Routes>
         <Route element={<MobileShell />}>
           <Route index element={<HomeScreen />} />
+          <Route path="deposit" element={<DepositScreen />} />
           <Route path="inventory" element={<InventoryScreen />} />
           <Route path="invite" element={<InviteScreen />} />
           <Route path="rating" element={<RatingScreen />} />

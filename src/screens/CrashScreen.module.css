@@ -2368,17 +2368,17 @@
 
 .amtFrac {
   display: inline-block;
-  min-width: 2ch;
+  min-width: 1.3em;
   text-align: left;
   font-variant-numeric: tabular-nums;
 }
 
 .playerBetAmount .amtInt {
-  min-width: calc(var(--stake-int, 2) * 1ch);
+  min-width: calc(var(--stake-int, 2) * 0.64em);
 }
 
 .playerPayoutVal .amtInt {
-  min-width: calc(var(--payout-int, 3) * 1ch);
+  min-width: calc(var(--payout-int, 3) * 0.64em);
 }
 
 .playerPayoutVal {

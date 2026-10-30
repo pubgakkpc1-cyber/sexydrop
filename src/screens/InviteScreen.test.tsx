@@ -81,7 +81,7 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
   it('в Telegram кнопки активны, ссылка ведёт на подтверждённого бота', () => {
     setTelegramUser({ id: 4242, first_name: 'Test' }, { platform: 'android' })
     render(<InviteScreen />)
-    expect(REFERRAL_BOT_USERNAME).toBe('ewfowfwfowbot')
+    expect(REFERRAL_BOT_USERNAME).toBe('sexydropbot')
     expect(screen.getByRole('button', { name: /Пригласить друзей/ })).toBeEnabled()
     expect(screen.getByRole('button', { name: /Скопировать ссылку/ })).toBeEnabled()
   })

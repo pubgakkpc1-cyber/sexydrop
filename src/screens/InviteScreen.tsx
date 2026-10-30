@@ -11,8 +11,8 @@ import {
 } from '../components/shell/icons'
 import styles from './InviteScreen.module.css'
 
-/** Бот мини-аппа (username публичный; подтверждён через Bot API getMe). */
-export const REFERRAL_BOT_USERNAME = 'ewfowfwfowbot'
+/** Бот мини-аппа (username публичный; подтверждён через Bot API getMe: @sexydropbot). */
+export const REFERRAL_BOT_USERNAME = 'sexydropbot'
 
 /** Условия реферальной программы (настройка продукта; начисляет их сервер — TIER 7). */
 export const REFERRAL_RULES = {

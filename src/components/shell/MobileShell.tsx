@@ -114,7 +114,7 @@ export function MobileShell() {
               <strong>Играйте на телефоне</strong>
               <p>Отсканируйте камерой смартфона</p>
               <a
-                href="https://t.me/ewfowfwfowbot"
+                href="https://t.me/sexydropbot"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={styles.tgLinkBtn}

@@ -59,7 +59,7 @@ NUMERIC обязателен в БД (TIER 7).
   - Конфигурация Vite (`vite.config.ts`) обновлена: `allowedHosts: true`, настроен прозрачный reverse-proxy `/api` на бэкенд FastAPI (`http://127.0.0.1:8000`), объединяя frontend и backend под единым SSL-доменом.
 - **Активный туннель**: **https://fire-men-permitted-reporting.trycloudflare.com/** (Vite preview 4173 с `allowedHosts: true` и обратным проксированием `/api` в FastAPI container 8000).
 - **Привязка к Telegram**:
-  - Кнопка меню в боте `@ewfowfwfowbot` обновлена на `https://b87117d07da9d8.lhr.life/` (как глобально через `setChatMenuButton`, так и персонально для чата пользователя);
+  - Кнопка меню в боте `@sexydropbot` обновлена на `https://b87117d07da9d8.lhr.life/` (как глобально через `setChatMenuButton`, так и персонально для чата пользователя);
   - Пользователю отправлено интерактивное сообщение с прямой WebApp кнопкой `🚀 Открыть GiftCase (Mini App)` и ссылкой для браузера.
 - **Проверки**:
   - Headless Chrome аудит подтвердил 100% отрисовку DOM (26 958 байт): шапка, переключатель Демо/Реал, баланс GRAM, баннеры Ракетка/PVP/Игры, 2 бесплатных и 20 платных кейсов, 5 вкладок навигации;
@@ -641,7 +641,7 @@ NUMERIC обязателен в БД (TIER 7).
     not_enough_tickets; rng-хук. Тесты: math 5 + сервис 4.
   - Экран: шансы призов опубликованы, честная строка пустого тиража.
 - [x] 6.5. Реферальная система — `screens/InviteScreen` (+module.css, тест 3).
-  - Код `ref-${tgUser.id}` в Telegram (bot @ewfowfwfowbot — username подтверждён
+  - Код `ref-${tgUser.id}` в Telegram (bot @sexydropbot — username подтверждён
     через Bot API getMe), ссылка `https://t.me/…?start=ref-<id>`, копирование.
   - Вне Telegram — честный placeholder «—» без фиктивного кода; начисления за
     друзей НЕ производятся и не показываются в Demo — только TIER 7 (сервер

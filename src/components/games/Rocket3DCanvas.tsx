@@ -224,6 +224,12 @@ export function Rocket3DCanvas({
     rocketSmooth: { x: number; y: number; angle: number }
     /** сглаженный «надув» корпуса, растёт с множителем */
     inflate: number
+    /** лента-след: точки сопла, дрейфуют назад */
+    ribbon: { x: number; y: number }[]
+    ribbonAcc: number
+    /** скользящее среднее dt и флаг облегчённого режима для слабых устройств */
+    emaDt: number
+    lowQ: boolean
     /** секунды с начала предвзрывного раздувания; -1 — не идёт */
     swellT: number
     burstFn?: () => void
@@ -243,13 +249,17 @@ export function Rocket3DCanvas({
     lastFrameTime: 0,
     rocketSmooth: { x: 0, y: 0, angle: 0 },
     inflate: 1,
+    ribbon: [],
+    ribbonAcc: 0,
+    emaDt: 0.016,
+    lowQ: false,
     swellT: -1,
   })
 
   // Инициализация фоновых звёзд по всему экрану (Starfield)
   useEffect(() => {
     const stars: Star[] = []
-    const count = 90
+    const count = 42
     for (let i = 0; i < count; i++) {
       const layer = Math.random() < 0.6 ? 1 : Math.random() < 0.85 ? 2 : 3
       stars.push({
@@ -303,7 +313,7 @@ export function Rocket3DCanvas({
         // 1. Создаём частицы огненного взрыва
         const exp: ExplosionParticle[] = []
         const colors = ['#ffffff', '#38bdf8', '#60a5fa', '#fbbf24', '#ef4444', '#fb923c']
-        for (let i = 0; i < 65; i++) {
+        for (let i = 0; i < 26; i++) {
           const angle = Math.random() * Math.PI * 2
           const speed = 2.5 + Math.random() * 10
           const maxLife = 40 + Math.floor(Math.random() * 40)
@@ -470,7 +480,7 @@ export function Rocket3DCanvas({
       const height = currentProps.fullscreen && typeof window !== 'undefined'
         ? window.innerHeight
         : (canvas.clientHeight || 280)
-      const dpr = Math.min(2, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)
+      const dpr = Math.min(1.5, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)
 
       if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
         canvas.width = width * dpr
@@ -487,6 +497,10 @@ export function Rocket3DCanvas({
         const dt = Math.min(0.05, Math.max(0.001, (now - lastTime) / 1000))
         state.lastFrameTime = now
         state.time += dt
+        // Облегчённый режим: если кадры стабильно дольше ~24 мс, отключаем мягкое свечение
+        state.emaDt += (dt - state.emaDt) * 0.05
+        if (state.emaDt > 0.024) state.lowQ = true
+        else if (state.emaDt < 0.019) state.lowQ = false
 
         // Тряска экрана при взрыве
         if (state.shake > 0.1) {
@@ -514,60 +528,23 @@ export function Rocket3DCanvas({
           }
 
           if (currentPhase === 'flying' && star.layer >= 2) {
-            const streakLen = star.speed * flightSpeedFactor * 4.5
-            const grad = ctx.createLinearGradient(star.x, star.y, star.x + streakLen, star.y)
-            grad.addColorStop(0, `rgba(255, 255, 255, ${star.opacity})`)
-            grad.addColorStop(1, 'rgba(255, 255, 255, 0)')
-            ctx.strokeStyle = grad
-            ctx.lineWidth = star.size * 0.75
+            const streakLen = Math.min(26, star.speed * flightSpeedFactor * 2.4)
+            ctx.strokeStyle = `rgba(255, 255, 255, ${star.opacity * 0.7})`
+            ctx.lineWidth = star.size * 0.7
             ctx.beginPath()
             ctx.moveTo(star.x, star.y)
             ctx.lineTo(star.x + streakLen, star.y)
             ctx.stroke()
           } else {
             ctx.fillStyle = `rgba(255, 255, 255, ${star.opacity})`
-            ctx.beginPath()
-            ctx.arc(star.x, star.y, star.size / 2, 0, Math.PI * 2)
-            ctx.fill()
+            ctx.fillRect(star.x - star.size / 2, star.y - star.size / 2, star.size, star.size)
           }
         }
         ctx.restore()
 
-        // --- 1.1 Космические полосы скорости (Speed Streaks) в фазе полёта ---
-        if (currentPhase === 'flying') {
-          if (state.speedStreaks.length < 10 && Math.random() < 0.35) {
-            state.speedStreaks.push({
-              x: width + 20,
-              y: height * 0.12 + Math.random() * (height * 0.72),
-              len: 30 + Math.random() * 55,
-              speed: (14 + Math.random() * 16) * Math.min(2.5, 1 + Math.log2(Math.max(1, currentMult)) * 0.4),
-              alpha: 0.25 + Math.random() * 0.4,
-              width: 1.2 + Math.random() * 1.0,
-            })
-          }
-
-          ctx.save()
-          for (let i = state.speedStreaks.length - 1; i >= 0; i--) {
-            const s = state.speedStreaks[i]!
-            s.x -= s.speed
-            if (s.x + s.len < -20) {
-              state.speedStreaks.splice(i, 1)
-              continue
-            }
-            ctx.strokeStyle = `rgba(255, 255, 255, ${s.alpha})`
-            ctx.lineWidth = s.width
-            ctx.lineCap = 'round'
-            ctx.beginPath()
-            ctx.moveTo(s.x, s.y)
-            ctx.lineTo(s.x + s.len, s.y)
-            ctx.stroke()
-          }
-          ctx.restore()
-        }
-
         // Во время отсчёта (betting) ракета не отображается (показывается только таймер)
         if (currentPhase === 'betting') {
-          state.trail = []
+          state.ribbon = []
           state.speedStreaks = []
           return
         }
@@ -581,24 +558,31 @@ export function Rocket3DCanvas({
         const launchAngle = -28
 
         // Точка круизного барьера (центр/верх арены — ракета доходит сюда и ОСТАНАВЛИВАЕТСЯ)
-        const barrierX = width * 0.52
-        const barrierY = height * 0.36
+        const barrierX = width * 0.5
+        const barrierY = height * 0.4
         const barrierAngle = -6
 
-        // Плавный и аккуратный взлёт на старте: ровно за ~1.2 секунды ракета подходит к барьеру
-        const riseDuration = 1.2
+        // Взлёт по дуге за 2 c, затем ракета без остановок плывёт по большой плавной восьмёрке
+        const riseDuration = 2.0
         const riseProgress = Math.min(1, state.flightSeconds / riseDuration)
-        // easeOutCubic: быстрый мягкий подъём с замедлением до полной остановки
-        const easeRise = 1 - Math.pow(1 - riseProgress, 3)
+        const easeRise = -(Math.cos(Math.PI * riseProgress) - 1) / 2
+        const arcLift = Math.sin(Math.PI * riseProgress) * height * 0.05
 
-        // Целевые координаты (строго останавливаются у барьера, НЕ улетают!)
-        const targetX = launchX + (barrierX - launchX) * easeRise
-        const targetY = launchY + (barrierY - launchY) * easeRise
-        const targetAngle = launchAngle + (barrierAngle - launchAngle) * easeRise
+        const t = state.flightSeconds
+        const cruise = riseProgress >= 1 ? Math.min(1, (t - riseDuration) / 1.5) : 0
+        const ampX = width * 0.17
+        const ampY = height * 0.11
+        const driftX = Math.sin(t * 0.62) * ampX * cruise
+        const driftY = Math.sin(t * 1.24 + 0.8) * ampY * cruise
+        const targetX = launchX + (barrierX - launchX) * easeRise + driftX
+        const targetY = launchY + (barrierY - launchY) * easeRise - arcLift + driftY
+        // Угол следует за вертикальной скоростью (крен в поворот), всегда носом вперёд
+        const vy = Math.cos(t * 1.24 + 0.8) * ampY * 1.24 * cruise
+        const targetAngle =
+          launchAngle + (barrierAngle - launchAngle) * easeRise + (Math.atan2(vy, 150) * 180) / Math.PI
 
-        // Естественные микро-колебания полёта на барьере
-        const hoverY = Math.sin(state.flightSeconds * 3.2) * 2.5
-        const hoverAngle = Math.sin(state.flightSeconds * 2.0) * 1.0
+        const hoverY = 0
+        const hoverAngle = 0
 
         // Frame-rate independent экспоненциальное сглаживание (полное исключение лагов и телепортов!)
         const lerpFactor = 1 - Math.exp(-dt * 14)
@@ -618,114 +602,68 @@ export function Rocket3DCanvas({
 
         state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
 
-        // --- 2. Неоновая дуговая траектория полёта и шлейф плазмы ---
+        // --- 2. Лента-след (без частиц): сопло оставляет плавно сужающийся светящийся шлейф ---
         if (currentPhase === 'flying') {
           const rad = (currentAngle * Math.PI) / 180
           const nozzleDist = 50 * 1.22
           const nozzleX = currentX - Math.cos(rad) * nozzleDist
           const nozzleY = currentY - Math.sin(rad) * nozzleDist
 
-          // Старт дуги из точки запуска в левом нижнем секторе
-          const startArcX = width * 0.08
-          const startArcY = height * 0.72
+          // Шлейф сносит назад — ощущение скорости; чем выше множитель, тем быстрее
+          const drift = (55 + Math.min(110, currentMult * 6)) * dt
+          for (const pt of state.ribbon) pt.x -= drift
+          state.ribbonAcc += dt
+          if (state.ribbonAcc >= 0.026) {
+            state.ribbonAcc = 0
+            state.ribbon.push({ x: nozzleX, y: nozzleY })
+            if (state.ribbon.length > 46) state.ribbon.shift()
+          }
 
-          // Плавная выпуклая контрольная точка
-          const ctrlX = startArcX + (nozzleX - startArcX) * 0.52
-          const ctrlY = startArcY + (nozzleY - startArcY) * 0.15
-
-          ctx.save()
-          ctx.lineCap = 'round'
-
-          // 1. Внешнее мягкое неоновое свечение шлейфа (Electric Glow)
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)'
-          ctx.lineWidth = 10
-          ctx.shadowColor = skin.accentColor
-          ctx.shadowBlur = 18
-          ctx.beginPath()
-          ctx.moveTo(startArcX, startArcY)
-          ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
-          ctx.stroke()
-
-          // 2. Внутреннее яркое градиентное ядро дуги (плавное появление от старта к соплу)
-          const arcGrad = ctx.createLinearGradient(startArcX, startArcY, nozzleX, nozzleY)
-          arcGrad.addColorStop(0, 'rgba(56, 189, 248, 0.05)')
-          arcGrad.addColorStop(0.35, 'rgba(56, 189, 248, 0.55)')
-          arcGrad.addColorStop(1, skin.accentGlow)
-          ctx.strokeStyle = arcGrad
-          ctx.lineWidth = 3.6
-          ctx.shadowBlur = 8
-          ctx.shadowColor = skin.accentGlow
-          ctx.beginPath()
-          ctx.moveTo(startArcX, startArcY)
-          ctx.quadraticCurveTo(ctrlX, ctrlY, nozzleX, nozzleY)
-          ctx.stroke()
-          ctx.restore()
-
-        // 3. Аккуратные частицы плазмы непосредственно за соплом
-        for (let n = 0; n < 2; n++) {
-          if (Math.random() > 0.55) continue
-          const spread = (Math.random() - 0.5) * 9
-          const perpX = -Math.sin(rad) * spread
-          const perpY = Math.cos(rad) * spread
-          const shapeRoll = Math.random()
-          const pSpeed = 2.6 + Math.random() * 3.8
-          const pAngle = rad + Math.PI + (Math.random() - 0.5) * 0.25
-
-          state.trail.push({
-            x: nozzleX + perpX,
-            y: nozzleY + perpY,
-            vx: Math.cos(pAngle) * pSpeed,
-            vy: Math.sin(pAngle) * pSpeed,
-            size: 3 + Math.random() * 5,
-            alpha: 0.9,
-            color: skin.trailColors[Math.floor(Math.random() * skin.trailColors.length)] ?? skin.accentColor,
-            life: 0,
-            maxLife: 26 + Math.floor(Math.random() * 18),
-            shape: shapeRoll < 0.22 ? 2 : shapeRoll < 0.45 ? 1 : 0,
-          })
+          const n = state.ribbon.length
+          if (n > 2) {
+            ctx.save()
+            ctx.lineCap = 'round'
+            ctx.lineJoin = 'round'
+            // Внешний мягкий слой (пропускается на слабых устройствах)
+            if (!state.lowQ) {
+              ctx.strokeStyle = skin.accentGlow
+              for (let i = 1; i < n; i++) {
+                const k = i / (n - 1)
+                ctx.globalAlpha = k * k * 0.3
+                ctx.lineWidth = 4 + k * 18
+                ctx.beginPath()
+                ctx.moveTo(state.ribbon[i - 1]!.x, state.ribbon[i - 1]!.y)
+                ctx.lineTo(state.ribbon[i]!.x, state.ribbon[i]!.y)
+                ctx.stroke()
+              }
+            }
+            // Основная лента цвета скина
+            ctx.strokeStyle = skin.accentColor
+            for (let i = 1; i < n; i++) {
+              const k = i / (n - 1)
+              ctx.globalAlpha = k * 0.95
+              ctx.lineWidth = 1.5 + k * 8
+              ctx.beginPath()
+              ctx.moveTo(state.ribbon[i - 1]!.x, state.ribbon[i - 1]!.y)
+              ctx.lineTo(state.ribbon[i]!.x, state.ribbon[i]!.y)
+              ctx.stroke()
+            }
+            // Белая жила у сопла
+            ctx.strokeStyle = '#ffffff'
+            for (let i = Math.floor(n * 0.45); i < n; i++) {
+              const k = i / (n - 1)
+              ctx.globalAlpha = k * 0.9
+              ctx.lineWidth = 0.8 + k * 2.4
+              ctx.beginPath()
+              ctx.moveTo(state.ribbon[i - 1]!.x, state.ribbon[i - 1]!.y)
+              ctx.lineTo(state.ribbon[i]!.x, state.ribbon[i]!.y)
+              ctx.stroke()
+            }
+            ctx.restore()
+          }
+        } else if (state.ribbon.length > 0) {
+          state.ribbon = []
         }
-      }
-
-      // Отрисовка частиц выхлопа (аддитивное свечение без shadowBlur — дёшево для слабых устройств)
-      ctx.save()
-      ctx.globalCompositeOperation = 'lighter'
-      for (let i = state.trail.length - 1; i >= 0; i--) {
-        const p = state.trail[i]!
-        p.life++
-        p.x += p.vx
-        p.y += p.vy
-        p.vx *= 0.95
-        p.vy *= 0.95
-        p.alpha = Math.max(0, 1 - p.life / p.maxLife)
-        p.size *= 0.98
-
-        if (p.life >= p.maxLife || p.alpha <= 0.02) {
-          state.trail.splice(i, 1)
-          continue
-        }
-
-        ctx.fillStyle = p.color
-        ctx.globalAlpha = p.alpha * 0.8
-        ctx.beginPath()
-        const r = p.size / 2
-        if (p.shape === 1) {
-          // четырёхлучевая звёздочка-искра
-          ctx.moveTo(p.x, p.y - r * 1.9)
-          ctx.quadraticCurveTo(p.x, p.y, p.x + r * 1.9, p.y)
-          ctx.quadraticCurveTo(p.x, p.y, p.x, p.y + r * 1.9)
-          ctx.quadraticCurveTo(p.x, p.y, p.x - r * 1.9, p.y)
-          ctx.quadraticCurveTo(p.x, p.y, p.x, p.y - r * 1.9)
-        } else if (p.shape === 2) {
-          // капля — отсылка к DROP
-          ctx.moveTo(p.x, p.y - r * 1.7)
-          ctx.bezierCurveTo(p.x + r * 1.5, p.y - r * 0.2, p.x + r * 1.2, p.y + r * 1.3, p.x, p.y + r * 1.3)
-          ctx.bezierCurveTo(p.x - r * 1.2, p.y + r * 1.3, p.x - r * 1.5, p.y - r * 0.2, p.x, p.y - r * 1.7)
-        } else {
-          ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
-        }
-        ctx.fill()
-      }
-      ctx.restore()
 
       // Плавный «надув» корпуса по мере роста множителя (лёгкое надувание)
       const inflateTarget = currentPhase === 'flying' ? 1 + Math.min(0.14, Math.log2(Math.max(1, currentMult)) * 0.04) : 1
@@ -763,16 +701,6 @@ export function Rocket3DCanvas({
           const flameFlicker = 0.9 + Math.random() * 0.2
           const flameLen = (65 + Math.min(38, currentMult * 3.5)) * flameFlicker
           const flameWidth = 16 * breathe
-
-          // Внешняя аристократическая аура пламени
-          const flameAuraGrad = ctx.createRadialGradient(-50, 0, 5, -50 - flameLen * 0.6, 0, flameLen)
-          flameAuraGrad.addColorStop(0, skin.flameAura[0])
-          flameAuraGrad.addColorStop(0.55, skin.flameAura[1])
-          flameAuraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)')
-          ctx.fillStyle = flameAuraGrad
-          ctx.beginPath()
-          ctx.ellipse(-50 - flameLen * 0.4, 0, flameLen * 0.7, flameWidth * 1.9, 0, 0, Math.PI * 2)
-          ctx.fill()
 
           // Основное реактивное ядро плазмы
           ctx.beginPath()
@@ -1316,10 +1244,10 @@ export function Rocket3DCanvas({
       className={className}
       style={{
         position: 'absolute',
-        top: 0,
+        top: -50,
         left: 0,
         width: '100%',
-        height: '100%',
+        height: 'calc(100% + 50px)',
         pointerEvents: 'none',
         zIndex: 1,
       }}

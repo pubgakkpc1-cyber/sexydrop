@@ -2358,3 +2358,30 @@
   top: 50%;
   margin-top: -3px;
 }
+
+/* Десятичные точки в ставках и выплатах стоят в одну вертикальную линию */
+.amtInt {
+  display: inline-block;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.amtFrac {
+  display: inline-block;
+  min-width: 2ch;
+  text-align: left;
+  font-variant-numeric: tabular-nums;
+}
+
+.playerBetAmount .amtInt {
+  min-width: calc(var(--stake-int, 2) * 1ch);
+}
+
+.playerPayoutVal .amtInt {
+  min-width: calc(var(--payout-int, 3) * 1ch);
+}
+
+.playerPayoutVal {
+  display: inline-flex;
+  align-items: baseline;
+}

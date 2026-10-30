@@ -86,6 +86,17 @@ function formatCardTon(minor: number): string {
 }
 
 /** Множитель: максимум 1 знак после точки (вниз), например 1.65 → 1.6 */
+/** Число с выровненной десятичной точкой: целая часть прижата вправо, дробная — фиксированной ширины */
+function AmountSplit({ text }: { text: string }) {
+  const [int, frac] = text.split('.')
+  return (
+    <>
+      <span className={styles.amtInt}>{int}</span>
+      <span className={styles.amtFrac}>{frac !== undefined ? `.${frac}` : ''}</span>
+    </>
+  )
+}
+
 function fmtMult(value: number): string {
   return (Math.floor(value * 10 + 1e-9) / 10).toFixed(1)
 }
@@ -702,7 +713,15 @@ export function CrashScreen() {
           </span>
         </div>
 
-        <div className={styles.playersList}>
+        <div
+          className={styles.playersList}
+          style={
+            {
+              '--stake-int': Math.max(1, ...sortedBetRows.map((r) => formatCardTon(r.stakeMinor).split('.')[0]!.length)),
+              '--payout-int': Math.max(1, ...sortedBetRows.map((r) => formatCardTon(r.profitMinor).split('.')[0]!.length)),
+            } as React.CSSProperties
+          }
+        >
           {sortedBetRows.map((row) => {
             const isWon = row.isCashed
             const isLost = phase === 'crashed' && !row.isCashed
@@ -746,7 +765,7 @@ export function CrashScreen() {
                     >
                       <TonIcon className={styles.playerBetDiamond} />
                       <span className={styles.playerBetAmount}>
-                        {formatCardTon(row.stakeMinor)}
+                        <AmountSplit text={formatCardTon(row.stakeMinor)} />
                       </span>
                       {isWon && (
                         <span className={styles.playerBetMult}>
@@ -778,11 +797,7 @@ export function CrashScreen() {
                       )}
                     />
                     <span className={styles.playerPayoutVal}>
-                      {isWon
-                        ? formatCardTon(row.profitMinor)
-                        : isLost
-                          ? '0.00'
-                          : formatCardTon(row.profitMinor)}
+                      <AmountSplit text={isLost ? '0' : formatCardTon(row.profitMinor)} />
                     </span>
                   </div>
 

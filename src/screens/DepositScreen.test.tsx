@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { DepositScreen } from './DepositScreen'
 import { useWalletStore } from '../store/wallet'
-import { STARS_PER_TON, isValidStars, parseStars, starsToMinor } from '../lib/stars'
+import { STARS_PER_TON, TON_PER_STAR_LABEL, isValidStars, parseStars, starsToMinor } from '../lib/stars'
 
 const user = userEvent.setup()
 
@@ -21,10 +21,11 @@ beforeEach(() => {
 })
 
 describe('lib/stars (курс Stars → TON)', () => {
-  it('1 TON = 200 Stars: 200 Stars = 1000 minor, округление вниз', () => {
-    expect(STARS_PER_TON).toBe(200)
-    expect(starsToMinor(200)).toBe(1000)
-    expect(starsToMinor(10)).toBe(50)
+  it('175 Stars = 1 TON: 175 Stars = 1000 minor, округление вниз', () => {
+    expect(STARS_PER_TON).toBe(175)
+    expect(starsToMinor(175)).toBe(1000)
+    expect(starsToMinor(10)).toBe(57)
+    expect(TON_PER_STAR_LABEL).toBe('0.0057')
     expect(starsToMinor(0)).toBe(0)
     expect(starsToMinor(-5)).toBe(0)
   })
@@ -72,8 +73,9 @@ describe('DepositScreen (пополнение баланса)', () => {
     const submit = screen.getByRole('button', { name: 'Пополнить' })
     expect(submit).toBeDisabled()
 
-    await user.type(screen.getByLabelText(/Количество Stars/), '400')
+    await user.type(screen.getByLabelText(/Количество Stars/), '350')
     expect(screen.getByText(/Вы получите/)).toHaveTextContent('2 TON')
+    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.0057 TON')
     await user.click(submit)
     expect(useWalletStore.getState().getBalance()).toBe(102_000)
   })
@@ -90,10 +92,11 @@ describe('DepositScreen (пополнение баланса)', () => {
     await user.click(screen.getByRole('tab', { name: 'Конвертер' }))
     expect(screen.getByRole('button', { name: 'Конвертировать' })).toBeDisabled()
 
-    await user.type(screen.getByLabelText('Количество Stars'), '1000')
-    expect(screen.getByLabelText('Получите TON')).toHaveTextContent('5')
+    await user.type(screen.getByLabelText('Количество Stars'), '1050')
+    expect(screen.getByLabelText('Получите TON')).toHaveTextContent('6')
+    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.0057 TON')
     await user.click(screen.getByRole('button', { name: 'Конвертировать' }))
-    expect(useWalletStore.getState().getBalance()).toBe(105_000)
+    expect(useWalletStore.getState().getBalance()).toBe(106_000)
   })
 
   it('Подарки: шаги раскрываются, приём подарков честно недоступен', async () => {

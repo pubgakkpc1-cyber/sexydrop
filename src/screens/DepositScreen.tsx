@@ -5,6 +5,7 @@ import {
   STARS_MAX,
   STARS_MIN,
   STARS_PER_TON,
+  TON_PER_STAR_LABEL,
   isValidStars,
   parseStars,
   starsToMinor,
@@ -143,6 +144,9 @@ function StarsPanel({ onDone }: { onDone: (minor: Minor) => void }) {
           Вы получите <strong>{formatMinor(payout)} TON</strong> · курс {STARS_PER_TON} Stars = 1 TON
         </p>
       )}
+      <p className={styles.rate}>
+        1 Star = <strong>{TON_PER_STAR_LABEL} TON</strong>
+      </p>
       <button
         type="button"
         className={styles.primary}
@@ -292,8 +296,10 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
       </div>
 
       <p className={styles.rate}>
-        Курс: <strong>{STARS_PER_TON} Stars = 1 TON</strong> · от {STARS_MIN} до{' '}
-        {STARS_MAX.toLocaleString('ru-RU')} Stars за раз
+        Курс: <strong>{STARS_PER_TON} Stars = 1 TON</strong> · 1 Star = <strong>{TON_PER_STAR_LABEL} TON</strong>
+      </p>
+      <p className={styles.rate}>
+        От {STARS_MIN} до {STARS_MAX.toLocaleString('ru-RU')} Stars за раз
       </p>
       <div className={styles.presetsRow}>
         {STARS_PRESETS.map((p) => (

@@ -38,7 +38,7 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
         <div className={styles.glowRay} aria-hidden />
 
         <h2 className={styles.title}>
-          <SparkleIcon style={{ width: '20px', height: '20px', display: 'inline', verticalAlign: '-2px', marginRight: '6px', color: '#fbbf24' }} />
+          <SparkleIcon style={{ width: '20px', height: '20px', display: 'inline', verticalAlign: '-2px', marginRight: '6px', color: '#c35c61' }} />
           <span>Поздравляем!</span>
         </h2>
         <p className={styles.subtitle}>Вам выпал новый подарок</p>

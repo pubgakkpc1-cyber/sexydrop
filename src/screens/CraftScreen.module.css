@@ -42,8 +42,8 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   color: var(--accent);
-  background: rgba(183, 164, 249, 0.12);
-  border: 1px solid rgba(183, 164, 249, 0.35);
+  background: rgba(229, 184, 186, 0.12);
+  border: 1px solid rgba(229, 184, 186, 0.35);
   border-radius: var(--radius-full);
 }
 
@@ -62,8 +62,8 @@
   gap: var(--space-3);
   padding: var(--space-5) var(--space-4);
   background:
-    radial-gradient(140px 100px at 20% 12%, rgba(255, 157, 11, 0.35), transparent 70%),
-    linear-gradient(160deg, #f0562b 0%, #d92b2b 60%, #a31d1d 100%);
+    radial-gradient(140px 100px at 20% 12%, rgba(189, 77, 82, 0.35), transparent 70%),
+    linear-gradient(160deg, #c96c52 0%, #c34141 60%, #922e2e 100%);
   border-radius: var(--radius-xl);
   overflow: hidden;
 }
@@ -160,8 +160,8 @@
 }
 
 .cellActive {
-  background: rgba(249, 115, 22, 0.14);
-  border-color: rgba(255, 159, 46, 0.65);
+  background: rgba(190, 81, 86, 0.14);
+  border-color: rgba(199, 102, 107, 0.65);
 }
 
 .cellImage {

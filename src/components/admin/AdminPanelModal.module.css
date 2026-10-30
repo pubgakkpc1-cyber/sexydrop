@@ -10,10 +10,10 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: rgba(255, 184, 0, 0.12);
-  border: 1px solid rgba(255, 184, 0, 0.35);
+  background: rgba(186, 69, 75, 0.12);
+  border: 1px solid rgba(186, 69, 75, 0.35);
   border-radius: 12px;
-  color: #ffb800;
+  color: #ba454b;
   font-size: 13px;
   font-weight: 600;
 }
@@ -35,7 +35,7 @@
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
-  color: #fff;
+  color: #ffffff;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
@@ -45,9 +45,9 @@
 
 .pill:hover,
 .pill:focus-visible {
-  background: rgba(0, 152, 234, 0.2);
-  border-color: #0098ea;
-  color: #38bdf8;
+  background: rgba(171, 63, 69, 0.2);
+  border-color: #ab3f45;
+  color: #c7696d;
 }
 
 .statusMessage {
@@ -59,23 +59,23 @@
 }
 
 .success {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: #34d399;
+  background: rgba(56, 145, 115, 0.12);
+  border: 1px solid rgba(56, 145, 115, 0.4);
+  color: #4dba92;
 }
 
 .error {
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #f87171;
+  background: rgba(206, 101, 101, 0.12);
+  border: 1px solid rgba(206, 101, 101, 0.4);
+  color: #db8e8e;
 }
 
 .submitBtn {
-  background: linear-gradient(135deg, #0098ea 0%, #0077b6 100%) !important;
-  color: #fff !important;
+  background: linear-gradient(135deg, #ab3f45 0%, #853135 100%) !important;
+  color: #ffffff !important;
   font-weight: 700 !important;
   border: none !important;
-  box-shadow: 0 4px 15px rgba(0, 152, 234, 0.35) !important;
+  box-shadow: 0 4px 15px rgba(171, 63, 69, 0.35) !important;
 }
 
 .submitBtn:hover {

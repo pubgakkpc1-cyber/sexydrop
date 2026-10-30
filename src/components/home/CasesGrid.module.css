@@ -18,7 +18,7 @@
 .tile {
   display: flex;
   flex-direction: column;
-  background: rgba(20, 18, 30, 0.72);
+  background: rgba(24, 24, 24, 0.72);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -42,7 +42,7 @@
   min-height: 128px;
   /* Свечение под артом — цвет кейса из конфига (упадёт в нейтральный, если не задан). */
   background:
-    radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--case-glow, #8b5cf6) 30%, transparent) 0%, transparent 62%),
+    radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--case-glow, #d18185) 30%, transparent) 0%, transparent 62%),
     transparent;
 }
 
@@ -57,11 +57,11 @@
   font-weight: 700;
   letter-spacing: 0.4px;
   color: #ffffff;
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  background: linear-gradient(135deg, #be5156 0%, #b44248 100%);
   border: 1px solid rgba(255, 255, 255, 0.4);
   border-radius: var(--radius-full);
   padding: 3px 8px;
-  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.6);
+  box-shadow: 0 2px 8px rgba(190, 81, 86, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 
 .newBadgeIcon {
@@ -111,13 +111,13 @@
 }
 
 .pillGreen {
-  background: linear-gradient(135deg, rgba(34, 197, 94, 0.9), rgba(21, 128, 61, 0.95));
-  box-shadow: 0 2px 8px rgba(34, 197, 94, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  background: linear-gradient(135deg, rgba(65, 166, 102, 0.9), rgba(42, 107, 66, 0.95));
+  box-shadow: 0 2px 8px rgba(65, 166, 102, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .pillPurple {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.9), rgba(126, 34, 206, 0.95));
-  box-shadow: 0 2px 8px rgba(168, 85, 247, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+  background: linear-gradient(135deg, rgba(207, 125, 129, 0.9), rgba(175, 65, 70, 0.95));
+  box-shadow: 0 2px 8px rgba(207, 125, 129, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .pillIcon {
@@ -128,7 +128,7 @@
 
 /* ===== Матовый стиль ===== */
 .tile {
-  background: #1e1d23;
+  background: #211f1f;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
   box-shadow: none;
@@ -137,12 +137,12 @@
 
 .art {
   background:
-    radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--case-glow, #8b5cf6) 13%, transparent) 0%, transparent 62%),
+    radial-gradient(circle at 50% 52%, color-mix(in srgb, var(--case-glow, #d18185) 13%, transparent) 0%, transparent 62%),
     transparent;
 }
 
 .newBadge {
-  background: #c9692c;
+  background: #b34248;
   box-shadow: none;
   border: none;
 }
@@ -154,11 +154,11 @@
 }
 
 .pillGreen {
-  background: #2f8a55;
+  background: #388156;
   box-shadow: none;
 }
 
 .pillPurple {
-  background: #6a50ad;
+  background: #ad5055;
   box-shadow: none;
 }

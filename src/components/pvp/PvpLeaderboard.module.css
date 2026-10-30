@@ -49,8 +49,8 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.4px;
   color: var(--accent);
-  background: rgba(183, 164, 249, 0.12);
-  border: 1px solid rgba(183, 164, 249, 0.35);
+  background: rgba(229, 184, 186, 0.12);
+  border: 1px solid rgba(229, 184, 186, 0.35);
   border-radius: var(--radius-full);
   padding: 1px 6px;
 }

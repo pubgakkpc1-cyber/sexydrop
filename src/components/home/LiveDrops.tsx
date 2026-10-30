@@ -3,10 +3,10 @@ import { useInventoryStore } from '../../store/inventory'
 import styles from './LiveDrops.module.css'
 
 const RARITY_COLOR: Record<Rarity, string> = {
-  common: '#9aa4b2',
-  rare: '#38bdf8',
-  epic: '#a855f7',
-  legendary: '#f5b942',
+  common: '#b29a9b',
+  rare: '#c7696d',
+  epic: '#cf7d81',
+  legendary: '#c96e72',
 }
 
 const SOURCE_LABEL: Record<string, string> = {

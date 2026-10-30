@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   z-index: var(--z-opening);
-  background: rgba(15, 14, 17, 0.94);
+  background: rgba(16, 15, 15, 0.94);
   backdrop-filter: blur(6px);
   display: flex;
   flex-direction: column;

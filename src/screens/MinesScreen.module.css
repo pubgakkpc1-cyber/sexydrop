@@ -42,8 +42,8 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   color: var(--accent);
-  background: rgba(183, 164, 249, 0.12);
-  border: 1px solid rgba(183, 164, 249, 0.35);
+  background: rgba(229, 184, 186, 0.12);
+  border: 1px solid rgba(229, 184, 186, 0.35);
   border-radius: var(--radius-full);
 }
 
@@ -60,8 +60,8 @@
   gap: var(--space-3);
   padding: var(--space-4);
   background:
-    radial-gradient(160px 120px at 22% 8%, rgba(139, 92, 246, 0.28), transparent 70%),
-    linear-gradient(170deg, #201d2c 0%, #14161f 100%);
+    radial-gradient(160px 120px at 22% 8%, rgba(209, 129, 133, 0.28), transparent 70%),
+    linear-gradient(170deg, #252424 0%, #1a1919 100%);
   border: 1px solid var(--border);
   border-radius: var(--radius-xl);
 }
@@ -101,8 +101,8 @@
 
 .mineChipActive {
   color: var(--text);
-  background: rgba(139, 92, 246, 0.16);
-  border-color: rgba(139, 92, 246, 0.55);
+  background: rgba(209, 129, 133, 0.16);
+  border-color: rgba(209, 129, 133, 0.55);
 }
 
 .mineChip:disabled {
@@ -124,7 +124,7 @@
   font-size: 22px;
   font-family: inherit;
   color: var(--text);
-  background: linear-gradient(180deg, #2a2733 0%, #23202b 100%);
+  background: linear-gradient(180deg, #2e2c2c 0%, #262525 100%);
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-md);
   cursor: pointer;
@@ -140,13 +140,13 @@
 }
 
 .tilePicked {
-  background: rgba(47, 191, 106, 0.16);
-  border-color: rgba(47, 191, 106, 0.55);
+  background: rgba(67, 171, 110, 0.16);
+  border-color: rgba(67, 171, 110, 0.55);
 }
 
 .tileMine {
-  background: rgba(255, 71, 87, 0.16);
-  border-color: rgba(255, 71, 87, 0.5);
+  background: rgba(211, 115, 120, 0.16);
+  border-color: rgba(211, 115, 120, 0.5);
 }
 
 .tileDim {
@@ -192,8 +192,8 @@
 }
 
 .presetActive {
-  background: rgba(139, 92, 246, 0.16);
-  border-color: rgba(139, 92, 246, 0.55);
+  background: rgba(209, 129, 133, 0.16);
+  border-color: rgba(209, 129, 133, 0.55);
 }
 
 .betError {
@@ -232,7 +232,7 @@
   font-family: inherit;
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: #062a15;
+  color: #0d2316;
   background: var(--price-green);
   border: none;
   border-radius: var(--radius-md);

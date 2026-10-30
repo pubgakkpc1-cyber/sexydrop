@@ -20,7 +20,7 @@
   color: #ffffff;
   background:
     radial-gradient(200px 150px at 82% 50%, rgba(255, 255, 255, 0.18), transparent 70%),
-    linear-gradient(150deg, #34d399 0%, #10b981 55%, #059669 100%);
+    linear-gradient(150deg, #4dba92 0%, #389173 55%, #2b705a 100%);
   border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5);
   border-radius: 22px;
@@ -46,8 +46,8 @@
   text-align: left;
   color: #ffffff;
   background:
-    radial-gradient(200px 140px at 78% 24%, rgba(255, 205, 80, 0.4), transparent 72%),
-    linear-gradient(155deg, #f43f5e 0%, #e11d48 55%, #be123c 100%);
+    radial-gradient(200px 140px at 78% 24%, rgba(208, 127, 131, 0.4), transparent 72%),
+    linear-gradient(155deg, #ce656a 0%, #c13d44 55%, #9e3237 100%);
   border: 1px solid rgba(255, 255, 255, 0.25);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.5);
   border-radius: 22px;
@@ -96,7 +96,7 @@
   gap: 4px;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-bold);
-  color: #1c1b20;
+  color: #1e1d1d;
   background: #ffffff;
   border-radius: var(--radius-full);
 }
@@ -163,13 +163,13 @@
 .tileRocket {
   background:
     radial-gradient(140px 100px at 80% 18%, rgba(255, 255, 255, 0.25), transparent 70%),
-    linear-gradient(160deg, #38bdf8 0%, #2563eb 100%);
+    linear-gradient(160deg, #c7696d 0%, #bf5157 100%);
 }
 
 .tilePlinko {
   background:
     radial-gradient(140px 110px at 70% 22%, rgba(255, 255, 255, 0.25), transparent 72%),
-    linear-gradient(160deg, #c084fc 0%, #7e22ce 100%);
+    linear-gradient(160deg, #dda3a6 0%, #af4146 100%);
 }
 
 button.tile {
@@ -189,13 +189,13 @@ button.tile:hover {
 .tileMuted {
   background:
     radial-gradient(140px 100px at 78% 20%, rgba(255, 255, 255, 0.2), transparent 70%),
-    linear-gradient(160deg, #2dd4bf 0%, #0f766e 100%);
+    linear-gradient(160deg, #bb464c 0%, #612427 100%);
 }
 
 .tileMagenta {
   background:
     radial-gradient(140px 100px at 70% 22%, rgba(255, 255, 255, 0.22), transparent 72%),
-    linear-gradient(160deg, #f472b6 0%, #c026d3 100%);
+    linear-gradient(160deg, #d69094 0%, #b64349 100%);
 }
 
 .tileDice {
@@ -207,7 +207,7 @@ button.tile:hover {
   gap: var(--space-4);
   background:
     radial-gradient(140px 100px at 85% 20%, rgba(255, 255, 255, 0.22), transparent 70%),
-    linear-gradient(160deg, #34d399 0%, #059669 100%);
+    linear-gradient(160deg, #4dba92 0%, #2b705a 100%);
 }
 
 .dieArt {
@@ -232,7 +232,7 @@ button.tile:hover {
   margin-left: 6px;
   font-size: 10px;
   font-weight: var(--font-weight-bold);
-  color: #1c1b20;
+  color: #1e1d1d;
   background: #ffffff;
   border-radius: var(--radius-full);
   vertical-align: middle;

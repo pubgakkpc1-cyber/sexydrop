@@ -47,7 +47,7 @@ export function GamesScreen() {
         </span>
         <span className={styles.bannerRing} aria-hidden>
           <svg className={styles.bannerRingSvg} viewBox="0 0 120 120">
-            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="10" />
+            <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255, 255, 255, 0.25)" strokeWidth="10" />
             <circle
               cx="60"
               cy="60"
@@ -161,7 +161,7 @@ export function GamesScreen() {
           aria-label="Дайс — угадай ролл 0–9999"
         >
           <span className={styles.dieArt} aria-hidden>
-            <DiceIcon style={{ width: '36px', height: '36px', color: '#38bdf8' }} />
+            <DiceIcon style={{ width: '36px', height: '36px', color: '#c7696d' }} />
           </span>
           <span className={styles.bannerInfo}>
             <span className={styles.tileName}>Дайс</span>

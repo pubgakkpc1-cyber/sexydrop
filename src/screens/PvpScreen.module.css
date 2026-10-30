@@ -16,7 +16,7 @@
   text-decoration: none;
   color: var(--text);
   background:
-    radial-gradient(140px 90px at 85% 0%, rgba(183, 164, 249, 0.16), transparent 70%),
+    radial-gradient(140px 90px at 85% 0%, rgba(229, 184, 186, 0.16), transparent 70%),
     var(--card);
   transition: border-color var(--transition-fast), transform var(--transition-fast);
 }
@@ -27,16 +27,16 @@
 
 .modeJackpot {
   background:
-    radial-gradient(160px 110px at 85% 10%, rgba(250, 204, 21, 0.18), transparent 70%),
+    radial-gradient(160px 110px at 85% 10%, rgba(190, 81, 86, 0.18), transparent 70%),
     var(--card);
-  border-color: rgba(250, 204, 21, 0.28);
+  border-color: rgba(190, 81, 86, 0.28);
 }
 
 .modeTvt {
   background:
-    radial-gradient(160px 110px at 85% 10%, rgba(59, 130, 246, 0.18), transparent 70%),
+    radial-gradient(160px 110px at 85% 10%, rgba(200, 105, 110, 0.18), transparent 70%),
     var(--card);
-  border-color: rgba(59, 130, 246, 0.28);
+  border-color: rgba(200, 105, 110, 0.28);
 }
 
 .modeIcon {
@@ -60,8 +60,8 @@
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background: rgba(250, 204, 21, 0.08);
-  border: 1px solid rgba(250, 204, 21, 0.4);
+  background: rgba(190, 81, 86, 0.08);
+  border: 1px solid rgba(190, 81, 86, 0.4);
   border-radius: var(--radius-md);
   text-decoration: none;
   color: var(--text);
@@ -72,7 +72,7 @@
   height: 10px;
   border-radius: var(--radius-full);
   background: var(--orange-deep);
-  box-shadow: 0 0 8px rgba(249, 115, 22, 0.7);
+  box-shadow: 0 0 8px rgba(190, 81, 86, 0.7);
   flex-shrink: 0;
 }
 

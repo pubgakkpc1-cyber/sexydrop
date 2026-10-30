@@ -66,8 +66,8 @@ export function initTelegram(): void {
   try {
     webApp.ready()
     webApp.expand()
-    webApp.setHeaderColor('#0d0b14')
-    webApp.setBackgroundColor('#0d0b14')
+    webApp.setHeaderColor('#141414')
+    webApp.setBackgroundColor('#141414')
     webApp.disableVerticalSwipes?.()
   } catch {
     /* старые клиенты могут не поддерживать часть методов */

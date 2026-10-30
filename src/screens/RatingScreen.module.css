@@ -15,7 +15,7 @@
   gap: 12px;
   padding: 16px;
   border-radius: 24px;
-  background: #1a1922;
+  background: #1e1d1d;
   border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
@@ -31,7 +31,7 @@
   width: 48px;
   height: 48px;
   border-radius: 14px;
-  background: #6b53b8;
+  background: #b85358;
 }
 
 .heroIconSvg {
@@ -69,7 +69,7 @@
 }
 
 .heroCol:first-child .heroLabel {
-  color: #d9a441;
+  color: #c1595e;
 }
 
 .timer {
@@ -78,9 +78,9 @@
   gap: 8px;
   padding: 9px 14px;
   border-radius: 14px;
-  background: #3a2f1c;
-  border: 1px solid rgba(217, 164, 65, 0.4);
-  color: #e8b653;
+  background: #2c2a2a;
+  border: 1px solid rgba(193, 89, 94, 0.4);
+  color: #ca7175;
   font-size: 17px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -104,7 +104,7 @@
 .winnersIcon {
   width: 20px;
   height: 20px;
-  color: #8c78d6;
+  color: #cf7f83;
 }
 
 .heroText {
@@ -137,7 +137,7 @@
 .listTitleIcon {
   width: 22px;
   height: 22px;
-  color: #8c78d6;
+  color: #cf7f83;
 }
 
 .colLabel {
@@ -165,27 +165,27 @@
   min-height: 60px;
   padding: 8px 10px;
   border-radius: 16px;
-  background: #1a1922;
+  background: #1e1d1d;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .rowGold {
-  background: #3f3418;
-  border-color: rgba(217, 164, 65, 0.45);
+  background: #2c2b2b;
+  border-color: rgba(193, 89, 94, 0.45);
 }
 
 .rowSilver {
-  background: #34373e;
-  border-color: rgba(170, 178, 192, 0.4);
+  background: #3a3838;
+  border-color: rgba(192, 170, 171, 0.4);
 }
 
 .rowBronze {
-  background: #43301a;
-  border-color: rgba(204, 124, 48, 0.4);
+  background: #2f2e2e;
+  border-color: rgba(184, 68, 74, 0.4);
 }
 
 .rowMe {
-  outline: 1.5px solid #7c66cc;
+  outline: 1.5px solid #c86a6f;
 }
 
 .rank {
@@ -194,24 +194,24 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  background: #2a2933;
+  background: #2f2d2d;
   color: rgba(255, 255, 255, 0.75);
   font-size: 14px;
   font-weight: 700;
 }
 
 .rankGold {
-  background: #e0a526;
+  background: #bc4a50;
   color: #ffffff;
 }
 
 .rankSilver {
-  background: #aab2c0;
+  background: #c0aaab;
   color: #ffffff;
 }
 
 .rankBronze {
-  background: #dc7b2e;
+  background: #bd4d52;
   color: #ffffff;
 }
 
@@ -221,7 +221,7 @@
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  background: #2a2933;
+  background: #2f2d2d;
 }
 
 .name {
@@ -240,7 +240,7 @@
   width: 52px;
   height: 44px;
   border-radius: 12px;
-  background: #24232c;
+  background: #282727;
 }
 
 .prizeImg {
@@ -260,9 +260,9 @@
   place-items: center;
   height: 44px;
   border-radius: 12px;
-  background: #2b2740;
-  border: 1px solid rgba(124, 102, 204, 0.35);
-  color: #b3a3f0;
+  background: #353232;
+  border: 1px solid rgba(200, 106, 111, 0.35);
+  color: #e2b1b3;
   font-size: 16px;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
@@ -280,7 +280,7 @@
   gap: 8px;
   padding: 8px 10px;
   border-radius: 18px;
-  background: #23222b;
+  background: #272626;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -289,7 +289,7 @@
   place-items: center;
   height: 36px;
   border-radius: 18px;
-  background: #34333d;
+  background: #393737;
   color: rgba(255, 255, 255, 0.85);
   font-size: 14px;
   font-weight: 700;
@@ -303,8 +303,8 @@
 .meChip {
   padding: 4px 10px;
   border-radius: 8px;
-  background: #2b2740;
-  color: #9d8ae6;
+  background: #353232;
+  color: #d9979b;
   font-size: 13px;
   font-weight: 700;
 }

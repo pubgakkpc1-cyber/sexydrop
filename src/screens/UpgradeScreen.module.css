@@ -42,8 +42,8 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.5px;
   color: var(--accent);
-  background: rgba(183, 164, 249, 0.12);
-  border: 1px solid rgba(183, 164, 249, 0.35);
+  background: rgba(229, 184, 186, 0.12);
+  border: 1px solid rgba(229, 184, 186, 0.35);
   border-radius: var(--radius-full);
 }
 
@@ -62,8 +62,8 @@
   gap: var(--space-3);
   padding: var(--space-5) var(--space-4);
   background:
-    radial-gradient(120px 120px at 78% 18%, rgba(61, 220, 91, 0.22), transparent 70%),
-    linear-gradient(160deg, #27c94f 0%, #14a33d 58%, #0d7c2e 100%);
+    radial-gradient(120px 120px at 78% 18%, rgba(90, 191, 109, 0.22), transparent 70%),
+    linear-gradient(160deg, #43ad5d 0%, #33844a 58%, #266338 100%);
   border-radius: var(--radius-xl);
   overflow: hidden;
 }
@@ -188,8 +188,8 @@
 }
 
 .targetActive {
-  background: rgba(139, 92, 246, 0.16);
-  border-color: rgba(139, 92, 246, 0.6);
+  background: rgba(209, 129, 133, 0.16);
+  border-color: rgba(209, 129, 133, 0.6);
 }
 
 .targetImage {

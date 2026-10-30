@@ -47,33 +47,33 @@ interface CountdownTheme {
 
 const COUNTDOWN_THEMES: Record<number, CountdownTheme> = {
   5: {
-    color: '#38bdf8',
-    glow: '0 0 24px rgba(56, 189, 248, 0.65)',
-    bgGlow: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(14, 13, 20, 0.9) 70%)',
+    color: '#c7696d',
+    glow: '0 0 24px rgba(199, 105, 109, 0.65)',
+    bgGlow: 'radial-gradient(circle, rgba(199, 105, 109, 0.22) 0%, rgba(17, 16, 16, 0.9) 70%)',
     ringGradient: 'url(#countdownGrad5)',
   },
   4: {
-    color: '#a855f7',
-    glow: '0 0 24px rgba(168, 85, 247, 0.7)',
-    bgGlow: 'radial-gradient(circle, rgba(168, 85, 247, 0.24) 0%, rgba(14, 13, 20, 0.9) 70%)',
+    color: '#cf7d81',
+    glow: '0 0 24px rgba(207, 125, 129, 0.7)',
+    bgGlow: 'radial-gradient(circle, rgba(207, 125, 129, 0.24) 0%, rgba(17, 16, 16, 0.9) 70%)',
     ringGradient: 'url(#countdownGrad4)',
   },
   3: {
-    color: '#fbbf24',
-    glow: '0 0 26px rgba(251, 191, 36, 0.75)',
-    bgGlow: 'radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, rgba(14, 13, 20, 0.9) 70%)',
+    color: '#c35c61',
+    glow: '0 0 26px rgba(195, 92, 97, 0.75)',
+    bgGlow: 'radial-gradient(circle, rgba(195, 92, 97, 0.25) 0%, rgba(17, 16, 16, 0.9) 70%)',
     ringGradient: 'url(#countdownGrad3)',
   },
   2: {
-    color: '#fb923c',
-    glow: '0 0 28px rgba(251, 146, 60, 0.8)',
-    bgGlow: 'radial-gradient(circle, rgba(251, 146, 60, 0.28) 0%, rgba(14, 13, 20, 0.9) 70%)',
+    color: '#c96e72',
+    glow: '0 0 28px rgba(201, 110, 114, 0.8)',
+    bgGlow: 'radial-gradient(circle, rgba(201, 110, 114, 0.28) 0%, rgba(17, 16, 16, 0.9) 70%)',
     ringGradient: 'url(#countdownGrad2)',
   },
   1: {
-    color: '#ef4444',
-    glow: '0 0 34px rgba(239, 68, 68, 0.9)',
-    bgGlow: 'radial-gradient(circle, rgba(239, 68, 68, 0.32) 0%, rgba(14, 13, 20, 0.9) 70%)',
+    color: '#ce6565',
+    glow: '0 0 34px rgba(206, 101, 101, 0.9)',
+    bgGlow: 'radial-gradient(circle, rgba(206, 101, 101, 0.32) 0%, rgba(17, 16, 16, 0.9) 70%)',
     ringGradient: 'url(#countdownGrad1)',
   },
 }
@@ -194,16 +194,16 @@ export function CrashScreen() {
 
   // Плавный переход цвета и свечения множителя
   const multColor = useMemo(() => {
-    if (multiplier >= 10.0) return '#c084fc'
-    if (multiplier >= 5.0) return '#fbbf24'
-    if (multiplier >= 2.0) return '#38bdf8'
+    if (multiplier >= 10.0) return '#dda3a6'
+    if (multiplier >= 5.0) return '#c35c61'
+    if (multiplier >= 2.0) return '#c7696d'
     return '#f8fafc'
   }, [multiplier])
 
   const multGlow = useMemo(() => {
-    if (multiplier >= 10.0) return '0 0 24px rgba(192, 132, 252, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 5.0) return '0 0 22px rgba(251, 191, 36, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 2.0) return '0 0 20px rgba(56, 189, 248, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 10.0) return '0 0 24px rgba(221, 163, 166, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 5.0) return '0 0 22px rgba(195, 92, 97, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
+    if (multiplier >= 2.0) return '0 0 20px rgba(199, 105, 109, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
     return '0 0 16px rgba(248, 250, 252, 0.35), 0 2px 10px rgba(0, 0, 0, 0.8)'
   }, [multiplier])
 
@@ -488,24 +488,24 @@ export function CrashScreen() {
               <svg className={styles.countdownSvg} viewBox="0 0 130 130">
                 <defs>
                   <linearGradient id="countdownGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#38bdf8" />
-                    <stop offset="100%" stopColor="#818cf8" />
+                    <stop offset="0%" stopColor="#c7696d" />
+                    <stop offset="100%" stopColor="#db9ea1" />
                   </linearGradient>
                   <linearGradient id="countdownGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#a855f7" />
-                    <stop offset="100%" stopColor="#ec4899" />
+                    <stop offset="0%" stopColor="#cf7d81" />
+                    <stop offset="100%" stopColor="#c86c70" />
                   </linearGradient>
                   <linearGradient id="countdownGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fbbf24" />
-                    <stop offset="100%" stopColor="#f59e0b" />
+                    <stop offset="0%" stopColor="#c35c61" />
+                    <stop offset="100%" stopColor="#ba464b" />
                   </linearGradient>
                   <linearGradient id="countdownGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#fb923c" />
-                    <stop offset="100%" stopColor="#f97316" />
+                    <stop offset="0%" stopColor="#c96e72" />
+                    <stop offset="100%" stopColor="#be5156" />
                   </linearGradient>
                   <linearGradient id="countdownGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#f43f5e" />
-                    <stop offset="100%" stopColor="#ef4444" />
+                    <stop offset="0%" stopColor="#ce656a" />
+                    <stop offset="100%" stopColor="#ce6565" />
                   </linearGradient>
                 </defs>
                 <circle
@@ -513,7 +513,7 @@ export function CrashScreen() {
                   cy="65"
                   r="58"
                   fill="none"
-                  stroke="rgba(255,255,255,0.08)"
+                  stroke="rgba(255, 255, 255, 0.08)"
                   strokeWidth="4"
                 />
                 <circle
@@ -895,7 +895,7 @@ export function CrashScreen() {
               <span
                 style={{
                   fontSize: '14px',
-                  color: '#38bdf8',
+                  color: '#c7696d',
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '4px',

@@ -44,7 +44,7 @@ export function PvpScreen() {
           className={`${pvpStyles.mode} ${pvpStyles.modeJackpot}`}
         >
           <span className={pvpStyles.modeIcon} aria-hidden>
-            <CoinsRewardIcon style={{ width: '28px', height: '28px', color: '#f59e0b' }} />
+            <CoinsRewardIcon style={{ width: '28px', height: '28px', color: '#ba464b' }} />
           </span>
           <span className={pvpStyles.modeName}>Solo Jackpot</span>
           <span className={pvpStyles.modeDesc}>
@@ -57,7 +57,7 @@ export function PvpScreen() {
           className={`${pvpStyles.mode} ${pvpStyles.modeTvt}`}
         >
           <span className={pvpStyles.modeIcon} aria-hidden>
-            <SwordsIcon style={{ width: '28px', height: '28px', color: '#38bdf8' }} />
+            <SwordsIcon style={{ width: '28px', height: '28px', color: '#c7696d' }} />
           </span>
           <span className={pvpStyles.modeName}>TVT: Лёд vs Огонь</span>
           <span className={pvpStyles.modeDesc}>

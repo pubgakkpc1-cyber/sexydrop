@@ -5,54 +5,54 @@
 
 :root {
   /* --- Цвета: поверхности (Премиальный матовый графит / глубокий серый сланцевый) --- */
-  --bg: #0e1117;
-  --card: #151921;
-  --surface: #1c222d;
-  --modal: #151921;
-  --surface-3: #222936;
-  --tile: #13171f;
+  --bg: #131212;
+  --card: #1c1a1a;
+  --surface: #252424;
+  --modal: #1c1a1a;
+  --surface-3: #2d2b2b;
+  --tile: #1a1818;
   --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(56, 189, 248, 0.4);
+  --border-strong: rgba(199, 105, 109, 0.4);
 
   /* --- Цвета: текст --- */
   --text: #f8fafc;
-  --text-muted: #94a3b8;
-  --text-faint: #64748b;
+  --text-muted: #a39e9e;
+  --text-faint: #7a7575;
 
-  /* --- Цвета: акценты (Электрический ледяной циан / Неоновый синий TON #38bdf8 / #0ea5e9) --- */
-  --accent: #38bdf8;
-  --accent-strong: #0284c7;
-  --accent-vivid: #00c6ff;
-  --accent-contrast: #0f172a;
+  /* --- Цвета: акценты (Электрический ледяной циан / Неоновый синий TON #c7696d / #b44348) --- */
+  --accent: #d1595e;
+  --accent-strong: #9a2f34;
+  --accent-vivid: #c0413f;
+  --accent-contrast: #1d1c1c;
 
   /* Матовая градиентная CTA («Сделать ставку», «Забрать выигрыш») */
-  --cta-from: #38bdf8;
-  --cta-to: #0284c7;
-  --cta-gradient: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%);
-  --gram: #0098ea;
-  --price-blue: #38bdf8;
-  --price-indigo: #6366f1;
-  --price-green: #22c55e;
-  --success: #22c55e;
-  --danger: #ef4444;
-  --danger-strong: #dc2626;
-  --gold: #f59e0b;
-  --gold-dark: #d97706;
-  --orange: #f97316;
-  --orange-deep: #ea580c;
+  --cta-from: #c9484a;
+  --cta-to: #8f2a2e;
+  --cta-gradient: linear-gradient(135deg, #c9484a 0%, #8f2a2e 100%);
+  --gram: #ab3f45;
+  --price-blue: #d1595e;
+  --price-indigo: #d18387;
+  --price-green: #41a666;
+  --success: #41a666;
+  --danger: #ce6565;
+  --danger-strong: #c33f3f;
+  --gold: #ba464b;
+  --gold-dark: #a33c41;
+  --orange: #be5156;
+  --orange-deep: #b44248;
 
   /* --- Цвета: редкости (каталог подарков) --- */
-  --rarity-common: #94a3b8;
-  --rarity-rare: #38bdf8;
-  --rarity-epic: #a855f7;
-  --rarity-legendary: #fbbf24;
+  --rarity-common: #a39e9e;
+  --rarity-rare: #c7696d;
+  --rarity-epic: #cf7d81;
+  --rarity-legendary: #c35c61;
 
   /* --- Matte Graphite & Electric Cyan Palette --- */
-  --theme-accent: #38bdf8;
-  --theme-glow: rgba(56, 189, 248, 0.35);
-  --theme-cyan: #00c6ff;
-  --theme-dark: #0284c7;
-  --theme-glass: rgba(21, 25, 33, 0.85);
+  --theme-accent: #c7696d;
+  --theme-glow: rgba(199, 105, 109, 0.35);
+  --theme-cyan: #ba454b;
+  --theme-dark: #93363b;
+  --theme-glass: rgba(28, 26, 26, 0.85);
 
   /* --- Отступы (шкала 4px) --- */
   --space-1: 4px;

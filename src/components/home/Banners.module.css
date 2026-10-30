@@ -43,7 +43,7 @@
   font-size: 19px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.4px;
-  text-shadow: 0 1px 6px rgba(15, 14, 17, 0.35);
+  text-shadow: 0 1px 6px rgba(16, 15, 15, 0.35);
 }
 
 .badge {
@@ -56,7 +56,7 @@
   gap: 4px;
   font-size: 11px;
   font-weight: 700;
-  color: #17161a;
+  color: #181818;
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -68,7 +68,7 @@
 
 /* --- РАКЕТКА: голубой градиент, искры, зелёные множители, арт-ракета --- */
 .crash {
-  background: linear-gradient(118deg, #aecbff 0%, #7ea6ff 55%, #6b95ff 100%);
+  background: linear-gradient(118deg, #e9c4c6 0%, #dca1a4 55%, #d79396 100%);
 }
 
 .sparkle {
@@ -87,7 +87,7 @@
   background: var(--price-green);
   border-radius: var(--radius-full);
   padding: 3px 8px;
-  box-shadow: 0 2px 6px rgba(15, 14, 17, 0.22);
+  box-shadow: 0 2px 6px rgba(16, 15, 15, 0.22);
 }
 
 .crashRocket {
@@ -97,13 +97,13 @@
   width: 62px;
   height: 62px;
   transform: translateY(-54%) rotate(14deg);
-  filter: drop-shadow(0 4px 10px rgba(15, 14, 17, 0.28));
+  filter: drop-shadow(0 4px 10px rgba(16, 15, 15, 0.28));
   z-index: 1;
 }
 
 /* --- PVP HUB: оранжевый, мини-карточки SOLO/TEAM --- */
 .pvp {
-  background: linear-gradient(118deg, #ffc531 0%, #ff9d0b 100%);
+  background: linear-gradient(118deg, #c7696d 0%, #bd4d52 100%);
 }
 
 .pvpArt {
@@ -128,22 +128,22 @@
   height: 58px;
   border-radius: var(--radius-md);
   border: 1.5px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 4px 10px rgba(15, 14, 17, 0.22);
+  box-shadow: 0 4px 10px rgba(16, 15, 15, 0.22);
 }
 
 .pvpCardSolo {
-  background: linear-gradient(155deg, #ffd44d 0%, #ffab1f 100%);
+  background: linear-gradient(155deg, #cf7d81 0%, #c35b61 100%);
 }
 
 .pvpCardTeam {
-  background: linear-gradient(105deg, #3b82f6 0%, #3b82f6 55%, #ef4444 55%, #ef4444 100%);
+  background: linear-gradient(105deg, #c8696e 0%, #c8696e 55%, #ce6565 55%, #ce6565 100%);
 }
 
 .pvpAvatar {
   width: 22px;
   height: 22px;
   border-radius: var(--radius-full);
-  background: linear-gradient(135deg, #fda4d0, #a78bfa);
+  background: linear-gradient(135deg, #e6bbbd, #dea7a9);
   border: 1.5px solid rgba(255, 255, 255, 0.8);
 }
 
@@ -151,7 +151,7 @@
   font-size: 9px;
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.6px;
-  color: #6b4a00;
+  color: #373434;
   background: rgba(255, 255, 255, 0.34);
   border-radius: var(--radius-full);
   padding: 1px 7px;
@@ -162,7 +162,7 @@
   font-weight: var(--font-weight-bold);
   letter-spacing: 0.6px;
   color: #ffffff;
-  background: rgba(15, 14, 17, 0.35);
+  background: rgba(16, 15, 15, 0.35);
   border-radius: var(--radius-full);
   padding: 1px 7px;
 }
@@ -172,12 +172,12 @@
   font-weight: var(--font-weight-bold);
   font-style: italic;
   color: #ffffff;
-  text-shadow: 0 1px 4px rgba(15, 14, 17, 0.3);
+  text-shadow: 0 1px 4px rgba(16, 15, 15, 0.3);
 }
 
 /* --- PLAY HUB: фиолетовый, мини-плитки игр --- */
 .play {
-  background: linear-gradient(118deg, #a13cf7 0%, #7a0fe0 100%);
+  background: linear-gradient(118deg, #c86b6f 0%, #ae4146 100%);
 }
 
 .playArt {
@@ -203,11 +203,11 @@
   height: 58px;
   border-radius: var(--radius-md);
   border: 1.5px solid rgba(255, 255, 255, 0.55);
-  box-shadow: 0 4px 10px rgba(15, 14, 17, 0.25);
+  box-shadow: 0 4px 10px rgba(16, 15, 15, 0.25);
 }
 
 .playTileUpgrade {
-  background: linear-gradient(160deg, #5ee36e 0%, #22c55e 100%);
+  background: linear-gradient(160deg, #77ca81 0%, #41a666 100%);
 }
 
 .upgradeRing {
@@ -221,14 +221,14 @@
 .upgradePct {
   font-size: 9px;
   font-weight: var(--font-weight-bold);
-  color: #1d5c2a;
+  color: #23562e;
   background: rgba(255, 255, 255, 0.85);
   border-radius: var(--radius-full);
   padding: 1px 5px;
 }
 
 .playTilePlinko {
-  background: #1d1b2b;
+  background: #242222;
   display: grid;
   grid-template-columns: repeat(3, 5px);
   gap: 5px 7px;
@@ -244,15 +244,15 @@
 }
 
 .playTileMines {
-  background: linear-gradient(160deg, #4aa8ff 0%, #2f66ff 100%);
+  background: linear-gradient(160deg, #ce7b7f 0%, #c7676c 100%);
 }
 
 .mineCube {
   width: 11px;
   height: 11px;
   border-radius: 3px;
-  background: linear-gradient(160deg, #ffffff, #cdd9ea);
-  box-shadow: 0 2px 4px rgba(15, 14, 17, 0.25);
+  background: linear-gradient(160deg, #ffffff, #eacdce);
+  box-shadow: 0 2px 4px rgba(16, 15, 15, 0.25);
 }
 
 /* ===== Матовый стиль: плоские приглушённые цвета, без глянца, свечений и стекла ===== */
@@ -279,15 +279,15 @@
 }
 
 .crash {
-  background: linear-gradient(120deg, #6a86c4 0%, #5875b6 100%);
+  background: linear-gradient(120deg, #c46a6e 0%, #b6585d 100%);
 }
 
 .pvp {
-  background: linear-gradient(120deg, #c9963f 0%, #b8832f 100%);
+  background: linear-gradient(120deg, #bd4b51 0%, #a93e44 100%);
 }
 
 .play {
-  background: linear-gradient(120deg, #7f55b6 0%, #6c44a3 100%);
+  background: linear-gradient(120deg, #b6555a 0%, #a34449 100%);
 }
 
 .pvpCardSolo,
@@ -299,17 +299,48 @@
 }
 
 .playTileUpgrade {
-  background: #3f9a60;
+  background: #489162;
 }
 
 .playTilePlinko {
-  background: #4876bf;
+  background: #bc4b50;
 }
 
 .pvpCardSolo {
-  background: #d3a04f;
+  background: #c45e63;
 }
 
 .pvpCardTeam {
-  background: linear-gradient(105deg, #4b70b8 0%, #4b70b8 55%, #b4524f 55%, #b4524f 100%);
+  background: linear-gradient(105deg, #b84b50 0%, #b84b50 55%, #b4524f 55%, #b4524f 100%);
+}
+
+/* ===== Палитра «серый + красный»: три баннера разных тонов ===== */
+.crash {
+  background: linear-gradient(120deg, #b13c40 0%, #98302f 100%);
+}
+
+.pvp {
+  background: linear-gradient(120deg, #666a72 0%, #565961 100%);
+}
+
+.play {
+  background: linear-gradient(120deg, #7e2b30 0%, #6a2226 100%);
+}
+
+.pvpCardSolo {
+  background: #8b8f98;
+}
+
+.pvpCardTeam {
+  background: linear-gradient(105deg, #5a5d65 0%, #5a5d65 55%, #a8393d 55%, #a8393d 100%);
+}
+
+.playTileMines,
+.playTileUpgrade,
+.playTilePlinko {
+  background: #4a4d55;
+}
+
+.playTileUpgrade {
+  background: #4a4d55;
 }

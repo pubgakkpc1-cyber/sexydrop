@@ -55,8 +55,8 @@
   color: var(--orange-deep);
   font-variant-numeric: tabular-nums;
   padding: 2px 12px;
-  background: rgba(249, 115, 22, 0.1);
-  border: 1px solid rgba(249, 115, 22, 0.35);
+  background: rgba(190, 81, 86, 0.1);
+  border: 1px solid rgba(190, 81, 86, 0.35);
   border-radius: var(--radius-full);
 }
 
@@ -81,8 +81,8 @@
 }
 
 .exchangeButton:not(:disabled):active {
-  background: rgba(249, 115, 22, 0.12);
-  border-color: rgba(249, 115, 22, 0.55);
+  background: rgba(190, 81, 86, 0.12);
+  border-color: rgba(190, 81, 86, 0.55);
 }
 
 .exchangeButton:disabled {
@@ -135,7 +135,7 @@
 .questFill {
   display: block;
   height: 100%;
-  background: linear-gradient(90deg, var(--orange-deep), #fbbf24);
+  background: linear-gradient(90deg, var(--orange-deep), #c35c61);
   border-radius: var(--radius-full);
   transition: width var(--transition-fast);
 }

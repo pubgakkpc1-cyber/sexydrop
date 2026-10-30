@@ -162,9 +162,9 @@
 
 .userAvatar {
 
-  border: 1.5px solid rgba(168, 85, 247, 0.5);
+  border: 1.5px solid rgba(207, 125, 129, 0.5);
 
-  box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+  box-shadow: 0 0 10px rgba(207, 125, 129, 0.3);
 
 }
 
@@ -224,7 +224,7 @@
 
   border-radius: 12px;
 
-  background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+  background: linear-gradient(135deg, #c56267 0%, #d18387 100%);
 
   border: none;
 
@@ -236,7 +236,7 @@
 
   cursor: pointer;
 
-  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+  box-shadow: 0 4px 14px rgba(197, 98, 103, 0.35);
 
   transition: transform 0.12s ease;
 
@@ -314,13 +314,13 @@
 
   border-radius: 14px;
 
-  background: rgba(56, 189, 248, 0.12);
+  background: rgba(199, 105, 109, 0.12);
 
-  border: 1.5px solid rgba(56, 189, 248, 0.4);
+  border: 1.5px solid rgba(199, 105, 109, 0.4);
 
   cursor: pointer;
 
-  box-shadow: 0 4px 16px rgba(56, 189, 248, 0.2);
+  box-shadow: 0 4px 16px rgba(199, 105, 109, 0.2);
 
 }
 
@@ -344,7 +344,7 @@
 
   height: 22px;
 
-  color: #38bdf8;
+  color: #c7696d;
 
   flex-shrink: 0;
 
@@ -382,7 +382,7 @@
 
   font-size: 11px;
 
-  color: #7dd3fc;
+  color: #db9ea1;
 
 }
 
@@ -394,15 +394,15 @@
 
   font-weight: 800;
 
-  color: #38bdf8;
+  color: #c7696d;
 
   padding: 4px 10px;
 
-  background: rgba(56, 189, 248, 0.15);
+  background: rgba(199, 105, 109, 0.15);
 
   border-radius: 8px;
 
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  border: 1px solid rgba(199, 105, 109, 0.3);
 
   white-space: nowrap;
 
@@ -490,9 +490,9 @@
 
 .openButtonDeposit {
 
-  background: linear-gradient(135deg, #f97316 0%, #ef4444 100%);
+  background: linear-gradient(135deg, #be5156 0%, #ce6565 100%);
 
-  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(206, 101, 101, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
 }
 
@@ -502,9 +502,9 @@
 
 .openButtonCta {
 
-  background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+  background: linear-gradient(135deg, #b44348 0%, #93363b 100%);
 
-  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(180, 67, 72, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
 }
 
@@ -512,9 +512,9 @@
 
 .openButtonQuest {
 
-  background: linear-gradient(135deg, #a855f7 0%, #7c3aed 100%);
+  background: linear-gradient(135deg, #cf7d81 0%, #c56267 100%);
 
-  box-shadow: 0 8px 24px rgba(168, 85, 247, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 24px rgba(207, 125, 129, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
 }
 
@@ -522,9 +522,9 @@
 
 .openButtonSpinning {
 
-  background: #1e2433;
+  background: #292828;
 
-  color: #94a3b8;
+  color: #b89496;
 
   cursor: not-allowed;
 
@@ -582,7 +582,7 @@
 
   font-weight: 600;
 
-  color: #fbbf24;
+  color: #c35c61;
 
   margin-top: 2px;
 
@@ -596,7 +596,7 @@
 
   font-weight: 700;
 
-  color: #f87171;
+  color: #db8e8e;
 
 }
 
@@ -692,11 +692,11 @@
 
   border-radius: 18px;
 
-  background: rgba(18, 22, 32, 0.88);
+  background: rgba(26, 24, 24, 0.88);
 
-  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  border: 1.5px solid rgba(186, 70, 75, 0.45);
 
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(254, 240, 138, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(223, 169, 172, 0.15);
 
   transition: transform 0.15s ease, border-color 0.15s ease;
 
@@ -711,7 +711,7 @@
 
 .rewardCard:hover {
 
-  border-color: rgba(245, 158, 11, 0.7);
+  border-color: rgba(186, 70, 75, 0.7);
 
 }
 
@@ -821,11 +821,11 @@
 
   border-radius: 8px;
 
-  background: rgba(147, 51, 234, 0.18);
+  background: rgba(194, 91, 96, 0.18);
 
-  border: 1px solid rgba(168, 85, 247, 0.35);
+  border: 1px solid rgba(207, 125, 129, 0.35);
 
-  color: #c084fc;
+  color: #dda3a6;
 
   font-size: 11px;
 
@@ -839,7 +839,7 @@
 
 .rewardChance {
 
-  color: rgba(216, 180, 254, 0.75);
+  color: rgba(234, 200, 201, 0.75);
 
 }
 
@@ -851,9 +851,9 @@
   gap: 4px;
   font-size: 11px;
   font-weight: 600;
-  color: #38bdf8;
-  background: rgba(56, 189, 248, 0.1);
-  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #c7696d;
+  background: rgba(199, 105, 109, 0.1);
+  border: 1px solid rgba(199, 105, 109, 0.28);
   border-radius: 6px;
   padding: 1px 7px;
   margin-top: 3px;

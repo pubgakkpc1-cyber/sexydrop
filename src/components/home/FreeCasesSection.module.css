@@ -26,15 +26,15 @@
 .titleIcon {
   width: 17px;
   height: 17px;
-  color: #fbbf24;
+  color: #c35c61;
 }
 
 .resetBadge {
   font-size: 11px;
   font-weight: 700;
-  color: #fbbf24;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #c35c61;
+  background: rgba(186, 70, 75, 0.12);
+  border: 1px solid rgba(186, 70, 75, 0.3);
   padding: 2px 8px;
   border-radius: 9999px;
   letter-spacing: 0.3px;
@@ -55,7 +55,7 @@
   justify-content: space-between;
   padding: 12px 10px 10px;
   border-radius: 20px;
-  background: rgba(18, 22, 32, 0.82);
+  background: rgba(26, 24, 24, 0.82);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1.5px solid rgba(255, 255, 255, 0.08);
@@ -108,30 +108,30 @@
 
 /* Золотая карточка FREE 24 */
 .tileDaily {
-  border-color: rgba(245, 158, 11, 0.38);
+  border-color: rgba(186, 70, 75, 0.38);
   background:
-    radial-gradient(circle at 50% 30%, rgba(245, 158, 11, 0.12) 0%, transparent 65%),
-    rgba(18, 20, 30, 0.88);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(254, 240, 138, 0.25);
+    radial-gradient(circle at 50% 30%, rgba(186, 70, 75, 0.12) 0%, transparent 65%),
+    rgba(24, 24, 24, 0.88);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(223, 169, 172, 0.25);
 }
 
 .tileDaily:hover {
-  border-color: rgba(245, 158, 11, 0.65);
-  box-shadow: 0 10px 30px rgba(245, 158, 11, 0.25), inset 0 1px 0 rgba(254, 240, 138, 0.4);
+  border-color: rgba(186, 70, 75, 0.65);
+  box-shadow: 0 10px 30px rgba(186, 70, 75, 0.25), inset 0 1px 0 rgba(223, 169, 172, 0.4);
 }
 
 /* Сиренево-голубая карточка FREE */
 .tileQuest {
-  border-color: rgba(168, 85, 247, 0.38);
+  border-color: rgba(207, 125, 129, 0.38);
   background:
-    radial-gradient(circle at 50% 30%, rgba(168, 85, 247, 0.12) 0%, transparent 65%),
-    rgba(18, 20, 30, 0.88);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(216, 180, 254, 0.25);
+    radial-gradient(circle at 50% 30%, rgba(207, 125, 129, 0.12) 0%, transparent 65%),
+    rgba(24, 24, 24, 0.88);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(234, 200, 201, 0.25);
 }
 
 .tileQuest:hover {
-  border-color: rgba(168, 85, 247, 0.65);
-  box-shadow: 0 10px 30px rgba(168, 85, 247, 0.25), inset 0 1px 0 rgba(216, 180, 254, 0.4);
+  border-color: rgba(207, 125, 129, 0.65);
+  box-shadow: 0 10px 30px rgba(207, 125, 129, 0.25), inset 0 1px 0 rgba(234, 200, 201, 0.4);
 }
 
 /* Верхняя полоса бейджей */
@@ -160,23 +160,23 @@
 }
 
 .pillGold {
-  background: rgba(245, 158, 11, 0.18);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(186, 70, 75, 0.18);
+  color: #c35c61;
+  border: 1px solid rgba(186, 70, 75, 0.4);
 }
 
 .pillPurple {
-  background: rgba(168, 85, 247, 0.18);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.4);
+  background: rgba(207, 125, 129, 0.18);
+  color: #dda3a6;
+  border: 1px solid rgba(207, 125, 129, 0.4);
 }
 
 .freeZeroBadge {
   font-size: 10.5px;
   font-weight: 800;
-  color: #4ade80;
-  background: rgba(34, 197, 94, 0.16);
-  border: 1px solid rgba(34, 197, 94, 0.38);
+  color: #65c387;
+  background: rgba(65, 166, 102, 0.16);
+  border: 1px solid rgba(65, 166, 102, 0.38);
   padding: 2px 8px;
   border-radius: 9999px;
   white-space: nowrap;
@@ -205,11 +205,11 @@
 }
 
 .glowGold {
-  background: rgba(245, 158, 11, 0.45);
+  background: rgba(186, 70, 75, 0.45);
 }
 
 .glowPurple {
-  background: rgba(168, 85, 247, 0.45);
+  background: rgba(207, 125, 129, 0.45);
 }
 
 .image {
@@ -241,14 +241,14 @@
 }
 
 .nameGold {
-  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 100%);
+  background: linear-gradient(135deg, #dfa9ac 0%, #ba464b 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
 }
 
 .namePurple {
-  background: linear-gradient(135deg, #f5d0fe 0%, #c084fc 100%);
+  background: linear-gradient(135deg, #f2dcdd 0%, #dda3a6 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -283,23 +283,23 @@
 }
 
 .pillReadyGold {
-  background: linear-gradient(135deg, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.38) 100%);
-  border: 1px solid rgba(245, 158, 11, 0.6);
-  color: #fef08a;
-  box-shadow: 0 0 12px rgba(245, 158, 11, 0.35);
+  background: linear-gradient(135deg, rgba(186, 70, 75, 0.28) 0%, rgba(163, 60, 65, 0.38) 100%);
+  border: 1px solid rgba(186, 70, 75, 0.6);
+  color: #dfa9ac;
+  box-shadow: 0 0 12px rgba(186, 70, 75, 0.35);
 }
 
 .pillReadyPurple {
-  background: linear-gradient(135deg, rgba(168, 85, 247, 0.28) 0%, rgba(126, 34, 206, 0.38) 100%);
-  border: 1px solid rgba(168, 85, 247, 0.6);
-  color: #e9d5ff;
-  box-shadow: 0 0 12px rgba(168, 85, 247, 0.35);
+  background: linear-gradient(135deg, rgba(207, 125, 129, 0.28) 0%, rgba(175, 65, 70, 0.38) 100%);
+  border: 1px solid rgba(207, 125, 129, 0.6);
+  color: #f4e0e1;
+  box-shadow: 0 0 12px rgba(207, 125, 129, 0.35);
 }
 
 .pillLocked {
-  background: rgba(56, 189, 248, 0.15);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  color: #7dd3fc;
+  background: rgba(199, 105, 109, 0.15);
+  border: 1px solid rgba(199, 105, 109, 0.45);
+  color: #db9ea1;
 }
 
 .pillWaiting {
@@ -318,8 +318,8 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #22c55e;
-  box-shadow: 0 0 6px #22c55e;
+  background: #41a666;
+  box-shadow: 0 0 6px #41a666;
   animation: pulseDot 1s infinite alternate;
 }
 
@@ -351,14 +351,14 @@
 }
 
 .tileDaily {
-  background: #221e18;
-  border-color: rgba(214, 160, 70, 0.35);
+  background: #1e1c1c;
+  border-color: rgba(194, 90, 95, 0.35);
   box-shadow: none;
 }
 
 .tileQuest {
-  background: #1f1b26;
-  border-color: rgba(150, 110, 210, 0.35);
+  background: #212020;
+  border-color: rgba(204, 116, 121, 0.35);
   box-shadow: none;
 }
 
@@ -368,12 +368,12 @@
 }
 
 .pillReadyGold {
-  background: rgba(214, 160, 70, 0.22);
+  background: rgba(194, 90, 95, 0.22);
   box-shadow: none;
 }
 
 .pillReadyPurple {
-  background: rgba(150, 110, 210, 0.22);
+  background: rgba(204, 116, 121, 0.22);
   box-shadow: none;
 }
 

@@ -193,7 +193,7 @@ export function SpinsScreen() {
     if (symbolIndex === BONUS_INDEX) {
       return (
         <span className={styles.cellBonus} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <SparkleIcon style={{ width: '24px', height: '24px', color: '#ffb300' }} />
+          <SparkleIcon style={{ width: '24px', height: '24px', color: '#ba454b' }} />
         </span>
       )
     }
@@ -249,7 +249,7 @@ export function SpinsScreen() {
           ))}
           <span className={styles.symbolChip} role="listitem">
             <span className={styles.symbolBonus} style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-              <SparkleIcon style={{ width: '16px', height: '16px', color: '#ffb300' }} />
+              <SparkleIcon style={{ width: '16px', height: '16px', color: '#ba454b' }} />
             </span>
             <span className={styles.symbolName}>Бонус</span>
             <span className={styles.symbolOdds}>

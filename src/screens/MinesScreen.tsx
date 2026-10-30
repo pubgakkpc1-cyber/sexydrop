@@ -130,7 +130,7 @@ export function MinesScreen() {
     if (mines.includes(index)) {
       return (
         <span data-testid="bomb-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-          <BombIcon style={{ width: '22px', height: '22px', color: '#ff5c5c' }} />
+          <BombIcon style={{ width: '22px', height: '22px', color: '#d88383' }} />
         </span>
       )
     }

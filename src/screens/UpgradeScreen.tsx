@@ -89,7 +89,7 @@ export function UpgradeScreen() {
       <div className={styles.board}>
         <div className={styles.ringWrap}>
           <svg className={styles.ringSvg} viewBox="0 0 148 148" aria-hidden>
-            <circle cx="74" cy="74" r="66" fill="none" stroke="rgba(255,255,255,0.18)" strokeWidth="10" />
+            <circle cx="74" cy="74" r="66" fill="none" stroke="rgba(255, 255, 255, 0.18)" strokeWidth="10" />
             {chancePct !== null && (
               <circle
                 cx="74"

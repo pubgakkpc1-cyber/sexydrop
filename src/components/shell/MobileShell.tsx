@@ -76,7 +76,7 @@ export function MobileShell() {
           <div className={styles.brandCard}>
             <div className={styles.brandHeader}>
               <div className={styles.brandLogo}>
-                <GiftIcon style={{ width: '24px', height: '24px', color: '#38bdf8' }} />
+                <GiftIcon style={{ width: '24px', height: '24px', color: '#c7696d' }} />
               </div>
               <div>
                 <h1 className={styles.brandTitle}>SEXY DROP</h1>
@@ -93,15 +93,15 @@ export function MobileShell() {
 
           <div className={styles.featuresCard}>
             <div className={styles.featureItem}>
-              <CubeIcon style={{ width: '16px', height: '16px', color: '#38bdf8', flexShrink: 0 }} />
+              <CubeIcon style={{ width: '16px', height: '16px', color: '#c7696d', flexShrink: 0 }} />
               <span>22 уникальных кейса с RTP 98%</span>
             </div>
             <div className={styles.featureItem}>
-              <TonIcon style={{ width: '16px', height: '16px', color: '#0098ea', flexShrink: 0 }} />
+              <TonIcon style={{ width: '16px', height: '16px', color: '#ab3f45', flexShrink: 0 }} />
               <span>122 эксклюзивных 3D-подарка</span>
             </div>
             <div className={styles.featureItem}>
-              <SlotIcon style={{ width: '16px', height: '16px', color: '#f59e0b', flexShrink: 0 }} />
+              <SlotIcon style={{ width: '16px', height: '16px', color: '#ba464b', flexShrink: 0 }} />
               <span>7 игровых режимов + PVP арена</span>
             </div>
           </div>

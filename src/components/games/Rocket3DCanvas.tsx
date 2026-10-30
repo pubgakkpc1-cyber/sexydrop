@@ -83,7 +83,7 @@ interface SpeedStreak {
 }
 
 /* --- Мультяшная ракета SEXY DROP: пухлый корпус, плавники и Plush Pepe сверху --- */
-const OUTLINE = '#1a1245'
+const OUTLINE = '#2c2b2b'
 
 function drawFlameLayer(ctx: CanvasRenderingContext2D, len: number, w: number, fill: string) {
   ctx.fillStyle = fill
@@ -130,7 +130,7 @@ function drawCartoonRocket(
   }
 
   // Сопло
-  ctx.fillStyle = '#2b2266'
+  ctx.fillStyle = '#632528'
   ctx.beginPath()
   safeRoundRect(ctx, -52, -9, 11, 18, 4)
   ctx.fill()
@@ -165,11 +165,11 @@ function drawCartoonRocket(
   ctx.fillStyle = skin.accentColor
   ctx.fillRect(-52, 2, 86, 14)
   // Глянцевый блик
-  ctx.fillStyle = 'rgba(255,255,255,0.55)'
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'
   ctx.beginPath()
   ctx.ellipse(-8, -13, 28, 4.5, -0.04, 0, Math.PI * 2)
   ctx.fill()
-  ctx.fillStyle = 'rgba(0,0,0,0.12)'
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.12)'
   ctx.fillRect(-52, 14, 110, 8)
   ctx.restore()
 
@@ -179,7 +179,7 @@ function drawCartoonRocket(
   ctx.stroke()
 
   // Иллюминатор
-  ctx.fillStyle = '#0c1d44'
+  ctx.fillStyle = '#292727'
   ctx.strokeStyle = OUTLINE
   ctx.lineWidth = 2.4
   ctx.beginPath()
@@ -215,7 +215,7 @@ function drawCartoonRocket(
   ctx.restore()
 
   // Заклёпки
-  ctx.fillStyle = 'rgba(26,18,69,0.55)'
+  ctx.fillStyle = 'rgba(44, 43, 43, 0.55)'
   for (const x of [-34, 8]) {
     ctx.beginPath()
     ctx.arc(x, -9, 1.3, 0, Math.PI * 2)
@@ -226,7 +226,7 @@ function drawCartoonRocket(
   const bob = Math.sin(t * 5.5) * 0.9
   const px = 4
   const py = -33 + bob
-  const GREEN_OUT = '#1d5a1b'
+  const GREEN_OUT = '#235421'
 
   // Шарф развевается
   const flap = Math.sin(t * 9) * 3
@@ -243,7 +243,7 @@ function drawCartoonRocket(
   ctx.stroke()
 
   // Руки держатся за корпус
-  ctx.fillStyle = '#5ec34a'
+  ctx.fillStyle = '#66b756'
   ctx.strokeStyle = GREEN_OUT
   ctx.lineWidth = 1.8
   for (const hx of [px - 11, px + 12]) {
@@ -254,7 +254,7 @@ function drawCartoonRocket(
   }
 
   // Туловище
-  ctx.fillStyle = '#4fb73f'
+  ctx.fillStyle = '#58ab4b'
   ctx.beginPath()
   ctx.ellipse(px, py + 12, 11, 8, 0, 0, Math.PI * 2)
   ctx.fill()
@@ -262,8 +262,8 @@ function drawCartoonRocket(
 
   // Голова
   const headGrad = ctx.createLinearGradient(px, py - 14, px, py + 12)
-  headGrad.addColorStop(0, '#86e66a')
-  headGrad.addColorStop(1, '#3fa937')
+  headGrad.addColorStop(0, '#93ce82')
+  headGrad.addColorStop(1, '#499e42')
   ctx.fillStyle = headGrad
   ctx.beginPath()
   ctx.ellipse(px, py, 16, 12.5, 0, 0, Math.PI * 2)
@@ -271,7 +271,7 @@ function drawCartoonRocket(
   ctx.stroke()
 
   // Щёчки
-  ctx.fillStyle = 'rgba(255,120,120,0.45)'
+  ctx.fillStyle = 'rgba(223, 152, 152, 0.45)'
   ctx.beginPath()
   ctx.ellipse(px - 10, py + 5, 3.4, 2.2, 0, 0, Math.PI * 2)
   ctx.ellipse(px + 11, py + 5, 3.4, 2.2, 0, 0, Math.PI * 2)
@@ -284,7 +284,7 @@ function drawCartoonRocket(
   ctx.moveTo(px - 9, py + 4.5)
   ctx.quadraticCurveTo(px + 1, py + 11, px + 12, py + 3.5)
   ctx.stroke()
-  ctx.fillStyle = '#e0605a'
+  ctx.fillStyle = '#d06f6a'
   ctx.beginPath()
   ctx.ellipse(px + 1.5, py + 8.2, 6.5, 2.1, 0.05, 0, Math.PI * 2)
   ctx.fill()
@@ -298,7 +298,7 @@ function drawCartoonRocket(
     ctx.arc(ex, py - 7, 6, 0, Math.PI * 2)
     ctx.fill()
     ctx.stroke()
-    ctx.fillStyle = '#111827'
+    ctx.fillStyle = '#1d1b1b'
     ctx.beginPath()
     ctx.arc(ex + 1.8, py - 6.6, 2.9, 0, Math.PI * 2)
     ctx.fill()
@@ -324,7 +324,7 @@ function drawCartoonRocket(
     ctx.stroke()
   } else if (skin.pilotType === 1) {
     // тёмные очки
-    ctx.fillStyle = '#0b1020'
+    ctx.fillStyle = '#161515'
     ctx.strokeStyle = OUTLINE
     ctx.lineWidth = 1.6
     ctx.beginPath()
@@ -341,8 +341,8 @@ function drawCartoonRocket(
     ctx.stroke()
   } else {
     // золотая корона
-    ctx.fillStyle = '#fcd34d'
-    ctx.strokeStyle = '#854d0e'
+    ctx.fillStyle = '#ce7b7f'
+    ctx.strokeStyle = '#6b282b'
     ctx.lineWidth = 1.6
     ctx.beginPath()
     ctx.moveTo(px - 9, py - 12)
@@ -355,7 +355,7 @@ function drawCartoonRocket(
     ctx.closePath()
     ctx.fill()
     ctx.stroke()
-    ctx.fillStyle = '#ef4444'
+    ctx.fillStyle = '#ce6565'
     ctx.beginPath()
     ctx.arc(px + 1, py - 15.5, 1.6, 0, Math.PI * 2)
     ctx.fill()
@@ -393,23 +393,23 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
     name: 'Chrono Titanium',
     nameRu: 'Хроно Титан',
     pilotNameRu: 'Пепе Кадет',
-    hullGradient: ['#ffffff', '#f1f5f9', '#cbd5e1', '#64748b'],
-    hullBorder: 'rgba(0, 152, 234, 0.85)',
-    accentColor: '#0098ea',
-    accentGlow: '#38bdf8',
-    wingFill: ['#334155', '#1e293b'],
-    wingBorder: '#0098ea',
-    wingtipLight: '#38bdf8',
-    nozzleFill: '#0f172a',
-    nozzleRing: '#0098ea',
-    decalColor: '#0098ea',
+    hullGradient: ['#ffffff', '#f9f1f1', '#e1cbcc', '#7a7575'],
+    hullBorder: 'rgba(171, 63, 69, 0.85)',
+    accentColor: '#ab3f45',
+    accentGlow: '#c7696d',
+    wingFill: ['#454343', '#2d2c2c'],
+    wingBorder: '#ab3f45',
+    wingtipLight: '#c7696d',
+    nozzleFill: '#1d1c1c',
+    nozzleRing: '#ab3f45',
+    decalColor: '#ab3f45',
     decalSubtext: 'SEXY DROP',
-    canopyGradient: ['rgba(255, 255, 255, 0.75)', 'rgba(56, 189, 248, 0.28)', 'rgba(0, 152, 234, 0.08)'],
-    canopyBorder: '#bae6fd',
+    canopyGradient: ['rgba(255, 255, 255, 0.75)', 'rgba(199, 105, 109, 0.28)', 'rgba(171, 63, 69, 0.08)'],
+    canopyBorder: '#eccbcd',
     canopyReflection: 'rgba(255, 255, 255, 0.98)',
-    flameCore: ['#ffffff', '#7dd3fc', '#0098ea', 'rgba(0, 152, 234, 0)'],
-    flameAura: ['rgba(0, 152, 234, 0.85)', 'rgba(56, 189, 248, 0.35)'],
-    trailColors: ['#0098ea', '#38bdf8', '#ffffff', '#7dd3fc', '#0284c7'],
+    flameCore: ['#ffffff', '#db9ea1', '#ab3f45', 'rgba(171, 63, 69, 0)'],
+    flameAura: ['rgba(171, 63, 69, 0.85)', 'rgba(199, 105, 109, 0.35)'],
+    trailColors: ['#ab3f45', '#c7696d', '#ffffff', '#db9ea1', '#93363b'],
     pilotType: 0,
   },
   {
@@ -417,23 +417,23 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
     name: 'Cyber Stealth',
     nameRu: 'Кибер Стелс',
     pilotNameRu: 'Кибер Пепе',
-    hullGradient: ['#475569', '#334155', '#1e293b', '#0f172a'],
-    hullBorder: 'rgba(56, 189, 248, 0.85)',
-    accentColor: '#38bdf8',
-    accentGlow: '#0284c7',
-    wingFill: ['#1e293b', '#0f172a'],
-    wingBorder: '#38bdf8',
-    wingtipLight: '#7dd3fc',
-    nozzleFill: '#0a0e17',
-    nozzleRing: '#38bdf8',
-    decalColor: '#38bdf8',
+    hullGradient: ['#5a5656', '#454343', '#2d2c2c', '#1d1c1c'],
+    hullBorder: 'rgba(199, 105, 109, 0.85)',
+    accentColor: '#c7696d',
+    accentGlow: '#93363b',
+    wingFill: ['#2d2c2c', '#1d1c1c'],
+    wingBorder: '#c7696d',
+    wingtipLight: '#db9ea1',
+    nozzleFill: '#111010',
+    nozzleRing: '#c7696d',
+    decalColor: '#c7696d',
     decalSubtext: 'STEALTH · 99',
-    canopyGradient: ['rgba(255, 255, 255, 0.7)', 'rgba(56, 189, 248, 0.25)', 'rgba(15, 23, 42, 0.1)'],
-    canopyBorder: '#7dd3fc',
+    canopyGradient: ['rgba(255, 255, 255, 0.7)', 'rgba(199, 105, 109, 0.25)', 'rgba(29, 28, 28, 0.1)'],
+    canopyBorder: '#db9ea1',
     canopyReflection: 'rgba(255, 255, 255, 0.95)',
-    flameCore: ['#ffffff', '#38bdf8', '#0284c7', 'rgba(2, 132, 199, 0)'],
-    flameAura: ['rgba(56, 189, 248, 0.85)', 'rgba(14, 165, 233, 0.35)'],
-    trailColors: ['#38bdf8', '#0098ea', '#ffffff', '#67e8f9', '#0284c7'],
+    flameCore: ['#ffffff', '#c7696d', '#93363b', 'rgba(147, 54, 59, 0)'],
+    flameAura: ['rgba(199, 105, 109, 0.85)', 'rgba(180, 67, 72, 0.35)'],
+    trailColors: ['#c7696d', '#ab3f45', '#ffffff', '#d48c8f', '#93363b'],
     pilotType: 1,
   },
   {
@@ -441,23 +441,23 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
     name: 'Imperial 24K',
     nameRu: 'Империал 24K',
     pilotNameRu: 'Король Пепе',
-    hullGradient: ['#fffbeb', '#fde047', '#eab308', '#ca8a04'],
-    hullBorder: 'rgba(234, 179, 8, 0.9)',
-    accentColor: '#fbbf24',
-    accentGlow: '#f59e0b',
-    wingFill: ['#1e293b', '#0f172a'],
-    wingBorder: '#fde047',
-    wingtipLight: '#fef08a',
-    nozzleFill: '#0f172a',
-    nozzleRing: '#fbbf24',
-    decalColor: '#fbbf24',
+    hullGradient: ['#faf0f1', '#cd777b', '#b14147', '#96383c'],
+    hullBorder: 'rgba(177, 65, 71, 0.9)',
+    accentColor: '#c35c61',
+    accentGlow: '#ba464b',
+    wingFill: ['#2d2c2c', '#1d1c1c'],
+    wingBorder: '#cd777b',
+    wingtipLight: '#dfa9ac',
+    nozzleFill: '#1d1c1c',
+    nozzleRing: '#c35c61',
+    decalColor: '#c35c61',
     decalSubtext: 'ROYAL · VIP',
-    canopyGradient: ['rgba(255, 255, 255, 0.8)', 'rgba(254, 240, 138, 0.25)', 'rgba(245, 158, 11, 0.08)'],
-    canopyBorder: '#fef08a',
+    canopyGradient: ['rgba(255, 255, 255, 0.8)', 'rgba(223, 169, 172, 0.25)', 'rgba(186, 70, 75, 0.08)'],
+    canopyBorder: '#dfa9ac',
     canopyReflection: 'rgba(255, 255, 255, 0.98)',
-    flameCore: ['#ffffff', '#fde047', '#f59e0b', 'rgba(245, 158, 11, 0)'],
-    flameAura: ['rgba(245, 158, 11, 0.85)', 'rgba(251, 191, 36, 0.4)'],
-    trailColors: ['#fbbf24', '#f59e0b', '#ffffff', '#fde68a', '#d97706'],
+    flameCore: ['#ffffff', '#cd777b', '#ba464b', 'rgba(186, 70, 75, 0)'],
+    flameAura: ['rgba(186, 70, 75, 0.85)', 'rgba(195, 92, 97, 0.4)'],
+    trailColors: ['#c35c61', '#ba464b', '#ffffff', '#dfa8ab', '#a33c41'],
     pilotType: 2,
   },
 ]
@@ -592,7 +592,7 @@ export function Rocket3DCanvas({
 
         // 1. Создаём частицы огненного взрыва
         const exp: ExplosionParticle[] = []
-        const colors = ['#ffffff', '#38bdf8', '#60a5fa', '#fbbf24', '#ef4444', '#fb923c']
+        const colors = ['#ffffff', '#c7696d', '#d3878b', '#c35c61', '#ce6565', '#c96e72']
         for (let i = 0; i < 26; i++) {
           const angle = Math.random() * Math.PI * 2
           const speed = 2.5 + Math.random() * 10
@@ -604,7 +604,7 @@ export function Rocket3DCanvas({
             vy: Math.sin(angle) * speed,
             size: 3 + Math.random() * 7,
             alpha: 1,
-            color: colors[Math.floor(Math.random() * colors.length)] ?? '#fbbf24',
+            color: colors[Math.floor(Math.random() * colors.length)] ?? '#c35c61',
             life: 0,
             maxLife,
             spin: (Math.random() - 0.5) * 0.35,
@@ -1007,7 +1007,7 @@ export function Rocket3DCanvas({
           ctx.save()
           ctx.strokeStyle = `rgba(239, 68, 68, ${state.shockwaveAlpha})`
           ctx.lineWidth = 3
-          ctx.shadowColor = '#ef4444'
+          ctx.shadowColor = '#ce6565'
           ctx.shadowBlur = 14
           ctx.beginPath()
           ctx.arc(rx, ry, state.shockwaveRadius, 0, Math.PI * 2)
@@ -1105,15 +1105,15 @@ export function Rocket3DCanvas({
             ctx.stroke()
           } else if (d.type === 'pepe_bubble') {
             // Спасательная капсула с картунным Пепе со спиральными глазами
-            ctx.fillStyle = 'rgba(56, 189, 248, 0.35)'
-            ctx.strokeStyle = '#38bdf8'
+            ctx.fillStyle = 'rgba(199, 105, 109, 0.35)'
+            ctx.strokeStyle = '#c7696d'
             ctx.lineWidth = 1.4
             ctx.beginPath()
             ctx.arc(0, 0, 11, 0, Math.PI * 2)
             ctx.fill()
             ctx.stroke()
 
-            ctx.fillStyle = '#4ade80'
+            ctx.fillStyle = '#65c387'
             ctx.beginPath()
             ctx.arc(0, 1, 6.5, 0, Math.PI * 2)
             ctx.fill()
@@ -1124,7 +1124,7 @@ export function Rocket3DCanvas({
             ctx.arc(2.5, -1, 2.5, 0, Math.PI * 2)
             ctx.fill()
 
-            ctx.strokeStyle = '#0f172a'
+            ctx.strokeStyle = '#1d1c1c'
             ctx.lineWidth = 0.8
             ctx.beginPath()
             ctx.arc(-2.5, -1, 1.2, 0, Math.PI * 1.5)

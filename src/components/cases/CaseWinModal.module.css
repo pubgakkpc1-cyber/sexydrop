@@ -24,15 +24,15 @@
   position: relative;
   width: 100%;
   max-width: 360px;
-  background: radial-gradient(circle at 50% 30%, #201e30 0%, #111019 100%);
-  border: 1.5px solid rgba(251, 191, 36, 0.4);
+  background: radial-gradient(circle at 50% 30%, #282626 0%, #151414 100%);
+  border: 1.5px solid rgba(195, 92, 97, 0.4);
   border-radius: 24px;
   padding: 24px 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  box-shadow: 0 0 40px rgba(251, 191, 36, 0.25), 0 20px 40px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 0 40px rgba(195, 92, 97, 0.25), 0 20px 40px rgba(0, 0, 0, 0.8);
   animation: popUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   overflow: hidden;
 }
@@ -56,7 +56,7 @@
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(251, 191, 36, 0.3) 0%, rgba(251, 191, 36, 0) 70%);
+  background: radial-gradient(circle, rgba(195, 92, 97, 0.3) 0%, rgba(195, 92, 97, 0) 70%);
   pointer-events: none;
   animation: pulseRay 2.5s infinite alternate ease-in-out;
 }
@@ -75,14 +75,14 @@
 .title {
   font-size: 20px;
   font-weight: 800;
-  color: #fff;
+  color: #ffffff;
   margin: 0 0 4px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
 .subtitle {
   font-size: 13px;
-  color: #94a3b8;
+  color: #b89496;
   margin: 0 0 16px;
 }
 
@@ -96,9 +96,9 @@
   justify-content: center;
   padding: 4px;
   background: rgba(0, 0, 0, 0.4);
-  border: 2px solid rgba(251, 191, 36, 0.5);
+  border: 2px solid rgba(195, 92, 97, 0.5);
   border-radius: 22px;
-  box-shadow: 0 0 24px rgba(251, 191, 36, 0.35);
+  box-shadow: 0 0 24px rgba(195, 92, 97, 0.35);
   overflow: hidden;
 }
 
@@ -144,33 +144,33 @@
 }
 
 .rarityBadge[data-rarity='common'] {
-  background: rgba(148, 163, 184, 0.2);
-  color: #cbd5e1;
-  border: 1px solid rgba(148, 163, 184, 0.4);
+  background: rgba(184, 148, 150, 0.2);
+  color: #e1cbcc;
+  border: 1px solid rgba(184, 148, 150, 0.4);
 }
 
 .rarityBadge[data-rarity='rare'] {
-  background: rgba(59, 130, 246, 0.2);
-  color: #60a5fa;
-  border: 1px solid rgba(59, 130, 246, 0.4);
+  background: rgba(200, 105, 110, 0.2);
+  color: #d3878b;
+  border: 1px solid rgba(200, 105, 110, 0.4);
 }
 
 .rarityBadge[data-rarity='epic'] {
-  background: rgba(168, 85, 247, 0.2);
-  color: #c084fc;
-  border: 1px solid rgba(168, 85, 247, 0.4);
+  background: rgba(207, 125, 129, 0.2);
+  color: #dda3a6;
+  border: 1px solid rgba(207, 125, 129, 0.4);
 }
 
 .rarityBadge[data-rarity='legendary'] {
-  background: rgba(245, 158, 11, 0.2);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.4);
+  background: rgba(186, 70, 75, 0.2);
+  color: #c35c61;
+  border: 1px solid rgba(186, 70, 75, 0.4);
 }
 
 .priceBadge {
   background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  color: #fbbf24;
+  border: 1px solid rgba(195, 92, 97, 0.4);
+  color: #c35c61;
   font-size: 13px;
   font-weight: 700;
   padding: 3px 10px;
@@ -191,9 +191,9 @@
   border: none;
   font-size: 15px;
   font-weight: 700;
-  color: #0f172a;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4);
+  color: #1d1c1c;
+  background: linear-gradient(135deg, #c35c61 0%, #ba464b 100%);
+  box-shadow: 0 4px 14px rgba(186, 70, 75, 0.4);
   cursor: pointer;
   transition: transform 0.15s ease, filter 0.15s ease;
 }
@@ -211,7 +211,7 @@
   background: rgba(255, 255, 255, 0.05);
   font-size: 14px;
   font-weight: 600;
-  color: #e2e8f0;
+  color: #f0e2e3;
   cursor: pointer;
   transition: background 0.15s ease;
 }
@@ -221,7 +221,7 @@
 }
 
 .sellButtonSold {
-  border-color: #22c55e !important;
-  color: #22c55e !important;
-  background: rgba(34, 197, 94, 0.1) !important;
+  border-color: #41a666 !important;
+  color: #41a666 !important;
+  background: rgba(65, 166, 102, 0.1) !important;
 }

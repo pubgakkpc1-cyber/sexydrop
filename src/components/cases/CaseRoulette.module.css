@@ -9,7 +9,7 @@
   position: relative;
   width: 100%;
   height: 124px;
-  background: radial-gradient(circle at 50% 50%, #1c1a29 0%, #100f18 100%);
+  background: radial-gradient(circle at 50% 50%, #222121 0%, #141313 100%);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 16px;
   overflow: hidden;
@@ -29,12 +29,12 @@
 
 .fadeMaskLeft {
   left: 0;
-  background: linear-gradient(to right, #100f18 0%, rgba(16, 15, 24, 0) 100%);
+  background: linear-gradient(to right, #141313 0%, rgba(20, 19, 19, 0) 100%);
 }
 
 .fadeMaskRight {
   right: 0;
-  background: linear-gradient(to left, #100f18 0%, rgba(16, 15, 24, 0) 100%);
+  background: linear-gradient(to left, #141313 0%, rgba(20, 19, 19, 0) 100%);
 }
 
 /* Центральный маркер/стрелка рулетки */
@@ -58,15 +58,15 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-top: 10px solid #c084fc;
-  filter: drop-shadow(0 2px 6px rgba(192, 132, 252, 0.9));
+  border-top: 10px solid #dda3a6;
+  filter: drop-shadow(0 2px 6px rgba(221, 163, 166, 0.9));
 }
 
 .markerLine {
   width: 2px;
   flex: 1;
-  background: linear-gradient(180deg, #c084fc 0%, rgba(192, 132, 252, 0.25) 50%, #c084fc 100%);
-  box-shadow: 0 0 8px rgba(192, 132, 252, 0.8);
+  background: linear-gradient(180deg, #dda3a6 0%, rgba(221, 163, 166, 0.25) 50%, #dda3a6 100%);
+  box-shadow: 0 0 8px rgba(221, 163, 166, 0.8);
 }
 
 .markerBottom {
@@ -74,8 +74,8 @@
   height: 0;
   border-left: 8px solid transparent;
   border-right: 8px solid transparent;
-  border-bottom: 10px solid #c084fc;
-  filter: drop-shadow(0 -2px 6px rgba(192, 132, 252, 0.9));
+  border-bottom: 10px solid #dda3a6;
+  filter: drop-shadow(0 -2px 6px rgba(221, 163, 166, 0.9));
 }
 
 /* Лента с подарками */
@@ -107,19 +107,19 @@
 }
 
 .tile[data-rarity='common'] {
-  border-bottom: 2px solid #94a3b8;
+  border-bottom: 2px solid #b89496;
 }
 
 .tile[data-rarity='rare'] {
-  border-bottom: 2px solid #3b82f6;
+  border-bottom: 2px solid #c8696e;
 }
 
 .tile[data-rarity='epic'] {
-  border-bottom: 2px solid #a855f7;
+  border-bottom: 2px solid #cf7d81;
 }
 
 .tile[data-rarity='legendary'] {
-  border-bottom: 2px solid #f59e0b;
+  border-bottom: 2px solid #ba464b;
 }
 
 .tileImage {
@@ -135,7 +135,7 @@
 .tileName {
   font-size: 10px;
   font-weight: 600;
-  color: #94a3b8;
+  color: #b89496;
   max-width: 72px;
   white-space: nowrap;
   overflow: hidden;
@@ -145,9 +145,9 @@
 
 /* Подсветка выигравшей карточки после остановки */
 .tileWinning {
-  border: 2px solid #fbbf24 !important;
-  background: rgba(251, 191, 36, 0.12) !important;
-  box-shadow: 0 0 16px rgba(251, 191, 36, 0.6);
+  border: 2px solid #c35c61 !important;
+  background: rgba(195, 92, 97, 0.12) !important;
+  box-shadow: 0 0 16px rgba(195, 92, 97, 0.6);
   transform: scale(1.04);
 }
 

@@ -70,7 +70,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
           <div className={styles.avatarInner}>
             <UserAvatar size={80} />
             <span className={styles.badgeStar} aria-hidden>
-              <SparkleIcon style={{ width: '13px', height: '13px', color: '#fbbf24' }} />
+              <SparkleIcon style={{ width: '13px', height: '13px', color: '#c35c61' }} />
             </span>
           </div>
         </div>
@@ -78,7 +78,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
         {/* Приветствие с именем пользователя */}
         <h1 className={styles.greetingTitle}>Привет, {userName}!</h1>
         <div className={styles.brandSub}>
-          <FlameIcon style={{ width: '14px', height: '14px', color: '#f97316' }} />
+          <FlameIcon style={{ width: '14px', height: '14px', color: '#be5156' }} />
           <span>SEXY DROP Mini App</span>
         </div>
 

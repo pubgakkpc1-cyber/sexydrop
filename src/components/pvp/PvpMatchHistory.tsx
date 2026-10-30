@@ -10,9 +10,9 @@ const MODE_NAMES: Record<PvpMode, string> = {
 
 function renderPvpIcon(mode: PvpMode) {
   if (mode === 'jackpot') {
-    return <CoinsRewardIcon style={{ width: '18px', height: '18px', color: '#f59e0b' }} />
+    return <CoinsRewardIcon style={{ width: '18px', height: '18px', color: '#ba464b' }} />
   }
-  return <SwordsIcon style={{ width: '18px', height: '18px', color: '#38bdf8' }} />
+  return <SwordsIcon style={{ width: '18px', height: '18px', color: '#c7696d' }} />
 }
 
 const timeFormatter = new Intl.DateTimeFormat('ru-RU', {

@@ -123,13 +123,13 @@ export function CrashMiniAdminModal({ open, onClose }: CrashMiniAdminModalProps)
           </div>
           <div className={styles.telemetryRow}>
             <span>Скрытый краш раунда:</span>
-            <strong style={{ color: '#38bdf8' }}>
+            <strong style={{ color: '#c7696d' }}>
               {telemetry.currentCrashPoint ? `x${telemetry.currentCrashPoint.toFixed(2)}` : 'Скрыто'}
             </strong>
           </div>
           <div className={styles.telemetryRow}>
             <span>Запланированный краш:</span>
-            <strong style={{ color: telemetry.nextOverride ? '#10b981' : '#94a3b8' }}>
+            <strong style={{ color: telemetry.nextOverride ? '#389173' : '#b89496' }}>
               {telemetry.nextOverride ? `x${telemetry.nextOverride.toFixed(2)}` : 'Рандом (RTP 0.98)'}
             </strong>
           </div>
@@ -249,7 +249,7 @@ export function CrashMiniAdminModal({ open, onClose }: CrashMiniAdminModalProps)
               type="button"
               className={styles.chipBtn}
               onClick={() => handleSetMultiplier(null)}
-              style={{ borderColor: 'rgba(239, 68, 68, 0.4)' }}
+              style={{ borderColor: 'rgba(206, 101, 101, 0.4)' }}
             >
               Рандом
             </button>

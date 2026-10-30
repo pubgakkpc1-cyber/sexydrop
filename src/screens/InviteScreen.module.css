@@ -13,7 +13,7 @@
   gap: 16px;
   padding: 20px 16px;
   border-radius: 24px;
-  background: #1f1e24;
+  background: #222020;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -24,7 +24,7 @@
   width: 56px;
   height: 56px;
   border-radius: 16px;
-  background: #7c66cc;
+  background: #c86a6f;
 }
 
 .heroIconSvg {
@@ -49,7 +49,7 @@
 }
 
 .accent {
-  color: #9b87e8;
+  color: #d8979a;
 }
 
 .sub {
@@ -74,8 +74,8 @@
   gap: 6px;
   padding: 4px 10px;
   border-radius: 10px;
-  background: #34304a;
-  color: #a898ee;
+  background: #3e3c3c;
+  color: #dfa7aa;
   font-size: 16px;
   font-weight: 700;
 }
@@ -100,8 +100,8 @@
   height: 42px;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #2d2b3a;
-  color: #9b87e8;
+  background: #343131;
+  color: #d8979a;
   cursor: pointer;
 }
 
@@ -116,7 +116,7 @@
   gap: 6px;
   padding: 14px 16px;
   border-radius: 18px;
-  background: #1f1e24;
+  background: #222020;
   border: 1px solid rgba(255, 255, 255, 0.06);
   font-size: 14px;
   line-height: 1.45;
@@ -137,7 +137,7 @@
   gap: 10px;
   padding: 14px;
   border-radius: 24px;
-  background: #1f1e24;
+  background: #222020;
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
@@ -158,11 +158,11 @@
 }
 
 .primary {
-  background: #7c66cc;
+  background: #c86a6f;
 }
 
 .secondary {
-  background: #2a292f;
+  background: #2d2b2b;
 }
 
 .primary:disabled,
@@ -204,7 +204,7 @@
   gap: 8px;
   font-size: 22px;
   font-weight: 700;
-  color: #9b87e8;
+  color: #d8979a;
   font-variant-numeric: tabular-nums;
 }
 
@@ -229,8 +229,8 @@
 .refCount {
   padding: 3px 11px;
   border-radius: 10px;
-  background: #34304a;
-  color: #b3a3f0;
+  background: #3e3c3c;
+  color: #e2b1b3;
   font-size: 15px;
   font-weight: 700;
 }
@@ -249,7 +249,7 @@
   width: 68px;
   height: 68px;
   border-radius: 20px;
-  background: #2a292f;
+  background: #2d2b2b;
 }
 
 .emptyIconSvg {

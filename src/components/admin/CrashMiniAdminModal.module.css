@@ -32,21 +32,21 @@
 }
 
 .phaseBadge[data-phase='betting'] {
-  background: rgba(56, 189, 248, 0.15);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  background: rgba(199, 105, 109, 0.15);
+  color: #c7696d;
+  border: 1px solid rgba(199, 105, 109, 0.3);
 }
 
 .phaseBadge[data-phase='flying'] {
-  background: rgba(16, 185, 129, 0.15);
-  color: #10b981;
-  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(56, 145, 115, 0.15);
+  color: #389173;
+  border: 1px solid rgba(56, 145, 115, 0.3);
 }
 
 .phaseBadge[data-phase='crashed'] {
-  background: rgba(239, 68, 68, 0.15);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
+  background: rgba(206, 101, 101, 0.15);
+  color: #ce6565;
+  border: 1px solid rgba(206, 101, 101, 0.3);
 }
 
 .section {
@@ -72,7 +72,7 @@
 .sectionIcon {
   width: 14px;
   height: 14px;
-  color: #fbbf24;
+  color: #c35c61;
 }
 
 .inputGroup {
@@ -112,10 +112,10 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.35);
+  background: rgba(56, 145, 115, 0.15);
+  border: 1px solid rgba(56, 145, 115, 0.35);
   border-radius: 10px;
-  color: #10b981;
+  color: #389173;
   font-size: 13px;
   font-weight: 600;
   animation: fadeIn 0.2s ease;

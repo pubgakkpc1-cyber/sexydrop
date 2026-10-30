@@ -304,7 +304,7 @@ export function CaseDetailScreen() {
       <section className={styles.rewardsSection} aria-label="Содержимое кейса">
         <div className={styles.rewardsHeader}>
           <h2 className={styles.rewardsTitle}>
-            <CubeIcon style={{ width: '19px', height: '19px', verticalAlign: '-3px', marginRight: '7px', color: '#c084fc' }} />
+            <CubeIcon style={{ width: '19px', height: '19px', verticalAlign: '-3px', marginRight: '7px', color: '#dda3a6' }} />
             <span>Коллекции в этом кейсе</span>
           </h2>
           <span className={styles.rewardsCount}>{rewardRows.length} предметов</span>

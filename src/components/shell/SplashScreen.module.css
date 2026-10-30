@@ -2,8 +2,8 @@
   position: fixed;
   inset: 0;
   z-index: 99999;
-  background: #090810;
-  background: radial-gradient(circle at 50% 40%, #171526 0%, #090810 100%);
+  background: #0c0c0c;
+  background: radial-gradient(circle at 50% 40%, #1e1d1d 0%, #0c0c0c 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -24,7 +24,7 @@
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0) 70%);
+  background: radial-gradient(circle, rgba(209, 129, 133, 0.25) 0%, rgba(209, 129, 133, 0) 70%);
   filter: blur(40px);
   pointer-events: none;
   animation: pulseGlow 3s infinite alternate ease-in-out;
@@ -67,7 +67,7 @@
   position: absolute;
   inset: -10px;
   border-radius: 50%;
-  border: 1.5px solid rgba(139, 92, 246, 0.4);
+  border: 1.5px solid rgba(209, 129, 133, 0.4);
   animation: pulseWaveAnim 2s infinite ease-out;
 }
 
@@ -75,7 +75,7 @@
   position: absolute;
   inset: -20px;
   border-radius: 50%;
-  border: 1px solid rgba(245, 158, 11, 0.3);
+  border: 1px solid rgba(186, 70, 75, 0.3);
   animation: pulseWaveAnim 2s infinite ease-out 0.6s;
 }
 
@@ -96,8 +96,8 @@
   inset: 0;
   border-radius: 50%;
   padding: 3px;
-  background: conic-gradient(from 0deg, #8b5cf6, #f59e0b, #38bdf8, #8b5cf6);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  background: conic-gradient(from 0deg, #d18185, #ba464b, #c7696d, #d18185);
+  -webkit-mask: linear-gradient(#ffffff 0 0) content-box, linear-gradient(#ffffff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: spinRing 3s linear infinite;
@@ -118,7 +118,7 @@
   height: 86px;
   border-radius: 50%;
   padding: 3px;
-  background: #111019;
+  background: #151414;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,8 +141,8 @@
   right: 0;
   width: 26px;
   height: 26px;
-  background: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
-  border: 2px solid #111019;
+  background: linear-gradient(135deg, #ba464b 0%, #c35c61 100%);
+  border: 2px solid #151414;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -154,7 +154,7 @@
 .greetingTitle {
   font-size: 22px;
   font-weight: 800;
-  color: #fff;
+  color: #ffffff;
   margin: 0 0 4px;
   letter-spacing: 0.3px;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
@@ -166,7 +166,7 @@
   gap: 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #a855f7;
+  color: #cf7d81;
   margin-bottom: 24px;
 }
 
@@ -191,15 +191,15 @@
 
 .progressBarFill {
   height: 100%;
-  background: linear-gradient(90deg, #8b5cf6 0%, #f59e0b 100%);
+  background: linear-gradient(90deg, #d18185 0%, #ba464b 100%);
   border-radius: 9999px;
   transition: width 0.15s ease-out;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.7);
+  box-shadow: 0 0 10px rgba(186, 70, 75, 0.7);
 }
 
 .statusText {
   font-size: 11px;
-  color: #94a3b8;
+  color: #b89496;
   font-weight: 500;
   min-height: 16px;
   transition: opacity 0.2s ease;

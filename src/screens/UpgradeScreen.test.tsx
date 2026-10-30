@@ -63,7 +63,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     expect(screen.getAllByText('Fresh Socks').length).toBeGreaterThan(0)
 
     // Цель Heart Locket (1000): p = 50/1000 × 0.98 = 4.9%
-    await user.click(screen.getByRole('button', { name: /^Heart Locket$/ }))
+    await user.click(screen.getAllByRole('button', { name: /^Heart Locket$/ })[0]!)
     expect(screen.getByText('4.9%')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
   })
@@ -81,7 +81,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     const dialog = screen.getByRole('dialog')
     await user.click(within(dialog).getByText('Fresh Socks'))
     await user.click(within(dialog).getByRole('button', { name: 'Подтвердить' }))
-    await user.click(screen.getByRole('button', { name: /^Heart Locket$/ }))
+    await user.click(screen.getAllByRole('button', { name: /^Heart Locket$/ })[0]!)
     await user.click(screen.getByRole('button', { name: 'Апгрейдить' }))
 
     const resultDialog = screen.getByRole('dialog')

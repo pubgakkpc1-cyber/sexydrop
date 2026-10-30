@@ -26,11 +26,9 @@ describe('GiftCard (3.2: карточки подарков)', () => {
     common.unmount()
   })
 
-  it('показывает номер экземпляра, только если он известен', () => {
-    const { rerender } = render(<GiftCard gift={plush} />)
-    expect(screen.queryByText(/^#\d+$/)).not.toBeInTheDocument()
-    rerender(<GiftCard gift={{ ...plush, serialNumber: 1337 }} />)
-    expect(screen.getByText('#1337')).toBeInTheDocument()
+  it('не показывает номер экземпляра, даже если он известен', () => {
+    render(<GiftCard gift={{ ...plush, serialNumber: 1337 }} />)
+    expect(screen.queryByText('#1337')).not.toBeInTheDocument()
   })
 
   it('с onClick корневой элемент — кнопка, клик обрабатывается', async () => {

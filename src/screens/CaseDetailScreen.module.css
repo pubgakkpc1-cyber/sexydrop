@@ -879,3 +879,15 @@
     gap: 6px;
   }
 }
+
+/* Цена TON — отдельной строкой над иконкой, не накладывается на неё и не вылезает за карточку */
+.rewardPriceBadge {
+  position: static;
+  align-self: flex-end;
+  max-width: 100%;
+  margin: 0 0 8px;
+}
+
+.rewardImageWrap {
+  margin: 0 0 8px;
+}

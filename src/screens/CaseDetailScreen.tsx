@@ -34,10 +34,6 @@ function formatCountdown(ms: number): string {
   return `${minutes}м ${String(seconds).padStart(2, '0')}с`
 }
 
-function formatChance(bps: number): string {
-  return `${(bps / 100).toFixed(2)}%`
-}
-
 export function CaseDetailScreen() {
   const { caseId } = useParams()
   const navigate = useNavigate()
@@ -96,7 +92,7 @@ export function CaseDetailScreen() {
       chance: displayProbabilityBps(gameCase.entries)[index] ?? 0,
     }))
     .filter((row): row is { gift: Gift; chance: number } => row.gift !== undefined)
-    .sort((a, b) => b.chance - a.chance)
+    .sort((a, b) => b.gift.priceMinor - a.gift.priceMinor || b.chance - a.chance)
 
   const handleOpen = () => {
     if (isSpinning) return
@@ -315,7 +311,7 @@ export function CaseDetailScreen() {
         </div>
 
         <div className={styles.rewardsGrid}>
-          {rewardRows.map(({ gift, chance }) => (
+          {rewardRows.map(({ gift }) => (
             <div key={gift.id} className={styles.rewardCard}>
               {/* Плашка цены в правом верхнем углу (как на фото) */}
               <span className={styles.rewardPriceBadge}>
@@ -330,21 +326,6 @@ export function CaseDetailScreen() {
 
               {/* Название */}
               <strong className={styles.rewardName}>{gift.name}</strong>
-
-              {/* Модель и фон (Backdrop) официального NFT с Fragment */}
-              {(gift.model || gift.backdrop) && (
-                <div className={styles.rewardModelBadge}>
-                  {gift.model && <span>{gift.model}</span>}
-                  {gift.model && gift.backdrop && <span className={styles.rewardModelDot}>·</span>}
-                  {gift.backdrop && <span>{gift.backdrop}</span>}
-                </div>
-              )}
-
-              {/* Нижняя пилюля «Случайный» (как на фото) */}
-              <div className={styles.rewardPill}>
-                <span>Случайный</span>
-                <span className={styles.rewardChance}>· {formatChance(chance)}</span>
-              </div>
             </div>
           ))}
         </div>

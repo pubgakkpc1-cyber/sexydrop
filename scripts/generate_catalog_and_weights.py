@@ -35,7 +35,7 @@ for gift_name, variants in manifest.items():
         rarity = "legendary" if price_ton >= 200 else ("epic" if price_ton >= 50 else ("rare" if price_ton >= 10 else "common"))
         serial = v.get("serial")
         serial_str = str(serial) if serial is not None else "null"
-        serial_display = f" #{serial}" if serial else f" #{v['idx']}"
+        serial_display = ""
         display_name = f"{gift_name}{serial_display}".replace("'", "\\'")
         esc_gift_name = gift_name.replace("'", "\\'")
         model = v.get("model", "Original").replace("'", "\\'")

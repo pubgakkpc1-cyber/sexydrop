@@ -28,9 +28,6 @@ export function GiftCard({ gift, action, onClick, className }: GiftCardProps) {
       <span className={styles.name}>{gift.name}</span>
       <span className={styles.footer}>
         <span className={styles.rarity}>{rarityLabel}</span>
-        {typeof gift.serialNumber === 'number' && (
-          <span className={styles.serial}>#{gift.serialNumber}</span>
-        )}
         <GramAmount minor={gift.priceMinor} className={styles.price} />
       </span>
       {action}

@@ -24,7 +24,25 @@ GIFTS = {
     name: (int(round(v[0]["price_ton"] * 1000)), [x["id"] for x in v])
     for name, v in manifest.items()
 }
-LADDER = sorted(GIFTS, key=lambda n: GIFTS[n][0])  # по возрастанию цены
+BACKDROP = {x["id"]: x["backdrop"] for v in manifest.values() for x in v}
+DARK = {"Black", "Onyx Black"}
+
+# Правило фонов: в обычных кейсах нет чёрных фонов (Black / Onyx Black),
+# в кейсе «Black» — только Black, в кейсе «Onyx Black» — только Onyx Black.
+SPECIAL_BACKDROP = {"black": "Black", "onyx-black": "Onyx Black"}
+
+
+def allowed_variants(name: str, case_id: str) -> list[str]:
+    ids = GIFTS[name][1]
+    want = SPECIAL_BACKDROP.get(case_id)
+    if want:
+        return [i for i in ids if BACKDROP[i] == want]
+    return [i for i in ids if BACKDROP[i] not in DARK]
+
+
+def ladder_for(case_id: str) -> list[str]:
+    names = [n for n in GIFTS if allowed_variants(n, case_id)]
+    return sorted(names, key=lambda n: GIFTS[n][0])
 
 # (id, название, цена в minor, коэффициент потолка топ-приза к цене кейса, число предметов)
 CASES = [
@@ -58,9 +76,10 @@ FORCE_TOP = {"elite": "Plush Pepe"}
 
 def pick_pool(price: int, top_mult: int, k: int, case_id: str, skew: float) -> list[str]:
     cap = price * top_mult
-    cands = [n for n in LADDER if GIFTS[n][0] <= cap]
+    ladder = ladder_for(case_id)
+    cands = [n for n in ladder if GIFTS[n][0] <= cap]
     if case_id in FORCE_TOP:
-        cands = [n for n in LADDER if GIFTS[n][0] <= max(cap, GIFTS[FORCE_TOP[case_id]][0])]
+        cands = [n for n in ladder if GIFTS[n][0] <= max(cap, GIFTS[FORCE_TOP[case_id]][0])]
     k = min(k, len(cands))
     # по рангу в лестнице цен со сдвигом к дешёвым (skew>1): много «якорей» у дна, редкий топ
     idx = sorted({round((i / max(1, k - 1)) ** skew * (len(cands) - 1)) for i in range(k)})
@@ -129,7 +148,10 @@ for ci, (cid, name, price, mult, k) in enumerate(CASES):
             break
     assert chosen, f"no solution for {cid}"
     pool, v, w = chosen
-    result[cid] = [[GIFTS[n][1][(ci + j) % 3], wt] for j, (n, wt) in enumerate(zip(pool, w))]
+    result[cid] = []
+    for j, (n, wt) in enumerate(zip(pool, w)):
+        opts = allowed_variants(n, cid)
+        result[cid].append([opts[(ci + j) % len(opts)], wt])
     report.append(
         f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
         f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"

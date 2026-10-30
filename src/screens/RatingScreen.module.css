@@ -1,304 +1,350 @@
+/* Рейтинг: матовые плоские цвета, ровные ряды (референс — таблица лидеров) */
+
 .screen {
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  padding-bottom: 24px;
+  gap: 14px;
+  padding-bottom: 8px;
 }
 
-.header {
+/* --- Карточка сезона --- */
+
+.hero {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #1a1922;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.heroTop {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heroIcon {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #6b53b8;
+}
+
+.heroIconSvg {
+  width: 26px;
+  height: 26px;
+  color: #ffffff;
 }
 
 .title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 800;
   color: #ffffff;
-  letter-spacing: -0.5px;
 }
 
-.lead {
-  color: rgba(255, 255, 255, 0.55);
-  font-size: 13px;
-  font-weight: 500;
-}
-
-/* --- Подиум топ-3 игроков --- */
-
-.podium {
-  display: grid;
-  grid-template-columns: 1fr 1.15fr 1fr;
+.heroRow {
+  display: flex;
   align-items: flex-end;
-  gap: 8px;
-  margin: 4px 0 8px;
+  justify-content: space-between;
+  gap: 12px;
 }
 
-.podiumCard {
-  position: relative;
+.heroCol {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 12px 6px 14px;
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  transition: transform 0.2s ease;
-}
-
-.podiumFirst {
-  padding: 18px 8px 16px;
-  background: linear-gradient(180deg, rgba(245, 158, 11, 0.12) 0%, rgba(20, 18, 28, 0.7) 100%);
-  border: 1.5px solid rgba(245, 158, 11, 0.45);
-  box-shadow: 0 12px 32px rgba(245, 158, 11, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-  transform: translateY(-8px);
-}
-
-.podiumSecond {
-  background: linear-gradient(180deg, rgba(148, 163, 184, 0.1) 0%, rgba(20, 18, 28, 0.6) 100%);
-  border: 1px solid rgba(148, 163, 184, 0.3);
-}
-
-.podiumThird {
-  background: linear-gradient(180deg, rgba(217, 119, 6, 0.08) 0%, rgba(20, 18, 28, 0.6) 100%);
-  border: 1px solid rgba(217, 119, 6, 0.25);
-}
-
-.crown {
-  position: absolute;
-  top: -14px;
-  font-size: 20px;
-  filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.8));
-  animation: floatCrown 2s infinite alternate ease-in-out;
-}
-
-@keyframes floatCrown {
-  0% { transform: translateY(0); }
-  100% { transform: translateY(-3px); }
-}
-
-.podiumRank {
-  font-size: 11px;
-  font-weight: 800;
-  color: rgba(255, 255, 255, 0.85);
-  margin-bottom: 6px;
-}
-
-.podiumAvatar {
-  width: 44px;
-  height: 44px;
-  border-radius: 14px;
-  object-fit: cover;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-  margin-bottom: 6px;
-}
-
-.podiumAvatarFirst {
-  width: 52px;
-  height: 52px;
-  border-color: #f59e0b;
-  box-shadow: 0 0 16px rgba(245, 158, 11, 0.45);
-}
-
-.podiumName {
-  font-size: 12px;
-  font-weight: 700;
-  color: #ffffff;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 90px;
-}
-
-.podiumProfit {
-  font-size: 11px;
-  font-weight: 700;
-  color: #4ade80;
-  margin-top: 2px;
-}
-
-.podiumProfitFirst {
-  font-size: 12px;
-  font-weight: 800;
-  color: #facc15;
-  margin-top: 2px;
-}
-
-/* --- Карточка с подсказкой --- */
-
-.empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 6px;
-  text-align: center;
-  color: rgba(255, 255, 255, 0.65);
-  padding: 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px dashed rgba(255, 255, 255, 0.15);
-  border-radius: 18px;
+}
+
+.heroColRight {
+  align-items: flex-end;
+}
+
+.heroLabel {
   font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
 }
 
-.empty strong {
-  color: #ffffff;
-  font-size: 14px;
+.heroCol:first-child .heroLabel {
+  color: #d9a441;
 }
 
-/* --- Таблица рейтинга --- */
-
-.tableCard {
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  overflow: hidden;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-}
-
-.table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11.5px;
-}
-
-.table th {
-  text-align: left;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.45);
-  padding: 10px 5px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-}
-
-.table td {
-  padding: 8px 5px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  vertical-align: middle;
-}
-
-.userRow {
-  background: rgba(59, 130, 246, 0.12);
-  box-shadow: inset 2px 0 0 #3b82f6;
-}
-
-.botRow:hover {
-  background: rgba(255, 255, 255, 0.02);
-}
-
-.rankPill {
+.timer {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 14px;
+  background: #3a2f1c;
+  border: 1px solid rgba(217, 164, 65, 0.4);
+  color: #e8b653;
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.timerIcon {
+  width: 18px;
+  height: 18px;
+}
+
+.winners {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.winnersIcon {
   width: 20px;
   height: 20px;
-  border-radius: 6px;
-  font-size: 10px;
-  font-weight: 800;
-  background: rgba(255, 255, 255, 0.06);
+  color: #8c78d6;
+}
+
+.heroText {
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.4;
   color: rgba(255, 255, 255, 0.7);
 }
 
-.rankFirst {
-  background: rgba(245, 158, 11, 0.25);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.5);
-}
+/* --- Заголовок списка --- */
 
-.rankSecond {
-  background: rgba(148, 163, 184, 0.2);
-  color: #cbd5e1;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-}
-
-.rankThird {
-  background: rgba(217, 119, 6, 0.2);
-  color: #f59e0b;
-  border: 1px solid rgba(217, 119, 6, 0.4);
-}
-
-.playerCell {
-  display: flex;
+.listHead {
+  display: grid;
+  grid-template-columns: 1fr 52px 76px;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  padding: 6px 4px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
-.botAvatar {
-  width: 26px;
-  height: 26px;
-  border-radius: 8px;
+.listTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.listTitleIcon {
+  width: 22px;
+  height: 22px;
+  color: #8c78d6;
+}
+
+.colLabel {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.55);
+  text-align: center;
+}
+
+/* --- Строки --- */
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 34px 44px minmax(0, 1fr) 52px 76px;
+  align-items: center;
+  gap: 8px;
+  min-height: 60px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  background: #1a1922;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rowGold {
+  background: #3f3418;
+  border-color: rgba(217, 164, 65, 0.45);
+}
+
+.rowSilver {
+  background: #34373e;
+  border-color: rgba(170, 178, 192, 0.4);
+}
+
+.rowBronze {
+  background: #43301a;
+  border-color: rgba(204, 124, 48, 0.4);
+}
+
+.rowMe {
+  outline: 1.5px solid #7c66cc;
+}
+
+.rank {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #2a2933;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.rankGold {
+  background: #e0a526;
+  color: #ffffff;
+}
+
+.rankSilver {
+  background: #aab2c0;
+  color: #ffffff;
+}
+
+.rankBronze {
+  background: #dc7b2e;
+  color: #ffffff;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #2a2933;
 }
 
-.playerName {
-  font-weight: 700;
+.name {
+  min-width: 0;
+  font-size: 17px;
+  font-weight: 600;
   color: #ffffff;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 82px;
-  font-size: 11.5px;
 }
 
-.botGift {
-  width: 20px;
-  height: 20px;
+.prize {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 44px;
+  border-radius: 12px;
+  background: #24232c;
+}
+
+.prizeImg {
+  width: 34px;
+  height: 34px;
   object-fit: contain;
-  flex-shrink: 0;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.4));
+  border-radius: 8px;
 }
 
-.num {
+.noPrize {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+}
+
+.points {
+  display: grid;
+  place-items: center;
+  height: 44px;
+  border-radius: 12px;
+  background: #2b2740;
+  border: 1px solid rgba(124, 102, 204, 0.35);
+  color: #b3a3f0;
+  font-size: 16px;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
-  text-align: right;
-  white-space: nowrap;
+}
+
+/* --- Закреплённая строка «ВЫ» --- */
+
+.meBar {
+  position: sticky;
+  bottom: 6px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 56px 40px auto minmax(0, 1fr) 52px 76px;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 18px;
+  background: #23222b;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.meRank {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  border-radius: 18px;
+  background: #34333d;
   color: rgba(255, 255, 255, 0.85);
-  font-weight: 600;
-}
-
-.realTag {
-  display: inline-block;
-  margin-left: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.4px;
-  color: #b7a4f9;
-  background: rgba(183, 164, 249, 0.14);
-  border: 1px solid rgba(183, 164, 249, 0.35);
-  border-radius: 9999px;
-  padding: 1px 6px;
-  white-space: nowrap;
-}
-
-.netWon {
-  color: #4ade80;
+  font-size: 14px;
   font-weight: 700;
 }
 
-.netLost {
-  color: #f87171;
+.meBar .avatar {
+  width: 40px;
+  height: 40px;
+}
+
+.meChip {
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: #2b2740;
+  color: #9d8ae6;
+  font-size: 13px;
   font-weight: 700;
+}
+
+.meBar .prize {
+  grid-column: 5;
 }
 
 .note {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.4);
   text-align: center;
-  margin-top: 4px;
+  padding: 4px 8px 8px;
 }
 
-/* Таблица не выходит за скруглённую рамку: на узких экранах скроллится внутри */
-.tableCard {
-  overflow-x: auto;
+@media (max-width: 350px) {
+  .row {
+    grid-template-columns: 30px 38px minmax(0, 1fr) 44px 64px;
+    gap: 6px;
+  }
+
+  .avatar {
+    width: 38px;
+    height: 38px;
+  }
+
+  .name {
+    font-size: 15px;
+  }
+
+  .listHead {
+    grid-template-columns: 1fr 44px 64px;
+  }
+
+  .meBar {
+    grid-template-columns: 48px 36px auto minmax(0, 1fr) 44px 64px;
+  }
+
+  .timer {
+    font-size: 15px;
+  }
 }

@@ -1,7 +1,8 @@
+import { useEffect, useMemo, useState } from 'react'
 import { useProfileStore } from '../store/profile'
-import { formatMinor } from '../lib/money'
 import { giftById } from '../data/catalog'
-import { CrownIcon, TonIcon } from '../components/shell/icons'
+import { ClockIcon, TrophyIcon, UsersIcon } from '../components/shell/icons'
+import { UserAvatar } from '../components/ui/UserAvatar'
 import { cx } from '../lib/cx'
 import styles from './RatingScreen.module.css'
 
@@ -9,278 +10,196 @@ interface LeaderboardBot {
   id: string
   name: string
   avatar: string
-  rounds: number
-  wageredGram: number
-  profitGram: number
-  topGiftId?: string
+  /** Очки = оборот в TON × 100 */
+  points: number
 }
 
-const TOP_BOTS: LeaderboardBot[] = [
-  {
-    id: 'b1',
-    name: 'kamronbek',
-    avatar: '/avatars/user_9.png',
-    rounds: 142,
-    wageredGram: 840,
-    profitGram: 384.2,
-    topGiftId: 'astral-crown',
-  },
-  {
-    id: 'b2',
-    name: 'V5B',
-    avatar: '/avatars/user_2.png',
-    rounds: 98,
-    wageredGram: 620,
-    profitGram: 241.5,
-    topGiftId: 'diamond-ring',
-  },
-  {
-    id: 'b3',
-    name: 'Saullmurder',
-    avatar: '/avatars/user_3.png',
-    rounds: 74,
-    wageredGram: 490,
-    profitGram: 189.7,
-    topGiftId: 'plush-pepe',
-  },
-  {
-    id: 'b4',
-    name: 'abdoo',
-    avatar: '/avatars/user_10.png',
-    rounds: 61,
-    wageredGram: 410,
-    profitGram: 142.3,
-    topGiftId: 'cyber-helmet',
-  },
-  {
-    id: 'b5',
-    name: 'DIYORBEK',
-    avatar: '/avatars/user_11.png',
-    rounds: 53,
-    wageredGram: 350,
-    profitGram: 118.0,
-    topGiftId: 'heart-locket',
-  },
-  {
-    id: 'b6',
-    name: 'Module_II',
-    avatar: '/avatars/user_4.png',
-    rounds: 47,
-    wageredGram: 290,
-    profitGram: 94.6,
-    topGiftId: 'magic-potion',
-  },
-  {
-    id: 'b7',
-    name: 'cryptowhale',
-    avatar: '/avatars/user_1.png',
-    rounds: 39,
-    wageredGram: 240,
-    profitGram: 72.4,
-    topGiftId: 'scared-cat',
-  },
-  {
-    id: 'b8',
-    name: 'Al_Sheikh',
-    avatar: '/avatars/user_5.png',
-    rounds: 33,
-    wageredGram: 210,
-    profitGram: 58.1,
-    topGiftId: 'chill-flame',
-  },
-  {
-    id: 'b9',
-    name: 'Pavel_D',
-    avatar: '/avatars/user_6.png',
-    rounds: 28,
-    wageredGram: 180,
-    profitGram: 45.0,
-    topGiftId: 'instant-ramen',
-  },
-  {
-    id: 'b10',
-    name: 'Artem_TON',
-    avatar: '/avatars/user_8.png',
-    rounds: 22,
-    wageredGram: 140,
-    profitGram: 32.8,
-    topGiftId: 'fresh-socks',
-  },
+/** Призы топ-10: реальные NFT из каталога, по местам. */
+const PRIZE_IDS = [
+  'plush_pepe-1',
+  'heart_locket-1',
+  'resistance_dog-1',
+  'durovs_cap-1',
+  'scared_cat-1',
+  'precious_peach-1',
+  'heroic_helmet-1',
+  'loot_bag-1',
+  'mighty_arm-1',
+  'astral_shard-1',
+] as const
+
+const TOP_BOTS: readonly LeaderboardBot[] = [
+  { id: 'b1', name: 'kamronbek', avatar: '/avatars/bot_03.svg', points: 84_000 },
+  { id: 'b2', name: 'cryptowhale', avatar: '/avatars/bot_17.svg', points: 62_000 },
+  { id: 'b3', name: 'Saullmurder', avatar: '/avatars/bot_08.svg', points: 49_000 },
+  { id: 'b4', name: 'abdoo', avatar: '/avatars/bot_22.svg', points: 41_000 },
+  { id: 'b5', name: 'DIYORBEK', avatar: '/avatars/bot_30.svg', points: 35_000 },
+  { id: 'b6', name: 'Module_II', avatar: '/avatars/bot_11.svg', points: 29_000 },
+  { id: 'b7', name: 'moon_rider', avatar: '/avatars/bot_26.svg', points: 24_000 },
+  { id: 'b8', name: 'Al_Sheikh', avatar: '/avatars/bot_35.svg', points: 21_000 },
+  { id: 'b9', name: 'Pavel_D', avatar: '/avatars/bot_14.svg', points: 18_000 },
+  { id: 'b10', name: 'Artem_TON', avatar: '/avatars/bot_41.svg', points: 14_000 },
 ]
 
+/** «kamronbek» → «ka***ek» */
+export function maskName(name: string): string {
+  if (name.length <= 4) return `${name[0] ?? ''}***`
+  return `${name.slice(0, 2)}***${name.slice(-2)}`
+}
+
+/** 29600000 → «29.6M», 84000 → «84.0K»: максимум один знак после точки. */
+export function formatPoints(points: number): string {
+  if (points >= 1_000_000) return `${(Math.floor(points / 100_000) / 10).toFixed(1)}M`
+  if (points >= 1_000) return `${(Math.floor(points / 100) / 10).toFixed(1)}K`
+  return String(Math.floor(points))
+}
+
+/** Недельный сезон: заканчивается в ближайший понедельник 00:00 UTC. */
+function msUntilSeasonEnd(now: number): number {
+  const d = new Date(now)
+  const daysToMonday = ((8 - d.getUTCDay()) % 7) || 7
+  const end = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + daysToMonday)
+  return end - now
+}
+
+export function formatCountdown(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000))
+  const d = Math.floor(total / 86400)
+  const h = Math.floor((total % 86400) / 3600)
+  const m = Math.floor((total % 3600) / 60)
+  const s = total % 60
+  return `${d}d ${h}h ${m}m ${s}s`
+}
+
+interface Row {
+  key: string
+  me: boolean
+  name: string
+  avatar?: string
+  points: number
+}
+
 export function RatingScreen() {
-  const { rounds, wageredMinor, netMinor, pvpMatches } = useProfileStore()
+  const { rounds, wageredMinor, pvpMatches } = useProfileStore()
   const noData = rounds === 0
+  const myPoints = Math.floor(wageredMinor / 10) // 1 TON оборота = 100 очков
+
+  const [left, setLeft] = useState(() => msUntilSeasonEnd(Date.now()))
+  useEffect(() => {
+    const id = setInterval(() => setLeft(msUntilSeasonEnd(Date.now())), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  // Таблица: боты + вы (если есть реальные раунды), по убыванию очков
+  const rows = useMemo<Row[]>(() => {
+    const list: Row[] = TOP_BOTS.map((b) => ({ key: b.id, me: false, name: b.name, avatar: b.avatar, points: b.points }))
+    if (!noData) list.push({ key: 'me', me: true, name: 'Вы', points: myPoints })
+    return list.sort((a, b) => b.points - a.points).slice(0, 10)
+  }, [noData, myPoints])
+
+  const myIndex = rows.findIndex((r) => r.me)
+  const myRankLabel = noData ? '999+' : myIndex >= 0 ? String(myIndex + 1) : '10+'
+  const myPrize = myIndex >= 0 ? giftById.get(PRIZE_IDS[myIndex] ?? '') : undefined
 
   return (
     <div className={styles.screen}>
-      <div className={styles.header}>
-        <h1 className={styles.title}>Рейтинг</h1>
-        <p className={styles.lead}>Лучшие игроки недели</p>
-      </div>
-
-      {/* Подиум топ-3 игроков в стиле Apple Liquid Glass */}
-      <div className={styles.podium}>
-        {/* 2 место */}
-        {TOP_BOTS[1] && (
-          <div className={cx(styles.podiumCard, styles.podiumSecond)}>
-            <div className={styles.podiumRank}>2 место</div>
-            <img
-              src={TOP_BOTS[1].avatar}
-              alt={TOP_BOTS[1].name}
-              className={styles.podiumAvatar}
-            />
-            <strong className={styles.podiumName}>{TOP_BOTS[1].name}</strong>
-            <span className={styles.podiumProfit}>
-              <TonIcon style={{ width: '12px', height: '12px', display: 'inline', verticalAlign: '-1px', marginRight: '3px' }} />
-              +{TOP_BOTS[1].profitGram} TON
-            </span>
-          </div>
-        )}
-
-        {/* 1 место (возвышенное с короной) */}
-        {TOP_BOTS[0] && (
-          <div className={cx(styles.podiumCard, styles.podiumFirst)}>
-            <CrownIcon className={styles.crown} style={{ width: '22px', height: '22px', color: '#f59e0b' }} />
-            <div className={styles.podiumRank}>1 место</div>
-            <img
-              src={TOP_BOTS[0].avatar}
-              alt={TOP_BOTS[0].name}
-              className={cx(styles.podiumAvatar, styles.podiumAvatarFirst)}
-            />
-            <strong className={styles.podiumName}>{TOP_BOTS[0].name}</strong>
-            <span className={styles.podiumProfitFirst}>
-              <TonIcon style={{ width: '13px', height: '13px', display: 'inline', verticalAlign: '-1px', marginRight: '3px' }} />
-              +{TOP_BOTS[0].profitGram} TON
-            </span>
-          </div>
-        )}
-
-        {/* 3 место */}
-        {TOP_BOTS[2] && (
-          <div className={cx(styles.podiumCard, styles.podiumThird)}>
-            <div className={styles.podiumRank}>3 место</div>
-            <img
-              src={TOP_BOTS[2].avatar}
-              alt={TOP_BOTS[2].name}
-              className={styles.podiumAvatar}
-            />
-            <strong className={styles.podiumName}>{TOP_BOTS[2].name}</strong>
-            <span className={styles.podiumProfit}>
-              <TonIcon style={{ width: '12px', height: '12px', display: 'inline', verticalAlign: '-1px', marginRight: '3px' }} />
-              +{TOP_BOTS[2].profitGram} TON
-            </span>
-          </div>
-        )}
-      </div>
-
-      {/* Статус пользователя: если ещё не играл — блок подсказки */}
-      {noData && (
-        <div className={styles.empty}>
-          <strong>Данных пока нет</strong>
-          <span>
-            Сыграйте раунд в PLAY — таблица покажет вашу реальную статистику.
+      <section className={styles.hero} aria-label="Рейтинг">
+        <div className={styles.heroTop}>
+          <span className={styles.heroIcon}>
+            <TrophyIcon className={styles.heroIconSvg} aria-hidden />
           </span>
+          <h1 className={styles.title}>Рейтинг</h1>
         </div>
-      )}
+        <div className={styles.heroRow}>
+          <div className={styles.heroCol}>
+            <span className={styles.heroLabel}>Заканчивается через</span>
+            <span className={styles.timer} role="timer">
+              <ClockIcon className={styles.timerIcon} aria-hidden />
+              {formatCountdown(left)}
+            </span>
+          </div>
+          <div className={cx(styles.heroCol, styles.heroColRight)}>
+            <span className={styles.heroLabel}>Призы и победители</span>
+            <span className={styles.winners}>
+              <UsersIcon className={styles.winnersIcon} aria-hidden />
+              {PRIZE_IDS.length}
+            </span>
+          </div>
+        </div>
+        <p className={styles.heroText}>
+          Соревнуйтесь с другими пользователями и выигрывайте потрясающие призы!
+        </p>
+      </section>
 
-      {/* Таблица рейтинга игроков */}
-      <div className={styles.tableCard}>
-        <table className={styles.table} aria-label="Рейтинг игроков">
-          <thead>
-            <tr>
-              <th scope="col">#</th>
-              <th scope="col">Игрок</th>
-              <th scope="col">Раунды</th>
-              <th scope="col">Оборот</th>
-              <th scope="col">Профит</th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* Строка текущего пользователя (только когда есть реальные раунды) */}
-            {!noData && (
-              <tr className={styles.userRow}>
-                <td>
-                  <span className={styles.rankPill}>1</span>
-                </td>
-                <td>
-                  <div className={styles.playerCell}>
-                    <span className={styles.playerName}>Вы</span>
-                    <span className={styles.realTag}>реальные данные</span>
-                  </div>
-                </td>
-                <td className={styles.num}>{rounds}</td>
-                <td className={styles.num}>
-                  <TonIcon style={{ width: '11px', height: '11px', display: 'inline', verticalAlign: '-1px', marginRight: '2px' }} />
-                  <span>{formatMinor(wageredMinor)} TON</span>
-                </td>
-                <td className={styles.num}>
-                  <span className={netMinor >= 0 ? styles.netWon : styles.netLost}>
-                    <TonIcon style={{ width: '11px', height: '11px', display: 'inline', verticalAlign: '-1px', marginRight: '2px' }} />
-                    <span>{`${netMinor >= 0 ? '+' : '−'}${formatMinor(Math.abs(netMinor))} TON`}</span>
-                  </span>
-                </td>
-              </tr>
-            )}
+      <div className={styles.listHead}>
+        <span className={styles.listTitle}>
+          <TrophyIcon className={styles.listTitleIcon} aria-hidden />
+          Топ игроков
+        </span>
+        <span className={styles.colLabel}>Приз</span>
+        <span className={styles.colLabel}>Очки</span>
+      </div>
 
-            {/* Рейтинг ботов, стилизованных под реальных пользователей Telegram */}
-            {TOP_BOTS.map((bot, idx) => {
-              const rank = !noData ? idx + 2 : idx + 1
-              const gift = bot.topGiftId ? giftById.get(bot.topGiftId) : undefined
+      <ol className={styles.list} aria-label="Рейтинг игроков">
+        {rows.map((row, idx) => {
+          const prize = giftById.get(PRIZE_IDS[idx] ?? '')
+          return (
+            <li
+              key={row.key}
+              className={cx(
+                styles.row,
+                idx === 0 && styles.rowGold,
+                idx === 1 && styles.rowSilver,
+                idx === 2 && styles.rowBronze,
+                row.me && styles.rowMe,
+              )}
+            >
+              <span
+                className={cx(
+                  styles.rank,
+                  idx === 0 && styles.rankGold,
+                  idx === 1 && styles.rankSilver,
+                  idx === 2 && styles.rankBronze,
+                )}
+              >
+                {idx + 1}
+              </span>
+              {row.me ? (
+                <UserAvatar size={44} className={styles.avatar} />
+              ) : (
+                <img className={styles.avatar} src={row.avatar} alt="" />
+              )}
+              <span className={styles.name}>
+                {row.me ? 'Вы' : maskName(row.name)}
+              </span>
+              <span className={styles.prize}>
+                {prize && <img src={prize.image} alt="" className={styles.prizeImg} />}
+              </span>
+              <span className={styles.points}>{formatPoints(row.points)}</span>
+            </li>
+          )
+        })}
+      </ol>
 
-              return (
-                <tr key={bot.id} className={styles.botRow}>
-                  <td>
-                    <span
-                      className={cx(
-                        styles.rankPill,
-                        rank === 1 && styles.rankFirst,
-                        rank === 2 && styles.rankSecond,
-                        rank === 3 && styles.rankThird,
-                      )}
-                    >
-                      {rank}
-                    </span>
-                  </td>
-                  <td>
-                    <div className={styles.playerCell}>
-                      <img
-                        src={bot.avatar}
-                        alt={bot.name}
-                        className={styles.botAvatar}
-                      />
-                      <span className={styles.playerName}>{bot.name}</span>
-                      {gift && (
-                        <img
-                          src={gift.image}
-                          alt={gift.name}
-                          title={`Любимый трофей: ${gift.name}`}
-                          className={styles.botGift}
-                        />
-                      )}
-                    </div>
-                  </td>
-                  <td className={styles.num}>{bot.rounds}</td>
-                  <td className={styles.num}>
-                    <TonIcon style={{ width: '11px', height: '11px', display: 'inline', verticalAlign: '-1px', marginRight: '2px' }} />
-                    {bot.wageredGram} TON
-                  </td>
-                  <td className={styles.num}>
-                    <span className={styles.netWon}>
-                      +<TonIcon style={{ width: '11px', height: '11px', display: 'inline', verticalAlign: '-1px', marginRight: '2px' }} />
-                      {bot.profitGram} TON
-                    </span>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+      <div className={styles.meBar} aria-label="Ваше место">
+        <span className={styles.meRank}>{myRankLabel}</span>
+        <UserAvatar size={40} className={styles.avatar} />
+        <span className={styles.meChip}>ВЫ</span>
+        <span className={styles.prize}>
+          {myPrize ? (
+            <img src={myPrize.image} alt="" className={styles.prizeImg} />
+          ) : (
+            <span className={styles.noPrize} aria-label="Без приза">
+              ✕
+            </span>
+          )}
+        </span>
+        <span className={styles.points}>{formatPoints(myPoints)}</span>
       </div>
 
       <p className={styles.note}>
-        PVP-матчей: {pvpMatches}. Оборот — суммарный объём ставок в TON.
-        Таблица лидеров обновляется по результатам раундов.
+        PVP-матчей: {pvpMatches}. Очки — оборот ставок в TON × 100. Таблица лидеров обновляется по
+        результатам раундов; места ботов — демо.
       </p>
     </div>
   )

@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { render, screen } from '@testing-library/react'
-import { RatingScreen } from './RatingScreen'
+import { render, screen, within } from '@testing-library/react'
+import { RatingScreen, formatCountdown, formatPoints, maskName } from './RatingScreen'
 import { useProfileStore } from '../store/profile'
 import { useTicketsStore } from '../store/tickets'
 import { useQuestsStore } from '../store/quests'
@@ -15,36 +15,52 @@ beforeEach(() => {
   usePvpMatchesStore.setState({ entries: [] })
 })
 
-describe('RatingScreen (6.1: реальные данные, без синтетики)', () => {
-  it('empty-state без раундов + таблица лидеров', () => {
+describe('RatingScreen (матовый рейтинг по референсу)', () => {
+  it('карточка сезона, заголовок списка и 10 мест с призами', () => {
     render(<RatingScreen />)
-    expect(screen.getByText('Рейтинг')).toBeInTheDocument()
-    expect(screen.getByText('Данных пока нет')).toBeInTheDocument()
-    expect(screen.getByText(/Сыграйте раунд в PLAY/)).toBeInTheDocument()
-    expect(screen.getByRole('table', { name: 'Рейтинг игроков' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
+    expect(screen.getByText('Заканчивается через')).toBeInTheDocument()
+    expect(screen.getByRole('timer')).toHaveTextContent(/\d+d \d+h \d+m \d+s/)
+    expect(screen.getByText('Топ игроков')).toBeInTheDocument()
+    const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
+    expect(within(list).getAllByRole('listitem')).toHaveLength(10)
   })
 
-  it('таблица показывает реальную статистику профиля (вы после раундов)', () => {
-    useProfileStore.setState({
-      rounds: 12,
-      wageredMinor: 15_000,
-      netMinor: -2_300,
-      pvpMatches: 3,
-    })
+  it('без раундов закреплённая строка «ВЫ» показывает 999+ и пустой приз', () => {
     render(<RatingScreen />)
-    expect(screen.getByRole('table', { name: 'Рейтинг игроков' })).toBeInTheDocument()
-    expect(screen.getByText('Вы')).toBeInTheDocument()
-    expect(screen.getByText('реальные данные')).toBeInTheDocument()
-    expect(screen.getByText('12')).toBeInTheDocument() // раунды
-    expect(screen.getByText('15 TON')).toBeInTheDocument() // оборот
-    expect(screen.getByText('−2.3 TON')).toBeInTheDocument() // профит (со знаком)
+    const bar = screen.getByLabelText('Ваше место')
+    expect(within(bar).getByText('999+')).toBeInTheDocument()
+    expect(within(bar).getByText('ВЫ')).toBeInTheDocument()
+    expect(within(bar).getByLabelText('Без приза')).toBeInTheDocument()
+  })
+
+  it('реальная статистика: очки = оборот × 100, вы попадаете в таблицу по месту', () => {
+    useProfileStore.setState({ rounds: 12, wageredMinor: 800_000, netMinor: -2_300, pvpMatches: 3 })
+    render(<RatingScreen />) // 800 TON оборота = 80K очков → 2 место после 84K
+    const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
+    const items = within(list).getAllByRole('listitem')
+    expect(within(items[1]!).getByText('Вы')).toBeInTheDocument()
+    expect(within(items[1]!).getByText('80.0K')).toBeInTheDocument()
+    expect(within(screen.getByLabelText('Ваше место')).getByText('2')).toBeInTheDocument()
     expect(screen.getByText(/PVP-матчей: 3/)).toBeInTheDocument()
-    expect(screen.getByText(/Таблица лидеров обновляется/)).toBeInTheDocument()
+  })
+})
+
+describe('форматтеры рейтинга', () => {
+  it('maskName скрывает середину ника', () => {
+    expect(maskName('kamronbek')).toBe('ka***ek')
+    expect(maskName('abc')).toBe('a***')
   })
 
-  it('профит со знаком плюс отображается корректно', () => {
-    useProfileStore.setState({ rounds: 5, wageredMinor: 8_000, netMinor: 1_250 })
-    render(<RatingScreen />)
-    expect(screen.getByText('+1.25 TON')).toBeInTheDocument()
+  it('formatPoints — максимум один знак после точки, вниз', () => {
+    expect(formatPoints(29_650_000)).toBe('29.6M')
+    expect(formatPoints(84_000)).toBe('84.0K')
+    expect(formatPoints(999)).toBe('999')
+    expect(formatPoints(0)).toBe('0')
+  })
+
+  it('formatCountdown: «2d 2h 40m 4s»', () => {
+    expect(formatCountdown(((2 * 24 + 2) * 3600 + 40 * 60 + 4) * 1000)).toBe('2d 2h 40m 4s')
+    expect(formatCountdown(-5)).toBe('0d 0h 0m 0s')
   })
 })

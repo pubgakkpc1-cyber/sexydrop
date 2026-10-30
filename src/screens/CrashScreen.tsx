@@ -829,12 +829,13 @@ export function CrashScreen() {
                         isActive && styles.playerNftBoxActive,
                         isLost && styles.playerNftBoxLost,
                       )}
+                      data-rarity={displayGift.rarity}
                       title={`${displayGift.name} (${formatCardTon(displayGift.priceMinor)} TON)`}
                     >
                       <img
                         src={displayGift.image}
                         alt={displayGift.name}
-                        className={styles.playerNftImg}
+                        className={cx(styles.playerNftImg, displayGift.image.endsWith('.png') && styles.playerNftImgFull)}
                         onError={(e) => {
                           const el = e.currentTarget
                           if (!el.dataset.fallback) {

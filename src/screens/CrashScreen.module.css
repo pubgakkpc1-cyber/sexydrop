@@ -1852,22 +1852,22 @@
 
 /* 1. ПОБЕДИТЕЛЬ / ВЫВЕЛ И НЕ ПРОИГРАЛ (1:1 референс из фото) */
 .playerCardWon {
-  background: #143522 !important;
-  border: 1.5px solid #22c55e !important;
+  background: #2d4a39 !important;
+  border: 2px solid #3fbf6f !important;
   box-shadow: 0 4px 16px rgba(34, 197, 94, 0.15);
 }
 
 /* 2. АКТИВНАЯ СТАВКА (в игре: еще не выиграл и не проиграл — просто серая) */
 .playerCardActive {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  background: #26272b !important;
+  border: 2px solid rgba(255, 255, 255, 0.14) !important;
   box-shadow: none;
 }
 
 /* 3. СГОРЕЛО / ПРОИГРАЛ (красным) */
 .playerCardLost {
-  background: rgba(45, 18, 22, 0.85) !important;
-  border: 1.5px solid rgba(239, 68, 68, 0.55) !important;
+  background: #4a2428 !important;
+  border: 2px solid #ef5350 !important;
   box-shadow: 0 4px 14px rgba(239, 68, 68, 0.1);
 }
 
@@ -1954,8 +1954,8 @@
 }
 
 .playerBetPillWon {
-  background: rgba(16, 45, 28, 0.85);
-  color: #4ade80;
+  background: rgba(0, 0, 0, 0.2);
+  color: #86efac;
 }
 
 .playerBetPillActive {
@@ -1964,8 +1964,8 @@
 }
 
 .playerBetPillLost {
-  background: rgba(239, 68, 68, 0.15);
-  color: #fca5a5;
+  background: rgba(0, 0, 0, 0.2);
+  color: #ffab9f;
 }
 
 .playerBetDiamond {
@@ -1981,7 +1981,7 @@
 
 .playerBetMult {
   font-weight: 700;
-  color: #4ade80;
+  color: #86efac;
 }
 
 .playerBetLostText {
@@ -2013,18 +2013,18 @@
 }
 
 .payoutWon {
-  background: rgba(16, 45, 28, 0.85) !important;
-  color: #4ade80 !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  color: #86efac !important;
 }
 
 .payoutActive {
-  background: rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.07) !important;
   color: #94a3b8 !important;
 }
 
 .payoutLost {
-  background: rgba(239, 68, 68, 0.15) !important;
-  color: #ef4444 !important;
+  background: rgba(0, 0, 0, 0.2) !important;
+  color: #ff8a80 !important;
 }
 
 .profitTonIcon {
@@ -2044,41 +2044,52 @@
 
 /* Рамка NFT подарка справа (фон и обводка под ней) */
 .playerNftBox {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
-  padding: 4px;
+  padding: 0;
   box-sizing: border-box;
   transition: border-color 0.25s ease, background 0.25s ease;
 }
 
+/* Фон под NFT — по редкости (у PNG-NFT свой бэкдроп, у SVG-подарков его даёт тайл) */
+.playerNftBox[data-rarity='common'] { background: linear-gradient(145deg, #4b5563, #2f3640); }
+.playerNftBox[data-rarity='rare'] { background: linear-gradient(145deg, #3b6fb8, #24457a); }
+.playerNftBox[data-rarity='epic'] { background: linear-gradient(145deg, #8250c9, #523086); }
+.playerNftBox[data-rarity='legendary'] { background: linear-gradient(145deg, #d99a2b, #8a5a12); }
+
 .playerNftBoxWon {
-  background: #18222d;
-  border: 1.5px solid #22c55e;
-  box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.25);
 }
 
 .playerNftBoxActive {
-  background: #171b23;
-  border: 1.5px solid rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  filter: grayscale(0.85);
 }
 
 .playerNftBoxLost {
-  background: #241417;
-  border: 1.5px solid rgba(239, 68, 68, 0.5);
-  opacity: 0.8;
+  border: 2px solid rgba(255, 138, 128, 0.7);
+  filter: saturate(0.6);
+  opacity: 0.85;
+}
+
+.playerNftImgFull {
+  padding: 0 !important;
+  object-fit: cover !important;
 }
 
 .playerNftImg {
   width: 100%;
   height: 100%;
+  padding: 4px;
+  box-sizing: border-box;
   object-fit: contain;
-  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
 }
 
 .cosmicTitleIcon {

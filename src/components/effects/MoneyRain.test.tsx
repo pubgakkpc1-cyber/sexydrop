@@ -11,7 +11,7 @@ describe('MoneyRain component', () => {
 
     expect(container.querySelector('[aria-hidden="true"]')).toBeInTheDocument()
     const particles = container.querySelectorAll(`.${styles.particle}`)
-    expect(particles.length).toBe(14)
+    expect(particles.length).toBe(10)
 
     act(() => {
       vi.advanceTimersByTime(1999)

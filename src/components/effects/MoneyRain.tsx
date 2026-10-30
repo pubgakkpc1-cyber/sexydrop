@@ -70,10 +70,10 @@ export function MoneyRain({ onComplete, durationMs = 2100 }: MoneyRainProps) {
     return () => clearTimeout(timer)
   }, [onComplete, durationMs])
 
-  // Фиксированный набор лёгких частиц (14 штук) — детерминированный, 
+  // Фиксированный набор лёгких частиц (10 штук) — детерминированный, 
   // чтобы не вызывать лишних ре-рендеров и не тратить CPU на слабых смартфонах
   const particles = useMemo<ParticleConfig[]>(() => {
-    const positions = [6, 13, 20, 27, 34, 42, 50, 58, 65, 72, 79, 86, 92, 48]
+    const positions = [8, 18, 28, 38, 48, 58, 68, 78, 88, 94]
     return positions.map((left, idx) => {
       const type: 'coin' | 'gem' | 'sparkle' =
         idx % 3 === 0 ? 'gem' : idx % 3 === 1 ? 'coin' : 'sparkle'

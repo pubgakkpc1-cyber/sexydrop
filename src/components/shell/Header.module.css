@@ -278,3 +278,19 @@
 .depositBtn.depositBtn:hover:not(:disabled) {
   background: #8a75d8;
 }
+
+/* Бейдж на аватарке: серый контурный бриллиант в тёмном кружке */
+.avatarBadge {
+  width: 22px;
+  height: 22px;
+  right: -4px;
+  bottom: -4px;
+  background: #2a2a30;
+  border: 2px solid #131217;
+}
+
+.avatarBadgeIcon {
+  width: 13px;
+  height: 13px;
+  color: #9aa0ad;
+}

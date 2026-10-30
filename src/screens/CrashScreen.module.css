@@ -2423,3 +2423,13 @@
     display: none;
   }
 }
+
+/* Ставка TON: тайл-подложка тёмная, чтобы синий камень TON читался */
+.playerNftBoxTon {
+  background: linear-gradient(145deg, #2a3550, #171d2e);
+}
+
+.playerNftTonIcon {
+  width: 28px;
+  height: 28px;
+}

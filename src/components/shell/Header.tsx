@@ -6,7 +6,7 @@ import { useWalletStore } from '../../store/wallet'
 import { AdminPanelModal } from '../admin/AdminPanelModal'
 import { Button, Modal } from '../ui'
 import { UserAvatar } from '../ui/UserAvatar'
-import { WalletIcon, TonIcon } from './icons'
+import { DiamondIcon, WalletIcon, TonIcon } from './icons'
 import styles from './Header.module.css'
 
 function DepositModal({ open, onClose }: { open: boolean; onClose: () => void }) {
@@ -65,7 +65,7 @@ export function Header() {
         <span className={styles.avatarWrap}>
           <UserAvatar size={44} className={styles.avatarRing} />
           <span className={styles.avatarBadge} aria-hidden>
-            <TonIcon className={styles.avatarBadgeIcon} />
+            <DiamondIcon className={styles.avatarBadgeIcon} />
           </span>
         </span>
         <span className={styles.balanceCol} aria-label={`Баланс: ${formatMinor(balance)} TON`}>

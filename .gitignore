@@ -30,3 +30,4 @@ scripts/*.py
 !scripts/generate_catalog_art.py
 !scripts/generate_nft_case_weights.py
 !scripts/generate_catalog_and_weights.py
+!scripts/generate_bot_avatars.py

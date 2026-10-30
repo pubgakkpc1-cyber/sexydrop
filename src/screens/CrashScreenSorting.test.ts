@@ -11,18 +11,33 @@ describe('Crash Screen Stakes Sorting & NFT Value Mapping', () => {
     expect(gift.image).toBe('/gifts/golden-trophy.svg')
   })
 
-  it('generates simulated players with valid stakeGiftId matching their stake value', () => {
-    const players = generateRoundPlayers(42)
-    expect(players.length).toBeGreaterThanOrEqual(7)
-
-    // Check every player has a stakeGiftId matching catalog
-    for (const p of players) {
-      expect(p.stakeGiftId).toBeDefined()
-      const gift = giftById.get(p.stakeGiftId)
-      expect(gift).toBeDefined()
-      // The gift's price should be close to or matching the stake
-      expect(Math.abs(gift!.priceMinor - p.stakeMinor)).toBeLessThanOrEqual(p.stakeMinor * 0.5 + 500)
+  it('NFT-ставка бота равна реальной цене NFT; ставка TON — без подарка и с 1 знаком после точки', () => {
+    let nft = 0
+    let ton = 0
+    for (let round = 1; round <= 40; round++) {
+      for (const p of generateRoundPlayers(round)) {
+        if (p.stakeGiftId) {
+          nft++
+          const gift = giftById.get(p.stakeGiftId)
+          expect(gift).toBeDefined()
+          expect(p.stakeMinor).toBe(gift!.priceMinor)
+        } else {
+          ton++
+          expect(p.stakeMinor % 100).toBe(0) // кратно 0.1 TON
+          expect(p.stakeMinor).toBeGreaterThanOrEqual(100)
+        }
+      }
     }
+    expect(nft).toBeGreaterThan(0)
+    expect(ton).toBeGreaterThan(0)
+  })
+
+  it('ники и аватарки меняются между раундами и не повторяются внутри раунда', () => {
+    const r1 = generateRoundPlayers(1)
+    const r9 = generateRoundPlayers(9)
+    expect(new Set(r1.map((p) => p.name)).size).toBe(r1.length)
+    expect(new Set(r1.map((p) => p.avatar)).size).toBe(r1.length)
+    expect(r1.map((p) => p.name).join()).not.toBe(r9.map((p) => p.name).join())
   })
 
   it('orders generated round players strictly descending by stakeMinor (от большого к маленькому)', () => {

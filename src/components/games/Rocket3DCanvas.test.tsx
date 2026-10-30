@@ -12,7 +12,7 @@ describe('Rocket3DCanvas (3D Rocket, SEXY decal & 3 NFT Plush Pepe pilots)', () 
     expect(skin0.nameRu).toBe('Хроно Титан')
     expect(skin0.pilotNameRu).toBe('Пепе Кадет')
     expect(skin0.pilotType).toBe(0)
-    expect(skin0.decalSubtext).toBe('SEXY · TON')
+    expect(skin0.decalSubtext).toBe('SEXY DROP')
 
     // Модель 1: Кибер Стелс + Кибер Пепе с визором
     const skin1 = ROCKET_SKINS[1]!

@@ -3,12 +3,10 @@ import { useNavigate } from 'react-router-dom'
 import { useCrashStore, type CrashBet } from '../store/crash'
 import { useWalletStore } from '../store/wallet'
 import { useInventoryStore } from '../store/inventory'
-import { formatMinor, mulByMultiplier } from '../lib/money'
+import { mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
   cashout,
-  placeGramBet,
-  queueNextRoundGramBet,
   cancelQueuedNextRoundBet,
   startCrashEngine,
   stopCrashEngine,
@@ -36,7 +34,7 @@ import {
   SparkleIcon,
   RocketIcon,
 } from '../components/shell/icons'
-import { giftById, gifts, getGiftForValue, type Gift } from '../data/catalog'
+import { giftById, gifts, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
 import styles from './CrashScreen.module.css'
 
@@ -80,15 +78,16 @@ const COUNTDOWN_THEMES: Record<number, CountdownTheme> = {
   },
 }
 
-/** Форматирование сумм TON: не длиннее 0.1 (максимум 1 знак после точки, без лишних плюсов) */
-/** Форматирование TON для живых карточек игроков (1:1 по референсу из фото: 3.35, 5.95) */
+/** TON в карточках игроков: максимум 1 знак после точки (округление вниз), целые без «.0». */
 function formatCardTon(minor: number): string {
-  if (minor <= 0) return '0.00'
-  const ton = minor / 1000
-  if (ton >= 1000) return Math.round(ton).toString()
-  if (Number.isInteger(ton)) return `${ton}`
-  const s = ton.toFixed(2)
-  return s.endsWith('.00') ? `${Math.round(ton)}` : s.endsWith('0') ? ton.toFixed(1) : s
+  if (minor <= 0) return '0'
+  const val = Math.floor(minor / 100) / 10
+  return Number.isInteger(val) ? `${val}` : val.toFixed(1)
+}
+
+/** Множитель: максимум 1 знак после точки (вниз), например 1.65 → 1.6 */
+function fmtMult(value: number): string {
+  return (Math.floor(value * 10 + 1e-9) / 10).toFixed(1)
 }
 
 function formatTonMaxOneDecimal(minor: number): string {
@@ -297,18 +296,6 @@ export function CrashScreen() {
 
 
   
-  // Быстрая ставка TON в один клик: строго только +0.1 TON (1:1 по референсу из фото)
-  const handleQuickBet = (amountGram = 0.1) => {
-    const amountMinor = Math.round(amountGram * 1000)
-    if (phase === 'betting') {
-      if (myBet !== null) return
-      placeGramBet(amountMinor, makeRequestId())
-    } else {
-      if (queuedNextBet !== null) return
-      queueNextRoundGramBet(amountMinor, makeRequestId())
-    }
-  }
-
   // Тема обратного отсчёта от 5 с плавными неоновыми переливами
   const countNumber = Math.min(5, Math.max(1, Math.ceil(secondsLeft)))
   const currentTheme = COUNTDOWN_THEMES[countNumber] ?? COUNTDOWN_THEMES[1]!
@@ -327,7 +314,7 @@ export function CrashScreen() {
       isCashed: boolean
       multToShow: number
       profitMinor: number
-      stakeGift: Gift
+      stakeGift?: Gift
       wonGift?: Gift
     }
 
@@ -345,11 +332,8 @@ export function CrashScreen() {
           ? mulByMultiplier(myBet.valueMinor, multiplier)
           : myBet.valueMinor
 
-      const stakeGift = myBet.giftId
-        ? (giftById.get(myBet.giftId) ?? getGiftForValue(myBet.valueMinor))
-        : getGiftForValue(myBet.valueMinor)
-
-      const wonGift = myBet.wonGift ?? (isWon ? getGiftForValue(profitMinor) : undefined)
+      const stakeGift = myBet.giftId ? giftById.get(myBet.giftId) : undefined
+      const wonGift = myBet.wonGift
 
       rows.push({
         id: 'user-my-bet',
@@ -372,8 +356,7 @@ export function CrashScreen() {
           : phase === 'flying' && multiplier >= p.targetMultiplier
       const multToShow = isCashed ? p.targetMultiplier : multiplier
       const profitMinor = Math.round(p.stakeMinor * multToShow)
-      const stakeGift = giftById.get(p.stakeGiftId) ?? getGiftForValue(p.stakeMinor)
-      const wonGift = p.wonGiftId ? giftById.get(p.wonGiftId) : getGiftForValue(profitMinor)
+      const stakeGift = p.stakeGiftId ? giftById.get(p.stakeGiftId) : undefined
 
       rows.push({
         id: p.id,
@@ -386,7 +369,6 @@ export function CrashScreen() {
         multToShow,
         profitMinor,
         stakeGift,
-        wonGift: isCashed ? wonGift : undefined,
       })
     }
 
@@ -445,7 +427,7 @@ export function CrashScreen() {
             aria-label="Пополнить баланс"
           >
             <TonIcon className={styles.diamondIcon} />
-            <span>{formatMinor(balance)}</span>
+            <span>{formatTonMaxOneDecimal(balance)}</span>
             <span className={styles.plusBadge}>+</span>
           </button>
         </div>
@@ -558,7 +540,7 @@ export function CrashScreen() {
                 textShadow: multGlow,
               }}
             >
-              x{multiplier.toFixed(2)}
+              x{fmtMult(multiplier)}
             </span>
           </div>
         )}
@@ -566,7 +548,7 @@ export function CrashScreen() {
         {/* ФАЗА 3: Краш — слева */}
         {phase === 'crashed' && (
           <div className={styles.crashedLeft}>
-            <span className={styles.multiplierCrashed}>x{multiplier.toFixed(2)}</span>
+            <span className={styles.multiplierCrashed}>x{fmtMult(multiplier)}</span>
             <span className={styles.crashedLabel}>Улетел!</span>
           </div>
         )}
@@ -583,7 +565,7 @@ export function CrashScreen() {
         {phase === 'flying' && (
           <span className={cx(styles.historyPill, styles.activeLivePill)}>
             <span className={styles.activeLiveDot} />
-            x{multiplier.toFixed(2)}
+            x{fmtMult(multiplier)}
           </span>
         )}
 
@@ -604,7 +586,7 @@ export function CrashScreen() {
               )}
             >
               {phase === 'crashed' && idx === 0 && <span className={styles.activeLiveDot} />}
-              x{val.toFixed(2)}
+              x{fmtMult(val)}
             </span>
           )
         })}
@@ -638,7 +620,7 @@ export function CrashScreen() {
                   <span className={styles.queuedBetBadge}>Ожидает следующий раунд</span>
                   <strong className={styles.queuedBetAmount}>
                     {queuedNextBet.kind === 'gram'
-                      ? `${formatMinor(queuedNextBet.valueMinor)} TON`
+                      ? `${formatTonMaxOneDecimal(queuedNextBet.valueMinor)} TON`
                       : (giftById.get(queuedNextBet.giftId ?? '')?.name ?? 'Подарок')}
                   </strong>
                 </div>
@@ -665,11 +647,11 @@ export function CrashScreen() {
               type="button"
               className={cx(styles.mainActionBtn, styles.btnCashout)}
               onClick={handleCashout}
-              aria-label={`Забрать x${multiplier.toFixed(2)}`}
+              aria-label={`Забрать x${fmtMult(multiplier)}`}
             >
               <span className={styles.btnGlassHighlight} />
               <span>
-                Забрать x{multiplier.toFixed(2)} (
+                Забрать x{fmtMult(multiplier)} (
                 {formatTonMaxOneDecimal(mulByMultiplier(myBet.valueMinor, multiplier))} TON)
               </span>
             </button>
@@ -708,23 +690,6 @@ export function CrashScreen() {
               <span>Поставить на след. раунд</span>
             </button>
           ))}
-
-
-        {/* Быстрая ставка TON: строго только +0.1 TON (1:1 по фото) */}
-        {((phase === 'betting' && myBet === null) ||
-          (phase === 'flying' && myBet === null && queuedNextBet === null) ||
-          (phase === 'crashed' && queuedNextBet === null)) && (
-          <div className={styles.quickBetContainer}>
-            <button
-              type="button"
-              className={styles.quickBetPill}
-              onClick={() => handleQuickBet(0.1)}
-              title="Поставить 0.1 TON"
-            >
-              +0.1 TON
-            </button>
-          </div>
-        )}
 
       </div>
 
@@ -785,7 +750,7 @@ export function CrashScreen() {
                       </span>
                       {isWon && (
                         <span className={styles.playerBetMult}>
-                          ×{row.multToShow.toFixed(2)}
+                          ×{fmtMult(row.multToShow)}
                         </span>
                       )}
                       {isLost && (
@@ -821,21 +786,24 @@ export function CrashScreen() {
                     </span>
                   </div>
 
-                  {displayGift && (
-                    <div
-                      className={cx(
-                        styles.playerNftBox,
-                        isWon && styles.playerNftBoxWon,
-                        isActive && styles.playerNftBoxActive,
-                        isLost && styles.playerNftBoxLost,
-                      )}
-                      data-rarity={displayGift.rarity}
-                      title={`${displayGift.name} (${formatCardTon(displayGift.priceMinor)} TON)`}
-                    >
+                  <div
+                    className={cx(
+                      styles.playerNftBox,
+                      !displayGift && styles.playerNftBoxTon,
+                      isWon && styles.playerNftBoxWon,
+                      isActive && styles.playerNftBoxActive,
+                      isLost && styles.playerNftBoxLost,
+                    )}
+                    data-rarity={displayGift?.rarity}
+                  >
+                    {displayGift ? (
                       <img
                         src={displayGift.image}
-                        alt={displayGift.name}
-                        className={cx(styles.playerNftImg, displayGift.image.endsWith('.png') && styles.playerNftImgFull)}
+                        alt=""
+                        className={cx(
+                          styles.playerNftImg,
+                          displayGift.image.endsWith('.png') && styles.playerNftImgFull,
+                        )}
                         onError={(e) => {
                           const el = e.currentTarget
                           if (!el.dataset.fallback) {
@@ -844,8 +812,10 @@ export function CrashScreen() {
                           }
                         }}
                       />
-                    </div>
-                  )}
+                    ) : (
+                      <TonIcon className={styles.playerNftTonIcon} />
+                    )}
+                  </div>
                 </div>
               </div>
             )
@@ -911,7 +881,7 @@ export function CrashScreen() {
                 }}
               >
                 <TonIcon style={{ width: '15px', height: '15px' }} />
-                <span>Стоимость: {formatMinor(cosmicReward.priceMinor)} TON</span>
+                <span>Стоимость: {formatTonMaxOneDecimal(cosmicReward.priceMinor)} TON</span>
               </span>
               {cosmicReward.fragmentFloorTon && (
                 <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.55)' }}>
@@ -939,7 +909,7 @@ export function CrashScreen() {
 }
 
 function betValueLabel(bet: CrashBet): string {
-  if (bet.kind === 'gram') return `${formatMinor(bet.valueMinor)} TON`
+  if (bet.kind === 'gram') return `${formatTonMaxOneDecimal(bet.valueMinor)} TON`
   const gift = bet.giftId ? giftById.get(bet.giftId) : undefined
   return gift ? gift.name : 'Подарок'
 }
@@ -965,8 +935,8 @@ function ResultLine({
     }
     return (
       <p className={styles.resultWon}>
-        Выигрыш +{formatMinor(myBet.wonMinor ?? 0)} TON (x
-        {myBet.cashedMultiplier?.toFixed(2)})
+        Выигрыш +{formatTonMaxOneDecimal(myBet.wonMinor ?? 0)} TON (x
+        {fmtMult(myBet.cashedMultiplier ?? 0)})
       </p>
     )
   }

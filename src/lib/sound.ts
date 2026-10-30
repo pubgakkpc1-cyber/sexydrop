@@ -142,18 +142,19 @@ export function playRocketLaunch(): void {
     const osc = ctx.createOscillator()
     const gain = ctx.createGain()
 
-    osc.type = 'sawtooth'
-    osc.frequency.setValueAtTime(140, now)
-    osc.frequency.exponentialRampToValueAtTime(420, now + 0.35)
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(180, now)
+    osc.frequency.exponentialRampToValueAtTime(380, now + 0.45)
 
-    gain.gain.setValueAtTime(0.18, now)
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.4)
+    gain.gain.setValueAtTime(0.001, now)
+    gain.gain.linearRampToValueAtTime(0.05, now + 0.12)
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.5)
 
     osc.connect(gain)
     gain.connect(ctx.destination)
 
     osc.start(now)
-    osc.stop(now + 0.42)
+    osc.stop(now + 0.52)
   } catch {
     /* no-op */
   }
@@ -185,12 +186,13 @@ export function startRocketFlightSound(initialMultiplier = 1.0): void {
     // 1. Низкочастотный рокот сопла двигателя (саб-осцилляторы)
     const osc1 = ctx.createOscillator()
     const osc2 = ctx.createOscillator()
-    osc1.type = 'sawtooth'
+    // Мягкий «пэд»: две синусоиды в квинте (приятный гул без грубого рычания)
+    osc1.type = 'sine'
     osc2.type = 'triangle'
 
-    const factor = Math.min(2.8, 1 + Math.log2(Math.max(1, initialMultiplier)) * 0.35)
-    osc1.frequency.setValueAtTime(62 * factor, now)
-    osc2.frequency.setValueAtTime(42 * factor, now)
+    const factor = Math.min(1.9, 1 + Math.log2(Math.max(1, initialMultiplier)) * 0.18)
+    osc1.frequency.setValueAtTime(96 * factor, now)
+    osc2.frequency.setValueAtTime(144 * factor, now)
 
     // 2. Аэродинамический шум разреженного космоса и плазменного потока (Looping Pink/Filtered Noise)
     const sampleRate = ctx.sampleRate || 44100
@@ -201,7 +203,7 @@ export function startRocketFlightSound(initialMultiplier = 1.0): void {
     for (let i = 0; i < bufferSize; i++) {
       const white = Math.random() * 2 - 1
       last = (last + 0.03 * white) / 1.03
-      data[i] = last * 3.2
+      data[i] = last * 3.2 // затем приглушается noiseGain
     }
 
     const noiseNode = ctx.createBufferSource()
@@ -211,19 +213,24 @@ export function startRocketFlightSound(initialMultiplier = 1.0): void {
     // 3. Резонансный НЧ-фильтр для ощущения турбины
     const filter = ctx.createBiquadFilter()
     filter.type = 'lowpass'
-    const cutoff = Math.min(1400, 320 + Math.log2(Math.max(1, initialMultiplier)) * 360)
+    const cutoff = Math.min(900, 240 + Math.log2(Math.max(1, initialMultiplier)) * 160)
     filter.frequency.setValueAtTime(cutoff, now)
-    filter.Q.setValueAtTime(1.8, now)
+    filter.Q.setValueAtTime(0.7, now)
+
+    // Воздушный шум — еле слышный фон
+    const noiseGain = ctx.createGain()
+    noiseGain.gain.setValueAtTime(0.18, now)
 
     // 4. Мастер-громкость с мягкой огибающей появления (без щелчка)
     const masterGain = ctx.createGain()
     masterGain.gain.setValueAtTime(0.001, now)
-    masterGain.gain.linearRampToValueAtTime(0.18, now + 0.15)
+    masterGain.gain.linearRampToValueAtTime(0.045, now + 0.6)
 
     // Коммутация узлов
     osc1.connect(filter)
     osc2.connect(filter)
-    noiseNode.connect(filter)
+    noiseNode.connect(noiseGain)
+    noiseGain.connect(filter)
     filter.connect(masterGain)
     masterGain.connect(ctx.destination)
 
@@ -252,15 +259,16 @@ export function updateRocketFlightSound(multiplier: number): void {
   try {
     const { osc1, osc2, filter, masterGain, ctx } = activeFlightAudio
     const now = ctx.currentTime
-    const factor = Math.min(2.8, 1 + Math.log2(Math.max(1, multiplier)) * 0.35)
-    osc1.frequency.setTargetAtTime(62 * factor, now, 0.08)
-    osc2.frequency.setTargetAtTime(42 * factor, now, 0.08)
+    const factor = Math.min(1.9, 1 + Math.log2(Math.max(1, multiplier)) * 0.18)
+    osc1.frequency.setTargetAtTime(96 * factor, now, 0.25)
+    osc2.frequency.setTargetAtTime(144 * factor, now, 0.25)
 
-    const cutoff = Math.min(1400, 320 + Math.log2(Math.max(1, multiplier)) * 360)
-    filter.frequency.setTargetAtTime(cutoff, now, 0.08)
+    const cutoff = Math.min(900, 240 + Math.log2(Math.max(1, multiplier)) * 160)
+    filter.frequency.setTargetAtTime(cutoff, now, 0.25)
 
-    const targetGain = Math.min(0.24, 0.16 + Math.log2(Math.max(1, multiplier)) * 0.04)
-    masterGain.gain.setTargetAtTime(targetGain, now, 0.08)
+    // Тихо: потолок громкости 0.07, нарастание очень плавное
+    const targetGain = Math.min(0.07, 0.045 + Math.log2(Math.max(1, multiplier)) * 0.01)
+    masterGain.gain.setTargetAtTime(targetGain, now, 0.3)
   } catch {
     /* no-op */
   }
@@ -276,7 +284,7 @@ export function stopRocketFlightSound(): void {
     const now = ctx.currentTime
     masterGain.gain.cancelScheduledValues(now)
     masterGain.gain.setValueAtTime(masterGain.gain.value, now)
-    masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.06)
+    masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.12)
 
     setTimeout(() => {
       try {
@@ -289,7 +297,7 @@ export function stopRocketFlightSound(): void {
       } catch {
         /* no-op */
       }
-    }, 70)
+    }, 140)
   } catch {
     /* no-op */
   } finally {

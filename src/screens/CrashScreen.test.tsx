@@ -92,14 +92,14 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     advanceEngine(5000) // полёт начался
     advanceEngine(2000) // 40 тиков роста → показ 1.41
 
-    const cashoutButton = screen.getByRole('button', { name: /Забрать x1\.4\d/ })
+    const cashoutButton = screen.getByRole('button', { name: /Забрать x1\.4/ })
     await user.click(cashoutButton)
 
-    expect(screen.getByText(/Выигрыш \+1\.41 TON/)).toBeInTheDocument()
+    expect(screen.getByText(/Выигрыш \+1\.4 TON/)).toBeInTheDocument()
     expect(useWalletStore.getState().getBalance('demo')).toBe(100_410)
   })
 
-  it('краш: «Улетел!», чип истории x2.00, «Ставка сгорела»', () => {
+  it('краш: «Улетел!», чип истории x2.0, «Ставка сгорела»', () => {
     _setCrashRngForTests(() => 0.51)
     renderScreen()
     expect(placeGramBet(1000, 'req-bet')).toEqual({ status: 'ok' })
@@ -108,7 +108,7 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
 
     expect(screen.getByText('Улетел!')).toBeInTheDocument()
     // «x2.00» — и на полотне (краш), и в чипе истории
-    expect(screen.getAllByText('x2.00')).toHaveLength(2)
+    expect(screen.getAllByText('x2.0')).toHaveLength(2)
     expect(screen.getByText('Ставка сгорела')).toBeInTheDocument()
   })
 

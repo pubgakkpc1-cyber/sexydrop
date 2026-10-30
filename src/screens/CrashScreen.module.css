@@ -2332,3 +2332,29 @@
   box-sizing: border-box;
   white-space: nowrap;
 }
+
+/* Ставка TON: тайл с алмазом TON вместо NFT, чтобы строки были выровнены */
+.playerNftBoxTon {
+  background: linear-gradient(145deg, #1d8fe0, #0b4f93);
+}
+
+.playerNftTonIcon {
+  width: 24px;
+  height: 24px;
+  color: #ffffff;
+}
+
+/* Точка «live» не сдвигает текст чипа: все чипы истории одной ширины/выравнивания */
+.historyPill {
+  position: relative;
+  min-width: 56px;
+  justify-content: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.activeLiveDot {
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  margin-top: -3px;
+}

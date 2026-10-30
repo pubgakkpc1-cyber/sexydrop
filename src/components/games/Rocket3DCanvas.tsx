@@ -20,6 +20,8 @@ interface TrailParticle {
   color: string
   life: number
   maxLife: number
+  /** 0 — круг, 1 — звёздочка, 2 — капля (отсылка к DROP) */
+  shape: 0 | 1 | 2
 }
 
 interface ExplosionParticle {
@@ -121,7 +123,7 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
     nozzleFill: '#0f172a',
     nozzleRing: '#0098ea',
     decalColor: '#0098ea',
-    decalSubtext: 'SEXY · TON',
+    decalSubtext: 'SEXY DROP',
     canopyGradient: ['rgba(255, 255, 255, 0.75)', 'rgba(56, 189, 248, 0.28)', 'rgba(0, 152, 234, 0.08)'],
     canopyBorder: '#bae6fd',
     canopyReflection: 'rgba(255, 255, 255, 0.98)',
@@ -220,6 +222,11 @@ export function Rocket3DCanvas({
     flightSeconds: number
     lastFrameTime: number
     rocketSmooth: { x: number; y: number; angle: number }
+    /** сглаженный «надув» корпуса, растёт с множителем */
+    inflate: number
+    /** секунды с начала предвзрывного раздувания; -1 — не идёт */
+    swellT: number
+    burstFn?: () => void
   }>({
     time: 0,
     shake: 0,
@@ -235,6 +242,8 @@ export function Rocket3DCanvas({
     flightSeconds: 0,
     lastFrameTime: 0,
     rocketSmooth: { x: 0, y: 0, angle: 0 },
+    inflate: 1,
+    swellT: -1,
   })
 
   // Инициализация фоновых звёзд по всему экрану (Starfield)
@@ -266,6 +275,9 @@ export function Rocket3DCanvas({
       state.shake = 0
       state.flightSeconds = 0
       state.rocketSmooth = { x: 0, y: 0, angle: 0 }
+      state.swellT = -1
+      state.burstFn = undefined
+      state.inflate = 1
     } else if (prevPhaseRef.current !== 'flying' && phase === 'flying') {
       state.flightSeconds = 0
       state.trail = []
@@ -274,146 +286,152 @@ export function Rocket3DCanvas({
       state.debris = []
       state.shake = 0
       state.rocketSmooth = { x: 0, y: 0, angle: 0 }
+      state.swellT = -1
+      state.burstFn = undefined
     } else if (prevPhaseRef.current !== 'crashed' && phase === 'crashed') {
-      const rx = state.rocketPos.x > 0 ? state.rocketPos.x : (typeof window !== 'undefined' ? window.innerWidth * 0.52 : 200)
-      const ry = state.rocketPos.y > 0 ? state.rocketPos.y : (typeof window !== 'undefined' ? window.innerHeight * 0.36 : 100)
+      // Сначала ракета «надувается» (0.16 c), затем лопается: взрыв запускается из цикла отрисовки
+      state.swellT = 0
+      state.burstFn = () => {
+        const rx = state.rocketPos.x > 0 ? state.rocketPos.x : (typeof window !== 'undefined' ? window.innerWidth * 0.52 : 200)
+        const ry = state.rocketPos.y > 0 ? state.rocketPos.y : (typeof window !== 'undefined' ? window.innerHeight * 0.36 : 100)
 
-      state.shake = 22 // амплитуда тряски
-      state.flashAlpha = 0.9 // вспышка взрыва
-      state.shockwaveRadius = 16
-      state.shockwaveAlpha = 1.0
+        state.shake = 22 // амплитуда тряски
+        state.flashAlpha = 0.9 // вспышка взрыва
+        state.shockwaveRadius = 16
+        state.shockwaveAlpha = 1.0
 
-      // 1. Создаём частицы огненного взрыва
-      const exp: ExplosionParticle[] = []
-      const colors = ['#ffffff', '#38bdf8', '#60a5fa', '#fbbf24', '#ef4444', '#fb923c']
-      for (let i = 0; i < 65; i++) {
-        const angle = Math.random() * Math.PI * 2
-        const speed = 2.5 + Math.random() * 10
-        const maxLife = 40 + Math.floor(Math.random() * 40)
-        exp.push({
-          x: rx,
-          y: ry,
-          vx: Math.cos(angle) * speed,
-          vy: Math.sin(angle) * speed,
-          size: 3 + Math.random() * 7,
-          alpha: 1,
-          color: colors[Math.floor(Math.random() * colors.length)] ?? '#fbbf24',
-          life: 0,
-          maxLife,
-          spin: (Math.random() - 0.5) * 0.35,
-          angle: Math.random() * Math.PI * 2,
-        })
+        // 1. Создаём частицы огненного взрыва
+        const exp: ExplosionParticle[] = []
+        const colors = ['#ffffff', '#38bdf8', '#60a5fa', '#fbbf24', '#ef4444', '#fb923c']
+        for (let i = 0; i < 65; i++) {
+          const angle = Math.random() * Math.PI * 2
+          const speed = 2.5 + Math.random() * 10
+          const maxLife = 40 + Math.floor(Math.random() * 40)
+          exp.push({
+            x: rx,
+            y: ry,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 3 + Math.random() * 7,
+            alpha: 1,
+            color: colors[Math.floor(Math.random() * colors.length)] ?? '#fbbf24',
+            life: 0,
+            maxLife,
+            spin: (Math.random() - 0.5) * 0.35,
+            angle: Math.random() * Math.PI * 2,
+          })
+        }
+        state.explosion = exp
+
+        // 2. Создаём РАЗЛЕТАЮЩИЕСЯ КУСКИ РАКЕТЫ (Debris Shards):
+        // Носовой конус, дельта-крылья, стекло кабины, сопло, обшивка с надписью SEXY, и капсула с Пепе!
+        const debris: DebrisShard[] = [
+          // Носовой конус — летит вперед и вверх
+          {
+            type: 'nose',
+            x: rx + 25,
+            y: ry - 4,
+            vx: 4.5 + Math.random() * 2.5,
+            vy: -5.5 - Math.random() * 2.5,
+            angle: 0.2,
+            spin: 0.14,
+            alpha: 1,
+            life: 0,
+            maxLife: 80,
+          },
+          // Верхнее крыло — взлетает вверх
+          {
+            type: 'wing_top',
+            x: rx - 10,
+            y: ry - 18,
+            vx: -2 + Math.random() * 2,
+            vy: -7 - Math.random() * 2.5,
+            angle: -0.4,
+            spin: -0.16,
+            alpha: 1,
+            life: 0,
+            maxLife: 75,
+          },
+          // Нижнее крыло — отлетает вниз
+          {
+            type: 'wing_bot',
+            x: rx - 10,
+            y: ry + 16,
+            vx: -1.5 + Math.random() * 2,
+            vy: 6 + Math.random() * 3,
+            angle: 0.5,
+            spin: 0.18,
+            alpha: 1,
+            life: 0,
+            maxLife: 75,
+          },
+          // Осколок стекла фонаря кабины
+          {
+            type: 'canopy',
+            x: rx + 8,
+            y: ry - 10,
+            vx: 2.2 + Math.random() * 2.5,
+            vy: -4 - Math.random() * 2,
+            angle: 0.1,
+            spin: 0.22,
+            alpha: 1,
+            life: 0,
+            maxLife: 70,
+          },
+          // Титановое сопло двигателя — отлетает назад
+          {
+            type: 'nozzle',
+            x: rx - 35,
+            y: ry,
+            vx: -6.5 - Math.random() * 2.5,
+            vy: -1 + Math.random() * 3,
+            angle: -0.2,
+            spin: -0.12,
+            alpha: 1,
+            life: 0,
+            maxLife: 85,
+          },
+          // Обломки обшивки фюзеляжа с маркировкой
+          {
+            type: 'fuselage_shard',
+            x: rx - 5,
+            y: ry + 5,
+            vx: -3 + Math.random() * 3,
+            vy: -3.5 + Math.random() * 4,
+            angle: 0,
+            spin: 0.15,
+            alpha: 1,
+            life: 0,
+            maxLife: 70,
+          },
+          {
+            type: 'fuselage_shard',
+            x: rx - 15,
+            y: ry - 5,
+            vx: 3 + Math.random() * 2,
+            vy: 3 + Math.random() * 3,
+            angle: 0.8,
+            spin: -0.2,
+            alpha: 1,
+            life: 0,
+            maxLife: 70,
+          },
+          // Спасательная капсула с картунным Пепе!
+          {
+            type: 'pepe_bubble',
+            x: rx,
+            y: ry - 14,
+            vx: 1.2 + Math.random() * 2,
+            vy: -6 - Math.random() * 2,
+            angle: 0,
+            spin: 0.08,
+            alpha: 1,
+            life: 0,
+            maxLife: 95,
+          },
+        ]
+        state.debris = debris
       }
-      state.explosion = exp
-
-      // 2. Создаём РАЗЛЕТАЮЩИЕСЯ КУСКИ РАКЕТЫ (Debris Shards):
-      // Носовой конус, дельта-крылья, стекло кабины, сопло, обшивка с надписью SEXY, и капсула с Пепе!
-      const debris: DebrisShard[] = [
-        // Носовой конус — летит вперед и вверх
-        {
-          type: 'nose',
-          x: rx + 25,
-          y: ry - 4,
-          vx: 4.5 + Math.random() * 2.5,
-          vy: -5.5 - Math.random() * 2.5,
-          angle: 0.2,
-          spin: 0.14,
-          alpha: 1,
-          life: 0,
-          maxLife: 80,
-        },
-        // Верхнее крыло — взлетает вверх
-        {
-          type: 'wing_top',
-          x: rx - 10,
-          y: ry - 18,
-          vx: -2 + Math.random() * 2,
-          vy: -7 - Math.random() * 2.5,
-          angle: -0.4,
-          spin: -0.16,
-          alpha: 1,
-          life: 0,
-          maxLife: 75,
-        },
-        // Нижнее крыло — отлетает вниз
-        {
-          type: 'wing_bot',
-          x: rx - 10,
-          y: ry + 16,
-          vx: -1.5 + Math.random() * 2,
-          vy: 6 + Math.random() * 3,
-          angle: 0.5,
-          spin: 0.18,
-          alpha: 1,
-          life: 0,
-          maxLife: 75,
-        },
-        // Осколок стекла фонаря кабины
-        {
-          type: 'canopy',
-          x: rx + 8,
-          y: ry - 10,
-          vx: 2.2 + Math.random() * 2.5,
-          vy: -4 - Math.random() * 2,
-          angle: 0.1,
-          spin: 0.22,
-          alpha: 1,
-          life: 0,
-          maxLife: 70,
-        },
-        // Титановое сопло двигателя — отлетает назад
-        {
-          type: 'nozzle',
-          x: rx - 35,
-          y: ry,
-          vx: -6.5 - Math.random() * 2.5,
-          vy: -1 + Math.random() * 3,
-          angle: -0.2,
-          spin: -0.12,
-          alpha: 1,
-          life: 0,
-          maxLife: 85,
-        },
-        // Обломки обшивки фюзеляжа с маркировкой
-        {
-          type: 'fuselage_shard',
-          x: rx - 5,
-          y: ry + 5,
-          vx: -3 + Math.random() * 3,
-          vy: -3.5 + Math.random() * 4,
-          angle: 0,
-          spin: 0.15,
-          alpha: 1,
-          life: 0,
-          maxLife: 70,
-        },
-        {
-          type: 'fuselage_shard',
-          x: rx - 15,
-          y: ry - 5,
-          vx: 3 + Math.random() * 2,
-          vy: 3 + Math.random() * 3,
-          angle: 0.8,
-          spin: -0.2,
-          alpha: 1,
-          life: 0,
-          maxLife: 70,
-        },
-        // Спасательная капсула с картунным Пепе!
-        {
-          type: 'pepe_bubble',
-          x: rx,
-          y: ry - 14,
-          vx: 1.2 + Math.random() * 2,
-          vy: -6 - Math.random() * 2,
-          angle: 0,
-          spin: 0.08,
-          alpha: 1,
-          life: 0,
-          maxLife: 95,
-        },
-      ]
-      state.debris = debris
     }
     prevPhaseRef.current = phase
   }, [phase])
@@ -644,11 +662,13 @@ export function Rocket3DCanvas({
           ctx.restore()
 
         // 3. Аккуратные частицы плазмы непосредственно за соплом
-        if (Math.random() < 0.65) {
-          const spread = (Math.random() - 0.5) * 8
+        for (let n = 0; n < 2; n++) {
+          if (Math.random() > 0.55) continue
+          const spread = (Math.random() - 0.5) * 9
           const perpX = -Math.sin(rad) * spread
           const perpY = Math.cos(rad) * spread
-          const pSpeed = 3.2 + Math.random() * 4.5
+          const shapeRoll = Math.random()
+          const pSpeed = 2.6 + Math.random() * 3.8
           const pAngle = rad + Math.PI + (Math.random() - 0.5) * 0.25
 
           state.trail.push({
@@ -656,17 +676,19 @@ export function Rocket3DCanvas({
             y: nozzleY + perpY,
             vx: Math.cos(pAngle) * pSpeed,
             vy: Math.sin(pAngle) * pSpeed,
-            size: 3 + Math.random() * 4.5,
-            alpha: 0.85,
+            size: 3 + Math.random() * 5,
+            alpha: 0.9,
             color: skin.trailColors[Math.floor(Math.random() * skin.trailColors.length)] ?? skin.accentColor,
             life: 0,
-            maxLife: 18 + Math.floor(Math.random() * 12),
+            maxLife: 26 + Math.floor(Math.random() * 18),
+            shape: shapeRoll < 0.22 ? 2 : shapeRoll < 0.45 ? 1 : 0,
           })
         }
       }
 
-      // Отрисовка частиц выхлопа
+      // Отрисовка частиц выхлопа (аддитивное свечение без shadowBlur — дёшево для слабых устройств)
       ctx.save()
+      ctx.globalCompositeOperation = 'lighter'
       for (let i = state.trail.length - 1; i >= 0; i--) {
         const p = state.trail[i]!
         p.life++
@@ -683,62 +705,100 @@ export function Rocket3DCanvas({
         }
 
         ctx.fillStyle = p.color
-        ctx.globalAlpha = p.alpha * 0.7
+        ctx.globalAlpha = p.alpha * 0.8
         ctx.beginPath()
-        ctx.arc(p.x, p.y, p.size / 2, 0, Math.PI * 2)
+        const r = p.size / 2
+        if (p.shape === 1) {
+          // четырёхлучевая звёздочка-искра
+          ctx.moveTo(p.x, p.y - r * 1.9)
+          ctx.quadraticCurveTo(p.x, p.y, p.x + r * 1.9, p.y)
+          ctx.quadraticCurveTo(p.x, p.y, p.x, p.y + r * 1.9)
+          ctx.quadraticCurveTo(p.x, p.y, p.x - r * 1.9, p.y)
+          ctx.quadraticCurveTo(p.x, p.y, p.x, p.y - r * 1.9)
+        } else if (p.shape === 2) {
+          // капля — отсылка к DROP
+          ctx.moveTo(p.x, p.y - r * 1.7)
+          ctx.bezierCurveTo(p.x + r * 1.5, p.y - r * 0.2, p.x + r * 1.2, p.y + r * 1.3, p.x, p.y + r * 1.3)
+          ctx.bezierCurveTo(p.x - r * 1.2, p.y + r * 1.3, p.x - r * 1.5, p.y - r * 0.2, p.x, p.y - r * 1.7)
+        } else {
+          ctx.arc(p.x, p.y, r, 0, Math.PI * 2)
+        }
         ctx.fill()
       }
       ctx.restore()
 
-      // --- 3. Отрисовка высокодетализированной 3D Ракеты с NFT Plush Pepe (только в полёте) ---
-      if (currentPhase === 'flying') {
+      // Плавный «надув» корпуса по мере роста множителя (лёгкое надувание)
+      const inflateTarget = currentPhase === 'flying' ? 1 + Math.min(0.14, Math.log2(Math.max(1, currentMult)) * 0.04) : 1
+      state.inflate += (inflateTarget - state.inflate) * Math.min(1, dt * 2.5)
+
+      // Предвзрывное раздувание: ракета пухнет и лопается
+      const SWELL_DURATION = 0.16
+      let swelling = false
+      if (currentPhase === 'crashed' && state.swellT >= 0) {
+        state.swellT += dt
+        if (state.swellT >= SWELL_DURATION) {
+          state.burstFn?.()
+          state.burstFn = undefined
+          state.swellT = -1
+        } else {
+          swelling = true
+        }
+      }
+
+      // --- 3. Отрисовка высокодетализированной 3D Ракеты с NFT Plush Pepe (в полёте и при раздувании) ---
+      if (currentPhase === 'flying' || swelling) {
         ctx.save()
         ctx.translate(currentX, currentY)
         ctx.rotate((currentAngle * Math.PI) / 180)
 
         // Зацикленное пульсирование/дыхание двигателя (Engine Breathing Cycle)
         const breathe = 1.0 + Math.sin(state.time * 6.5) * 0.035
-        ctx.scale(1.22 * breathe, 1.22 * breathe)
+        // Медленный вдох-выдох + рост «надува»; перед взрывом корпус раздувается до ×1.5
+        const puff = state.inflate * (1 + Math.sin(state.time * 2.2) * 0.022)
+        const swellK = swelling ? 1 + Math.pow(state.swellT / SWELL_DURATION, 2) * 0.5 : 1
+        ctx.scale(1.22 * breathe * swellK * (1 + (puff - 1) * 0.5), 1.22 * breathe * swellK * puff)
 
-        // 3.1. Реактивное пламя двигателя форсажа
-        const flameFlicker = 0.9 + Math.random() * 0.2
-        const flameLen = (65 + Math.min(38, currentMult * 3.5)) * flameFlicker
-        const flameWidth = 16 * breathe
+        // 3.1. Реактивное пламя двигателя форсажа (при раздувании двигатель уже заглох)
+        if (!swelling) {
+          const flameFlicker = 0.9 + Math.random() * 0.2
+          const flameLen = (65 + Math.min(38, currentMult * 3.5)) * flameFlicker
+          const flameWidth = 16 * breathe
 
-        // Внешняя аристократическая аура пламени
-        const flameAuraGrad = ctx.createRadialGradient(-50, 0, 5, -50 - flameLen * 0.6, 0, flameLen)
-        flameAuraGrad.addColorStop(0, skin.flameAura[0])
-        flameAuraGrad.addColorStop(0.55, skin.flameAura[1])
-        flameAuraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)')
-        ctx.fillStyle = flameAuraGrad
-        ctx.beginPath()
-        ctx.ellipse(-50 - flameLen * 0.4, 0, flameLen * 0.7, flameWidth * 1.9, 0, 0, Math.PI * 2)
-        ctx.fill()
+          // Внешняя аристократическая аура пламени
+          const flameAuraGrad = ctx.createRadialGradient(-50, 0, 5, -50 - flameLen * 0.6, 0, flameLen)
+          flameAuraGrad.addColorStop(0, skin.flameAura[0])
+          flameAuraGrad.addColorStop(0.55, skin.flameAura[1])
+          flameAuraGrad.addColorStop(1, 'rgba(0, 0, 0, 0)')
+          ctx.fillStyle = flameAuraGrad
+          ctx.beginPath()
+          ctx.ellipse(-50 - flameLen * 0.4, 0, flameLen * 0.7, flameWidth * 1.9, 0, 0, Math.PI * 2)
+          ctx.fill()
 
-        // Основное реактивное ядро плазмы
-        ctx.beginPath()
-        ctx.moveTo(-50, -flameWidth / 2)
-        ctx.quadraticCurveTo(-50 - flameLen * 0.5, -flameWidth * 0.65, -50 - flameLen, 0)
-        ctx.quadraticCurveTo(-50 - flameLen * 0.5, flameWidth * 0.65, -50, flameWidth / 2)
-        ctx.closePath()
+          // Основное реактивное ядро плазмы
+          ctx.beginPath()
+          ctx.moveTo(-50, -flameWidth / 2)
+          ctx.quadraticCurveTo(-50 - flameLen * 0.5, -flameWidth * 0.65, -50 - flameLen, 0)
+          ctx.quadraticCurveTo(-50 - flameLen * 0.5, flameWidth * 0.65, -50, flameWidth / 2)
+          ctx.closePath()
 
-        const coreFlameGrad = ctx.createLinearGradient(-50, 0, -50 - flameLen, 0)
-        coreFlameGrad.addColorStop(0, skin.flameCore[0])
-        coreFlameGrad.addColorStop(0.25, skin.flameCore[1])
-        coreFlameGrad.addColorStop(0.7, skin.flameCore[2])
-        coreFlameGrad.addColorStop(1, skin.flameCore[3])
-        ctx.fillStyle = coreFlameGrad
-        ctx.fill()
+          const coreFlameGrad = ctx.createLinearGradient(-50, 0, -50 - flameLen, 0)
+          coreFlameGrad.addColorStop(0, skin.flameCore[0])
+          coreFlameGrad.addColorStop(0.25, skin.flameCore[1])
+          coreFlameGrad.addColorStop(0.7, skin.flameCore[2])
+          coreFlameGrad.addColorStop(1, skin.flameCore[3])
+          ctx.fillStyle = coreFlameGrad
+          ctx.fill()
 
-        // Сверхзвуковые узлы плазмы (Mach Diamonds)
-        ctx.fillStyle = '#ffffff'
-        ctx.beginPath()
-        ctx.ellipse(-66, 0, 5, 2.2, 0, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = skin.accentColor
-        ctx.beginPath()
-        ctx.ellipse(-84, 0, 3.8, 1.8, 0, 0, Math.PI * 2)
-        ctx.fill()
+          // Сверхзвуковые узлы плазмы (Mach Diamonds)
+          ctx.fillStyle = '#ffffff'
+          ctx.beginPath()
+          ctx.ellipse(-66, 0, 5, 2.2, 0, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = skin.accentColor
+          ctx.beginPath()
+          ctx.ellipse(-84, 0, 3.8, 1.8, 0, 0, Math.PI * 2)
+          ctx.fill()
+        }
 
         // 3.2. Сопло двигателя (Тёмный полированный титан с неоновым кольцом)
         ctx.fillStyle = skin.nozzleFill
@@ -836,19 +896,30 @@ export function Rocket3DCanvas({
         ctx.stroke()
         ctx.shadowBlur = 0
 
-        // Микро-индикаторы статуса телеметрии (аккуратные светящиеся диоды вместо наклеек)
-        ctx.fillStyle = '#10b981'
-        ctx.beginPath()
-        ctx.arc(-24, 6.5, 1.2, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.fillStyle = '#38bdf8'
-        ctx.beginPath()
-        ctx.arc(-18, 6.5, 1.2, 0, Math.PI * 2)
-        ctx.fill()
+        // SEXY DROP — надпись на борту (отсылка к названию бота) + капля
+        ctx.save()
+        ctx.font = '800 7.6px system-ui, -apple-system, "Segoe UI", Arial, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        try {
+          ;(ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = '1.1px'
+        } catch {
+          /* старые WebView без letterSpacing */
+        }
+        ctx.lineJoin = 'round'
+        ctx.lineWidth = 2.2
+        ctx.strokeStyle = 'rgba(8, 12, 28, 0.6)'
+        ctx.strokeText('SEXY DROP', -4, 9.6)
+        ctx.fillStyle = '#ffffff'
+        ctx.fillText('SEXY DROP', -4, 9.6)
+        // капля у кормы
         ctx.fillStyle = skin.accentColor
         ctx.beginPath()
-        ctx.arc(-12, 6.5, 1.2, 0, Math.PI * 2)
+        ctx.moveTo(-37, 5.4)
+        ctx.bezierCurveTo(-34.6, 8, -34.6, 11.6, -37, 11.6)
+        ctx.bezierCurveTo(-39.4, 11.6, -39.4, 8, -37, 5.4)
         ctx.fill()
+        ctx.restore()
 
         // 3.5. Пилот: Мультяшный NFT Plush Pepe в кабине
         ctx.save()

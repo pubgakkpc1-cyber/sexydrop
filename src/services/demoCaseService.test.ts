@@ -22,15 +22,15 @@ describe('demoCaseService: openCase', () => {
   it('списывает цену кейса и начисляет предмет из его содержимого', () => {
     const elite = caseById.get('elite')
     if (!elite) throw new Error('no elite case')
-    // Elite стоит 125 GRAM — пополняем демо-баланс до достаточного
-    useWalletStore.getState().credit(50_000, 'demo')
+    // Elite стоит 300 TON — пополняем демо-баланс до достаточного
+    useWalletStore.getState().credit(250_000, 'demo')
 
     const result = openCase('elite', 'req-1', rngLast)
     if (result.status !== 'ok') throw new Error('expected ok')
 
     expect(result.giftId).toBe(elite.entries[elite.entries.length - 1]?.itemId)
     expect(giftById.has(result.giftId)).toBe(true)
-    expect(useWalletStore.getState().getBalance('demo')).toBe(150_000 - elite.priceMinor)
+    expect(useWalletStore.getState().getBalance('demo')).toBe(350_000 - elite.priceMinor)
     expect(useInventoryStore.getState().items).toHaveLength(1)
     expect(useInventoryStore.getState().items[0]?.giftId).toBe(result.giftId)
   })
@@ -39,14 +39,14 @@ describe('demoCaseService: openCase', () => {
     const first = openCase('farm', 'req-dup', rngFirst)
     const second = openCase('farm', 'req-dup', rngFirst)
     expect(second).toEqual(first)
-    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 100)
+    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 6_000)
     expect(useInventoryStore.getState().items).toHaveLength(1)
   })
 
   it('разные client_request_id — независимые операции', () => {
     openCase('farm', 'req-a', rngFirst)
     openCase('farm', 'req-b', rngFirst)
-    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 200)
+    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 12_000)
     expect(useInventoryStore.getState().items).toHaveLength(2)
   })
 

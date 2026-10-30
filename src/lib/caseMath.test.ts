@@ -94,26 +94,26 @@ describe('catalog: cases — инвариант EV и RTP', () => {
   it('у всех 20 платных кейсов цена из конфигурации продукта', () => {
     const expected = new Map(
       Object.entries({
-        farm: 100,
-        autumn: 3500,
-        movie: 4000,
-        telegram: 5000,
-        space: 6000,
-        magic: 5000,
-        kitty: 5000,
-        adult18: 7000,
-        money: 8000,
-        'onyx-black': 8000,
-        snoop: 7770,
-        peach: 8000,
-        gem: 8000,
-        pepe: 15000,
-        cap: 15000,
-        ring: 15000,
-        black: 20000,
-        epic: 40000,
-        vip: 50000,
-        elite: 125000,
+        farm: 6000,
+        autumn: 8000,
+        movie: 9000,
+        telegram: 10000,
+        space: 12000,
+        magic: 10000,
+        kitty: 10000,
+        adult18: 14000,
+        money: 16000,
+        'onyx-black': 16000,
+        snoop: 15000,
+        peach: 16000,
+        gem: 16000,
+        pepe: 30000,
+        cap: 30000,
+        ring: 30000,
+        black: 40000,
+        epic: 80000,
+        vip: 120000,
+        elite: 300000,
       }),
     )
     expect(paidCases).toHaveLength(expected.size)
@@ -153,7 +153,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
       expect(gameCase.priceMinor).toBe(0)
       expect(gameCase.freeCooldownMs).toBeGreaterThan(0)
       const entries = priced(gameCase.id)
-      const targetMinor = gameCase.id === 'free24' ? 5_000 : 500
+      const targetMinor = gameCase.id === 'free24' ? 16_000 : 8_000
       expect(isWithinRtp(entries, targetMinor, RTP_BPS)).toBe(true)
       expect(rtpUtilizationBps(entries, targetMinor, RTP_BPS)).toBeGreaterThanOrEqual(9_000)
     }
@@ -187,7 +187,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
 
   it('caseById находит кейсы', () => {
     expect(caseById.get('elite')?.name).toBe('Elite')
-    expect(caseById.get('farm')?.priceMinor).toBe(100) // 0.1 GRAM
+    expect(caseById.get('farm')?.priceMinor).toBe(6000) // 6 TON
     expect(caseById.get('free')?.freeCooldownMs).toBe(3_600_000)
     expect(caseById.get('free24')?.freeCooldownMs).toBe(86_400_000)
   })

@@ -1,89 +1,293 @@
+/* Пригласить: матовые карточки, как в референсе */
+
 .screen {
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: 14px;
+}
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 16px;
+  border-radius: 24px;
+  background: #1f1e24;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.heroIcon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 56px;
+  height: 56px;
+  border-radius: 16px;
+  background: #7c66cc;
+}
+
+.heroIconSvg {
+  width: 30px;
+  height: 30px;
+  color: #ffffff;
+}
+
+.heroBody {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  padding-right: 28px;
 }
 
 .title {
-  font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
-}
-
-.lead {
-  color: var(--text-muted);
-  font-size: var(--font-size-sm);
-  margin-top: calc(var(--space-2) * -1);
-}
-
-.codeCard {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-5) var(--space-4);
-  background:
-    radial-gradient(140px 100px at 85% 0%, rgba(183, 164, 249, 0.16), transparent 70%),
-    var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-}
-
-.codeLabel {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.codeValue {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  font-variant-numeric: tabular-nums;
-}
-
-.linkLabel {
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-top: var(--space-2);
-}
-
-.linkValue {
-  font-size: var(--font-size-xs);
-  color: var(--accent);
-  word-break: break-all;
-}
-
-.codeHint {
-  font-size: var(--font-size-xs);
-  color: var(--text-faint);
-}
-
-.copy {
-  margin-top: var(--space-2);
-  height: 44px;
-  font-family: inherit;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-bold);
+  font-size: 24px;
+  line-height: 1.2;
+  font-weight: 800;
   color: #ffffff;
-  background: var(--cta-gradient);
-  border: none;
-  border-radius: var(--radius-md);
+}
+
+.accent {
+  color: #9b87e8;
+}
+
+.sub {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.bonus {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.ticketChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 10px;
+  background: #34304a;
+  color: #a898ee;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.ticketIcon {
+  width: 16px;
+  height: 16px;
+}
+
+.limit {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.help {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #2d2b3a;
+  color: #9b87e8;
   cursor: pointer;
+}
+
+.helpIcon {
+  width: 22px;
+  height: 22px;
 }
 
 .rules {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-  padding: var(--space-4);
-  font-size: var(--font-size-xs);
-  color: var(--text-muted);
-  border: 1px dashed var(--border-strong);
-  border-radius: var(--radius-md);
+  gap: 6px;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: #1f1e24;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 14px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .rules strong {
-  font-size: var(--font-size-sm);
-  color: var(--text);
+  color: #ffffff;
+}
+
+.rules p {
+  margin: 0;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 24px;
+  background: #1f1e24;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.primary,
+.secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 54px;
+  border: none;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.primary {
+  background: #7c66cc;
+}
+
+.secondary {
+  background: #2a292f;
+}
+
+.primary:disabled,
+.secondary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btnIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.hint {
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 6px;
+}
+
+.statRow + .statRow {
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.statLabel {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.statValue {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #9b87e8;
+  font-variant-numeric: tabular-nums;
+}
+
+.statIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.refHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px 0;
+}
+
+.refTitle {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.refCount {
+  padding: 3px 11px;
+  border-radius: 10px;
+  background: #34304a;
+  color: #b3a3f0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 28px 0 22px;
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 68px;
+  height: 68px;
+  border-radius: 20px;
+  background: #2a292f;
+}
+
+.emptyIconSvg {
+  width: 32px;
+  height: 32px;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.emptyText {
+  font-size: 17px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 350px) {
+  .title {
+    font-size: 20px;
+  }
+
+  .hero {
+    gap: 12px;
+    padding: 16px 12px;
+  }
+
+  .heroIcon {
+    width: 48px;
+    height: 48px;
+  }
+}
+
+/* «А также по [🎟 5] за каждого» — одной строкой */
+.bonus {
+  flex-wrap: nowrap;
+  gap: 6px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.ticketChip {
+  padding: 3px 8px;
+  font-size: 15px;
 }

@@ -38,6 +38,7 @@ interface TelegramWebApp {
   safeAreaInset?: { top: number; bottom: number; left: number; right: number }
   contentSafeAreaInset?: { top: number; bottom: number; left: number; right: number }
   onEvent?: (event: string, cb: () => void) => void
+  openTelegramLink?: (url: string) => void
 }
 
 declare global {
@@ -122,4 +123,12 @@ export function hapticNotify(type: 'success' | 'error' | 'warning'): void {
   } catch {
     /* вне Telegram — no-op */
   }
+}
+
+/** Окно «Поделиться» Telegram со ссылкой; вне Telegram открывается в новой вкладке. */
+export function shareTelegramLink(link: string, text: string): void {
+  const url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`
+  const webApp = getWebApp()
+  if (webApp?.openTelegramLink) webApp.openTelegramLink(url)
+  else window.open(url, '_blank', 'noopener')
 }

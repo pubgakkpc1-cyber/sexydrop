@@ -46,6 +46,10 @@ export function Header() {
   const [adminOpen, setAdminOpen] = useState(false)
 
   const tgUser = useMemo(() => getTelegramUser(), [])
+  const balanceParts = useMemo(() => {
+    const [int = '0', frac] = formatMinor(balance).split('.')
+    return { int, frac: frac ? `.${frac}` : '' }
+  }, [balance])
   const usernameClean = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
   const isAdmin =
     usernameClean === 'zapixxgarant' ||
@@ -58,12 +62,18 @@ export function Header() {
         className={styles.profile}
         aria-label={tgUser ? `${tgUser.first_name ?? 'Игрок'} — на главную` : 'SEXY DROP — на главную'}
       >
-        <UserAvatar size={36} />
+        <span className={styles.avatarWrap}>
+          <UserAvatar size={44} className={styles.avatarRing} />
+          <span className={styles.avatarBadge} aria-hidden>
+            <TonIcon className={styles.avatarBadgeIcon} />
+          </span>
+        </span>
         <span className={styles.balanceCol} aria-label={`Баланс: ${formatMinor(balance)} TON`}>
           <span className={styles.balanceLabel}>Ваш баланс</span>
           <span className={styles.balanceValue}>
-            <TonIcon style={{ width: '15px', height: '15px', color: '#0098ea', display: 'inline-block', flexShrink: 0 }} aria-hidden />
-            {formatMinor(balance)}
+            <TonIcon style={{ width: '22px', height: '22px', color: '#2aa7f5', display: 'inline-block', flexShrink: 0 }} aria-hidden />
+            <span>{balanceParts.int}</span>
+            {balanceParts.frac && <span className={styles.balanceFrac}>{balanceParts.frac}</span>}
           </span>
         </span>
       </Link>

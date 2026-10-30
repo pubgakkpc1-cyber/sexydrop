@@ -221,3 +221,60 @@
   box-shadow: none;
   transform: none;
 }
+
+/* Аватарка с фиолетовым кольцом и значком TON, число с мелкой дробной частью */
+.avatarWrap {
+  position: relative;
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.avatarRing {
+  box-shadow: none;
+  border: 2px solid #7c66cc;
+}
+
+.avatarBadge {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #1c1b22;
+  border: 1.5px solid #131217;
+}
+
+.avatarBadgeIcon {
+  width: 11px;
+  height: 11px;
+}
+
+.balanceValue {
+  font-size: 26px;
+  line-height: 1.1;
+  gap: 8px;
+}
+
+.balanceFrac {
+  font-size: 17px;
+  font-weight: 600;
+  margin-left: -6px;
+  align-self: flex-end;
+  padding-bottom: 2px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.depositBtn.depositBtn {
+  height: 44px;
+  padding: 0 var(--space-4);
+  border-radius: 16px;
+  background: #7c66cc;
+  font-size: 17px;
+}
+
+.depositBtn.depositBtn:hover:not(:disabled) {
+  background: #8a75d8;
+}

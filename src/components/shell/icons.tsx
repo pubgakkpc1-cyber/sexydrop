@@ -626,3 +626,36 @@ export function UsersIcon(props: IconProps) {
   )
 }
 
+
+/** Поделиться (три точки, соединённые линиями) */
+export function ShareIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
+      <circle cx="6" cy="12" r="2.6" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="17.5" cy="6" r="2.6" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="17.5" cy="18" r="2.6" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8.3 10.8 15.2 7.2M8.3 13.2l6.9 3.6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+/** Копировать (два листа) */
+export function CopyIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
+      <rect x="9" y="9" width="11" height="11" rx="2.6" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M15 9V6.6A2.6 2.6 0 0 0 12.4 4H6.6A2.6 2.6 0 0 0 4 6.6v5.8A2.6 2.6 0 0 0 6.6 15H9" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+/** Вопрос в круге */
+export function HelpIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M9.6 9.4a2.5 2.5 0 1 1 3.6 2.2c-.8.4-1.2.9-1.2 1.7" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <circle cx="12" cy="16.6" r="1" fill="currentColor" />
+    </svg>
+  )
+}

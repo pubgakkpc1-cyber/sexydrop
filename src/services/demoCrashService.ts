@@ -5,6 +5,7 @@ import { useInventoryStore } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
 import { useGamesHistoryStore } from '../store/gamesHistory'
 import { createRequestMemo } from '../lib/requestMemo'
+import { recentCrashPoints, roundInfo, scheduleAt, sharedNow, syncClock } from './crashSchedule'
 import {
   MAX_HISTORY,
   useCrashStore,
@@ -107,6 +108,13 @@ interface EngineState {
 
 const engine: EngineState = { timer: null, multAcc: 1, crashPoint: null }
 
+/**
+ * Общие раунды: вне тестов фазы, множитель и точка краша берутся из общего
+ * расписания (crashSchedule), поэтому на всех устройствах ракета, боты и скин
+ * совпадают в каждый момент. В тестах остаётся локальный детерминированный движок.
+ */
+const SHARED_ROUNDS = import.meta.env.MODE !== 'test'
+
 let rng: () => number = Math.random
 let adminNextCrashPoint: number | null = null
 
@@ -127,13 +135,15 @@ export function getAdminCrashState() {
     phase: s.phase,
     roundId: s.roundId,
     multiplier: s.multiplier,
-    currentCrashPoint: engine.crashPoint,
+    currentCrashPoint: SHARED_ROUNDS && s.roundId > 0 ? roundInfo(s.roundId).crashPoint : engine.crashPoint,
     nextOverride: adminNextCrashPoint,
   }
 }
 
 /** Принудительный перезапуск раунда (для супер-админа). */
 export function adminForceRestartCrashRound(): void {
+  // Общие раунды идут по расписанию для всех игроков — локальный перезапуск не нужен.
+  if (SHARED_ROUNDS) return
   engine.multAcc = 1
   engine.crashPoint = null
   useCrashStore.setState((prev) => ({
@@ -257,6 +267,94 @@ function tick(): void {
   }
 }
 
+/** Ставка сгорела при краше: запись в общей истории ставок. */
+function burnActiveBet(bet: CrashBet | null, crash: number): CrashBet | null {
+  if (!bet || bet.status !== 'active') return bet
+  useGamesHistoryStore.getState().push({
+    game: 'Ракетка',
+    stakeLabel: crashStakeLabel(bet),
+    stakeMinor: bet.valueMinor,
+    outcome: 'lost',
+    deltaMinor: -bet.valueMinor,
+    detail: `краш x${crash.toFixed(2)}`,
+  })
+  return { ...bet, status: 'lost' }
+}
+
+/** Тик общих раундов: приводит стор к состоянию расписания в текущий момент. */
+function syncTick(): void {
+  const now = sharedNow()
+  const st = scheduleAt(now)
+  const s = useCrashStore.getState()
+
+  if (s.roundId !== st.roundId) {
+    // Новый раунд (или первый запуск / вкладка «просыпается»): незавершённая ставка сгорает.
+    let myBet = s.myBet
+    if (myBet && myBet.status === 'active' && s.roundId > 0) {
+      myBet = burnActiveBet(myBet, roundInfo(s.roundId).crashPoint)
+    }
+    let queued = s.queuedNextBet
+    let nextBet: CrashBet | null = null
+    if (st.phase === 'betting' && queued) {
+      nextBet = {
+        kind: queued.kind,
+        valueMinor: queued.valueMinor,
+        uid: queued.uid,
+        giftId: queued.giftId,
+        status: 'active',
+      }
+      queued = null
+    }
+    useCrashStore.setState({
+      roundId: st.roundId,
+      phase: st.phase,
+      multiplier: st.multiplier,
+      crashPoint: st.crashPoint,
+      ticksLeft: st.ticksLeft,
+      history: recentCrashPoints(now, MAX_HISTORY),
+      myBet: nextBet,
+      queuedNextBet: queued,
+    })
+    return
+  }
+
+  if (s.phase === 'flying' && st.phase === 'crashed') {
+    const myBet = burnActiveBet(s.myBet, st.multiplier)
+    useCrashStore.setState({
+      phase: 'crashed',
+      multiplier: st.multiplier,
+      crashPoint: st.crashPoint,
+      ticksLeft: st.ticksLeft,
+      history: recentCrashPoints(now, MAX_HISTORY),
+      myBet,
+    })
+    return
+  }
+
+  if (s.phase === 'betting' && st.phase === 'flying') {
+    useCrashStore.setState({ phase: 'flying', multiplier: st.multiplier, ticksLeft: 0, crashPoint: null })
+    return
+  }
+
+  if (s.phase !== st.phase) {
+    // Любой другой пропуск фаз (редко): догоняем расписание
+    useCrashStore.setState({
+      phase: st.phase,
+      multiplier: st.multiplier,
+      crashPoint: st.crashPoint,
+      ticksLeft: st.ticksLeft,
+      myBet: st.phase === 'crashed' ? burnActiveBet(s.myBet, roundInfo(st.roundId).crashPoint) : s.myBet,
+    })
+    return
+  }
+
+  if (st.phase === 'flying') {
+    if (s.multiplier !== st.multiplier) useCrashStore.setState({ multiplier: st.multiplier })
+  } else if (s.ticksLeft !== st.ticksLeft) {
+    useCrashStore.setState({ ticksLeft: st.ticksLeft })
+  }
+}
+
 /** Запускает (или продолжает) цикл раундов. Идемпотентно. */
 export function startCrashEngine(): void {
   if (engine.timer !== null) return
@@ -264,6 +362,12 @@ export function startCrashEngine(): void {
   const s = useCrashStore.getState()
   if (s.phase === 'betting' && s.ticksLeft <= 0) {
     useCrashStore.setState({ ticksLeft: BETTING_TICKS })
+  }
+  if (SHARED_ROUNDS) {
+    void syncClock()
+    syncTick()
+    engine.timer = setInterval(syncTick, TICK_MS)
+    return
   }
   engine.timer = setInterval(tick, TICK_MS)
 }

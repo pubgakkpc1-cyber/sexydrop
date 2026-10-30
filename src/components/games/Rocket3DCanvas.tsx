@@ -82,6 +82,286 @@ interface SpeedStreak {
   width: number
 }
 
+/* --- Мультяшная ракета SEXY DROP: пухлый корпус, плавники и Plush Pepe сверху --- */
+const OUTLINE = '#1a1245'
+
+function drawFlameLayer(ctx: CanvasRenderingContext2D, len: number, w: number, fill: string) {
+  ctx.fillStyle = fill
+  ctx.beginPath()
+  ctx.moveTo(-46, -w)
+  ctx.quadraticCurveTo(-46 - len * 0.55, -w * 1.15, -46 - len, 0)
+  ctx.quadraticCurveTo(-46 - len * 0.55, w * 1.15, -46, w)
+  ctx.closePath()
+  ctx.fill()
+}
+
+function drawCartoonRocket(
+  ctx: CanvasRenderingContext2D,
+  skin: RocketSkinConfig,
+  t: number,
+  mult: number,
+  withFlame: boolean,
+) {
+  ctx.lineJoin = 'round'
+  ctx.lineCap = 'round'
+
+  // Пламя: три вложенных «капли», пляшут по синусу (без частиц)
+  if (withFlame) {
+    const wob = 1 + Math.sin(t * 24) * 0.07 + Math.sin(t * 13) * 0.05
+    const len = (46 + Math.min(30, mult * 3)) * wob
+    drawFlameLayer(ctx, len, 13, skin.flameCore[2])
+    drawFlameLayer(ctx, len * 0.7, 9, skin.flameCore[1])
+    drawFlameLayer(ctx, len * 0.42, 5, '#ffffff')
+  }
+
+  // Плавники (за корпусом)
+  ctx.fillStyle = skin.wingBorder
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 2.6
+  for (const dir of [-1, 1]) {
+    ctx.beginPath()
+    ctx.moveTo(-26, dir * 16)
+    ctx.lineTo(-50, dir * 36)
+    ctx.quadraticCurveTo(-52, dir * 40, -44, dir * 38)
+    ctx.lineTo(-12, dir * 18)
+    ctx.closePath()
+    ctx.fill()
+    ctx.stroke()
+  }
+
+  // Сопло
+  ctx.fillStyle = '#2b2266'
+  ctx.beginPath()
+  safeRoundRect(ctx, -52, -9, 11, 18, 4)
+  ctx.fill()
+  ctx.stroke()
+
+  // Корпус: пухлая «пуля»
+  const body = () => {
+    ctx.beginPath()
+    ctx.moveTo(-42, -18)
+    ctx.lineTo(22, -21)
+    ctx.quadraticCurveTo(54, -18, 56, 0)
+    ctx.quadraticCurveTo(54, 18, 22, 21)
+    ctx.lineTo(-42, 18)
+    ctx.quadraticCurveTo(-52, 0, -42, -18)
+    ctx.closePath()
+  }
+  const hull = ctx.createLinearGradient(0, -21, 0, 21)
+  hull.addColorStop(0, skin.hullGradient[0])
+  hull.addColorStop(0.45, skin.hullGradient[1])
+  hull.addColorStop(1, skin.hullGradient[2])
+  ctx.fillStyle = hull
+  body()
+  ctx.fill()
+
+  ctx.save()
+  body()
+  ctx.clip()
+  // Нос цвета акцента
+  ctx.fillStyle = skin.accentColor
+  ctx.fillRect(32, -26, 30, 52)
+  // Полоса с названием
+  ctx.fillStyle = skin.accentColor
+  ctx.fillRect(-52, 2, 86, 14)
+  // Глянцевый блик
+  ctx.fillStyle = 'rgba(255,255,255,0.55)'
+  ctx.beginPath()
+  ctx.ellipse(-8, -13, 28, 4.5, -0.04, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.fillStyle = 'rgba(0,0,0,0.12)'
+  ctx.fillRect(-52, 14, 110, 8)
+  ctx.restore()
+
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 3.2
+  body()
+  ctx.stroke()
+
+  // Иллюминатор
+  ctx.fillStyle = '#0c1d44'
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 2.4
+  ctx.beginPath()
+  ctx.arc(22, -3, 7.2, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+  ctx.strokeStyle = '#ffffff'
+  ctx.lineWidth = 1.5
+  ctx.beginPath()
+  ctx.arc(22, -3, 4.2, Math.PI * 1.05, Math.PI * 1.55)
+  ctx.stroke()
+
+  // Надпись SEXY DROP на полосе + капля
+  ctx.save()
+  ctx.font = '800 8px system-ui, -apple-system, "Segoe UI", Arial, sans-serif'
+  ctx.textAlign = 'center'
+  ctx.textBaseline = 'middle'
+  try {
+    ;(ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = '0.9px'
+  } catch {
+    /* старые WebView */
+  }
+  ctx.lineWidth = 2.4
+  ctx.strokeStyle = OUTLINE
+  ctx.strokeText('SEXY DROP', -6, 9.5)
+  ctx.fillStyle = '#ffffff'
+  ctx.fillText('SEXY DROP', -6, 9.5)
+  ctx.beginPath()
+  ctx.moveTo(-40, 5.2)
+  ctx.bezierCurveTo(-37.4, 8, -37.4, 12, -40, 12)
+  ctx.bezierCurveTo(-42.6, 12, -42.6, 8, -40, 5.2)
+  ctx.fill()
+  ctx.restore()
+
+  // Заклёпки
+  ctx.fillStyle = 'rgba(26,18,69,0.55)'
+  for (const x of [-34, 8]) {
+    ctx.beginPath()
+    ctx.arc(x, -9, 1.3, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  // --- Plush Pepe сидит наверху ---
+  const bob = Math.sin(t * 5.5) * 0.9
+  const px = 4
+  const py = -33 + bob
+  const GREEN_OUT = '#1d5a1b'
+
+  // Шарф развевается
+  const flap = Math.sin(t * 9) * 3
+  ctx.fillStyle = skin.accentColor
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 1.8
+  ctx.beginPath()
+  ctx.moveTo(px - 4, py + 10)
+  ctx.quadraticCurveTo(px - 18, py + 8 + flap, px - 30, py + 13 + flap * 1.4)
+  ctx.lineTo(px - 28, py + 19 + flap * 1.2)
+  ctx.quadraticCurveTo(px - 16, py + 15 + flap, px - 2, py + 16)
+  ctx.closePath()
+  ctx.fill()
+  ctx.stroke()
+
+  // Руки держатся за корпус
+  ctx.fillStyle = '#5ec34a'
+  ctx.strokeStyle = GREEN_OUT
+  ctx.lineWidth = 1.8
+  for (const hx of [px - 11, px + 12]) {
+    ctx.beginPath()
+    ctx.arc(hx, -19.5, 4.2, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.stroke()
+  }
+
+  // Туловище
+  ctx.fillStyle = '#4fb73f'
+  ctx.beginPath()
+  ctx.ellipse(px, py + 12, 11, 8, 0, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  // Голова
+  const headGrad = ctx.createLinearGradient(px, py - 14, px, py + 12)
+  headGrad.addColorStop(0, '#86e66a')
+  headGrad.addColorStop(1, '#3fa937')
+  ctx.fillStyle = headGrad
+  ctx.beginPath()
+  ctx.ellipse(px, py, 16, 12.5, 0, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  // Щёчки
+  ctx.fillStyle = 'rgba(255,120,120,0.45)'
+  ctx.beginPath()
+  ctx.ellipse(px - 10, py + 5, 3.4, 2.2, 0, 0, Math.PI * 2)
+  ctx.ellipse(px + 11, py + 5, 3.4, 2.2, 0, 0, Math.PI * 2)
+  ctx.fill()
+
+  // Большая улыбка с губой
+  ctx.strokeStyle = GREEN_OUT
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.moveTo(px - 9, py + 4.5)
+  ctx.quadraticCurveTo(px + 1, py + 11, px + 12, py + 3.5)
+  ctx.stroke()
+  ctx.fillStyle = '#e0605a'
+  ctx.beginPath()
+  ctx.ellipse(px + 1.5, py + 8.2, 6.5, 2.1, 0.05, 0, Math.PI * 2)
+  ctx.fill()
+
+  // Выпуклые глаза, смотрят вперёд
+  for (const ex of [px - 6.5, px + 7.5]) {
+    ctx.fillStyle = '#ffffff'
+    ctx.strokeStyle = GREEN_OUT
+    ctx.lineWidth = 1.8
+    ctx.beginPath()
+    ctx.arc(ex, py - 7, 6, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.stroke()
+    ctx.fillStyle = '#111827'
+    ctx.beginPath()
+    ctx.arc(ex + 1.8, py - 6.6, 2.9, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.fillStyle = '#ffffff'
+    ctx.beginPath()
+    ctx.arc(ex + 2.6, py - 7.8, 1, 0, Math.PI * 2)
+    ctx.fill()
+  }
+
+  // Аксессуар по скину
+  if (skin.pilotType === 0) {
+    // антенна-лампочка
+    ctx.strokeStyle = OUTLINE
+    ctx.lineWidth = 1.8
+    ctx.beginPath()
+    ctx.moveTo(px + 1, py - 12)
+    ctx.quadraticCurveTo(px - 3, py - 19, px + 2, py - 22)
+    ctx.stroke()
+    ctx.fillStyle = skin.accentGlow
+    ctx.beginPath()
+    ctx.arc(px + 2, py - 23, 3.2, 0, Math.PI * 2)
+    ctx.fill()
+    ctx.stroke()
+  } else if (skin.pilotType === 1) {
+    // тёмные очки
+    ctx.fillStyle = '#0b1020'
+    ctx.strokeStyle = OUTLINE
+    ctx.lineWidth = 1.6
+    ctx.beginPath()
+    safeRoundRect(ctx, px - 14, py - 12, 28, 10, 4)
+    ctx.fill()
+    ctx.stroke()
+    ctx.strokeStyle = skin.accentColor
+    ctx.lineWidth = 1.4
+    ctx.beginPath()
+    ctx.moveTo(px - 9, py - 9)
+    ctx.lineTo(px - 4, py - 11)
+    ctx.moveTo(px + 4, py - 9)
+    ctx.lineTo(px + 9, py - 11)
+    ctx.stroke()
+  } else {
+    // золотая корона
+    ctx.fillStyle = '#fcd34d'
+    ctx.strokeStyle = '#854d0e'
+    ctx.lineWidth = 1.6
+    ctx.beginPath()
+    ctx.moveTo(px - 9, py - 12)
+    ctx.lineTo(px - 10, py - 22)
+    ctx.lineTo(px - 4, py - 17)
+    ctx.lineTo(px + 1, py - 24)
+    ctx.lineTo(px + 6, py - 17)
+    ctx.lineTo(px + 12, py - 22)
+    ctx.lineTo(px + 11, py - 12)
+    ctx.closePath()
+    ctx.fill()
+    ctx.stroke()
+    ctx.fillStyle = '#ef4444'
+    ctx.beginPath()
+    ctx.arc(px + 1, py - 15.5, 1.6, 0, Math.PI * 2)
+    ctx.fill()
+  }
+}
+
 export interface RocketSkinConfig {
   id: number
   name: string
@@ -553,7 +833,7 @@ export function Rocket3DCanvas({
         state.flightSeconds += dt
 
         // Точка старта (нижняя левая область арены)
-        const launchX = width * 0.20
+        const launchX = width * 0.18
         const launchY = height * 0.58
         const launchAngle = -28
 
@@ -570,8 +850,8 @@ export function Rocket3DCanvas({
 
         const t = state.flightSeconds
         const cruise = riseProgress >= 1 ? Math.min(1, (t - riseDuration) / 1.5) : 0
-        const ampX = width * 0.17
-        const ampY = height * 0.11
+        const ampX = width * 0.26
+        const ampY = height * 0.19
         const driftX = Math.sin(t * 0.62) * ampX * cruise
         const driftY = Math.sin(t * 1.24 + 0.8) * ampY * cruise
         const targetX = launchX + (barrierX - launchX) * easeRise + driftX
@@ -696,350 +976,7 @@ export function Rocket3DCanvas({
         const swellK = swelling ? 1 + Math.pow(state.swellT / SWELL_DURATION, 2) * 0.5 : 1
         ctx.scale(1.22 * breathe * swellK * (1 + (puff - 1) * 0.5), 1.22 * breathe * swellK * puff)
 
-        // 3.1. Реактивное пламя двигателя форсажа (при раздувании двигатель уже заглох)
-        if (!swelling) {
-          const flameFlicker = 0.9 + Math.random() * 0.2
-          const flameLen = (65 + Math.min(38, currentMult * 3.5)) * flameFlicker
-          const flameWidth = 16 * breathe
-
-          // Основное реактивное ядро плазмы
-          ctx.beginPath()
-          ctx.moveTo(-50, -flameWidth / 2)
-          ctx.quadraticCurveTo(-50 - flameLen * 0.5, -flameWidth * 0.65, -50 - flameLen, 0)
-          ctx.quadraticCurveTo(-50 - flameLen * 0.5, flameWidth * 0.65, -50, flameWidth / 2)
-          ctx.closePath()
-
-          const coreFlameGrad = ctx.createLinearGradient(-50, 0, -50 - flameLen, 0)
-          coreFlameGrad.addColorStop(0, skin.flameCore[0])
-          coreFlameGrad.addColorStop(0.25, skin.flameCore[1])
-          coreFlameGrad.addColorStop(0.7, skin.flameCore[2])
-          coreFlameGrad.addColorStop(1, skin.flameCore[3])
-          ctx.fillStyle = coreFlameGrad
-          ctx.fill()
-
-          // Сверхзвуковые узлы плазмы (Mach Diamonds)
-          ctx.fillStyle = '#ffffff'
-          ctx.beginPath()
-          ctx.ellipse(-66, 0, 5, 2.2, 0, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.fillStyle = skin.accentColor
-          ctx.beginPath()
-          ctx.ellipse(-84, 0, 3.8, 1.8, 0, 0, Math.PI * 2)
-          ctx.fill()
-        }
-
-        // 3.2. Сопло двигателя (Тёмный полированный титан с неоновым кольцом)
-        ctx.fillStyle = skin.nozzleFill
-        ctx.strokeStyle = skin.nozzleRing
-        ctx.lineWidth = 1.6
-        ctx.beginPath()
-        ctx.ellipse(-48, 0, 5.5, 10, 0, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.stroke()
-
-        // 3.3. 3D Дельта-Крылья ракеты (Стреловидные аэрокосмические стабилизаторы)
-        // Верхнее крыло (Dorsal Stabilizer)
-        const topWingGrad = ctx.createLinearGradient(-14, -14, -42, -32)
-        topWingGrad.addColorStop(0, skin.wingFill[0])
-        topWingGrad.addColorStop(1, skin.wingFill[1])
-        ctx.fillStyle = topWingGrad
-        ctx.strokeStyle = skin.wingBorder
-        ctx.lineWidth = 1.4
-        ctx.beginPath()
-        ctx.moveTo(-12, -13)
-        ctx.lineTo(-42, -32)
-        ctx.quadraticCurveTo(-44, -34, -41, -30)
-        ctx.lineTo(-28, -11)
-        ctx.closePath()
-        ctx.fill()
-        ctx.stroke()
-
-        // Нижнее крыло (Ventral Wing)
-        const botWingGrad = ctx.createLinearGradient(-14, 14, -40, 30)
-        botWingGrad.addColorStop(0, skin.wingFill[0])
-        botWingGrad.addColorStop(1, skin.wingFill[1])
-        ctx.fillStyle = botWingGrad
-        ctx.strokeStyle = skin.wingBorder
-        ctx.lineWidth = 1.4
-        ctx.beginPath()
-        ctx.moveTo(-12, 13)
-        ctx.lineTo(-40, 30)
-        ctx.quadraticCurveTo(-42, 32, -39, 29)
-        ctx.lineTo(-27, 11)
-        ctx.closePath()
-        ctx.fill()
-        ctx.stroke()
-
-        // Огоньки габаритов на законцовках крыльев
-        ctx.fillStyle = skin.wingtipLight
-        ctx.shadowColor = skin.wingtipLight
-        ctx.shadowBlur = 8
-        ctx.beginPath()
-        ctx.arc(-41, -31, 2.2, 0, Math.PI * 2)
-        ctx.arc(-39, 29, 2.2, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.shadowBlur = 0
-
-        // 3.4. Основной фюзеляж ракеты (3D Volumetric Fuselage - стреловидный чистый корпус)
-        const hullGrad = ctx.createLinearGradient(0, -20, 0, 20)
-        hullGrad.addColorStop(0, skin.hullGradient[0])
-        hullGrad.addColorStop(0.24, skin.hullGradient[1])
-        hullGrad.addColorStop(0.70, skin.hullGradient[2])
-        hullGrad.addColorStop(1, skin.hullGradient[3])
-
-        ctx.fillStyle = hullGrad
-        ctx.strokeStyle = skin.hullBorder
-        ctx.lineWidth = 1.4
-
-        ctx.beginPath()
-        ctx.moveTo(56, 0) // Элегантный носовой конус
-        ctx.bezierCurveTo(46, -15, 16, -18, -48, -13) // Плавный верхний контур
-        ctx.lineTo(-48, 13) // Корма
-        ctx.bezierCurveTo(16, 18, 46, 15, 56, 0) // Плавный нижний контур
-        ctx.closePath()
-        ctx.fill()
-        ctx.stroke()
-
-        // Чистые технологичные стыки обшивки фюзеляжа (без кривого текста!)
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)'
-        ctx.lineWidth = 0.8
-        ctx.beginPath()
-        ctx.moveTo(28, -14)
-        ctx.quadraticCurveTo(30, 0, 28, 14)
-        ctx.stroke()
-
-        ctx.beginPath()
-        ctx.moveTo(-16, -16)
-        ctx.quadraticCurveTo(-14, 0, -16, 16)
-        ctx.stroke()
-
-        // Сверхзвуковая неоновая лазерная линия по центру фюзеляжа
-        ctx.strokeStyle = skin.accentColor
-        ctx.lineWidth = 2.4
-        ctx.shadowColor = skin.accentGlow
-        ctx.shadowBlur = 8
-        ctx.beginPath()
-        ctx.moveTo(-36, 0)
-        ctx.lineTo(34, 0)
-        ctx.stroke()
-        ctx.shadowBlur = 0
-
-        // SEXY DROP — надпись на борту (отсылка к названию бота) + капля
-        ctx.save()
-        ctx.font = '800 7.6px system-ui, -apple-system, "Segoe UI", Arial, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-        try {
-          ;(ctx as CanvasRenderingContext2D & { letterSpacing?: string }).letterSpacing = '1.1px'
-        } catch {
-          /* старые WebView без letterSpacing */
-        }
-        ctx.lineJoin = 'round'
-        ctx.lineWidth = 2.2
-        ctx.strokeStyle = 'rgba(8, 12, 28, 0.6)'
-        ctx.strokeText('SEXY DROP', -4, 9.6)
-        ctx.fillStyle = '#ffffff'
-        ctx.fillText('SEXY DROP', -4, 9.6)
-        // капля у кормы
-        ctx.fillStyle = skin.accentColor
-        ctx.beginPath()
-        ctx.moveTo(-37, 5.4)
-        ctx.bezierCurveTo(-34.6, 8, -34.6, 11.6, -37, 11.6)
-        ctx.bezierCurveTo(-39.4, 11.6, -39.4, 8, -37, 5.4)
-        ctx.fill()
-        ctx.restore()
-
-        // 3.5. Пилот: Мультяшный NFT Plush Pepe в кабине
-        ctx.save()
-        // Тёмная глубина ниши кабины
-        ctx.fillStyle = '#0a0f1d'
-        ctx.beginPath()
-        ctx.ellipse(14, -7, 16, 8, 0, 0, Math.PI * 2)
-        ctx.fill()
-
-        const pepeBob = Math.sin(state.time * 6.5) * 0.7
-        const px = 14
-        const py = -9 + pepeBob
-
-        // Туловище в скафандре
-        const suitGrad = ctx.createLinearGradient(px - 6, py + 2, px + 6, py + 8)
-        suitGrad.addColorStop(0, '#f1f5f9')
-        suitGrad.addColorStop(1, '#94a3b8')
-        ctx.fillStyle = suitGrad
-        ctx.beginPath()
-        ctx.ellipse(px + 2, py + 6.5, 8.5, 4.5, 0, 0, Math.PI * 2)
-        ctx.fill()
-
-        // Лапки пилота
-        ctx.fillStyle = '#4ade80'
-        ctx.beginPath()
-        ctx.arc(px + 4, py + 5.2, 1.8, 0, Math.PI * 2)
-        ctx.arc(px + 9, py + 5.2, 1.8, 0, Math.PI * 2)
-        ctx.fill()
-
-        // Голова Пепе
-        const headGrad = ctx.createLinearGradient(px - 7, py - 7, px + 7, py + 5)
-        headGrad.addColorStop(0, '#4ade80')
-        headGrad.addColorStop(1, '#16a34a')
-        ctx.fillStyle = headGrad
-        ctx.strokeStyle = '#14532d'
-        ctx.lineWidth = 0.9
-        ctx.beginPath()
-        ctx.ellipse(px, py, 7.8, 6.2, 0, 0, Math.PI * 2)
-        ctx.fill()
-        ctx.stroke()
-
-        // Щёчки и милая улыбка
-        ctx.fillStyle = '#86efac'
-        ctx.beginPath()
-        ctx.ellipse(px + 1, py + 2.4, 5.5, 2.2, 0, 0, Math.PI * 2)
-        ctx.fill()
-
-        ctx.strokeStyle = '#14532d'
-        ctx.lineWidth = 1.0
-        ctx.beginPath()
-        ctx.moveTo(px - 3.5, py + 2.2)
-        ctx.quadraticCurveTo(px + 0.5, py + 3.8, px + 4.5, py + 1.8)
-        ctx.stroke()
-
-        // Выразительные круглые глаза с яркими бликами
-        const drawCartoonEye = (ex: number, ey: number) => {
-          ctx.fillStyle = '#ffffff'
-          ctx.strokeStyle = '#14532d'
-          ctx.lineWidth = 0.8
-          ctx.beginPath()
-          ctx.ellipse(ex, ey, 3.2, 3.6, 0, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.stroke()
-
-          // Зрачок
-          ctx.fillStyle = '#0f172a'
-          ctx.beginPath()
-          ctx.arc(ex + 0.8, ey - 0.4, 1.7, 0, Math.PI * 2)
-          ctx.fill()
-
-          // Блики
-          ctx.fillStyle = '#ffffff'
-          ctx.beginPath()
-          ctx.arc(ex + 0.3, ey - 1.1, 0.8, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.beginPath()
-          ctx.arc(ex + 1.4, ey + 0.2, 0.4, 0, Math.PI * 2)
-          ctx.fill()
-        }
-
-        drawCartoonEye(px - 2.6, py - 3.6)
-        drawCartoonEye(px + 3.4, py - 3.6)
-
-        // Аксессуары пилота
-        if (skin.pilotType === 0) {
-          // Антенна связи скафандра
-          ctx.strokeStyle = '#94a3b8'
-          ctx.lineWidth = 1.0
-          ctx.beginPath()
-          ctx.moveTo(px - 6.5, py - 1.0)
-          ctx.lineTo(px - 8.5, py - 5.0)
-          ctx.stroke()
-          ctx.fillStyle = '#38bdf8'
-          ctx.shadowColor = '#38bdf8'
-          ctx.shadowBlur = 4
-          ctx.beginPath()
-          ctx.arc(px - 8.5, py - 5.0, 1.4, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.shadowBlur = 0
-        } else if (skin.pilotType === 1) {
-          // Кибер-визор
-          ctx.save()
-          ctx.fillStyle = 'rgba(56, 189, 248, 0.85)'
-          ctx.strokeStyle = '#38bdf8'
-          ctx.lineWidth = 1.0
-          ctx.shadowColor = '#38bdf8'
-          ctx.shadowBlur = 6
-          ctx.beginPath()
-          safeRoundRect(ctx, px - 5.8, py - 5.8, 12.5, 4.8, 1.8)
-          ctx.fill()
-          ctx.stroke()
-          ctx.strokeStyle = '#ffffff'
-          ctx.lineWidth = 1.0
-          ctx.beginPath()
-          ctx.moveTo(px - 3, py - 2.5)
-          ctx.lineTo(px + 2, py - 5.0)
-          ctx.stroke()
-          ctx.restore()
-        } else {
-          // Золотая корона
-          ctx.save()
-          const crownGrad = ctx.createLinearGradient(px - 4, py - 12, px + 4, py - 7)
-          crownGrad.addColorStop(0, '#fde047')
-          crownGrad.addColorStop(1, '#ca8a04')
-          ctx.fillStyle = crownGrad
-          ctx.strokeStyle = '#854d0e'
-          ctx.lineWidth = 0.8
-          ctx.beginPath()
-          ctx.moveTo(px - 4.0, py - 7.0)
-          ctx.lineTo(px - 5.0, py - 11.5)
-          ctx.lineTo(px - 1.2, py - 8.8)
-          ctx.lineTo(px + 0.5, py - 13.0)
-          ctx.lineTo(px + 2.2, py - 8.8)
-          ctx.lineTo(px + 5.5, py - 11.5)
-          ctx.lineTo(px + 4.5, py - 7.0)
-          ctx.closePath()
-          ctx.fill()
-          ctx.stroke()
-          ctx.fillStyle = '#ef4444'
-          ctx.beginPath()
-          ctx.arc(px + 0.5, py - 9.2, 1.3, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.restore()
-        }
-        ctx.restore()
-
-        // 3.6. Стекло фонаря кабины (Кристальный ультра-прозрачный аэрокосмический купол)
-        const canopyGrad = ctx.createLinearGradient(12, -22, 16, 2)
-        canopyGrad.addColorStop(0, 'rgba(255, 255, 255, 0.75)') // Верхняя кристальная грань
-        canopyGrad.addColorStop(0.2, skin.canopyGradient[0])
-        canopyGrad.addColorStop(0.65, skin.canopyGradient[1])
-        canopyGrad.addColorStop(1, skin.canopyGradient[2])
-
-        ctx.fillStyle = canopyGrad
-        ctx.strokeStyle = skin.canopyBorder
-        ctx.lineWidth = 1.2
-
-        ctx.beginPath()
-        ctx.moveTo(33, -1)
-        ctx.bezierCurveTo(27, -19, 3, -19, -4, -3)
-        ctx.bezierCurveTo(6, 0, 24, 0, 33, -1)
-        ctx.closePath()
-        ctx.fill()
-        ctx.stroke()
-
-        // Верхний дуговой глянцевый блик стекла
-        ctx.strokeStyle = skin.canopyReflection
-        ctx.lineWidth = 1.6
-        ctx.beginPath()
-        ctx.ellipse(14, -14, 11, 2.5, -0.15, Math.PI * 0.9, Math.PI * 1.9)
-        ctx.stroke()
-
-        // Дополнительный искрящийся блик на переднем скате стекла
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.65)'
-        ctx.lineWidth = 1.0
-        ctx.beginPath()
-        ctx.ellipse(24, -8, 4.5, 1.5, -0.28, Math.PI * 0.8, Math.PI * 1.8)
-        ctx.stroke()
-
-        // Звёздная искорка на стекле (Glint Sparkle)
-        const glintX = 26
-        const glintY = -11
-        ctx.save()
-        ctx.strokeStyle = '#ffffff'
-        ctx.lineWidth = 1.2
-        ctx.beginPath()
-        ctx.moveTo(glintX - 3.5, glintY)
-        ctx.lineTo(glintX + 3.5, glintY)
-        ctx.moveTo(glintX, glintY - 3.5)
-        ctx.lineTo(glintX, glintY + 3.5)
-        ctx.stroke()
-        ctx.restore()
+        drawCartoonRocket(ctx, skin, state.time, currentMult, !swelling)
 
         ctx.restore()
       }

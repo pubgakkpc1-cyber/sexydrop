@@ -418,6 +418,13 @@ export function CrashScreen() {
           <span className={styles.backText}>Назад</span>
         </button>
 
+        <div className={styles.brandBadge} aria-label="SEXY DROP">
+          <svg viewBox="0 0 24 24" className={styles.brandDrop} aria-hidden="true">
+            <path d="M12 2.5c3.6 4.3 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.7 6-11z" fill="currentColor" />
+          </svg>
+          <span>SEXY DROP</span>
+        </div>
+
         <div className={styles.headerRight}>
           {isAdmin && (
             <button

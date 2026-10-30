@@ -2385,3 +2385,41 @@
   display: inline-flex;
   align-items: baseline;
 }
+
+/* Бренд по центру шапки: тот же размер и вес, что у плашки баланса */
+.topHeader {
+  position: relative;
+}
+
+.brandBadge {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.55), rgba(0, 152, 234, 0.45));
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: 0 2px 10px rgba(99, 102, 241, 0.3);
+  pointer-events: none;
+}
+
+.brandDrop {
+  width: 12px;
+  height: 12px;
+  color: #7dd3fc;
+}
+
+@media (max-width: 350px) {
+  .brandBadge {
+    display: none;
+  }
+}

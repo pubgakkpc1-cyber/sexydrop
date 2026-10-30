@@ -71,10 +71,10 @@ describe('demoCraftService (4.5: EV = 0.98·S, цели формулой)', () =
   })
 
   it('нет кандидатов — честный отказ (S дороже всего каталога)', () => {
-    // 200000 (golden-pepe) + 25000: порог 220500 → дороже только… ничего.
+    // Входные предметы дороже любого предмета в каталоге (Plush Pepe 6720 TON x 2)
     seed([
-      { uid: 'a', giftId: 'golden-pepe' },
-      { uid: 'b', giftId: 'plush-pepe' },
+      { uid: 'a', giftId: 'plush_pepe-1' },
+      { uid: 'b', giftId: 'plush_pepe-2' },
     ])
     expect(craft(['a', 'b'], 'req-1')).toEqual({
       status: 'rejected',

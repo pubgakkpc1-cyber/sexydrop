@@ -1834,375 +1834,252 @@
 
 
 
+/* ==========================================================================
+   Живые карточки игроков раунда (1:1 по референсу из фото)
+   ========================================================================== */
+
 .playerCard {
-
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
-
-  padding: 10px 14px;
-
-  border-radius: 14px;
-
-  background: rgba(18, 22, 30, 0.85);
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
+  padding: 8px 12px;
+  border-radius: 18px;
   backdrop-filter: blur(14px);
-
   -webkit-backdrop-filter: blur(14px);
-
-  transition: all 0.2s ease;
-
+  transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+  box-sizing: border-box;
 }
 
+/* 1. ПОБЕДИТЕЛЬ / ВЫВЕЛ И НЕ ПРОИГРАЛ (1:1 референс из фото) */
+.playerCardWon {
+  background: #143522 !important;
+  border: 1.5px solid #22c55e !important;
+  box-shadow: 0 4px 16px rgba(34, 197, 94, 0.15);
+}
 
+/* 2. АКТИВНАЯ СТАВКА (в игре: еще не выиграл и не проиграл — просто серая) */
+.playerCardActive {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: none;
+}
+
+/* 3. СГОРЕЛО / ПРОИГРАЛ (красным) */
+.playerCardLost {
+  background: rgba(45, 18, 22, 0.85) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.55) !important;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.1);
+}
 
 .playerCardUser {
-
-  background: rgba(0, 152, 234, 0.12);
-
-  border-color: rgba(0, 152, 234, 0.45);
-
-  box-shadow: 0 4px 16px rgba(0, 152, 234, 0.18);
-
+  position: relative;
 }
 
-
-
-.playerCardWon {
-
-  background: rgba(34, 197, 94, 0.1);
-
-  border-color: rgba(34, 197, 94, 0.38);
-
-}
-
-
-
-.playerCardActiveBlue {
-
-  background: rgba(0, 152, 234, 0.08);
-
-  border-color: rgba(0, 152, 234, 0.28);
-
-}
-
-
-
-.playerCardLost {
-
-  opacity: 0.45;
-
-  background: rgba(18, 22, 30, 0.45);
-
-  border-color: rgba(255, 255, 255, 0.04);
-
-}
-
-
-
+/* Левая часть: аватарка + инфо */
 .playerLeft {
-
   display: flex;
-
   align-items: center;
-
-  gap: 11px;
-
+  gap: 12px;
   min-width: 0;
-
   flex: 1;
-
 }
 
-
+.playerAvatarBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: #0f172a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+}
 
 .playerAvatar {
-
-  width: 40px;
-
-  height: 40px;
-
-  border-radius: 12px;
-
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
-
-  flex-shrink: 0;
-
 }
-
-
 
 .playerInfo {
-
   display: flex;
-
   flex-direction: column;
-
-  gap: 2px;
-
+  gap: 4px;
   min-width: 0;
-
+  justify-content: center;
 }
-
-
 
 .playerNameRow {
-
   display: flex;
-
   align-items: center;
-
   gap: 6px;
-
   min-width: 0;
-
 }
-
-
 
 .playerName {
-
-  font-size: 13.5px;
-
+  font-size: 15px;
   font-weight: 700;
-
   color: #ffffff;
-
   white-space: nowrap;
-
   overflow: hidden;
-
   text-overflow: ellipsis;
-
-  max-width: 135px;
-
-  letter-spacing: 0.15px;
-
+  max-width: 140px;
+  line-height: 1.2;
 }
-
-
 
 .userBadge {
-
   font-size: 10px;
-
   font-weight: 800;
-
   padding: 1px 5px;
-
   background: #0098ea;
-
   color: #ffffff;
-
   border-radius: 5px;
-
   letter-spacing: 0.3px;
-
-}
-
-
-
-.playerStakeRow {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 5px;
-
-  font-size: 12px;
-
-  font-weight: 600;
-
-  font-variant-numeric: tabular-nums;
-
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-
-  letter-spacing: 0;
-
-  color: rgba(255, 255, 255, 0.65);
-
-}
-
-
-
-.playerStakeDiamond {
-
-  width: 12px;
-
-  height: 12px;
-
-  color: #0098ea;
-
   flex-shrink: 0;
-
 }
 
-
-
-.playerRight {
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 8px;
-
-  flex-shrink: 0;
-
-}
-
-
-
-.playerProfitPill {
-
+/* Плашка ставки под именем игрока */
+.playerBetPill {
   display: inline-flex;
-
   align-items: center;
-
   gap: 5px;
-
-  padding: 5px 12px;
-
-  border-radius: 9999px;
-
+  padding: 3px 8px;
+  border-radius: 10px;
   font-size: 13px;
-
-  font-weight: 700;
-
+  font-weight: 600;
+  line-height: 1.2;
+  width: fit-content;
   font-variant-numeric: tabular-nums;
-
-  font-feature-settings: 'tnum' 1, 'lnum' 1;
-
-  color: #ffffff;
-
-  background: #141822;
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-
-  flex-shrink: 0;
-
-  white-space: nowrap;
-
 }
 
+.playerBetPillWon {
+  background: rgba(16, 45, 28, 0.85);
+  color: #4ade80;
+}
 
+.playerBetPillActive {
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+.playerBetPillLost {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+}
+
+.playerBetDiamond {
+  width: 13px;
+  height: 13px;
+  color: #0098ea;
+  flex-shrink: 0;
+}
+
+.playerBetAmount {
+  font-weight: 600;
+}
+
+.playerBetMult {
+  font-weight: 700;
+  color: #4ade80;
+}
+
+.playerBetLostText {
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+/* Правая часть: выигрыш/профит + NFT подарок */
+.playerRight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+/* Плашка выплаты справа */
+.playerPayoutPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.payoutWon {
+  background: rgba(16, 45, 28, 0.85) !important;
+  color: #4ade80 !important;
+}
+
+.payoutActive {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #94a3b8 !important;
+}
+
+.payoutLost {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #ef4444 !important;
+}
 
 .profitTonIcon {
-
-  width: 13px;
-
-  height: 13px;
-
-  flex-shrink: 0;
-
+  width: 14px;
+  height: 14px;
   color: #0098ea;
-
-}
-
-
-
-.profitWon {
-
-  background: rgba(34, 197, 94, 0.15);
-
-  border-color: rgba(34, 197, 94, 0.5);
-
-  color: #4ade80;
-
-  box-shadow: 0 0 12px rgba(34, 197, 94, 0.25);
-
-}
-
-
-
-.profitWon .profitTonIcon {
-
-  color: #4ade80;
-
-}
-
-
-
-.profitActiveBlue {
-
-  background: rgba(0, 152, 234, 0.14);
-
-  border-color: rgba(0, 152, 234, 0.45);
-
-  color: #ffffff;
-
-  box-shadow: 0 0 10px rgba(0, 152, 234, 0.2);
-
-}
-
-
-
-.profitLost {
-
-  background: rgba(255, 255, 255, 0.03);
-
-  border-color: rgba(255, 255, 255, 0.06);
-
-  color: rgba(255, 255, 255, 0.35);
-
-}
-
-
-
-.playerGiftWonWrapper {
-
-  width: 36px;
-
-  height: 36px;
-
-  border-radius: 10px;
-
-  background: rgba(255, 255, 255, 0.08);
-
-  border: 1px solid rgba(255, 255, 255, 0.15);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  padding: 3px;
-
-  box-sizing: border-box;
-
   flex-shrink: 0;
-
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-
 }
 
+.profitTonIconLost {
+  color: #ef4444 !important;
+}
 
+.playerPayoutVal {
+  letter-spacing: 0.1px;
+}
 
-.playerGiftWon {
+/* Рамка NFT подарка справа (фон и обводка под ней) */
+.playerNftBox {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  padding: 4px;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, background 0.25s ease;
+}
 
+.playerNftBoxWon {
+  background: #18222d;
+  border: 1.5px solid #22c55e;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.2);
+}
+
+.playerNftBoxActive {
+  background: #171b23;
+  border: 1.5px solid rgba(255, 255, 255, 0.15);
+}
+
+.playerNftBoxLost {
+  background: #241417;
+  border: 1.5px solid rgba(239, 68, 68, 0.5);
+  opacity: 0.8;
+}
+
+.playerNftImg {
   width: 100%;
-
   height: 100%;
-
   object-fit: contain;
-
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.35));
-
-  animation: giftPop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-
 }
-
-
 
 .cosmicTitleIcon {
 
@@ -2432,52 +2309,4 @@
 
 .quickBetPill:active {
   transform: scale(0.96);
-}
-
-
-/* 1:1 референс живой карточки победителя (Фото 3) */
-.playerCardWon {
-  background: #0f2619 !important;
-  border: 1.5px solid #1c4d2d !important;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.12);
-}
-
-.playerAvatarBox {
-  width: 38px;
-  height: 38px;
-  border-radius: 10px;
-  background: #1a3826;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2px;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-.playerGiftBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 7px;
-  border-radius: 6px;
-  background: rgba(56, 189, 248, 0.12);
-  border: 1px solid rgba(56, 189, 248, 0.45);
-  color: #38bdf8;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.playerStakeIcon {
-  width: 14px;
-  height: 14px;
-  object-fit: contain;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-
-.profitWon {
-  background: rgba(34, 197, 94, 0.14) !important;
-  border: 1.5px solid #22c55e !important;
-  color: #4ade80 !important;
 }

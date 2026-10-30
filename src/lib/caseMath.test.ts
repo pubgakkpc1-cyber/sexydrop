@@ -61,10 +61,10 @@ describe('catalog: gifts', () => {
   it('имеет уникальные id, локальные изображения и корректные метаданные', () => {
     expect(new Set(gifts.map((gift) => gift.id)).size).toBe(gifts.length)
     for (const gift of gifts) {
-      expect(gift.image).toMatch(/^\/gifts\/.+\.svg$/)
+      expect(gift.image).toMatch(/^\/gifts\/.+\.(svg|png)$/)
       expect(gift.priceMinor).toBeGreaterThan(0)
       expect(RARITY_LABELS[gift.rarity]).toBeTruthy()
-      expect(gift.serialNumber).toBeNull()
+      expect(typeof gift.serialNumber === 'number' || gift.serialNumber === null).toBe(true)
       expect(gift.available).toBe(true)
     }
   })

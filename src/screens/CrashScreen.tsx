@@ -25,6 +25,7 @@ import {
   playCashoutWin,
 } from '../lib/sound'
 import { getWebApp, getTelegramUser } from '../lib/telegram'
+import { MoneyRain } from '../components/effects/MoneyRain'
 import { BetSheet } from '../components/games/BetSheet'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
@@ -80,6 +81,16 @@ const COUNTDOWN_THEMES: Record<number, CountdownTheme> = {
 }
 
 /** Форматирование сумм TON: не длиннее 0.1 (максимум 1 знак после точки, без лишних плюсов) */
+/** Форматирование TON для живых карточек игроков (1:1 по референсу из фото: 3.35, 5.95) */
+function formatCardTon(minor: number): string {
+  if (minor <= 0) return '0.00'
+  const ton = minor / 1000
+  if (ton >= 1000) return Math.round(ton).toString()
+  if (Number.isInteger(ton)) return `${ton}`
+  const s = ton.toFixed(2)
+  return s.endsWith('.00') ? `${Math.round(ton)}` : s.endsWith('0') ? ton.toFixed(1) : s
+}
+
 function formatTonMaxOneDecimal(minor: number): string {
   const val = Math.floor((minor / 1000) * 10) / 10
   return Number.isInteger(val) ? `${val}` : val.toFixed(1)
@@ -188,6 +199,17 @@ export function CrashScreen() {
 
   // Пул живых игроков раунда
   const [players, setPlayers] = useState<SimulatedPlayer[]>([])
+  const [showMoneyRain, setShowMoneyRain] = useState(false)
+  const prevMyBetStatusRef = useRef(myBet?.status)
+
+  // Триггер дождика деньгами при победе игрока (без просадки FPS на слабых устройствах)
+  useEffect(() => {
+    if (myBet?.status === 'won' && prevMyBetStatusRef.current !== 'won') {
+      setShowMoneyRain(true)
+    }
+    prevMyBetStatusRef.current = myBet?.status
+  }, [myBet?.status])
+
 
   // Предыдущие значения для аудио/тактильного триггера
   const prevPhaseRef = useRef(phase)
@@ -259,6 +281,7 @@ export function CrashScreen() {
 
     // Если выпал равноценный NFT или высокий полёт — показываем модалку
     if (res.status === 'ok') {
+      setShowMoneyRain(true)
       if (res.wonGift) {
         setCosmicReward(res.wonGift)
       } else if (res.multiplier >= 2.5 && Math.random() < 0.45) {
@@ -715,83 +738,117 @@ export function CrashScreen() {
         </div>
 
         <div className={styles.playersList}>
-          {sortedBetRows.map((row) => (
-            <div
-              key={row.id}
-              className={cx(
-                styles.playerCard,
-                row.isUser && styles.playerCardUser,
-                row.isCashed && styles.playerCardWon,
-                !row.isCashed && phase === 'flying' && styles.playerCardActiveBlue,
-                phase === 'crashed' && !row.isCashed && styles.playerCardLost,
-              )}
-            >
-              <div className={styles.playerLeft}>
-                <div className={styles.playerAvatarBox}>
-                  <img
-                    src={row.avatar}
-                    alt={row.name}
-                    className={styles.playerAvatar}
-                    onError={(e) => {
-                      ;(e.target as HTMLImageElement).src = '/avatars/user_1.png'
-                    }}
-                  />
-                </div>
-                <div className={styles.playerInfo}>
-                  <div className={styles.playerNameRow}>
-                    <span className={styles.playerName}>{row.name}</span>
-                    {row.isUser && <span className={styles.userBadge}>YOU</span>}
-                    <span className={styles.playerGiftBadge}>{row.stakeGift.name}</span>
-                  </div>
-                  <div className={styles.playerStakeRow}>
+          {sortedBetRows.map((row) => {
+            const isWon = row.isCashed
+            const isLost = phase === 'crashed' && !row.isCashed
+            const isActive = !isWon && !isLost
+            const displayGift = isWon ? (row.wonGift ?? row.stakeGift) : row.stakeGift
+
+            return (
+              <div
+                key={row.id}
+                className={cx(
+                  styles.playerCard,
+                  isWon && styles.playerCardWon,
+                  isActive && styles.playerCardActive,
+                  isLost && styles.playerCardLost,
+                  row.isUser && styles.playerCardUser,
+                )}
+              >
+                <div className={styles.playerLeft}>
+                  <div className={styles.playerAvatarBox}>
                     <img
-                      src={row.stakeGift.image}
-                      alt={row.stakeGift.name}
-                      className={styles.playerStakeIcon}
+                      src={row.avatar}
+                      alt={row.name}
+                      className={styles.playerAvatar}
+                      onError={(e) => {
+                        ;(e.target as HTMLImageElement).src = '/avatars/user_1.png'
+                      }}
                     />
-                    <TonIcon className={styles.playerStakeDiamond} />
-                    <span>
-                      {formatTonMaxOneDecimal(row.stakeMinor)} × {(Math.floor(row.multToShow * 10) / 10).toFixed(1)}x
+                  </div>
+                  <div className={styles.playerInfo}>
+                    <div className={styles.playerNameRow}>
+                      <span className={styles.playerName}>{row.name}</span>
+                      {row.isUser && <span className={styles.userBadge}>YOU</span>}
+                    </div>
+                    <div
+                      className={cx(
+                        styles.playerBetPill,
+                        isWon && styles.playerBetPillWon,
+                        isActive && styles.playerBetPillActive,
+                        isLost && styles.playerBetPillLost,
+                      )}
+                    >
+                      <TonIcon className={styles.playerBetDiamond} />
+                      <span className={styles.playerBetAmount}>
+                        {formatCardTon(row.stakeMinor)}
+                      </span>
+                      {isWon && (
+                        <span className={styles.playerBetMult}>
+                          ×{row.multToShow.toFixed(2)}
+                        </span>
+                      )}
+                      {isLost && (
+                        <span className={styles.playerBetLostText}>
+                          (Краш)
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.playerRight}>
+                  <div
+                    className={cx(
+                      styles.playerPayoutPill,
+                      isWon && styles.payoutWon,
+                      isActive && styles.payoutActive,
+                      isLost && styles.payoutLost,
+                    )}
+                  >
+                    <TonIcon
+                      className={cx(
+                        styles.profitTonIcon,
+                        isLost && styles.profitTonIconLost,
+                      )}
+                    />
+                    <span className={styles.playerPayoutVal}>
+                      {isWon
+                        ? formatCardTon(row.profitMinor)
+                        : isLost
+                          ? '0.00'
+                          : formatCardTon(row.profitMinor)}
                     </span>
                   </div>
+
+                  {displayGift && (
+                    <div
+                      className={cx(
+                        styles.playerNftBox,
+                        isWon && styles.playerNftBoxWon,
+                        isActive && styles.playerNftBoxActive,
+                        isLost && styles.playerNftBoxLost,
+                      )}
+                      title={`${displayGift.name} (${formatCardTon(displayGift.priceMinor)} TON)`}
+                    >
+                      <img
+                        src={displayGift.image}
+                        alt={displayGift.name}
+                        className={styles.playerNftImg}
+                        onError={(e) => {
+                          const el = e.currentTarget
+                          if (!el.dataset.fallback) {
+                            el.dataset.fallback = '1'
+                            el.src = el.src.replace('.svg', '.png')
+                          }
+                        }}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
-
-              <div className={styles.playerRight}>
-                <span
-                  className={cx(
-                    styles.playerProfitPill,
-                    row.isCashed && styles.profitWon,
-                    !row.isCashed && phase === 'flying' && styles.profitActiveBlue,
-                    phase === 'crashed' && !row.isCashed && styles.profitLost,
-                  )}
-                >
-                  <TonIcon className={styles.profitTonIcon} />
-                  <span>
-                    {formatTonMaxOneDecimal(row.profitMinor)}
-                  </span>
-                </span>
-
-                {/* Telegram NFT подарок по стоимости выигрыша при кешауте */}
-                {row.isCashed && row.wonGift && (
-                  <div className={styles.playerGiftWonWrapper}>
-                    <img
-                    src={row.wonGift.image}
-                    alt={row.wonGift.name}
-                    title={`Выигран NFT: ${row.wonGift.name} (${formatMinor(row.wonGift.priceMinor)} TON)`}
-                    className={styles.playerGiftWon}
-                    onError={(e) => {
-                      const el = e.currentTarget
-                      if (!el.dataset.fallback) {
-                        el.dataset.fallback = '1'
-                        el.src = el.src.replace('.svg', '.png')
-                      }
-                    }}
-                  />
-                  </div>)}
-              </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </div>
 
@@ -871,6 +928,10 @@ export function CrashScreen() {
             </button>
           </div>
         </div>
+      )}
+      {/* Лёгкий дождик деньгами при выигрыше (без просадки FPS на слабых устройствах) */}
+      {showMoneyRain && (
+        <MoneyRain onComplete={() => setShowMoneyRain(false)} />
       )}
     </div>
   )

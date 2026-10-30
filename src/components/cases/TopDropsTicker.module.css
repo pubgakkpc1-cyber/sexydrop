@@ -77,7 +77,11 @@
 .dropImage {
   width: 20px;
   height: 20px;
-  object-fit: contain;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  flex-shrink: 0;
+  display: block;
 }
 
 .dropName {

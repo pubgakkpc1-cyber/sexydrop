@@ -701,6 +701,9 @@
   transition: transform 0.15s ease, border-color 0.15s ease;
 
   user-select: none;
+  overflow: hidden;
+  min-width: 0;
+  box-sizing: border-box;
 
 }
 
@@ -751,33 +754,29 @@
 
 
 .rewardImageWrap {
-
-  width: 96px;
-
-  height: 96px;
-
+  width: 88px;
+  height: 88px;
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
-  margin: 12px 0 8px;
-
+  margin: 10px 0 8px;
+  padding: 3px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.14);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 
 
 .rewardImage {
-
-  width: 86px;
-
-  height: 86px;
-
-  object-fit: contain;
-
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
   filter: drop-shadow(0 6px 14px rgba(0, 0, 0, 0.6));
-
+  display: block;
 }
 
 

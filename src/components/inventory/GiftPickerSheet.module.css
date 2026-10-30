@@ -59,6 +59,9 @@
   flex-shrink: 0;
   width: 44px;
   height: 44px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
 }
 
 .name {

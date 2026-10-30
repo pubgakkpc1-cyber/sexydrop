@@ -15,7 +15,9 @@
   background: var(--surface);
   border-radius: var(--radius-xl);
   border: 2px solid var(--rarity-common);
-}
+
+  overflow: hidden;
+  padding: 4px;}
 
 .art[data-rarity='rare'] {
   border-color: var(--rarity-rare);
@@ -32,6 +34,9 @@
 .image {
   width: 88px;
   height: 88px;
+  object-fit: cover;
+  border-radius: calc(var(--radius-xl) - 6px);
+  display: block;
 }
 
 .name {

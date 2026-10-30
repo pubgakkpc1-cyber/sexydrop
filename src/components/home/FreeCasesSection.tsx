@@ -66,7 +66,7 @@ export function FreeCasesSection() {
               {/* Верхняя строка бейджей */}
               <div className={styles.topBadgesRow}>
                 <span className={cx(styles.categoryPill, isDaily ? styles.pillGold : styles.pillPurple)}>
-                  {isDaily ? '⚡ 1 РАЗ В 24 ЧАСА' : '⭐ 5 TG PREMIUM ДРУЗЕЙ'}
+                  {isDaily ? '⚡ 24 ЧАСА' : '⭐ 5 ДРУЗЕЙ'}
                 </span>
                 <span className={styles.freeZeroBadge}>0 TON</span>
               </div>
@@ -100,7 +100,7 @@ export function FreeCasesSection() {
                 {hasPendingQuest ? (
                   <span className={cx(styles.actionPill, styles.pillLocked)}>
                     <LockIcon className={styles.pillIcon} aria-hidden />
-                    <span>Замок · 3 дня на квест</span>
+                    <span>Квест: 3 дня</span>
                   </span>
                 ) : available ? (
                   <span
@@ -110,12 +110,12 @@ export function FreeCasesSection() {
                     )}
                   >
                     <span className={styles.pulseDot} />
-                    <span>{isDaily ? 'Готов к открытию' : 'Крутить бесплатно'}</span>
+                    <span>{isDaily ? 'Открыть' : 'Крутить'}</span>
                   </span>
                 ) : (
                   <span className={cx(styles.actionPill, styles.pillWaiting)}>
                     <ClockIcon className={styles.pillIcon} aria-hidden />
-                    <span>В 23:00 ({formatCountdown(remainingMs)})</span>
+                    <span>{formatCountdown(remainingMs)}</span>
                   </span>
                 )}
               </div>

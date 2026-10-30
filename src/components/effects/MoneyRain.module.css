@@ -1,0 +1,60 @@
+.moneyRainContainer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9999;
+  overflow: hidden;
+  user-select: none;
+}
+
+.particle {
+  position: absolute;
+  top: -60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform, opacity;
+  animation-name: moneyFall;
+  animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+@keyframes moneyFall {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(var(--scale, 1));
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate3d(var(--drift, 0px), 110vh, 0) rotate(var(--rot, 180deg)) scale(var(--scale, 1));
+    opacity: 0;
+  }
+}
+
+.coinIcon {
+  width: 28px;
+  height: 28px;
+  filter: drop-shadow(0 4px 8px rgba(245, 158, 11, 0.45));
+}
+
+.gemIcon {
+  width: 24px;
+  height: 24px;
+  color: #0098ea;
+  filter: drop-shadow(0 4px 10px rgba(0, 152, 234, 0.6));
+}
+
+.sparkleIcon {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 2px 6px rgba(250, 204, 21, 0.5));
+}

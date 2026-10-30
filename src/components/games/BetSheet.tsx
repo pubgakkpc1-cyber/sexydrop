@@ -21,6 +21,29 @@ export type BetSheetTab = 'gifts' | 'gram'
 
 const PRESETS: readonly Minor[] = [100, 500, 1000, 5000] // 0.1 / 0.5 / 1 / 5 GRAM
 export const LAST_CRASH_BET_KEY = 'sexydrop_crash_last_bet'
+export const AUTO_CASHOUT_KEY = 'sexydrop_crash_auto'
+const AUTO_MIN = 1.1
+const AUTO_MAX = 100
+const AUTO_STEP = 0.1
+
+/** Округление вниз до 1 знака после точки (правило проекта: максимум один знак). */
+function roundAuto(value: number): number {
+  const v = Math.floor(value * 10 + 1e-9) / 10
+  return Math.min(AUTO_MAX, Math.max(AUTO_MIN, v))
+}
+
+function loadAuto(): { on: boolean; mult: number } {
+  try {
+    const raw = window.localStorage?.getItem(AUTO_CASHOUT_KEY)
+    if (raw) {
+      const parsed = JSON.parse(raw) as { on?: boolean; mult?: number }
+      return { on: parsed.on === true, mult: roundAuto(Number(parsed.mult) || 1.5) }
+    }
+  } catch {
+    /* no-op */
+  }
+  return { on: false, mult: 1.5 }
+}
 
 export interface BetSheetProps {
   open: boolean
@@ -46,6 +69,9 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
   })
   const [selectedUid, setSelectedUid] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [autoOn, setAutoOn] = useState(() => loadAuto().on)
+  const [autoMult, setAutoMult] = useState(() => loadAuto().mult)
+  const [autoText, setAutoText] = useState(() => loadAuto().mult.toFixed(1))
 
   // Каждое открытие — чистое состояние с подгрузкой последней ставки.
   useEffect(() => {
@@ -55,8 +81,19 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
       setAmountInput(saved || '0.1')
       setSelectedUid(null)
       setError(null)
+      const auto = loadAuto()
+      setAutoOn(auto.on)
+      setAutoMult(auto.mult)
+      setAutoText(auto.mult.toFixed(1))
     }
   }, [open])
+
+  const setAuto = (mult: number) => {
+    const v = roundAuto(mult)
+    setAutoMult(v)
+    setAutoText(v.toFixed(1))
+  }
+  const autoValue = autoOn ? autoMult : undefined
 
   const giftRows = useMemo(() => {
     return items
@@ -86,11 +123,16 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
 
   const confirm = () => {
     setError(null)
+    try {
+      window.localStorage?.setItem(AUTO_CASHOUT_KEY, JSON.stringify({ on: autoOn, mult: autoMult }))
+    } catch {
+      /* no-op */
+    }
     if (tab === 'gram') {
       if (amountMinor === null || insufficient) return
       const result = isNextRound
-        ? queueNextRoundGramBet(amountMinor, makeRequestId())
-        : placeGramBet(amountMinor, makeRequestId())
+        ? queueNextRoundGramBet(amountMinor, makeRequestId(), autoValue)
+        : placeGramBet(amountMinor, makeRequestId(), autoValue)
 
       if (result.status === 'ok') {
         try {
@@ -106,8 +148,8 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
     }
     if (!selectedRow) return
     const result = isNextRound
-      ? queueNextRoundGiftBet(selectedRow.item.uid, makeRequestId())
-      : placeGiftBet(selectedRow.item.uid, makeRequestId())
+      ? queueNextRoundGiftBet(selectedRow.item.uid, makeRequestId(), autoValue)
+      : placeGiftBet(selectedRow.item.uid, makeRequestId(), autoValue)
 
     if (result.status === 'ok') {
       onClose()
@@ -232,6 +274,55 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
           </p>
         </div>
       )}
+
+
+      {/* Авто вывод: ставка забирается сама на выбранном множителе */}
+      <div className={styles.auto}>
+        <div className={styles.autoHead}>
+          <span className={styles.autoLabel}>Авто вывод</span>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={autoOn}
+            aria-label="Авто вывод"
+            className={cx(styles.switch, autoOn && styles.switchOn)}
+            onClick={() => setAutoOn((v) => !v)}
+          >
+            <span className={styles.switchKnob} />
+          </button>
+        </div>
+        {autoOn && (
+          <div className={styles.stepper}>
+            <button
+              type="button"
+              className={styles.stepBtn}
+              aria-label="Меньше"
+              onClick={() => setAuto(autoMult - AUTO_STEP)}
+            >
+              −
+            </button>
+            <div className={styles.stepValue}>
+              <input
+                className={styles.stepInput}
+                inputMode="decimal"
+                aria-label="Множитель авто вывода"
+                value={autoText}
+                onChange={(e) => setAutoText(e.target.value.replace(',', '.'))}
+                onBlur={() => setAuto(Number(autoText) || autoMult)}
+              />
+              <span className={styles.stepX}>x</span>
+            </div>
+            <button
+              type="button"
+              className={styles.stepBtn}
+              aria-label="Больше"
+              onClick={() => setAuto(autoMult + AUTO_STEP)}
+            >
+              +
+            </button>
+          </div>
+        )}
+      </div>
 
       {error && (
         <p className={styles.error} role="alert">

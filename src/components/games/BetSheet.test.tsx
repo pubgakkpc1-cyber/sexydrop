@@ -150,4 +150,22 @@ describe('BetSheet (4.1: Dual Betting)', () => {
     // баланс GRAM при ставке подарком не списывается
     expect(useWalletStore.getState().getBalance('demo')).toBe(100_000)
   })
+  it('авто вывод: переключатель, шаги ± по 0.1 и множитель уходит в ставку', async () => {
+    window.localStorage.removeItem('sexydrop_crash_auto')
+    window.localStorage.removeItem('sexydrop_crash_last_bet')
+    renderSheet()
+    const dialog = screen.getByRole('dialog')
+
+    await user.click(within(dialog).getByRole('switch', { name: 'Авто вывод' }))
+    const input = within(dialog).getByRole('textbox', { name: 'Множитель авто вывода' })
+    expect(input).toHaveValue('1.5')
+    await user.click(within(dialog).getByRole('button', { name: 'Больше' }))
+    await user.click(within(dialog).getByRole('button', { name: 'Больше' }))
+    expect(input).toHaveValue('1.7')
+    await user.click(within(dialog).getByRole('button', { name: 'Меньше' }))
+    expect(input).toHaveValue('1.6')
+
+    await user.click(within(dialog).getByRole('button', { name: 'Поставить 0.1 TON' }))
+    expect(useCrashStore.getState().myBet).toMatchObject({ kind: 'gram', autoCashout: 1.6 })
+  })
 })

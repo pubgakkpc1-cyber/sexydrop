@@ -226,6 +226,27 @@ describe('placeGramBet / cashout (fake timers)', () => {
     expect(cashout('req-cash-2')).toEqual({ status: 'rejected', reason: 'duplicate' })
   })
 
+  it('авто вывод: ставка забирается сама ровно на множителе цели (x1.2 → floor(1000 × 1.2) = 1200)', () => {
+    _setCrashRngForTests(() => 0.51) // краш x2.00 — позже цели
+    startCrashEngine()
+    expect(placeGramBet(1000, 'req-auto', 1.2)).toEqual({ status: 'ok' })
+
+    vi.advanceTimersByTime(BETTING_TICKS * TICK_MS + 4000)
+    const bet = useCrashStore.getState().myBet
+    expect(bet).toMatchObject({ status: 'won', cashedMultiplier: 1.2, wonMinor: 1200 })
+    expect(useWalletStore.getState().getBalance('demo')).toBe(100_200)
+  })
+
+  it('авто вывод выше точки краша не срабатывает: ставка сгорает', () => {
+    _setCrashRngForTests(() => 0.51) // краш x2.00
+    startCrashEngine()
+    placeGramBet(1000, 'req-auto-high', 5)
+    vi.advanceTimersByTime(BETTING_TICKS * TICK_MS + 6000)
+    expect(useCrashStore.getState().phase).toBe('crashed')
+    expect(useCrashStore.getState().myBet?.status).toBe('lost')
+    expect(useWalletStore.getState().getBalance('demo')).toBe(99_000)
+  })
+
   it('кешаут без ставки и вне полёта отклоняется', () => {
     _setCrashRngForTests(() => 0.51)
     startCrashEngine()

@@ -18,6 +18,8 @@ export interface CrashBet {
   wonMinor?: Minor
   /** Выигранный равноценный NFT подарок (если найден). */
   wonGift?: Gift
+  /** Авто вывод: множитель, на котором ставка забирается сама. */
+  autoCashout?: number
 }
 
 export interface QueuedNextBet {
@@ -26,6 +28,7 @@ export interface QueuedNextBet {
   giftId?: string
   uid?: string
   requestId: string
+  autoCashout?: number
 }
 
 export interface CrashState {

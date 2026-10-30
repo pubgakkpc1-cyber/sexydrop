@@ -229,6 +229,7 @@ function tick(): void {
       })
     } else {
       useCrashStore.setState({ multiplier: displayed })
+      maybeAutoCashout()
     }
     return
   }
@@ -248,6 +249,7 @@ function tick(): void {
           valueMinor: queued.valueMinor,
           uid: queued.uid,
           giftId: queued.giftId,
+          autoCashout: queued.autoCashout,
           status: 'active',
         },
         queuedNextBet: null,
@@ -301,6 +303,7 @@ function syncTick(): void {
         valueMinor: queued.valueMinor,
         uid: queued.uid,
         giftId: queued.giftId,
+        autoCashout: queued.autoCashout,
         status: 'active',
       }
       queued = null
@@ -333,6 +336,7 @@ function syncTick(): void {
 
   if (s.phase === 'betting' && st.phase === 'flying') {
     useCrashStore.setState({ phase: 'flying', multiplier: st.multiplier, ticksLeft: 0, crashPoint: null })
+    maybeAutoCashout()
     return
   }
 
@@ -350,6 +354,7 @@ function syncTick(): void {
 
   if (st.phase === 'flying') {
     if (s.multiplier !== st.multiplier) useCrashStore.setState({ multiplier: st.multiplier })
+    maybeAutoCashout()
   } else if (s.ticksLeft !== st.ticksLeft) {
     useCrashStore.setState({ ticksLeft: st.ticksLeft })
   }
@@ -387,7 +392,11 @@ export function isCrashEngineRunning(): boolean {
 /* --- Игровые операции (Demo Mode ONLY; серверные — TIER 7, 4.3) --- */
 
 /** Ставка TON в текущем окне ставок. Минимальная ставка — 0.1 TON (100 minor). */
-export function placeGramBet(amountMinor: Minor, clientRequestId: string): PlaceBetResult {
+export function placeGramBet(
+  amountMinor: Minor,
+  clientRequestId: string,
+  autoCashout?: number,
+): PlaceBetResult {
   return processOnce(clientRequestId, () => {
     const s = useCrashStore.getState()
     if (s.phase !== 'betting') {
@@ -405,7 +414,7 @@ export function placeGramBet(amountMinor: Minor, clientRequestId: string): Place
     }
     wallet.debit(amountMinor)
     useCrashStore.setState({
-      myBet: { kind: 'gram', valueMinor: amountMinor, status: 'active' },
+      myBet: { kind: 'gram', valueMinor: amountMinor, status: 'active', autoCashout },
     })
     return { status: 'ok' } as const
   })
@@ -414,11 +423,15 @@ export function placeGramBet(amountMinor: Minor, clientRequestId: string): Place
 export const placeTonBet = placeGramBet
 
 /** Запланировать ставку TON на следующий раунд (если текущий уже летит). */
-export function queueNextRoundGramBet(amountMinor: Minor, clientRequestId: string): PlaceBetResult {
+export function queueNextRoundGramBet(
+  amountMinor: Minor,
+  clientRequestId: string,
+  autoCashout?: number,
+): PlaceBetResult {
   return processOnce(clientRequestId, () => {
     const s = useCrashStore.getState()
     if (s.phase === 'betting') {
-      return placeGramBet(amountMinor, clientRequestId)
+      return placeGramBet(amountMinor, clientRequestId, autoCashout)
     }
     if (s.queuedNextBet !== null) {
       return { status: 'rejected', reason: 'duplicate' } as const
@@ -436,6 +449,7 @@ export function queueNextRoundGramBet(amountMinor: Minor, clientRequestId: strin
         kind: 'gram',
         valueMinor: amountMinor,
         requestId: clientRequestId,
+        autoCashout,
       },
     })
     return { status: 'ok' } as const
@@ -443,11 +457,15 @@ export function queueNextRoundGramBet(amountMinor: Minor, clientRequestId: strin
 }
 
 /** Запланировать ставку подарком на следующий раунд. */
-export function queueNextRoundGiftBet(uid: string, clientRequestId: string): PlaceBetResult {
+export function queueNextRoundGiftBet(
+  uid: string,
+  clientRequestId: string,
+  autoCashout?: number,
+): PlaceBetResult {
   return processOnce(clientRequestId, () => {
     const s = useCrashStore.getState()
     if (s.phase === 'betting') {
-      return placeGiftBet(uid, clientRequestId)
+      return placeGiftBet(uid, clientRequestId, autoCashout)
     }
     if (s.queuedNextBet !== null) {
       return { status: 'rejected', reason: 'duplicate' } as const
@@ -466,6 +484,7 @@ export function queueNextRoundGiftBet(uid: string, clientRequestId: string): Pla
         uid,
         giftId: item.giftId,
         requestId: clientRequestId,
+        autoCashout,
       },
     })
     return { status: 'ok' } as const
@@ -488,7 +507,11 @@ export function cancelQueuedNextRoundBet(): boolean {
 }
 
 /** Ставка подарком из инвентаря: предмет конвертируется в каталог-цену. */
-export function placeGiftBet(uid: string, clientRequestId: string): PlaceBetResult {
+export function placeGiftBet(
+  uid: string,
+  clientRequestId: string,
+  autoCashout?: number,
+): PlaceBetResult {
   return processOnce(clientRequestId, () => {
     const s = useCrashStore.getState()
     if (s.phase !== 'betting') {
@@ -507,7 +530,7 @@ export function placeGiftBet(uid: string, clientRequestId: string): PlaceBetResu
     // выигрыш в GRAM начисляется при «Забрать», при краше предмет сгорает.
     inventory.removeUids([uid], 'crash-bet')
     useCrashStore.setState({
-      myBet: { kind: 'gift', valueMinor: price, uid, giftId: item.giftId, status: 'active' },
+      myBet: { kind: 'gift', valueMinor: price, uid, giftId: item.giftId, status: 'active', autoCashout },
     })
     return { status: 'ok' } as const
   })
@@ -515,7 +538,24 @@ export function placeGiftBet(uid: string, clientRequestId: string): PlaceBetResu
 
 /** «Забрать» во время полёта: выигрыш floor(ставка × показанный множитель). */
 export function cashout(clientRequestId: string): CashoutResult {
-  return processOnce(clientRequestId, () => {
+  return processOnce(clientRequestId, () => cashoutAt(useCrashStore.getState().multiplier))
+}
+
+/**
+ * Авто вывод: как только показанный множитель достиг цели и краша ещё нет,
+ * ставка забирается по множителю ЦЕЛИ (не выше показанного — в пользу казны).
+ */
+function maybeAutoCashout(): void {
+  const s = useCrashStore.getState()
+  const bet = s.myBet
+  if (s.phase !== 'flying' || !bet || bet.status !== 'active') return
+  const target = bet.autoCashout
+  if (target === undefined || s.multiplier < target) return
+  processOnce(`auto-${s.roundId}-${bet.valueMinor}`, () => cashoutAt(target))
+}
+
+function cashoutAt(multiplier: number): CashoutResult {
+  {
     const s = useCrashStore.getState()
     if (s.phase !== 'flying') {
       return { status: 'rejected', reason: 'phase' } as const
@@ -526,7 +566,7 @@ export function cashout(clientRequestId: string): CashoutResult {
     if (s.myBet.status !== 'active') {
       return { status: 'rejected', reason: 'duplicate' } as const
     }
-    const wonMinor = mulByMultiplier(s.myBet.valueMinor, s.multiplier)
+    const wonMinor = mulByMultiplier(s.myBet.valueMinor, multiplier)
 
     // Ищем равноценный NFT подарок в каталоге
     const matchingGift = gifts.find((g) => g.priceMinor === wonMinor)
@@ -546,19 +586,19 @@ export function cashout(clientRequestId: string): CashoutResult {
       stakeMinor: s.myBet.valueMinor,
       outcome: 'won',
       deltaMinor: wonMinor - s.myBet.valueMinor,
-      detail: matchingGift ? `NFT ${matchingGift.name}` : `x${s.multiplier.toFixed(2)}`,
+      detail: matchingGift ? `NFT ${matchingGift.name}` : `x${multiplier.toFixed(2)}`,
     })
     useCrashStore.setState({
       myBet: {
         ...s.myBet,
         status: 'won',
-        cashedMultiplier: s.multiplier,
+        cashedMultiplier: multiplier,
         wonMinor,
         wonGift: matchingGift,
       },
     })
-    return { status: 'ok', wonMinor, multiplier: s.multiplier, wonGift: matchingGift } as const
-  })
+    return { status: 'ok', wonMinor, multiplier, wonGift: matchingGift } as const
+  }
 }
 
 /** Полный сброс движка и стора между тестами. Не использовать в продукте. */

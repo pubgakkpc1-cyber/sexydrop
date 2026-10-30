@@ -31,6 +31,13 @@ interface TelegramWebApp {
     offClick: (cb: () => void) => void
   }
   close: () => void
+  platform?: string
+  isFullscreen?: boolean
+  isVersionAtLeast?: (version: string) => boolean
+  requestFullscreen?: () => void
+  safeAreaInset?: { top: number; bottom: number; left: number; right: number }
+  contentSafeAreaInset?: { top: number; bottom: number; left: number; right: number }
+  onEvent?: (event: string, cb: () => void) => void
 }
 
 declare global {
@@ -64,6 +71,35 @@ export function initTelegram(): void {
   } catch {
     /* старые клиенты могут не поддерживать часть методов */
   }
+
+  // Полноэкранный режим на телефоне: убирает родную шапку Telegram («← Название ⌄ ⋮»).
+  try {
+    const mobile = webApp.platform === 'android' || webApp.platform === 'ios'
+    if (mobile && webApp.isVersionAtLeast?.('8.0') && webApp.requestFullscreen && !webApp.isFullscreen) {
+      webApp.requestFullscreen()
+    }
+    applyTelegramInsets()
+    for (const ev of ['fullscreenChanged', 'safeAreaChanged', 'contentSafeAreaChanged', 'viewportChanged']) {
+      webApp.onEvent?.(ev, applyTelegramInsets)
+    }
+  } catch {
+    /* клиенты без Bot API 8.0 остаются в обычном режиме */
+  }
+}
+
+/**
+ * В полноэкранном режиме контент рисуется под системной строкой состояния и под
+ * кнопками Telegram (закрыть / меню): прокидываем их высоту в CSS-переменные.
+ */
+function applyTelegramInsets(): void {
+  const webApp = getWebApp()
+  if (!webApp) return
+  const root = document.documentElement
+  const full = webApp.isFullscreen === true
+  const top = full ? (webApp.safeAreaInset?.top ?? 0) + (webApp.contentSafeAreaInset?.top ?? 0) : 0
+  const bottom = full ? (webApp.safeAreaInset?.bottom ?? 0) : 0
+  root.style.setProperty('--tg-top', `${top}px`)
+  root.style.setProperty('--tg-bottom', `${bottom}px`)
 }
 
 export function getTelegramUser(): TelegramUser | undefined {

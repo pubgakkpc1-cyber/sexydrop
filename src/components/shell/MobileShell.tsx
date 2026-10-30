@@ -55,7 +55,10 @@ export function MobileShell() {
       <div className={styles.rootWrapper}>
         <div className={styles.shellContainer}>
           {!isCustomHeaderScreen && <Header />}
-          <main className={styles.main} key={location.pathname}>
+          <main
+            className={isCustomHeaderScreen ? `${styles.main} ${styles.mainCustomHeader}` : styles.main}
+            key={location.pathname}
+          >
             <Outlet />
           </main>
           <BottomNav />

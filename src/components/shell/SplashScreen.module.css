@@ -204,3 +204,87 @@
   min-height: 16px;
   transition: opacity 0.2s ease;
 }
+
+/* ---- Запуск: веер подарков, логотип-«дроп», блик на прогрессе ---- */
+.giftFan {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.fanCard {
+  position: absolute;
+  width: 84px;
+  height: auto;
+  border-radius: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.55);
+  opacity: 0;
+  animation: fanRise 0.9s cubic-bezier(0.2, 0.9, 0.25, 1.1) forwards, fanFloat 3.2s ease-in-out 1s infinite;
+}
+
+.fan0 { left: 8%; top: 12%; --rot: -14deg; animation-delay: 0.1s, 1s; }
+.fan1 { right: 9%; top: 9%; --rot: 12deg; animation-delay: 0.25s, 1.2s; }
+.fan2 { left: 50%; bottom: 8%; margin-left: -42px; --rot: -4deg; animation-delay: 0.4s, 1.4s; }
+
+@keyframes fanRise {
+  0% { opacity: 0; transform: translateY(90px) rotate(calc(var(--rot) * 3)) scale(0.6); }
+  100% { opacity: 0.95; transform: translateY(0) rotate(var(--rot)) scale(1); }
+}
+
+@keyframes fanFloat {
+  0%, 100% { transform: translateY(0) rotate(var(--rot)); }
+  50% { transform: translateY(-9px) rotate(calc(var(--rot) * -0.6)); }
+}
+
+.wordmark {
+  display: flex;
+  margin: 6px 0 10px;
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: #fff;
+}
+
+.wordLetter {
+  display: inline-block;
+  opacity: 0;
+  animation: letterDrop 0.55s cubic-bezier(0.3, 1.5, 0.5, 1) forwards;
+}
+
+@keyframes letterDrop {
+  0% { opacity: 0; transform: translateY(-34px) scale(1.4); }
+  100% { opacity: 1; transform: translateY(0) scale(1); text-shadow: 0 0 18px rgba(214, 78, 84, 0.55); }
+}
+
+.progressBarFill { position: relative; overflow: hidden; }
+
+.shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, 0.55) 50%, transparent 70%);
+  transform: translateX(-100%);
+  animation: shimmerMove 1s linear infinite;
+}
+
+@keyframes shimmerMove { to { transform: translateX(100%); } }
+
+.exiting .content { animation: splashOut 0.4s ease-in forwards; }
+.exiting .giftFan { animation: splashOut 0.4s ease-in forwards; }
+
+@keyframes splashOut {
+  to { opacity: 0; transform: scale(1.08) translateY(-10px); }
+}
+
+@media (max-width: 360px) {
+  .wordmark { font-size: 24px; }
+  .fanCard { width: 64px; }
+  .fan2 { margin-left: -32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fanCard, .wordLetter, .shimmer { animation-duration: 0.01s; animation-iteration-count: 1; }
+}

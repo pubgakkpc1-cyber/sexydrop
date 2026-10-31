@@ -8,6 +8,13 @@ interface SplashScreenProps {
   onFinish: () => void
 }
 
+const FAN_GIFTS = [
+  '/gifts/heart_locket_1.png',
+  '/gifts/plush_pepe_1.png',
+  '/gifts/mini_oscar_1.png',
+] as const
+const WORDMARK = 'SEXY DROP'.split('')
+
 export function SplashScreen({ onFinish }: SplashScreenProps) {
   const [progress, setProgress] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
@@ -60,6 +67,13 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
     >
       <div className={styles.ambientGlow} aria-hidden />
 
+      {/* Веер NFT-подарков: «выпадают» снизу и парят */}
+      <div className={styles.giftFan} aria-hidden>
+        {FAN_GIFTS.map((src, i) => (
+          <img key={src} src={src} alt="" className={`${styles.fanCard} ${styles[`fan${i}`]}`} />
+        ))}
+      </div>
+
       <div className={styles.content}>
         {/* Моушн-аватар с вращающимся градиентным кольцом и пульсирующими волнами */}
         <div className={styles.avatarWrapper}>
@@ -75,6 +89,15 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
           </div>
         </div>
 
+        {/* Логотип: буквы по очереди «падают» (drop) */}
+        <div className={styles.wordmark} aria-hidden>
+          {WORDMARK.map((ch, i) => (
+            <span key={i} className={styles.wordLetter} style={{ animationDelay: `${0.25 + i * 0.07}s` }}>
+              {ch === ' ' ? ' ' : ch}
+            </span>
+          ))}
+        </div>
+
         {/* Приветствие с именем пользователя */}
         <h1 className={styles.greetingTitle}>Привет, {userName}!</h1>
         <div className={styles.brandSub}>
@@ -85,7 +108,9 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
         {/* Полоса загрузки с динамическим статусом */}
         <div className={styles.progressContainer}>
           <div className={styles.progressBarTrack}>
-            <div className={styles.progressBarFill} style={{ width: `${progress}%` }} />
+            <div className={styles.progressBarFill} style={{ width: `${progress}%` }}>
+              <span className={styles.shimmer} aria-hidden />
+            </div>
           </div>
           <span className={styles.statusText}>{statusMessage}</span>
         </div>

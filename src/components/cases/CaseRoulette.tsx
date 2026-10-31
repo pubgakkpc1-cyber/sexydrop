@@ -11,6 +11,7 @@ const TILE_WIDTH = 80
 const TILE_MARGIN = 5 // margin left and right = 10px total
 const STRIDE = TILE_WIDTH + TILE_MARGIN * 2 // 90px
 const DURATION_MS = 4200
+const WINDUP_MS = 300 // «замах»: лента чуть откатывается назад перед рывком
 
 interface CaseRouletteProps {
   caseDefinition: CaseDefinition
@@ -58,6 +59,7 @@ export function CaseRoulette({
   const [translateX, setTranslateX] = useState<number>(0)
   const [transitionStyle, setTransitionStyle] = useState<string>('none')
   const [winningIndex, setWinningIndex] = useState<number | null>(null)
+  const [burstKey, setBurstKey] = useState(0)
 
   const viewportRef = useRef<HTMLDivElement>(null)
   const lastTileIndexRef = useRef<number>(-1)
@@ -121,6 +123,14 @@ export function CaseRoulette({
 
     let safetyTimer: ReturnType<typeof setTimeout> | null = null
 
+    // Замах: короткий откат ленты назад + вспышка у маркера
+    const windupTimer = setTimeout(() => {
+      setBurstKey((k) => k + 1)
+      setTransitionStyle(`transform ${WINDUP_MS}ms cubic-bezier(0.3, 0, 0.3, 1)`)
+      setTranslateX(startOffset + 38)
+      hapticImpact('medium')
+    }, 40)
+
     const launchTimer = setTimeout(() => {
       // Включаем аппаратное ускорение и CSS transition
       setTransitionStyle(`transform ${DURATION_MS}ms cubic-bezier(0.08, 0.82, 0.12, 1)`)
@@ -160,9 +170,10 @@ export function CaseRoulette({
       safetyTimer = setTimeout(() => {
         finishSpin()
       }, DURATION_MS + 80)
-    }, 40)
+    }, 40 + WINDUP_MS)
 
     return () => {
+      clearTimeout(windupTimer)
       clearTimeout(launchTimer)
       if (safetyTimer) clearTimeout(safetyTimer)
       if (animationFrameRef.current) {
@@ -180,7 +191,11 @@ export function CaseRoulette({
 
   return (
     <div className={styles.rouletteContainer} aria-label="Рулетка кейса">
-      <div className={styles.rouletteViewport} ref={viewportRef}>
+      <div
+        className={`${styles.rouletteViewport} ${isSpinning ? styles.viewportSpinning : ''}`}
+        ref={viewportRef}
+      >
+        {burstKey > 0 && <div key={burstKey} className={styles.launchBurst} aria-hidden />}
         {/* Боковые маски затемнения */}
         <div className={styles.fadeMaskLeft} aria-hidden />
         <div className={styles.fadeMaskRight} aria-hidden />

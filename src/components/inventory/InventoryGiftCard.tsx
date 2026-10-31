@@ -34,7 +34,7 @@ export function InventoryGiftCard({ gift, onSell, selling = false }: InventoryGi
       )}
       <div className={styles.art}>
         <img
-          className={gift.image.endsWith('.png') ? styles.imageFull : styles.imageContain}
+          className={/_\d\.png$/.test(gift.image) ? styles.imageFull : styles.imageContain}
           src={gift.image}
           alt=""
         />

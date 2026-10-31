@@ -55,7 +55,7 @@ export function RocketRewardSheet({ gift, onClose }: RocketRewardSheetProps) {
       <div className={styles.body}>
         <span className={styles.art} data-rarity={gift.rarity}>
           <img
-            className={gift.image.endsWith('.png') ? styles.imageFull : styles.imageContain}
+            className={/_\d\.png$/.test(gift.image) ? styles.imageFull : styles.imageContain}
             src={gift.image}
             alt=""
           />

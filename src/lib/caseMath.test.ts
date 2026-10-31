@@ -91,10 +91,13 @@ describe('catalog: gifts', () => {
 })
 
 describe('catalog: cases — инвариант EV и RTP', () => {
-  it('у всех 28 платных кейсов цена из конфигурации продукта', () => {
+  it('у всех 31 платных кейсов цена из конфигурации продукта', () => {
     const expected = new Map(
       Object.entries({
         farm: 6000,
+        classic: 150,
+        romance: 150,
+        holiday: 250,
         sweet: 6000,
         party: 7000,
         cute: 8000,

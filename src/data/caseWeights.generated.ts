@@ -33,4 +33,7 @@ export const caseWeights: Readonly<Record<string, ReadonlyArray<readonly [string
   'heroes': [['victory_medal-1', 144], ['liberty_figure-3', 129], ['khabibs_papakha-2', 33], ['mini_oscar-1', 11], ['mighty_arm-3', 7], ['heroic_helmet-2', 4], ['durovs_cap-3', 2], ['resistance_dog-2', 1]],
   'street': [['snoop_dogg-2', 127], ['input_key-1', 104], ['surge_board-1', 98], ['snoop_cigar-3', 31], ['sharp_tongue-1', 5], ['low_rider-1', 3], ['westside_sign-2', 1]],
   'cute': [['whip_cupcake-2', 179], ['pet_snake-1', 179], ['spring_basket-2', 124], ['jolly_chimp-3', 87], ['toy_bear-3', 12], ['kissed_frog-1', 6], ['scared_cat-3', 1]],
+  'classic': [['reg-heart', 513], ['reg-bear', 513], ['reg-gift', 221], ['reg-rose', 222], ['reg-cake', 77], ['reg-bouquet', 77], ['reg-rocket', 77], ['reg-champagne', 77], ['reg-trophy', 27], ['reg-ring', 27], ['reg-diamond', 1]],
+  'romance': [['reg-heart', 182], ['reg-bear', 182], ['reg-rose', 109], ['reg-bouquet', 63], ['reg-ring', 33], ['reg-diamond', 1]],
+  'holiday': [['reg-gift', 26], ['reg-cake', 20], ['reg-champagne', 19], ['reg-rocket', 19], ['reg-trophy', 1]],
 }

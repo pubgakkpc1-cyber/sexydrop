@@ -838,7 +838,7 @@ export function CrashScreen() {
                         className={cx(
                           styles.playerNftSwap,
                           styles.playerNftImg,
-                          displayGift.image.endsWith('.png') && styles.playerNftImgFull,
+                          /_\d\.png$/.test(displayGift.image) && styles.playerNftImgFull,
                         )}
                         onError={(e) => {
                           const el = e.currentTarget

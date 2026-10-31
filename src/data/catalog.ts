@@ -100,6 +100,22 @@ function gift(
   }
 }
 
+/** Обычный (не NFT) подарок Telegram: прозрачный стикер, цена по курсу Stars (175 Stars = 1 TON). */
+function regularGift(id: string, name: string, priceMinor: Minor, file: string): Gift {
+  return {
+    id,
+    name,
+    image: `/gifts/png/${file}.png`,
+    priceMinor,
+    rarity: priceMinor >= 500 ? 'rare' : 'common',
+    priceSource: 'catalog-config',
+    priceUpdatedAt: PRICE_UPDATED_AT,
+    collection: 'Classic Gifts',
+    serialNumber: null,
+    available: true,
+  }
+}
+
 /**
  * Каталог подарков:
  * 1. 19 базовых подарков спецификации для строгой совместимости математики и кейсов.
@@ -126,6 +142,19 @@ export const gifts: readonly Gift[] = [
   gift('golden-trophy', 'Golden Trophy', 60000, 'legendary', 'Champions', 'demo', 1200.0),
   gift('astral-crown', 'Astral Crown', 100000, 'legendary', 'Astral Series', 'demo', 3500.0),
   gift('golden-pepe', 'Golden Plush Pepe', 200000, 'legendary', 'Memes', 'demo', 15000.0),
+
+  /* --- ОБЫЧНЫЕ ПОДАРКИ TELEGRAM (не NFT) --- */
+  regularGift('reg-heart', 'Heart', 85, 'pink_heart_box'),
+  regularGift('reg-bear', 'Bear', 85, 'teddy_bear'),
+  regularGift('reg-gift', 'Gift', 142, 'yellow_gift_box'),
+  regularGift('reg-rose', 'Rose', 142, 'red_rose'),
+  regularGift('reg-cake', 'Cake', 285, 'birthday_cake_white'),
+  regularGift('reg-bouquet', 'Bouquet', 285, 'flower_bouquet'),
+  regularGift('reg-rocket', 'Rocket', 285, 'space_rocket'),
+  regularGift('reg-champagne', 'Champagne', 285, 'champagne_bottle'),
+  regularGift('reg-trophy', 'Trophy', 571, 'golden_trophy'),
+  regularGift('reg-ring', 'Ring', 571, 'solitaire_diamond_ring'),
+  regularGift('reg-diamond', 'Diamond', 571, 'blue_diamond_gem'),
 
   /* --- 147 ПОДЛИННЫХ TELEGRAM NFT С FRAGMENT (3 уникальных вида на каждый из 49 подарков) --- */
   nftGift('plush_pepe-1', 'Plush Pepe', 6720000, 'legendary', 'Plush Pepe', '/gifts/plush_pepe_1.png', 6720.0, 'Gummy Frog', 'Platinum', 'Ring', 1821),
@@ -333,6 +362,9 @@ const CASE_CONFIG: readonly {
   { id: 'onyx-black', name: 'Onyx Black', priceMinor: 16000, glow: '#7c5cff' },
   { id: 'peach', name: 'Peach', priceMinor: 16000, glow: '#ffb07a' },
   { id: 'gem', name: 'Gem', priceMinor: 16000, glow: '#38e1ff' },
+  { id: 'classic', name: 'Classic', priceMinor: 150, isNew: true, glow: '#ffb74d' },
+  { id: 'romance', name: 'Love', priceMinor: 150, isNew: true, glow: '#ff6f91' },
+  { id: 'holiday', name: 'Holiday', priceMinor: 250, isNew: true, glow: '#59c8ff' },
   { id: 'sweet', name: 'Sweet', priceMinor: 6000, isNew: true, glow: '#ff8fc7' },
   { id: 'party', name: 'Party', priceMinor: 7000, isNew: true, glow: '#ffd23c' },
   { id: 'cute', name: 'Cute', priceMinor: 8000, isNew: true, glow: '#ffb3d9' },

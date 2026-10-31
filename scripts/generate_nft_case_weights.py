@@ -196,6 +196,37 @@ for ti, (cid, name, names) in enumerate(THEMED):
 
 (ROOT / "scripts/themed_cases.json").write_text(json.dumps(themed_prices, indent=1), encoding="utf-8")
 
+# --- Кейсы с обычными подарками Telegram (не NFT): цены по Stars (175 Stars = 1 TON, вниз) ---
+REGULAR = {
+    "reg-heart": 85, "reg-bear": 85, "reg-gift": 142, "reg-rose": 142,
+    "reg-cake": 285, "reg-bouquet": 285, "reg-rocket": 285, "reg-champagne": 285,
+    "reg-trophy": 571, "reg-ring": 571, "reg-diamond": 571,
+}
+REGULAR_CASES = [
+    ("classic", "Classic", list(REGULAR)),
+    ("romance", "Romance", ["reg-heart", "reg-rose", "reg-bouquet", "reg-bear", "reg-ring", "reg-diamond"]),
+    ("holiday", "Holiday", ["reg-cake", "reg-champagne", "reg-rocket", "reg-gift", "reg-trophy"]),
+]
+REGULAR_LADDER = [150, 180, 200, 220, 250, 280, 300, 330, 350, 400, 450, 500, 600, 700, 800]
+
+regular_prices = {}
+for cid, name, ids in REGULAR_CASES:
+    pool = sorted(ids, key=lambda g: REGULAR[g])
+    v = [REGULAR[g] for g in pool]
+    best = None
+    for price in REGULAR_LADDER:
+        w = solve(v, price)
+        if w and util(w, v, price) >= 0.96:
+            best = (price, w)
+            break
+    assert best, f"no price for regular case {cid}"
+    price, w = best
+    regular_prices[cid] = price
+    result[cid] = [[g, wt] for g, wt in zip(pool, w)]
+    report.append(f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  total={sum(w)}  {list(zip(pool, w))}")
+
+(ROOT / "scripts/regular_cases.json").write_text(json.dumps(regular_prices, indent=1), encoding="utf-8")
+
 (ROOT / "scripts/case_weights.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
 ts = [
     "/**",

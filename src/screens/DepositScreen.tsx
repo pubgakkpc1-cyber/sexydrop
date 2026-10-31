@@ -582,15 +582,16 @@ function GiftsPanel() {
 function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
   const [input, setInput] = useState('')
   const stars = parseStars(input)
-  const valid = isValidStars(stars)
-  const payout = valid ? starsToMinor(stars) : stars !== null ? starsToMinor(stars) : 0
   const earned = useStarsBalanceStore((s) => s.stars)
+  const valid = isValidStars(stars)
+  const enough = valid && stars <= earned
+  const payout = valid ? starsToMinor(stars) : stars !== null ? starsToMinor(stars) : 0
 
   return (
     <div className={styles.panel}>
-      <p className={styles.demo}>
-        Демо-режим: Stars не списываются, конвертация виртуальная. Реальная конвертация появится
-        после подключения сервера.
+      <p className={styles.note}>
+        Конвертируются только заработанные звёзды (за задания и друзей): они списываются с вашего
+        звёздного баланса.
       </p>
 
       <div className={styles.convertCard}>
@@ -647,15 +648,22 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
           </button>
         ))}
       </div>
+      {valid && !enough && (
+        <p className={styles.note} role="alert">
+          Недостаточно звёзд: у вас {earned.toLocaleString('ru-RU')} ★
+        </p>
+      )}
       <button
         type="button"
         className={styles.primary}
-        disabled={!valid || payout <= 0}
+        disabled={!enough || payout <= 0}
         onClick={() => {
-          if (valid && payout > 0) {
-            onDone(payout)
-            setInput('')
-          }
+          if (!enough || payout <= 0) return
+          // сначала списываем звёзды, и только фактически списанное превращаем в TON
+          const used = useStarsBalanceStore.getState().spend(stars)
+          if (used !== stars) return
+          onDone(payout)
+          setInput('')
         }}
       >
         Конвертировать

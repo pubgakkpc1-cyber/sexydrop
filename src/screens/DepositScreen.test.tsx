@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router-dom'
 import { DepositScreen } from './DepositScreen'
 import { useWalletStore } from '../store/wallet'
+import { useStarsBalanceStore } from '../store/starsBalance'
 import { STARS_PER_TON, TON_PER_STAR_LABEL, isValidStars, parseStars, starsToMinor } from '../lib/stars'
 
 const user = userEvent.setup()
@@ -18,6 +19,7 @@ function renderScreen() {
 
 beforeEach(() => {
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
+  useStarsBalanceStore.setState({ stars: 0 })
 })
 
 describe('lib/stars (курс Stars → TON)', () => {
@@ -87,7 +89,8 @@ describe('DepositScreen (пополнение баланса)', () => {
     expect(screen.getByRole('button', { name: 'Пополнить' })).toBeDisabled()
   })
 
-  it('Конвертировать: пересчёт Stars → TON и зачисление', async () => {
+  it('Конвертировать: пересчёт Stars → TON, звёзды списываются, зачисление один раз', async () => {
+    useStarsBalanceStore.setState({ stars: 2000 })
     renderScreen()
     await user.click(screen.getByRole('tab', { name: 'Конвертер' }))
     expect(screen.getByRole('button', { name: 'Конвертировать' })).toBeDisabled()
@@ -97,6 +100,18 @@ describe('DepositScreen (пополнение баланса)', () => {
     expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.0057 TON')
     await user.click(screen.getByRole('button', { name: 'Конвертировать' }))
     expect(useWalletStore.getState().getBalance()).toBe(106_000)
+    expect(useStarsBalanceStore.getState().stars).toBe(950)
+  })
+
+  it('Конвертировать: нельзя больше, чем заработано (без дюпа денег)', async () => {
+    useStarsBalanceStore.setState({ stars: 100 })
+    renderScreen()
+    await user.click(screen.getByRole('tab', { name: 'Конвертер' }))
+    await user.type(screen.getByLabelText('Количество Stars'), '1000')
+    expect(screen.getByRole('button', { name: 'Конвертировать' })).toBeDisabled()
+    expect(screen.getByRole('alert')).toHaveTextContent('Недостаточно звёзд')
+    expect(useWalletStore.getState().getBalance()).toBe(100_000)
+    expect(useStarsBalanceStore.getState().stars).toBe(100)
   })
 
   it('Подарки: шаги раскрываются, кнопка ведёт на @SexyDropOwner', async () => {

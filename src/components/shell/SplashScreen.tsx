@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
-import { getTelegramUser, hapticImpact } from '../../lib/telegram'
+import { hapticImpact } from '../../lib/telegram'
 import { UserAvatar } from '../ui/UserAvatar'
 import { FlameIcon } from './icons'
 import styles from './SplashScreen.module.css'
@@ -25,10 +25,6 @@ const SPARKS = Array.from({ length: 16 }, (_, i) => ({
 export function SplashScreen({ onFinish }: SplashScreenProps) {
   const [progress, setProgress] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
-  const tgUser = useMemo(() => getTelegramUser(), [])
-
-  const userName = tgUser?.first_name || tgUser?.username || 'Игрок'
-
   useEffect(() => {
     const startTime = performance.now()
     let impacted = false
@@ -142,7 +138,6 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
           <span className={styles.wordShine} />
         </div>
 
-        <h1 className={styles.greetingTitle}>Привет, {userName}!</h1>
         <div className={styles.brandSub}>
           <FlameIcon style={{ width: '14px', height: '14px', color: '#be5156' }} />
           <span>SEXY DROP Mini App</span>

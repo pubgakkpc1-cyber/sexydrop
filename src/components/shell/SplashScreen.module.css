@@ -297,7 +297,7 @@
   color: #cf7d81;
   margin-bottom: 22px;
   opacity: 0;
-  animation: riseIn 0.5s ease-out 1.25s forwards;
+  animation: riseIn 0.5s ease-out 1.1s forwards;
 }
 
 .progressContainer {

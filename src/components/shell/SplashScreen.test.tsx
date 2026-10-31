@@ -19,23 +19,10 @@ describe('SplashScreen (Моушн-загрузка и аватар)', () => {
     }
   })
 
-  it('рендерит дефолтное приветствие если пользователь не авторизован', () => {
+  it('показывает бренд и не показывает приветствие', () => {
     render(<SplashScreen onFinish={vi.fn()} />)
-    expect(screen.getByText(/Привет, Игрок!/)).toBeInTheDocument()
     expect(screen.getByText('SEXY DROP Mini App')).toBeInTheDocument()
-  })
-
-  it('рендерит персональное приветствие с именем Telegram пользователя', () => {
-    window.Telegram = {
-      WebApp: {
-        initDataUnsafe: {
-          user: { id: 777, first_name: 'Александр' },
-        },
-      } as never,
-    }
-
-    render(<SplashScreen onFinish={vi.fn()} />)
-    expect(screen.getByText(/Привет, Александр!/)).toBeInTheDocument()
+    expect(screen.queryByText(/Привет/)).not.toBeInTheDocument()
   })
 
   it('вызывает onFinish по клику для быстрого пропуска', () => {

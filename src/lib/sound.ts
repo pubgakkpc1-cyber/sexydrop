@@ -394,3 +394,94 @@ export function playCashoutWin(): void {
     /* no-op */
   }
 }
+
+/* ---------- Мины: мягкие звуки (тихие, без резких атак) ---------- */
+
+type Tone = { f: number; t: number; d: number; v: number; type?: OscillatorType; slideTo?: number }
+
+/** Играет набор тонов через мягкий lowpass; громкость заведомо низкая. */
+function playTones(tones: readonly Tone[], cutoff = 3200): void {
+  if (isSoundMuted) return
+  try {
+    const ctx = getAudioContext()
+    if (!ctx) return
+    const filter = ctx.createBiquadFilter()
+    filter.type = 'lowpass'
+    filter.frequency.value = cutoff
+    filter.connect(ctx.destination)
+    const base = ctx.currentTime
+    for (const tone of tones) {
+      const osc = ctx.createOscillator()
+      const gain = ctx.createGain()
+      const at = base + tone.t
+      osc.type = tone.type ?? 'sine'
+      osc.frequency.setValueAtTime(tone.f, at)
+      if (tone.slideTo) osc.frequency.exponentialRampToValueAtTime(tone.slideTo, at + tone.d)
+      gain.gain.setValueAtTime(0.0001, at)
+      gain.gain.exponentialRampToValueAtTime(tone.v, at + 0.012)
+      gain.gain.exponentialRampToValueAtTime(0.0001, at + tone.d)
+      osc.connect(gain)
+      gain.connect(filter)
+      osc.start(at)
+      osc.stop(at + tone.d + 0.05)
+    }
+  } catch {
+    /* безопасность при сбое Web Audio */
+  }
+}
+
+/** Пентатоника: каждая следующая безопасная клетка звучит чуть выше. */
+const MINES_SCALE = [523.25, 587.33, 659.25, 783.99, 880, 1046.5, 1174.66, 1318.51]
+
+/** Нажатие кнопки интерфейса — едва слышный «клик». */
+export function playUiTap(): void {
+  playTones([{ f: 640, t: 0, d: 0.05, v: 0.035, type: 'triangle' }], 2400)
+}
+
+/** Старт раунда: мягкий восходящий «вжух». */
+export function playMinesStart(): void {
+  playTones(
+    [
+      { f: 280, t: 0, d: 0.22, v: 0.05, type: 'triangle', slideTo: 520 },
+      { f: 523.25, t: 0.12, d: 0.3, v: 0.045 },
+    ],
+    2600,
+  )
+}
+
+/** Безопасная клетка: колокольчик, высота растёт с каждым шагом. */
+export function playMinesGem(step: number): void {
+  const f = MINES_SCALE[Math.min(Math.max(step, 1), MINES_SCALE.length) - 1]!
+  playTones(
+    [
+      { f, t: 0, d: 0.34, v: 0.07 },
+      { f: f * 2, t: 0.01, d: 0.22, v: 0.02 },
+    ],
+    4200,
+  )
+}
+
+/** Забрать выигрыш: тёплое «монетное» арпеджио. */
+export function playMinesCashout(): void {
+  playTones(
+    [
+      { f: 659.25, t: 0, d: 0.3, v: 0.06 },
+      { f: 783.99, t: 0.09, d: 0.3, v: 0.06 },
+      { f: 1046.5, t: 0.18, d: 0.5, v: 0.06 },
+      { f: 1568, t: 0.27, d: 0.45, v: 0.025 },
+    ],
+    4200,
+  )
+}
+
+/** Взрыв: глухой низкий удар и тихий нисходящий «стон» — без резкого шума. */
+export function playMinesBoom(): void {
+  playTones(
+    [
+      { f: 150, t: 0, d: 0.5, v: 0.12, type: 'sine', slideTo: 48 },
+      { f: 300, t: 0, d: 0.28, v: 0.045, type: 'triangle', slideTo: 90 },
+      { f: 220, t: 0.18, d: 0.55, v: 0.035, type: 'sine', slideTo: 110 },
+    ],
+    1400,
+  )
+}

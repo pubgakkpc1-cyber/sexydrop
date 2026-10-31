@@ -505,6 +505,37 @@ export function BombIcon(props: IconProps) {
 }
 
 /**
+ * Фирменная бомба SEXY DROP: тёмная «капля» с красным кантом, глянцем, фитилём и искрой.
+ * Цвет кант/искры берётся из currentColor, поэтому подходит к палитре темы.
+ */
+export function DropBombIcon(props: IconProps) {
+  return (
+    <svg {...base(props)} viewBox="0 0 48 48" fill="none">
+      <defs>
+        <radialGradient id="dropbomb-body" cx="38%" cy="32%" r="80%">
+          <stop offset="0%" stopColor="#6a6065" />
+          <stop offset="55%" stopColor="#2a2527" />
+          <stop offset="100%" stopColor="#141012" />
+        </radialGradient>
+      </defs>
+      <path
+        d="M24 14c6.6 6.4 11.4 12.1 11.4 18.2a11.4 11.4 0 0 1-22.8 0C12.6 26.1 17.4 20.4 24 14z"
+        fill="url(#dropbomb-body)"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinejoin="round"
+      />
+      <path d="M17.5 28.5c.4-3 2.2-5.2 4.2-7" stroke="#ffffff" strokeOpacity="0.55" strokeWidth="2.2" strokeLinecap="round" />
+      <path d="M24 14c0-3.6 1.6-5.4 4.6-6.4" stroke="#d9b36a" strokeWidth="2.2" strokeLinecap="round" />
+      <g className="dropbomb-spark">
+        <path d="M30.6 3.2l1 2.6 2.6 1-2.6 1-1 2.6-1-2.6-2.6-1 2.6-1z" fill="#ffd25a" />
+      </g>
+      <path d="M24 38.6v-3.2M20.4 36.2l1.2 1.2M27.6 36.2l-1.2 1.2" stroke="currentColor" strokeOpacity="0.8" strokeWidth="1.8" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+/**
  * 28. Мишень / Плинко (Target Icon)
  */
 export function TargetIcon(props: IconProps) {

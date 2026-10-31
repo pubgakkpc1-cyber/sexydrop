@@ -8,7 +8,6 @@ describe('buildWithdrawMessage', () => {
     const text = buildWithdrawMessage(gift, 'abc123')
     expect(text).toContain('Plush Pepe')
     expect(text).toContain('25 TON')
-    expect(text).toContain('abc123
-')
+    expect(text).toContain('abc123')
   })
 })

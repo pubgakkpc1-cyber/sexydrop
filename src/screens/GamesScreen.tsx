@@ -1,8 +1,10 @@
+import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { giftById } from '../data/catalog'
+import { CrashLoop } from '../components/home/CrashLoop'
 import { formatMultiplier, plinkoMaxMultiplier } from '../lib/plinkoMath'
 import { GameHistory } from '../components/games/GameHistory'
-import { DiceIcon, FlameIcon, RocketArtIcon, ZapIcon } from '../components/shell/icons'
+import { DiceIcon, FlameIcon, ZapIcon } from '../components/shell/icons'
 import { FEATURES } from '../lib/features'
 import styles from './GamesScreen.module.css'
 
@@ -60,7 +62,10 @@ export function GamesScreen() {
               strokeDasharray={`${0.24 * 2 * Math.PI * 50} ${2 * Math.PI * 50}`}
             />
           </svg>
-          <img className={styles.bannerRingArt} src={giftById.get('cyber-helmet')?.image} alt="" />
+          <span className={styles.bannerNeedle}>
+            <span className={styles.bannerNeedleTip} />
+          </span>
+          <img className={styles.bannerRingArt} src={giftById.get('plush_pepe-1')?.image} alt="" />
           <span className={styles.bannerRingPill}>24%</span>
         </span>
       </button>
@@ -73,8 +78,8 @@ export function GamesScreen() {
           onClick={() => navigate('/games/crash')}
           aria-label="Ракетка — забери до краша"
         >
-          <span className={styles.tileArt} aria-hidden>
-            <RocketArtIcon />
+          <span className={styles.tileScene} aria-hidden>
+            <CrashLoop />
           </span>
           <span className={styles.bannerInfo}>
             <span className={styles.tileName}>Ракетка</span>
@@ -121,7 +126,14 @@ export function GamesScreen() {
         >
           <span className={styles.squaresGrid} aria-hidden>
             {Array.from({ length: 9 }, (_, i) => (
-              <span key={i} className={styles.square} />
+              <span
+                key={i}
+                className={`${styles.mineCell} ${i === 7 ? styles.mineBomb : ''}`}
+                style={{ '--d': `${((i * 5) % 9) * 0.28}s` } as CSSProperties}
+              >
+                <span className={styles.mineFront} />
+                <span className={styles.mineBack}>{i === 7 ? '✹' : '◆'}</span>
+              </span>
             ))}
           </span>
           <span className={styles.bannerInfo}>

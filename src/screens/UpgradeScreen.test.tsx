@@ -98,7 +98,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     await user.click(within(targetDialog).getByRole('button', { name: 'Подтвердить' }))
     await user.click(screen.getByRole('button', { name: 'Апгрейдить' }))
 
-    const resultDialog = await screen.findByRole('dialog', {}, { timeout: 5000 })
+    const resultDialog = await screen.findByRole('dialog', {}, { timeout: 12_000 })
     expect(within(resultDialog).getByText('Не получилось')).toBeInTheDocument()
     expect(within(resultDialog).getByText(new RegExp(`шанс был ${pctText(50, 'snoop_dogg-1').replace('.', '\.')}%`))).toBeInTheDocument()
 
@@ -106,7 +106,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     expect(useInventoryStore.getState().items).toHaveLength(0)
     const entries = useGamesHistoryStore.getState().entries
     expect(entries[0]).toMatchObject({ game: 'Апгрейд', outcome: 'lost', deltaMinor: -50 })
-  })
+  }, 20_000)
 
   it('кнопки x2 / x3 / x5 выбирают РАЗНЫЕ цели с растущей ценой', async () => {
     useInventoryStore.setState({

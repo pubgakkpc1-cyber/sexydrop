@@ -116,24 +116,53 @@ function formatTonMaxOneDecimal(minor: number): string {
   return Number.isInteger(val) ? `${val}` : val.toFixed(1)
 }
 
-/** Три мелких NFT медленно плывут по фону (чистый CSS-transform, без нагрузки на canvas). */
-const FLOATERS = [
-  { src: '/gifts/plush_pepe_1.png', top: '14%', size: 26, dur: 34, delay: 0 },
-  { src: '/gifts/heart_locket_1.png', top: '27%', size: 22, dur: 44, delay: -16 },
-  { src: '/gifts/ion_gem_1.png', top: '36%', size: 24, dur: 38, delay: -27 },
+/** Мелкие NFT левитируют по всей арене и время от времени сменяются на другие (чистый CSS-transform). */
+const FLOAT_POOL = [
+  'plush_pepe_1', 'heart_locket_1', 'ion_gem_1', 'mini_oscar_1', 'astral_shard_1', 'snoop_dogg_1',
+  'liberty_figure_1', 'crystal_ball_1', 'jolly_chimp_1', 'swiss_watch_1', 'toy_bear_1', 'kissed_frog_1',
 ] as const
+const FLOATERS = [
+  { x: 10, y: 11, size: 26, swapMs: 7000, start: 0, dx: 26, dy: 16, dur: 9 },
+  { x: 78, y: 15, size: 24, swapMs: 8500, start: 3, dx: -22, dy: 20, dur: 11 },
+  { x: 42, y: 29, size: 22, swapMs: 9500, start: 6, dx: 24, dy: -18, dur: 13 },
+  { x: 88, y: 36, size: 24, swapMs: 7800, start: 9, dx: -20, dy: -14, dur: 10 },
+] as const
+
+function Floater({ f }: { f: (typeof FLOATERS)[number] }) {
+  const [idx, setIdx] = useState<number>(f.start)
+  useEffect(() => {
+    const id = window.setInterval(() => setIdx((i) => (i + 1) % FLOAT_POOL.length), f.swapMs)
+    return () => window.clearInterval(id)
+  }, [f.swapMs])
+  return (
+    <span
+      className={styles.floaterWrap}
+      style={
+        {
+          left: `${f.x}%`,
+          top: `${f.y}%`,
+          '--dx': `${f.dx}px`,
+          '--dy': `${f.dy}px`,
+          animationDuration: `${f.dur}s`,
+        } as React.CSSProperties
+      }
+    >
+      <img
+        key={idx}
+        src={`/gifts/${FLOAT_POOL[idx % FLOAT_POOL.length]}.png`}
+        alt=""
+        className={styles.floater}
+        style={{ width: f.size, height: f.size }}
+      />
+    </span>
+  )
+}
 
 function FloatingNfts() {
   return (
     <div className={styles.floaters} aria-hidden>
-      {FLOATERS.map((f) => (
-        <img
-          key={f.src}
-          src={f.src}
-          alt=""
-          className={styles.floater}
-          style={{ top: f.top, width: f.size, height: f.size, animationDuration: `${f.dur}s`, animationDelay: `${f.delay}s` }}
-        />
+      {FLOATERS.map((f, i) => (
+        <Floater key={i} f={f} />
       ))}
     </div>
   )

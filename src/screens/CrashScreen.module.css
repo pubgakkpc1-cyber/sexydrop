@@ -2676,27 +2676,38 @@
   overflow: hidden;
 }
 
-.floater {
+.floaterWrap {
   position: absolute;
-  left: 0;
-  border-radius: 7px;
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
-  opacity: 0.4;
-  object-fit: cover;
-  animation-name: floaterDrift;
-  animation-timing-function: linear;
+  display: block;
+  animation-name: levitate;
+  animation-timing-function: ease-in-out;
   animation-iteration-count: infinite;
+  animation-direction: alternate;
   will-change: transform;
 }
 
-@keyframes floaterDrift {
-  0% { transform: translate3d(108vw, 0, 0) rotate(8deg); }
-  50% { transform: translate3d(50vw, -14px, 0) rotate(-6deg); }
-  100% { transform: translate3d(-14vw, 6px, 0) rotate(10deg); }
+.floater {
+  display: block;
+  border-radius: 7px;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  opacity: 0.42;
+  object-fit: cover;
+  animation: floaterSwap 0.9s ease-out both;
+}
+
+@keyframes levitate {
+  0% { transform: translate3d(0, 0, 0) rotate(-5deg); }
+  50% { transform: translate3d(calc(var(--dx) * 0.5), calc(var(--dy) * -0.8), 0) rotate(4deg); }
+  100% { transform: translate3d(var(--dx), var(--dy), 0) rotate(-3deg); }
+}
+
+@keyframes floaterSwap {
+  0% { opacity: 0; transform: scale(0.4) rotate(-25deg); }
+  100% { opacity: 0.42; transform: scale(1) rotate(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .floater { animation: none; left: 70%; }
+  .floaterWrap, .floater { animation: none; }
 }
 
 /* Производительность: никакого стеклянного размытия поверх анимированного холста (матовый стиль) */

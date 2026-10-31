@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useStarsBalanceStore } from '../store/starsBalance'
 import { formatMinor, toMinor, type Minor } from '../lib/money'
@@ -13,6 +13,20 @@ import {
 } from '../lib/stars'
 import { useWalletStore } from '../store/wallet'
 import { cx } from '../lib/cx'
+import {
+  commentPayload,
+  createCryptoInvoice,
+  cryptoInvoiceStatus,
+  loadDepositConfig,
+  minorToNano,
+  newSecret,
+  tonComment,
+  tonPaymentStatus,
+  type DepositConfig,
+} from '../lib/deposits'
+import { getTonConnect } from '../lib/tonconnect'
+import { getWebApp } from '../lib/telegram'
+import { PENDING_TTL_MS, useDepositsStore } from '../store/deposits'
 import {
   BotIcon,
   CheckIcon,
@@ -55,10 +69,10 @@ function parseTon(input: string): Minor | null {
 }
 
 /** Панель «TON» и «Крипто Бот»: сумма + быстрые добавки. */
-function TonPanel({ via, onDone }: { via: 'wallet' | 'bot'; onDone: (minor: Minor) => void }) {
+function TonPanel({ via, onDone, locked = false }: { via: 'wallet' | 'bot'; onDone: (minor: Minor) => void; locked?: boolean }) {
   const [input, setInput] = useState('')
   const minor = useMemo(() => parseTon(input), [input])
-  const valid = minor !== null && minor >= MIN_TON_MINOR
+  const valid = minor !== null && minor >= MIN_TON_MINOR && !locked
   const add = (preset: Minor) => setInput(formatMinor((minor ?? 0) + preset))
 
   return (
@@ -103,6 +117,235 @@ function TonPanel({ via, onDone }: { via: 'wallet' | 'bot'; onDone: (minor: Mino
       </button>
     </div>
   )
+}
+
+/** Общая часть реальных панелей: поле суммы и быстрые добавки. */
+function AmountField({
+  input,
+  setInput,
+  minor,
+  config,
+}: {
+  input: string
+  setInput: (v: string) => void
+  minor: Minor | null
+  config: DepositConfig
+}) {
+  const add = (preset: Minor) => setInput(formatMinor(Math.min(config.max_minor, (minor ?? 0) + preset)))
+  return (
+    <>
+      <label className={styles.label} htmlFor="dep-ton">
+        Сумма (минимум {formatMinor(config.min_minor)} TON)
+      </label>
+      <div className={styles.inputRow}>
+        <input
+          id="dep-ton"
+          className={styles.input}
+          inputMode="decimal"
+          placeholder="Введите сумму…"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+        <TonIcon className={styles.inputIcon} aria-hidden />
+      </div>
+      <div className={styles.presets}>
+        {TON_PRESETS.map((p) => (
+          <button key={p} type="button" className={styles.preset} onClick={() => add(p)}>
+            +{formatMinor(p)} TON
+          </button>
+        ))}
+      </div>
+    </>
+  )
+}
+
+/** «TON»: перевод с любого кошелька через TON Connect (Tonkeeper, Tonhub, MyTonWallet, Wallet…). */
+function WalletPanel({ config }: { config: DepositConfig }) {
+  const [input, setInput] = useState('')
+  const [connected, setConnected] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [sent, setSent] = useState(false)
+  const minor = useMemo(() => parseTon(input), [input])
+  const valid = minor !== null && minor >= config.min_minor && minor <= config.max_minor
+  const address = config.ton_address
+
+  useEffect(() => {
+    let off: (() => void) | undefined
+    let dead = false
+    getTonConnect()
+      .then((tc) => {
+        if (dead) return
+        setConnected(tc.connected)
+        off = tc.onStatusChange((w) => setConnected(Boolean(w)))
+      })
+      .catch(() => setError('Не удалось загрузить TON Connect'))
+    return () => {
+      dead = true
+      off?.()
+    }
+  }, [])
+
+  const submit = async () => {
+    setError(null)
+    setBusy(true)
+    try {
+      const tc = await getTonConnect()
+      if (!tc.connected) {
+        await tc.openModal()
+        return
+      }
+      if (!valid || !address) return
+      const secret = newSecret()
+      const comment = await tonComment(secret)
+      await tc.sendTransaction({
+        validUntil: Math.floor(Date.now() / 1000) + 600,
+        messages: [{ address, amount: minorToNano(minor), payload: commentPayload(comment) }],
+      })
+      useDepositsStore.getState().add({ secret, kind: 'ton', amount: minor, createdAt: Date.now() })
+      setInput('')
+      setSent(true)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : ''
+      setError(/reject|declin|cancel|User/i.test(msg) ? 'Перевод отменён в кошельке' : msg || 'Не удалось отправить перевод')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const disconnect = async () => {
+    try {
+      await (await getTonConnect()).disconnect()
+    } catch {
+      /* кошелёк уже отключён */
+    }
+  }
+
+  return (
+    <div className={styles.panel}>
+      <p className={styles.note}>
+        Переведите TON со своего кошелька: Tonkeeper, Tonhub, MyTonWallet, Wallet в Telegram и
+        другие. Баланс пополнится автоматически, когда перевод попадёт в блокчейн.
+      </p>
+      <AmountField input={input} setInput={setInput} minor={minor} config={config} />
+      <button
+        type="button"
+        className={styles.primary}
+        disabled={busy || (connected && !valid)}
+        onClick={() => void submit()}
+      >
+        {connected ? 'Пополнить' : 'Подключить кошелёк'}
+      </button>
+      {connected && (
+        <button type="button" className={styles.preset} onClick={() => void disconnect()}>
+          Сменить кошелёк
+        </button>
+      )}
+      {sent && <p className={styles.rate}>Перевод отправлен — ждём подтверждения в сети (до минуты).</p>}
+      {error && (
+        <p className={styles.note} role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
+/** «Крипто Бот»: счёт в @CryptoBot на выбранную сумму. */
+function CryptoBotPanel({ config }: { config: DepositConfig }) {
+  const [input, setInput] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [sent, setSent] = useState(false)
+  const minor = useMemo(() => parseTon(input), [input])
+  const valid = minor !== null && minor >= config.min_minor && minor <= config.max_minor
+
+  const submit = async () => {
+    if (!valid) return
+    setError(null)
+    setBusy(true)
+    try {
+      const secret = newSecret()
+      const inv = await createCryptoInvoice(minor, secret)
+      useDepositsStore.getState().add({
+        secret,
+        kind: 'crypto',
+        invoiceId: inv.invoice_id,
+        amount: minor,
+        createdAt: Date.now(),
+      })
+      const webApp = getWebApp()
+      if (webApp?.openTelegramLink) webApp.openTelegramLink(inv.pay_url)
+      else window.open(inv.pay_url, '_blank', 'noopener')
+      setInput('')
+      setSent(true)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Не удалось создать счёт')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className={styles.panel}>
+      <p className={styles.note}>
+        Оплата через @CryptoBot: создадим счёт, вы оплатите его в боте любой криптовалютой —
+        баланс пополнится в TON автоматически.
+      </p>
+      <AmountField input={input} setInput={setInput} minor={minor} config={config} />
+      <button type="button" className={styles.primary} disabled={!valid || busy} onClick={() => void submit()}>
+        Оплатить в @CryptoBot
+      </button>
+      {sent && <p className={styles.rate}>Счёт открыт в боте. После оплаты вернитесь сюда — баланс обновится сам.</p>}
+      {error && (
+        <p className={styles.note} role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
+/**
+ * Следит за неподтверждёнными платежами (TON и CryptoBot) и зачисляет оплаченные.
+ * Пока открыт экран, опрашивает сервер каждые 4 секунды; незавершённые платежи
+ * переживают перезапуск приложения и проверяются при следующем открытии.
+ */
+function usePendingDeposits(onPaid: (minor: Minor) => void) {
+  useEffect(() => {
+    let stopped = false
+    const tick = async () => {
+      const { pending, remove, markCredited } = useDepositsStore.getState()
+      for (const p of pending) {
+        if (stopped) return
+        if (Date.now() - p.createdAt > PENDING_TTL_MS) {
+          remove(p.secret)
+          continue
+        }
+        try {
+          const res =
+            p.kind === 'ton' || p.invoiceId === undefined
+              ? await tonPaymentStatus(p.secret)
+              : await cryptoInvoiceStatus(p.invoiceId, p.secret)
+          if (res.status === 'paid') {
+            if (markCredited(p.secret)) onPaid(res.amount_minor)
+          } else if (res.status === 'expired') {
+            remove(p.secret)
+          }
+        } catch {
+          /* сеть или сервер недоступны — повторим на следующем такте */
+        }
+      }
+    }
+    void tick()
+    const id = window.setInterval(() => void tick(), 4000)
+    return () => {
+      stopped = true
+      window.clearInterval(id)
+    }
+    // onPaid зачисляет через store, повторный запуск эффекта не нужен
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 }
 
 /** Панель «Stars»: оплата Stars → зачисление TON по курсу. */
@@ -351,12 +594,26 @@ export function DepositScreen() {
   const startTab = params.get('tab')
   const [tab, setTab] = useState<TabId>(TABS.some((x) => x.id === startTab) ? (startTab as TabId) : 'ton')
   const [done, setDone] = useState<string | null>(null)
+  const [config, setConfig] = useState<DepositConfig | null | undefined>(undefined)
+  const pendingCount = useDepositsStore((s) => s.pending.length)
+
+  useEffect(() => {
+    let dead = false
+    void loadDepositConfig().then((c) => {
+      if (!dead) setConfig(c)
+    })
+    return () => {
+      dead = true
+    }
+  }, [])
 
   const finish = (minor: Minor) => {
     credit(minor)
     setDone(`Баланс пополнен на ${formatMinor(minor)} TON`)
     window.setTimeout(() => setDone(null), 2500)
   }
+
+  usePendingDeposits(finish)
 
   return (
     <div className={styles.screen}>
@@ -389,8 +646,24 @@ export function DepositScreen() {
         </p>
       )}
 
-      {tab === 'ton' && <TonPanel via="wallet" onDone={finish} />}
-      {tab === 'crypto' && <TonPanel via="bot" onDone={finish} />}
+      {pendingCount > 0 && (
+        <p className={styles.rate} role="status">
+          Ожидаем подтверждение оплаты ({pendingCount})…
+        </p>
+      )}
+
+      {tab === 'ton' &&
+        (config?.ton_address ? (
+          <WalletPanel config={config} />
+        ) : (
+          <TonPanel via="wallet" onDone={finish} locked={config === undefined} />
+        ))}
+      {tab === 'crypto' &&
+        (config?.cryptobot ? (
+          <CryptoBotPanel config={config} />
+        ) : (
+          <TonPanel via="bot" onDone={finish} locked={config === undefined} />
+        ))}
       {tab === 'stars' && <StarsPanel onDone={finish} />}
       {tab === 'gifts' && <GiftsPanel />}
       {tab === 'convert' && <ConvertPanel onDone={finish} />}

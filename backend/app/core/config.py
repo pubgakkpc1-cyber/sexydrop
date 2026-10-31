@@ -35,6 +35,13 @@ class Settings(BaseSettings):
     app_url: str = "https://p01--sexydrop--86lmybxbkwwj.code.run"
     # Секрет пути вебхука; пусто — вычисляется из BOT_TOKEN
     telegram_webhook_secret: str = ""
+    # Пополнения: токен Crypto Pay (@CryptoBot → Crypto Pay → Create App) и адрес кошелька проекта для TON
+    cryptobot_token: str = ""
+    cryptobot_api_url: str = "https://pay.crypt.bot/api"
+    # Публичный адрес кошелька проекта (не секрет); можно переопределить через TON_DEPOSIT_ADDRESS
+    ton_deposit_address: str = "UQCTiqlyiZ0YigN0391TXbV3vZFmR6xNx9G6HeHMP4f9Le5a"
+    toncenter_api_url: str = "https://toncenter.com/api/v3"
+    toncenter_api_key: str = ""
     jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400

@@ -26,9 +26,7 @@ describe('CaseDetailScreen (Референс Epic Gift Bot)', () => {
     )
 
     // Шапка
-    expect(screen.getByText('Назад')).toBeInTheDocument()
-    expect(screen.getByText('SEXY DROP')).toBeInTheDocument()
-    expect(screen.getByText('+ Пополнить')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Вернуться назад' })).toBeInTheDocument()
 
     // Встроенная рулетка
     expect(screen.getByLabelText('Рулетка кейса')).toBeInTheDocument()

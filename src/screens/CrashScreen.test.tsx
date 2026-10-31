@@ -92,7 +92,7 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     advanceEngine(5000) // полёт начался
     advanceEngine(2000) // 40 тиков роста → показ 1.41
 
-    const cashoutButton = screen.getByRole('button', { name: /Забрать x1\.4/ })
+    const cashoutButton = screen.getByRole('button', { name: /Забрать x1\.41/ })
     await user.click(cashoutButton)
 
     expect(screen.getByText(/Выигрыш \+1\.4 TON/)).toBeInTheDocument()
@@ -108,7 +108,7 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
 
     expect(screen.getByText('Улетел!')).toBeInTheDocument()
     // «x2.00» — и на полотне (краш), и в чипе истории
-    expect(screen.getAllByText('x2.0')).toHaveLength(2)
+    expect(screen.getAllByText('x2.00')).toHaveLength(2)
     expect(screen.getByText('Ставка сгорела')).toBeInTheDocument()
   })
 

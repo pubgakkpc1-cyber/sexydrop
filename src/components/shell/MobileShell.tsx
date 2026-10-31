@@ -16,8 +16,7 @@ export function MobileShell() {
   const navigate = useNavigate()
 
   const [inTelegram] = useState(() => isTelegramEnv())
-  const isCustomHeaderScreen =
-    location.pathname.startsWith('/case/') || location.pathname === '/games/crash'
+  const isCustomHeaderScreen = location.pathname === '/games/crash'
   const [isWideScreen, setIsWideScreen] = useState(() => {
     if (typeof window === 'undefined') return false
     return window.innerWidth >= 1024

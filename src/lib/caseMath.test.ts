@@ -91,10 +91,18 @@ describe('catalog: gifts', () => {
 })
 
 describe('catalog: cases — инвариант EV и RTP', () => {
-  it('у всех 20 платных кейсов цена из конфигурации продукта', () => {
+  it('у всех 28 платных кейсов цена из конфигурации продукта', () => {
     const expected = new Map(
       Object.entries({
         farm: 6000,
+        sweet: 6000,
+        party: 7000,
+        cute: 8000,
+        street: 10000,
+        jewel: 12000,
+        meme: 14000,
+        heroes: 20000,
+        potion: 24000,
         autumn: 8000,
         movie: 9000,
         telegram: 10000,
@@ -181,7 +189,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
   it('у кейсов уникальные id и локальные изображения', () => {
     expect(new Set(cases.map((c) => c.id)).size).toBe(cases.length)
     for (const gameCase of cases) {
-      expect(gameCase.image).toMatch(/^\/cases\/.+\.svg$/)
+      expect(gameCase.image).toMatch(/^\/cases\/.+\.(svg|png)$/)
     }
   })
 

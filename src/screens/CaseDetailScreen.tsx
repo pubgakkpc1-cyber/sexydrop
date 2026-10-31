@@ -12,7 +12,6 @@ import {
   TonIcon,
   LockIcon,
 } from '../components/shell/icons'
-import { UserAvatar } from '../components/ui/UserAvatar'
 import { caseById, giftById, type FreeCaseId, type Gift } from '../data/catalog'
 import { displayProbabilityBps } from '../lib/caseMath'
 import { formatMinor } from '../lib/money'
@@ -153,52 +152,19 @@ export function CaseDetailScreen() {
 
   return (
     <div className={styles.screen}>
-      {/* 1. Верхняя панель (по референсу фото) */}
-      <header className={styles.topNav}>
+      {/* 2. Заголовок кейса (как на фото) */}
+      <div className={styles.caseHeading}>
         <button
           type="button"
-          className={styles.backButton}
+          className={styles.inlineBack}
           onClick={() => {
             hapticImpact('light')
             navigate(-1)
           }}
           aria-label="Вернуться назад"
         >
-          <span className={styles.backIconWrap}>
-            <ChevronLeftIcon className={styles.backIcon} aria-hidden />
-          </span>
-          <span className={styles.backText}>Назад</span>
+          <ChevronLeftIcon className={styles.backIcon} aria-hidden />
         </button>
-
-        <div className={styles.brandTitle}>
-          <span>SEXY DROP</span>
-        </div>
-
-        <div className={styles.headerRight}>
-          <UserAvatar size={32} className={styles.userAvatar} />
-          <div className={styles.balanceCol}>
-            <span className={styles.balanceLabel}>Ваш баланс</span>
-            <span className={styles.balanceVal}>
-              <TonIcon style={{ width: '13px', height: '13px', marginRight: '3px' }} />
-              {formatMinor(balance)}
-            </span>
-          </div>
-
-          <button
-            type="button"
-            className={styles.depositPill}
-            onClick={() => {
-              hapticImpact('light')
-              navigate('/deposit')
-            }}
-          >
-            + Пополнить
-          </button>
-        </div>
-      </header>
-
-      {/* 2. Заголовок кейса (как на фото) */}
-      <div className={styles.caseHeading}>
         <h1 className={styles.caseTitle}>{gameCase.name} Кейс</h1>
         <p className={styles.caseSubtitle}>
           {isDailyFree

@@ -157,6 +157,45 @@ for ci, (cid, name, price, mult, k) in enumerate(CASES):
         f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"
     )
 
+# --- Тематические кейсы: набор подарков задан по смыслу, цена подбирается автоматически ---
+THEMED = [
+    ("sweet", "Sweet", ["Ice Cream", "Lol Pop", "Whip Cupcake", "Spring Basket", "Party Sparkler", "Jingle Bell", "Pool Float", "Chill Flame", "Xmas Stocking"]),
+    ("potion", "Potion", ["Love Potion", "Crystal Ball", "Voodoo Doll", "Magic Potion", "Astral Shard", "Witch Hat", "Trapped Heart", "Mad Pumpkin"]),
+    ("jewel", "Jewel", ["Clover Pin", "Victory Medal", "Fine Pen", "Signet Ring", "Swiss Watch", "Astral Shard", "Heart Locket", "Ion Gem", "Loot Bag"]),
+    ("meme", "Meme", ["Pet Snake", "Jolly Chimp", "Snoop Dogg", "Snoop Cigar", "Kissed Frog", "Toy Bear", "Plush Pepe", "Liberty Figure"]),
+    ("party", "Party", ["Party Sparkler", "Big Year", "Jingle Bell", "Lol Pop", "Victory Medal", "Timeless Book", "Mini Oscar", "Westside Sign", "Surge Board"]),
+    ("heroes", "Heroes", ["Victory Medal", "Khabib's Papakha", "Mini Oscar", "Mighty Arm", "Heroic Helmet", "Durov's Cap", "Resistance Dog", "Liberty Figure"]),
+    ("street", "Street", ["Surge Board", "Snoop Dogg", "Snoop Cigar", "Sharp Tongue", "Low Rider", "Westside Sign", "Input Key", "Vintage Cigar"]),
+    ("cute", "Cute", ["Whip Cupcake", "Pet Snake", "Jolly Chimp", "Toy Bear", "Kissed Frog", "Scared Cat", "Spring Basket"]),
+]
+PRICE_LADDER_TON = [6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24, 25, 30, 35, 40, 50, 60, 70, 80, 100, 120, 150, 200, 250, 300, 400, 500, 750, 1000]
+
+themed_prices = {}
+for ti, (cid, name, names) in enumerate(THEMED):
+    pool = sorted((n for n in names if n in GIFTS and allowed_variants(n, cid)), key=lambda n: GIFTS[n][0])
+    v = [GIFTS[n][0] for n in pool]
+    best = None
+    for ton in PRICE_LADDER_TON:
+        price = ton * 1000
+        w = solve(v, price)
+        if w and util(w, v, price) >= 0.96:
+            best = (price, w)
+            break
+    assert best, f"no price for themed case {cid}"
+    price, w = best
+    themed_prices[cid] = price
+    ci = len(CASES) + ti
+    result[cid] = []
+    for j, (n, wt) in enumerate(zip(pool, w)):
+        opts = allowed_variants(n, cid)
+        result[cid].append([opts[(ci + j) % len(opts)], wt])
+    report.append(
+        f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
+        f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"
+    )
+
+(ROOT / "scripts/themed_cases.json").write_text(json.dumps(themed_prices, indent=1), encoding="utf-8")
+
 (ROOT / "scripts/case_weights.json").write_text(json.dumps(result, ensure_ascii=False, indent=1), encoding="utf-8")
 ts = [
     "/**",

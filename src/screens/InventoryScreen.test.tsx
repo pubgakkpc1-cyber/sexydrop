@@ -155,7 +155,7 @@ describe('InventoryScreen — фильтры', () => {
     renderScreen()
     seedInventory()
     await userEvent.click(within(card('Astral Shard')).getByRole('button', { name: 'Продать за 5 TON' }))
-    expect(screen.getByRole('status')).toHaveTextContent('Продано: +5 TON')
+    expect(await screen.findByRole('status')).toHaveTextContent('Продано: +5 TON')
     expect(useWalletStore.getState().getBalance()).toBe(105_000)
     expect(screen.getByText('3 шт.')).toBeInTheDocument()
     expect(screen.queryByRole('article', { name: 'Astral Shard' })).not.toBeInTheDocument()

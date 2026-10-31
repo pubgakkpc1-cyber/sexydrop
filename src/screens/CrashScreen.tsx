@@ -111,7 +111,7 @@ function tierCls(tier: keyof typeof TIER_CLASS): string {
 }
 
 function fmtMult(value: number): string {
-  return (Math.floor(value * 10 + 1e-9) / 10).toFixed(1)
+  return (Math.floor(value * 100 + 1e-7) / 100).toFixed(2)
 }
 
 function formatTonMaxOneDecimal(minor: number): string {

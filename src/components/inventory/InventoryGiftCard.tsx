@@ -7,6 +7,8 @@ import styles from './InventoryGiftCard.module.css'
 export interface InventoryGiftCardProps {
   gift: Gift
   onSell: () => void
+  /** Идёт анимация продажи: карточка плавно исчезает, всплывает «+X TON». */
+  selling?: boolean
 }
 
 /**
@@ -14,12 +16,22 @@ export interface InventoryGiftCardProps {
  * название, «Вывести» (серверная функция — пока недоступна), «Продать за …»,
  * быстрые переходы в Апгрейд и Play Hub.
  */
-export function InventoryGiftCard({ gift, onSell }: InventoryGiftCardProps) {
+export function InventoryGiftCard({ gift, onSell, selling = false }: InventoryGiftCardProps) {
   const navigate = useNavigate()
   const price = formatMinor(gift.priceMinor)
 
   return (
-    <article className={styles.card} data-rarity={gift.rarity} aria-label={gift.name}>
+    <article
+      className={`${styles.card} ${selling ? styles.selling : ''}`}
+      data-rarity={gift.rarity}
+      aria-label={gift.name}
+    >
+      {selling && (
+        <span className={styles.soldFloat} aria-hidden>
+          +{price}
+          <TonIcon className={styles.priceIcon} aria-hidden />
+        </span>
+      )}
       <div className={styles.art}>
         <img
           className={gift.image.endsWith('.png') ? styles.imageFull : styles.imageContain}
@@ -47,6 +59,7 @@ export function InventoryGiftCard({ gift, onSell }: InventoryGiftCardProps) {
         <button
           type="button"
           className={styles.sell}
+          disabled={selling}
           onClick={onSell}
           aria-label={`Продать за ${price} TON`}
         >

@@ -223,6 +223,14 @@ const CASE_CONFIG: readonly {{
   glow: string
 }}[] = [
   {{ id: 'farm', name: 'Farm', priceMinor: 6000, glow: '#46d97b' }},
+  {{ id: 'sweet', name: 'Sweet', priceMinor: 6000, isNew: true, glow: '#ff8fc7' }},
+  {{ id: 'party', name: 'Party', priceMinor: 7000, isNew: true, glow: '#ffd23c' }},
+  {{ id: 'cute', name: 'Cute', priceMinor: 8000, isNew: true, glow: '#ffb3d9' }},
+  {{ id: 'street', name: 'Street', priceMinor: 10000, isNew: true, glow: '#ff6b3d' }},
+  {{ id: 'jewel', name: 'Jewel', priceMinor: 12000, isNew: true, glow: '#5de0ff' }},
+  {{ id: 'meme', name: 'Meme', priceMinor: 14000, isNew: true, glow: '#7be35c' }},
+  {{ id: 'heroes', name: 'Heroes', priceMinor: 20000, isNew: true, glow: '#ffb02e' }},
+  {{ id: 'potion', name: 'Potion', priceMinor: 24000, isNew: true, glow: '#c05cff' }},
   {{ id: 'autumn', name: 'Autumn', priceMinor: 8000, isNew: true, glow: '#ff9f2e' }},
   {{ id: 'movie', name: 'Movie', priceMinor: 9000, glow: '#ff5d5d' }},
   {{ id: 'telegram', name: 'Telegram', priceMinor: 10000, glow: '#3ba7ff' }},

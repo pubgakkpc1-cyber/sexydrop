@@ -35,6 +35,8 @@ const SORT_MODES: ReadonlyArray<{ id: SortMode; label: string }> = [
  * и фильтры. Фильтры и сортировка — клиентский вид поверх реального состояния
  * стора; сами данные приходят только из настоящих операций (открытие кейсов и т.д.).
  */
+const SELL_ANIM_MS = 520
+
 export function InventoryScreen() {
   const navigate = useNavigate()
   const items = useInventoryStore((s) => s.items)
@@ -44,6 +46,7 @@ export function InventoryScreen() {
   const [sort, setSort] = useState<SortMode>('new')
   /** Короткое подтверждение продажи («Продано +X TON»). */
   const [soldNote, setSoldNote] = useState<string | null>(null)
+  const [sellingUid, setSellingUid] = useState<string | null>(null)
 
   const joined = useMemo(
     () =>
@@ -77,12 +80,18 @@ export function InventoryScreen() {
 
   const filtering = query.trim() !== '' || rarity !== 'all'
 
+  // Продажа в два шага: карточка плавно «улетает» (с плашкой +X TON), затем подарок реально продаётся
   const handleSell = (uid: string) => {
-    const res = sellItem(uid, makeRequestId())
-    if (res.status === 'ok') {
-      setSoldNote(`Продано: +${formatMinor(res.creditedMinor)} TON`)
-      window.setTimeout(() => setSoldNote(null), 2500)
-    }
+    if (sellingUid !== null) return
+    setSellingUid(uid)
+    window.setTimeout(() => {
+      const res = sellItem(uid, makeRequestId())
+      setSellingUid(null)
+      if (res.status === 'ok') {
+        setSoldNote(`Продано: +${formatMinor(res.creditedMinor)} TON`)
+        window.setTimeout(() => setSoldNote(null), 2500)
+      }
+    }, SELL_ANIM_MS)
   }
 
   const resetFilters = () => {
@@ -196,7 +205,9 @@ export function InventoryScreen() {
           ) : (
             <div className={filterStyles.grid}>
               {visible.map(({ item, gift }) => (
-                <InventoryGiftCard key={item.uid} gift={gift} onSell={() => handleSell(item.uid)} />
+                <InventoryGiftCard key={item.uid} gift={gift} selling={sellingUid === item.uid}
+                  onSell={() => handleSell(item.uid)}
+                />
               ))}
             </div>
           )}

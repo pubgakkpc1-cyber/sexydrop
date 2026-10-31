@@ -232,3 +232,47 @@
   background: var(--card);
   border-radius: var(--radius-sm, 6px);
 }
+
+/* Сводка заработка */
+.earnHero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  background: linear-gradient(135deg, #3a1f21 0%, #231a1b 100%);
+  border: 1px solid rgba(209, 89, 94, 0.45);
+  border-radius: 20px;
+  box-shadow: 0 0 24px rgba(209, 89, 94, 0.15);
+}
+
+.earnMain {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.earnLabel {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.earnValue {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.earnStats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.earnStats b {
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}

@@ -23,7 +23,7 @@ const EXCHANGE_OPTIONS: readonly { tickets: number; gramMinor: Minor }[] = [
 ]
 
 /**
- * Награды (6.2–6.4): задания и прогресс, билеты и обмен, розыгрыш.
+ * Заработок (6.2–6.4): задания и прогресс, билеты и обмен, розыгрыш.
  * Всё считается из РЕАЛЬНОЙ статистики пользователя (store/profile ←
  * gamesHistory/pvpMatches); синтетика запрещена. Экономика раскрыта:
  * билет = 0.025 TON, начисление 1 билет / 2 TON оборота = кэшбэк 1.25%
@@ -66,11 +66,27 @@ export function RewardsScreen() {
   }
 
   const draws = raffleRecentDraws()
+  const doneQuests = QUESTS.filter((q) => claimed[q.id] === true).length
 
   return (
     <div className={styles.screen}>
-      <h1 className={styles.title}>Награды</h1>
-      <p className={styles.lead}>Задания, билеты и розыгрыши</p>
+      <h1 className={styles.title}>Заработок</h1>
+      <p className={styles.lead}>Играй, выполняй задания и забирай TON</p>
+
+      {/* Сводка заработка: сколько TON уже можно забрать билетами */}
+      <section className={styles.earnHero} aria-label="Сводка заработка">
+        <div className={styles.earnMain}>
+          <span className={styles.earnLabel}>Можно обменять</span>
+          <span className={styles.earnValue} data-testid="earn-value">
+            {formatMinor(tickets * TICKET_VALUE_MINOR)} TON
+          </span>
+        </div>
+        <div className={styles.earnStats}>
+          <span><b>{tickets}</b> билетов</span>
+          <span><b>{formatMinor(profile.wageredMinor)}</b> оборот</span>
+          <span><b>{doneQuests}/{QUESTS.length}</b> заданий</span>
+        </div>
+      </section>
 
       {/* --- Билеты (6.3) --- */}
       <section className={styles.section} aria-label="Билеты">
@@ -112,7 +128,7 @@ export function RewardsScreen() {
 
       {/* --- Задания (6.2) --- */}
       <section className={styles.section} aria-label="Задания">
-        <h2 className={styles.sectionTitle}>Задания и прогресс</h2>
+        <h2 className={styles.sectionTitle}>Задания — заработай билеты</h2>
         <div className={styles.questList}>
           {QUESTS.map((quest) => {
             const progress = Math.min(progressOf(quest), quest.target)
@@ -125,6 +141,7 @@ export function RewardsScreen() {
                   <span className={styles.questTitle}>{quest.title}</span>
                   <span className={styles.questReward} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                     +{quest.rewardTickets} <TicketIcon style={{ width: '14px', height: '14px' }} />
+                    <small style={{ opacity: 0.7 }}>≈ {formatMinor(quest.rewardTickets * TICKET_VALUE_MINOR)} TON</small>
                   </span>
                 </div>
                 <div className={styles.questBar}>
@@ -151,7 +168,7 @@ export function RewardsScreen() {
         </div>
         <p className={styles.rules}>
           Задания считаются локально по реальным событиям; серверная проверка
-          по журналу транзакций — TIER 7 (6.6/7.6). Награды разовые (промо).
+          по журналу транзакций — TIER 7 (6.6/7.6). Бонусы за задания разовые.
         </p>
       </section>
 
@@ -210,7 +227,7 @@ export function RewardsScreen() {
 
       <p className={styles.note}>
         Ваша статистика: раунды: {profile.rounds}, оборот: {formatMinor(profile.wageredMinor)} TON.
-        Участвуйте в розыгрышах и получайте эксклюзивные награды.
+        Чем больше играете, тем больше зарабатываете.
       </p>
     </div>
   )

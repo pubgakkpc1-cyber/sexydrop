@@ -34,7 +34,7 @@ afterEach(() => {
 describe('RewardsScreen (6.2–6.4: задания, билеты, розыгрыш)', () => {
   it('шапка, секции и раскрытая экономика (кэшбэк 1.25%, EV = 2.5 TON, TIER 7)', () => {
     render(<RewardsScreen />)
-    expect(screen.getByText('Награды')).toBeInTheDocument()
+    expect(screen.getByText('Заработок')).toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Билеты' })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Задания' })).toBeInTheDocument()
     expect(screen.getByRole('region', { name: 'Розыгрыш' })).toBeInTheDocument()

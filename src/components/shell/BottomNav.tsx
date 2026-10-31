@@ -36,7 +36,7 @@ export function BottomNav() {
     { to: '/invite', label: 'Пригласить', icon: UserPlusIcon },
     { to: '/', label: 'Главная', icon: HomeIcon, end: true },
     { to: '/rating', label: 'Рейтинг', icon: TrophyIcon },
-    { to: '/rewards', label: 'Награды', icon: CoinsRewardIcon },
+    { to: '/rewards', label: 'Заработок', icon: CoinsRewardIcon },
   ]
 
   const activeIndex = tabs.findIndex((tab) =>

@@ -26,6 +26,8 @@ import { getWebApp, getTelegramUser } from '../lib/telegram'
 import { MoneyRain } from '../components/effects/MoneyRain'
 import { BetSheet } from '../components/games/BetSheet'
 import { RocketRewardSheet } from '../components/games/RocketRewardSheet'
+import { MULT_TIER_STYLE, multTier } from '../lib/multTier'
+import { tileGiftFor } from '../lib/crashTile'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
@@ -94,6 +96,18 @@ function AmountSplit({ text }: { text: string }) {
       <span className={styles.amtFrac}>{frac !== undefined ? `.${frac}` : ''}</span>
     </>
   )
+}
+
+const TIER_CLASS: Record<'bad' | 'amber' | 'green' | 'cyan' | 'violet', string | undefined> = {
+  bad: styles.tierBad,
+  amber: styles.tierAmber,
+  green: styles.tierGreen,
+  cyan: styles.tierCyan,
+  violet: styles.tierViolet,
+}
+
+function tierCls(tier: keyof typeof TIER_CLASS): string {
+  return TIER_CLASS[tier] ?? ''
 }
 
 function fmtMult(value: number): string {
@@ -191,24 +205,27 @@ export function CrashScreen() {
     return 'cosmic'
   }, [phase, multiplier])
 
-  // Плавный переход цвета и свечения множителя
-  const multColor = useMemo(() => {
-    if (multiplier >= 10.0) return '#dda3a6'
-    if (multiplier >= 5.0) return '#c35c61'
-    if (multiplier >= 2.0) return '#c7696d'
-    return '#f8fafc'
-  }, [multiplier])
-
-  const multGlow = useMemo(() => {
-    if (multiplier >= 10.0) return '0 0 24px rgba(221, 163, 166, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 5.0) return '0 0 22px rgba(195, 92, 97, 0.7), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    if (multiplier >= 2.0) return '0 0 20px rgba(199, 105, 109, 0.75), 0 2px 10px rgba(0, 0, 0, 0.8)'
-    return '0 0 16px rgba(248, 250, 252, 0.35), 0 2px 10px rgba(0, 0, 0, 0.8)'
-  }, [multiplier])
+  // Цвет и свечение множителя по «качеству» икса (серый → жёлтый → зелёный → голубой → фиолетовый)
+  const multColor = MULT_TIER_STYLE[multTier(multiplier)].color
+  const multGlow = MULT_TIER_STYLE[multTier(multiplier)].glow
 
   // Пул живых игроков раунда
   const [players, setPlayers] = useState<SimulatedPlayer[]>([])
   const [showMoneyRain, setShowMoneyRain] = useState(false)
+  const [showLaunch, setShowLaunch] = useState(false)
+  const launchPrevPhase = useRef(phase)
+  const multiplierRef = useRef(multiplier)
+  multiplierRef.current = multiplier
+
+  // Анимированный запуск: на старте полёта на арене вспыхивает «SEXY DROP · ПУСК!»
+  useEffect(() => {
+    const started = launchPrevPhase.current !== 'flying' && phase === 'flying'
+    launchPrevPhase.current = phase
+    if (!started || multiplierRef.current >= 1.3) return
+    setShowLaunch(true)
+    const id = window.setTimeout(() => setShowLaunch(false), 1800)
+    return () => window.clearTimeout(id)
+  }, [phase])
   const prevMyBetStatusRef = useRef(myBet?.status)
 
   // Триггер дождика деньгами при победе игрока (без просадки FPS на слабых устройствах)
@@ -388,6 +405,8 @@ export function CrashScreen() {
     // 3. Слившие игроки (в фазе краша без кешаута) — В САМЫЙ НИЗ
     // Внутри каждой группы — сортировка по величине ставки (descending)
     return rows.sort((a, b) => {
+      // Моя ставка всегда первая, независимо от статуса и суммы
+      if (a.isUser !== b.isUser) return a.isUser ? -1 : 1
       const isLostA = phase === 'crashed' && !a.isCashed
       const isLostB = phase === 'crashed' && !b.isCashed
       const priorityA = a.isCashed ? 1 : isLostA ? 3 : 2
@@ -464,7 +483,18 @@ export function CrashScreen() {
           phase={phase}
           multiplier={multiplier}
           roundId={roundId}
+          secondsLeft={phase === 'betting' ? secondsLeft : undefined}
         />
+
+        {showLaunch && (
+          <div className={styles.launchBanner} aria-hidden="true">
+            <svg viewBox="0 0 24 24" className={styles.launchDrop}>
+              <path d="M12 2.5c3.6 4.3 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.7 6-11z" fill="currentColor" />
+            </svg>
+            <span className={styles.launchTitle}>SEXY DROP</span>
+            <span className={styles.launchGo}>ПУСК!</span>
+          </div>
+        )}
 
         {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 */}
         {phase === 'betting' && (
@@ -580,7 +610,7 @@ export function CrashScreen() {
           </span>
         )}
         {phase === 'flying' && (
-          <span className={cx(styles.historyPill, styles.activeLivePill)}>
+          <span className={cx(styles.historyPill, styles.activeLivePill, tierCls(multTier(multiplier)))}>
             <span className={styles.activeLiveDot} />
             x{fmtMult(multiplier)}
           </span>
@@ -588,10 +618,7 @@ export function CrashScreen() {
 
         {/* Предыдущие 7 раундов с цветными рамками по величине (не скроллятся) */}
         {history.slice(0, 7).map((val, idx) => {
-          let tierClass = styles.tierSlate
-          if (val >= 10.0) tierClass = styles.tierGold
-          else if (val >= 5.0) tierClass = styles.tierMagenta
-          else if (val >= 2.0) tierClass = styles.tierPurple
+          const tierClass = tierCls(multTier(val))
 
           return (
             <span
@@ -732,7 +759,10 @@ export function CrashScreen() {
             const isWon = row.isCashed
             const isLost = phase === 'crashed' && !row.isCashed
             const isActive = !isWon && !isLost
-            const displayGift = isWon ? (row.wonGift ?? row.stakeGift) : row.stakeGift
+            // Плитка живая: самый дорогой NFT, который не дороже текущей выплаты (меняется в полёте);
+            // пока выплата ниже самого дешёвого NFT — значок TON; у проигравших — поставленный подарок.
+            const liveGift = isLost ? row.stakeGift : tileGiftFor(row.profitMinor, row.id, row.stakeGift)
+            const displayGift = isWon ? (row.wonGift ?? liveGift) : liveGift
 
             return (
               <div
@@ -819,9 +849,11 @@ export function CrashScreen() {
                   >
                     {displayGift ? (
                       <img
+                        key={displayGift.id}
                         src={displayGift.image}
                         alt=""
                         className={cx(
+                          styles.playerNftSwap,
                           styles.playerNftImg,
                           displayGift.image.endsWith('.png') && styles.playerNftImgFull,
                         )}

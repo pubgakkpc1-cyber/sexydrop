@@ -462,12 +462,85 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
   },
 ]
 
+/* --- Запуск: площадка, зарядка перед стартом и ударная волна с дымом при старте --- */
+function drawPad(ctx: CanvasRenderingContext2D, x: number, y: number, charge: number, accent: string) {
+  ctx.save()
+  // свечение под ракетой растёт к старту
+  for (const [rx, ry, a] of [[96, 22, 0.1], [62, 14, 0.18]] as const) {
+    ctx.globalAlpha = Math.min(0.7, a + charge * 0.3)
+    ctx.fillStyle = accent
+    ctx.beginPath()
+    ctx.ellipse(x, y, rx + charge * 18, ry + charge * 5, 0, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  // плита площадки
+  ctx.globalAlpha = 1
+  ctx.fillStyle = '#26262a'
+  ctx.strokeStyle = '#4a4a52'
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.ellipse(x, y, 58, 12, 0, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+  // мигающие огни по краю — «готовность»
+  const blink = 0.4 + charge * 0.6
+  ctx.fillStyle = accent
+  for (const dx of [-44, -22, 22, 44]) {
+    ctx.globalAlpha = blink * (0.5 + 0.5 * Math.sin(performance.now() / (260 - charge * 180) + dx))
+    ctx.beginPath()
+    ctx.arc(x + dx, y + 1, 2.4, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  ctx.restore()
+}
+
+function drawIgnition(ctx: CanvasRenderingContext2D, x: number, y: number, t: number, accent: string) {
+  const k = Math.min(1, t / 1.2)
+  ctx.save()
+  // вспышка зажигания
+  if (t < 0.3) {
+    const a = (1 - t / 0.3) * 0.55
+    const g = ctx.createRadialGradient(x, y, 0, x, y, 90)
+    g.addColorStop(0, `rgba(255, 255, 255, ${a})`)
+    g.addColorStop(1, 'rgba(255, 255, 255, 0)')
+    ctx.fillStyle = g
+    ctx.fillRect(x - 90, y - 90, 180, 180)
+  }
+  // три кольца ударной волны (приплюснутые — идут «по земле»)
+  ctx.lineWidth = 3
+  for (let i = 0; i < 3; i++) {
+    const tt = t - i * 0.12
+    if (tt <= 0) continue
+    const r = tt * 175
+    ctx.globalAlpha = Math.max(0, 1 - tt / 0.9) * 0.7
+    ctx.strokeStyle = i === 0 ? '#ffffff' : accent
+    ctx.beginPath()
+    ctx.ellipse(x, y, r, r * 0.28, 0, 0, Math.PI * 2)
+    ctx.stroke()
+  }
+  // клубы дыма разлетаются в стороны и тают
+  ctx.fillStyle = '#c9ccd3'
+  for (let i = 0; i < 9; i++) {
+    const dir = (i / 8) * 2 - 1
+    const px = x + dir * (30 + t * 95)
+    const py = y - Math.abs(dir) * 6 - t * (10 + (i % 3) * 10)
+    const rr = 8 + t * (20 + (i % 3) * 6)
+    ctx.globalAlpha = Math.max(0, 0.5 * (1 - k))
+    ctx.beginPath()
+    ctx.arc(px, py, rr, 0, Math.PI * 2)
+    ctx.fill()
+  }
+  ctx.restore()
+}
+
 interface Rocket3DCanvasProps {
   phase: CrashPhase
   multiplier: number
   roundId?: number
   skinIndex?: number
   fullscreen?: boolean
+  /** Секунд до старта (окно ставок): ракета на площадке «заряжается» к старту. */
+  secondsLeft?: number
   className?: string
 }
 
@@ -477,14 +550,15 @@ export function Rocket3DCanvas({
   roundId,
   skinIndex,
   fullscreen = false,
+  secondsLeft,
   className,
 }: Rocket3DCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
   const prevPhaseRef = useRef<CrashPhase>(phase)
 
   // Держим свежие пропсы для цикла анимации (синхронное обновление)
-  const propsRef = useRef({ phase, multiplier, roundId, skinIndex, fullscreen })
-  propsRef.current = { phase, multiplier, roundId, skinIndex, fullscreen }
+  const propsRef = useRef({ phase, multiplier, roundId, skinIndex, fullscreen, secondsLeft })
+  propsRef.current = { phase, multiplier, roundId, skinIndex, fullscreen, secondsLeft }
 
   // Внутреннее состояние анимации
   const stateRef = useRef<{
@@ -574,7 +648,7 @@ export function Rocket3DCanvas({
       state.speedStreaks = []
       state.explosion = []
       state.debris = []
-      state.shake = 0
+      state.shake = 9 // толчок зажигания
       state.rocketSmooth = { x: 0, y: 0, angle: 0 }
       state.swellT = -1
       state.burstFn = undefined
@@ -822,10 +896,26 @@ export function Rocket3DCanvas({
         }
         ctx.restore()
 
-        // Во время отсчёта (betting) ракета не отображается (показывается только таймер)
+        // Окно ставок: ракета стоит на площадке и «заряжается» к старту (дрожь и пламя растут)
         if (currentPhase === 'betting') {
           state.ribbon = []
           state.speedStreaks = []
+          const left = currentProps.secondsLeft ?? 5
+          const charge = Math.max(0, Math.min(1, (2.4 - left) / 2.4))
+          const padX = width * 0.27
+          const padY = height * 0.58
+          drawPad(ctx, padX, padY + 40, charge, skin.accentColor)
+
+          ctx.save()
+          const jitter = charge * charge * 2.4
+          ctx.translate(
+            padX + (Math.random() - 0.5) * jitter,
+            padY + (Math.random() - 0.5) * jitter + Math.sin(state.time * 2.2) * 1.4,
+          )
+          ctx.rotate((-28 * Math.PI) / 180)
+          ctx.scale(1.1, 1.1)
+          drawCartoonRocket(ctx, skin, state.time, 1 + charge * 6, charge > 0.04)
+          ctx.restore()
           return
         }
 
@@ -833,9 +923,14 @@ export function Rocket3DCanvas({
         state.flightSeconds += dt
 
         // Точка старта (нижняя левая область арены)
-        const launchX = width * 0.18
+        const launchX = width * 0.27
         const launchY = height * 0.58
         const launchAngle = -28
+
+        // Эффекты зажигания: вспышка, ударные кольца и дым у площадки
+        if (currentPhase === 'flying' && state.flightSeconds < 1.2) {
+          drawIgnition(ctx, launchX, launchY + 40, state.flightSeconds, skin.accentColor)
+        }
 
         // Точка круизного барьера (центр/верх арены — ракета доходит сюда и ОСТАНАВЛИВАЕТСЯ)
         const barrierX = width * 0.5

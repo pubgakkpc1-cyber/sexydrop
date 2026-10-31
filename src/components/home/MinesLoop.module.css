@@ -1,0 +1,154 @@
+.wrap {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  height: 92px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #1c1b1e 0%, #2a1a1c 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.shake {
+  animation: boardQuake 0.45s ease-out;
+}
+
+@keyframes boardQuake {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, -1px); }
+  80% { transform: translate(1px, 1px); }
+}
+
+.chip {
+  align-self: flex-start;
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 800;
+  color: #4fd18b;
+  text-shadow: 0 0 12px rgba(79, 209, 139, 0.55);
+  font-variant-numeric: tabular-nums;
+  transition: color 0.2s ease;
+}
+
+.chipBoom {
+  color: #ff5a64;
+  text-shadow: 0 0 12px rgba(255, 90, 100, 0.7);
+  animation: chipPop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+}
+
+@keyframes chipPop {
+  from { transform: scale(0.5); }
+  to { transform: scale(1); }
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 21px);
+  gap: 4px;
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 21px;
+  height: 21px;
+  border-radius: 6px;
+  background: linear-gradient(160deg, #3a383c 0%, #29272b 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* водяной знак-капля на закрытой клетке */
+.cell::before {
+  content: '';
+  width: 7px;
+  height: 9px;
+  background: rgba(255, 255, 255, 0.1);
+  clip-path: path('M3.5 0 C5.6 2.6 7 4.6 7 6.2 A3.5 3.5 0 0 1 0 6.2 C0 4.6 1.4 2.6 3.5 0 Z');
+}
+
+.cellGem,
+.cellBomb {
+  animation: cellFlip 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.cellGem::before,
+.cellBomb::before {
+  display: none;
+}
+
+.cellGem {
+  background: linear-gradient(160deg, #1f4636 0%, #16271f 100%);
+  border-color: rgba(79, 209, 139, 0.6);
+  box-shadow: 0 0 10px rgba(79, 209, 139, 0.3);
+}
+
+.cellBomb {
+  background: linear-gradient(160deg, #7a2327 0%, #3b1517 100%);
+  border-color: rgba(255, 90, 100, 0.8);
+  box-shadow: 0 0 14px rgba(255, 90, 100, 0.55);
+}
+
+@keyframes cellFlip {
+  from { transform: rotateY(90deg) scale(0.7); opacity: 0.4; }
+  to { transform: rotateY(0) scale(1); opacity: 1; }
+}
+
+.gem {
+  width: 14px;
+  height: 14px;
+  filter: drop-shadow(0 0 5px rgba(90, 200, 255, 0.8));
+  animation: gemPop 0.45s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+}
+
+@keyframes gemPop {
+  from { transform: scale(0.2) rotate(-60deg); }
+  to { transform: scale(1) rotate(0); }
+}
+
+.bomb {
+  width: 18px;
+  height: 18px;
+  color: #ff5a64;
+  animation: bombIn 0.35s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+}
+
+@keyframes bombIn {
+  from { transform: translateY(-10px) scale(0.5); }
+  to { transform: translateY(0) scale(1); }
+}
+
+.shock {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  border: 2px solid #ff8a8f;
+  animation: shockOut 0.7s ease-out forwards;
+}
+
+@keyframes shockOut {
+  from { opacity: 0.95; transform: scale(0.3); }
+  to { opacity: 0; transform: scale(4.5); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shake, .chipBoom, .cellGem, .cellBomb, .gem, .bomb, .shock { animation: none; }
+}

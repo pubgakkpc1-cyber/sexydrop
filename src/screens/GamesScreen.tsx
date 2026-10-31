@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { giftById } from '../data/catalog'
 import { CrashLoop } from '../components/home/CrashLoop'
+import { MinesLoop } from '../components/home/MinesLoop'
 import { formatMultiplier, plinkoMaxMultiplier } from '../lib/plinkoMath'
 import { GameHistory } from '../components/games/GameHistory'
 import { DiceIcon, FlameIcon, ZapIcon } from '../components/shell/icons'
@@ -124,18 +124,7 @@ export function GamesScreen() {
           onClick={() => navigate('/games/mines')}
           aria-label="Мины — обойди мины"
         >
-          <span className={styles.squaresGrid} aria-hidden>
-            {Array.from({ length: 9 }, (_, i) => (
-              <span
-                key={i}
-                className={`${styles.mineCell} ${i === 7 ? styles.mineBomb : ''}`}
-                style={{ '--d': `${((i * 5) % 9) * 0.28}s` } as CSSProperties}
-              >
-                <span className={styles.mineFront} />
-                <span className={styles.mineBack}>{i === 7 ? '✹' : '◆'}</span>
-              </span>
-            ))}
-          </span>
+          <MinesLoop />
           <span className={styles.bannerInfo}>
             <span className={styles.tileName}>Мины</span>
             <span className={styles.tileSubtitle}>Обходи мины</span>

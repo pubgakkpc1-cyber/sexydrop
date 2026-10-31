@@ -1,44 +1,58 @@
-import { useState } from 'react'
-import { QUESTS, useQuestsStore } from '../store/quests'
+import { useNavigate } from 'react-router-dom'
+import { QUESTS, useQuestsStore, type Quest } from '../store/quests'
 import { useProfileStore } from '../store/profile'
-import { EXCHANGE_MIN_STARS, useStarsBalanceStore } from '../store/starsBalance'
-import { STARS_PER_TON, starsToMinor } from '../lib/stars'
+import { useStarsBalanceStore } from '../store/starsBalance'
+import { starsToMinor } from '../lib/stars'
 import { formatMinor } from '../lib/money'
-import { StarIcon, TonIcon } from '../components/shell/icons'
+import { CheckIcon, ConvertIcon, StarIcon, TonIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
 import styles from './RewardsScreen.module.css'
-
-/** Быстрые суммы обмена, Stars (кратно курсу: 1, 5, 10 TON). */
-const EXCHANGE_PRESETS: readonly number[] = [STARS_PER_TON, STARS_PER_TON * 5, STARS_PER_TON * 10]
 
 function fmtStars(stars: number): string {
   return stars.toLocaleString('ru-RU').replace(/\u00a0/g, ' ')
 }
 
+/** Кольцо прогресса задания: дуга растёт, внутри звезда (или галочка, когда награда забрана). */
+function QuestRing({ pct, done }: { pct: number; done: boolean }) {
+  const r = 19
+  const len = 2 * Math.PI * r
+  return (
+    <span className={cx(styles.ring, done && styles.ringDone)} aria-hidden>
+      <svg viewBox="0 0 46 46" className={styles.ringSvg}>
+        <circle cx="23" cy="23" r={r} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
+        <circle
+          cx="23"
+          cy="23"
+          r={r}
+          fill="none"
+          stroke={done ? '#4fd18b' : '#ffc93c'}
+          strokeWidth="4"
+          strokeLinecap="round"
+          strokeDasharray={`${(Math.min(100, pct) / 100) * len} ${len}`}
+          transform="rotate(-90 23 23)"
+        />
+      </svg>
+      {done ? <CheckIcon className={styles.ringIcon} /> : <StarIcon className={styles.ringIcon} />}
+    </span>
+  )
+}
+
 /**
- * Заработок: звёзды за задания и обмен звёзд на TON. Задания считаются из РЕАЛЬНОЙ статистики
- * (store/profile); синтетики нет. Серверная проверка заданий — TIER 7.
+ * Заработок: звёзды за задания и переход в конвертер для обмена на TON. Задания считаются из
+ * РЕАЛЬНОЙ статистики (store/profile); синтетики нет. Серверная проверка заданий — TIER 7.
  */
 export function RewardsScreen() {
+  const navigate = useNavigate()
   const stars = useStarsBalanceStore((s) => s.stars)
   const claimed = useQuestsStore((s) => s.claimed)
   const claim = useQuestsStore((s) => s.claim)
   const progressOf = useQuestsStore((s) => s.progressOf)
   const profile = useProfileStore()
-  const [note, setNote] = useState<string | null>(null)
 
   const doneQuests = QUESTS.filter((q) => claimed[q.id] === true).length
 
-  const exchange = (amount: number) => {
-    const res = useStarsBalanceStore.getState().exchange(amount)
-    setNote(
-      res === 'ok'
-        ? `Обмен: ${fmtStars(amount)} Stars → ${formatMinor(starsToMinor(amount))} TON`
-        : res === 'insufficient'
-          ? 'Недостаточно звёзд'
-          : `Минимальный обмен — ${EXCHANGE_MIN_STARS} Stars`,
-    )
-  }
+  const fmtProgress = (quest: Quest, value: number) =>
+    quest.metric === 'wagered' ? formatMinor(value) : String(value)
 
   return (
     <div className={styles.screen}>
@@ -57,6 +71,10 @@ export function RewardsScreen() {
             <TonIcon className={styles.earnStar} aria-hidden />
           </span>
         </div>
+        <button type="button" className={styles.exchangeCta} onClick={() => navigate('/deposit?tab=convert')}>
+          <ConvertIcon className={styles.exchangeCtaIcon} aria-hidden />
+          Обменять
+        </button>
         <div className={styles.earnStats}>
           <span><b>{formatMinor(profile.wageredMinor)}</b> оборот</span>
           <span><b>{profile.rounds}</b> раундов</span>
@@ -64,89 +82,41 @@ export function RewardsScreen() {
         </div>
       </section>
 
-      {/* --- Обмен звёзд на TON --- */}
-      <section className={styles.section} aria-label="Обмен звёзд">
-        <h2 className={styles.sectionTitle}>
-          <StarIcon className={styles.titleStar} aria-hidden /> Обмен на TON
-        </h2>
-        <p className={styles.rules}>Курс: {STARS_PER_TON} Stars = 1 TON. Минимальный обмен — {EXCHANGE_MIN_STARS} Stars.</p>
-
-        <div className={styles.exchange} role="group" aria-label="Сумма обмена">
-          {EXCHANGE_PRESETS.map((amount) => (
-            <button
-              key={amount}
-              type="button"
-              className={cx(styles.exchangeButton, stars >= amount && styles.exchangeActive)}
-              disabled={stars < amount}
-              onClick={() => exchange(amount)}
-            >
-              <span className={styles.presetStars}>
-                {fmtStars(amount)} <StarIcon className={styles.presetIcon} aria-hidden />
-              </span>
-              <span className={styles.presetTon}>
-                → {formatMinor(starsToMinor(amount))} <TonIcon className={styles.presetIcon} aria-hidden />
-              </span>
-            </button>
-          ))}
-          <button
-            type="button"
-            className={cx(styles.exchangeButton, stars >= EXCHANGE_MIN_STARS && styles.exchangeActive)}
-            disabled={stars < EXCHANGE_MIN_STARS}
-            onClick={() => exchange(stars)}
-          >
-            <span className={styles.presetStars}>Всё</span>
-            <span className={styles.presetTon}>
-              → {formatMinor(starsToMinor(stars))} <TonIcon className={styles.presetIcon} aria-hidden />
-            </span>
-          </button>
-        </div>
-
-        {note && (
-          <p className={styles.drawResult} role="status" data-testid="exchange-note">
-            {note}
-          </p>
-        )}
-      </section>
-
-      {/* --- Задания --- */}
       <section className={styles.section} aria-label="Задания">
-        <h2 className={styles.sectionTitle}>Задания — заработай звёзды</h2>
-        <div className={styles.questList}>
+        <h2 className={styles.sectionTitle}>Задания</h2>
+        <ul className={styles.quests}>
           {QUESTS.map((quest) => {
-            const progress = Math.min(progressOf(quest), quest.target)
-            const done = progressOf(quest) >= quest.target
+            const value = progressOf(quest)
+            const progress = Math.min(value, quest.target)
+            const done = value >= quest.target
             const isClaimed = claimed[quest.id] === true
             const pct = Math.round((progress * 100) / quest.target)
             return (
-              <div key={quest.id} className={styles.quest}>
-                <div className={styles.questTop}>
-                  <span className={styles.questTitle}>{quest.title}</span>
-                  <span className={styles.questReward}>
-                    +{fmtStars(quest.rewardStars)} <StarIcon className={styles.presetIcon} aria-hidden />
+              <li key={quest.id} className={cx(styles.qCard, done && !isClaimed && styles.qReady, isClaimed && styles.qClaimed)}>
+                <QuestRing pct={pct} done={isClaimed} />
+                <div className={styles.qBody}>
+                  <span className={styles.qTitle}>{quest.title}</span>
+                  <span className={styles.qProgress}>
+                    {fmtProgress(quest, progress)} / {fmtProgress(quest, quest.target)}
                   </span>
                 </div>
-                <div className={styles.questBar}>
-                  <span className={styles.questFill} style={{ width: `${pct}%` }} />
-                </div>
-                <div className={styles.questBottom}>
-                  <span>
-                    Прогресс:{' '}
-                    {quest.metric === 'wagered' ? formatMinor(progress) : progress}/
-                    {quest.metric === 'wagered' ? formatMinor(quest.target) : quest.target}
+                <div className={styles.qSide}>
+                  <span className={styles.qReward}>
+                    +{fmtStars(quest.rewardStars)} <StarIcon className={styles.qRewardIcon} aria-hidden />
                   </span>
                   <button
                     type="button"
-                    className={styles.claim}
+                    className={cx(styles.qBtn, done && !isClaimed && styles.qBtnReady)}
                     disabled={!done || isClaimed}
                     onClick={() => claim(quest.id)}
                   >
-                    {isClaimed ? 'Забрано' : done ? 'Забрать' : '—'}
+                    {isClaimed ? 'Забрано' : done ? 'Забрать' : `${pct}%`}
                   </button>
                 </div>
-              </div>
+              </li>
             )
           })}
-        </div>
+        </ul>
         <p className={styles.rules}>Бонусы за задания разовые.</p>
       </section>
     </div>

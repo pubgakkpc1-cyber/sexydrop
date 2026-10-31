@@ -100,6 +100,28 @@ function gift(
   }
 }
 
+/** Приз в TON из кейса: сразу зачисляется на баланс (в инвентарь не попадает). */
+export function isTonPrize(giftOrId: Gift | string): boolean {
+  const id = typeof giftOrId === 'string' ? giftOrId : giftOrId.id
+  return id.startsWith('ton_')
+}
+
+function tonPrize(minor: Minor): Gift {
+  const ton = minor / 1000
+  return {
+    id: `ton_${minor}`,
+    name: `${Number.isInteger(ton) ? ton : ton.toFixed(1)} TON`,
+    image: `/gifts/tonprize_${minor}.png`,
+    priceMinor: minor,
+    rarity: minor >= 25000 ? 'legendary' : minor >= 5000 ? 'epic' : minor >= 2000 ? 'rare' : 'common',
+    priceSource: 'catalog-config',
+    priceUpdatedAt: PRICE_UPDATED_AT,
+    collection: 'TON',
+    serialNumber: null,
+    available: true,
+  }
+}
+
 /** Обычный (не NFT) подарок Telegram: прозрачный стикер, цена по курсу Stars (175 Stars = 1 TON). */
 function regularGift(id: string, name: string, priceMinor: Minor, file: string): Gift {
   return {
@@ -155,6 +177,17 @@ export const gifts: readonly Gift[] = [
   regularGift('reg-trophy', 'Trophy', 571, 'golden_trophy'),
   regularGift('reg-ring', 'Ring', 571, 'solitaire_diamond_ring'),
   regularGift('reg-diamond', 'Diamond', 571, 'blue_diamond_gem'),
+
+  /* --- ПРИЗЫ В TON --- */
+  tonPrize(500),
+  tonPrize(1000),
+  tonPrize(2000),
+  tonPrize(5000),
+  tonPrize(10000),
+  tonPrize(25000),
+  tonPrize(50000),
+  tonPrize(100000),
+  tonPrize(250000),
 
   /* --- 147 ПОДЛИННЫХ TELEGRAM NFT С FRAGMENT (3 уникальных вида на каждый из 49 подарков) --- */
   nftGift('plush_pepe-1', 'Plush Pepe', 6720000, 'legendary', 'Plush Pepe', '/gifts/plush_pepe_1.png', 6720.0, 'Gummy Frog', 'Platinum', 'Ring', 1821),
@@ -366,11 +399,11 @@ const CASE_CONFIG: readonly {
   { id: 'romance', name: 'Love', priceMinor: 150, isNew: true, glow: '#ff6f91' },
   { id: 'holiday', name: 'Holiday', priceMinor: 250, isNew: true, glow: '#59c8ff' },
   { id: 'sweet', name: 'Sweet', priceMinor: 6000, isNew: true, glow: '#ff8fc7' },
-  { id: 'party', name: 'Party', priceMinor: 7000, isNew: true, glow: '#ffd23c' },
-  { id: 'cute', name: 'Cute', priceMinor: 8000, isNew: true, glow: '#ffb3d9' },
-  { id: 'street', name: 'Street', priceMinor: 10000, isNew: true, glow: '#ff6b3d' },
+  { id: 'party', name: 'Party', priceMinor: 6000, isNew: true, glow: '#ffd23c' },
+  { id: 'cute', name: 'Cute', priceMinor: 6000, isNew: true, glow: '#ffb3d9' },
+  { id: 'street', name: 'Street', priceMinor: 7000, isNew: true, glow: '#ff6b3d' },
   { id: 'jewel', name: 'Jewel', priceMinor: 12000, isNew: true, glow: '#5de0ff' },
-  { id: 'meme', name: 'Meme', priceMinor: 14000, isNew: true, glow: '#7be35c' },
+  { id: 'meme', name: 'Meme', priceMinor: 7000, isNew: true, glow: '#7be35c' },
   { id: 'heroes', name: 'Heroes', priceMinor: 20000, isNew: true, glow: '#ffb02e' },
   { id: 'potion', name: 'Potion', priceMinor: 24000, isNew: true, glow: '#c05cff' },
   { id: 'pepe', name: 'Pepe', priceMinor: 30000, glow: '#6ee36e' },

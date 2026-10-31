@@ -348,3 +348,66 @@
     font-size: 15px;
   }
 }
+
+
+/* ===== Рейтинг: маленькое описание очков ===== */
+.info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: -6px;
+}
+
+.infoBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 0;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.infoCaret {
+  display: inline-block;
+  font-size: 10px;
+  transition: transform 0.2s ease;
+}
+
+.infoCaretOpen {
+  transform: rotate(180deg);
+}
+
+.infoPanel {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  animation: infoIn 0.18s ease-out;
+}
+
+.infoPanel p {
+  margin: 0 0 6px;
+}
+
+.infoPanel p:last-child {
+  margin-bottom: 0;
+}
+
+.infoPanel b {
+  color: var(--text);
+}
+
+@keyframes infoIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: none; }
+}

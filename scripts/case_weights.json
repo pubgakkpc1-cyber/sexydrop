@@ -1,24 +1,56 @@
 {
  "farm": [
   [
+   "ton_500",
+   11
+  ],
+  [
+   "ton_2000",
+   5
+  ],
+  [
+   "ton_5000",
+   1
+  ],
+  [
    "chill_flame-2",
-   88
+   2
+  ],
+  [
+   "lol_pop-1",
+   4
   ],
   [
    "xmas_stocking-3",
-   81
+   4
   ],
   [
-   "victory_medal-3",
-   60
+   "whip_cupcake-1",
+   4
+  ],
+  [
+   "victory_medal-2",
+   27
+  ],
+  [
+   "liberty_figure-3",
+   6
   ],
   [
    "snoop_dogg-3",
-   41
+   6
   ],
   [
-   "fine_pen-2",
-   19
+   "surge_board-2",
+   5
+  ],
+  [
+   "fine_pen-3",
+   5
+  ],
+  [
+   "crystal_ball-1",
+   4
   ],
   [
    "love_potion-3",
@@ -28,57 +60,109 @@
  "autumn": [
   [
    "chill_flame-2",
+   9
+  ],
+  [
+   "lol_pop-1",
+   8
+  ],
+  [
+   "pet_snake-3",
+   8
+  ],
+  [
+   "timeless_book-1",
    7
   ],
   [
-   "xmas_stocking-3",
+   "party_sparkler-1",
+   7
+  ],
+  [
+   "clover_pin-1",
    6
   ],
   [
-   "victory_medal-1",
-   5
+   "input_key-1",
+   15
   ],
   [
-   "spring_basket-2",
+   "jolly_chimp-3",
+   4
+  ],
+  [
+   "jingle_bell-2",
    3
   ],
   [
-   "fine_pen-3",
+   "snoop_cigar-1",
    2
   ],
   [
-   "love_potion-1",
+   "toy_bear-3",
    1
   ],
   [
-   "voodoo_doll-2",
+   "voodoo_doll-1",
    1
   ]
  ],
  "movie": [
   [
+   "ton_1000",
+   20
+  ],
+  [
+   "ton_5000",
+   9
+  ],
+  [
    "chill_flame-2",
-   27
+   9
   ],
   [
-   "pet_snake-3",
-   27
+   "pool_float-3",
+   9
   ],
   [
-   "liberty_figure-3",
-   22
+   "pet_snake-1",
+   9
   ],
   [
-   "input_key-1",
-   19
+   "victory_medal-2",
+   8
   ],
   [
-   "crystal_ball-1",
-   11
+   "clover_pin-1",
+   7
   ],
   [
-   "signet_ring-3",
+   "snoop_dogg-3",
+   8
+  ],
+  [
+   "jolly_chimp-3",
+   13
+  ],
+  [
+   "ton_10000",
+   6
+  ],
+  [
+   "jingle_bell-1",
+   6
+  ],
+  [
+   "love_potion-3",
    5
+  ],
+  [
+   "signet_ring-1",
+   3
+  ],
+  [
+   "sharp_tongue-3",
+   3
   ],
   [
    "magic_potion-1",
@@ -88,52 +172,30 @@
  "telegram": [
   [
    "chill_flame-2",
-   12
-  ],
-  [
-   "xmas_stocking-3",
    10
   ],
   [
-   "party_sparkler-1",
+   "pool_float-3",
+   10
+  ],
+  [
+   "pet_snake-3",
+   9
+  ],
+  [
+   "victory_medal-1",
+   7
+  ],
+  [
+   "liberty_figure-3",
    6
   ],
   [
    "snoop_dogg-2",
-   3
+   5
   ],
   [
-   "jingle_bell-2",
-   1
-  ],
-  [
-   "khabibs_papakha-2",
-   1
-  ],
-  [
-   "kissed_frog-3",
-   1
-  ],
-  [
-   "mini_oscar-2",
-   1
-  ]
- ],
- "magic": [
-  [
-   "chill_flame-2",
-   12
-  ],
-  [
-   "xmas_stocking-3",
-   10
-  ],
-  [
-   "party_sparkler-1",
-   6
-  ],
-  [
-   "snoop_dogg-3",
+   "jolly_chimp-3",
    3
   ],
   [
@@ -141,45 +203,19 @@
    1
   ],
   [
-   "khabibs_papakha-2",
+   "love_potion-3",
    1
   ],
   [
-   "kissed_frog-1",
+   "toy_bear-2",
    1
   ],
   [
-   "mini_oscar-3",
-   1
-  ]
- ],
- "kitty": [
-  [
-   "chill_flame-2",
-   12
-  ],
-  [
-   "xmas_stocking-3",
-   10
-  ],
-  [
-   "party_sparkler-1",
-   6
-  ],
-  [
-   "snoop_dogg-2",
-   3
-  ],
-  [
-   "jingle_bell-2",
+   "sharp_tongue-3",
    1
   ],
   [
-   "khabibs_papakha-2",
-   1
-  ],
-  [
-   "kissed_frog-3",
+   "swiss_watch-1",
    1
   ],
   [
@@ -187,68 +223,240 @@
    1
   ]
  ],
- "space": [
+ "magic": [
+  [
+   "ton_1000",
+   69
+  ],
+  [
+   "ton_5000",
+   30
+  ],
   [
    "chill_flame-2",
-   6
+   30
   ],
   [
-   "xmas_stocking-3",
-   6
+   "pool_float-3",
+   30
   ],
   [
-   "party_sparkler-1",
-   5
+   "pet_snake-1",
+   30
+  ],
+  [
+   "victory_medal-1",
+   28
+  ],
+  [
+   "liberty_figure-3",
+   27
   ],
   [
    "snoop_dogg-3",
-   4
+   26
+  ],
+  [
+   "jolly_chimp-3",
+   23
+  ],
+  [
+   "ton_10000",
+   22
   ],
   [
    "jingle_bell-1",
-   2
+   20
   ],
   [
-   "khabibs_papakha-2",
-   1
+   "love_potion-3",
+   17
   ],
   [
-   "kissed_frog-1",
-   1
+   "toy_bear-2",
+   12
+  ],
+  [
+   "sharp_tongue-3",
+   10
+  ],
+  [
+   "swiss_watch-1",
+   9
   ],
   [
    "mini_oscar-2",
    1
   ]
  ],
- "adult18": [
+ "kitty": [
   [
    "chill_flame-2",
-   85
+   10
   ],
   [
-   "pet_snake-1",
-   83
+   "pool_float-3",
+   10
+  ],
+  [
+   "pet_snake-3",
+   9
+  ],
+  [
+   "victory_medal-3",
+   7
   ],
   [
    "liberty_figure-3",
-   74
+   6
   ],
   [
-   "surge_board-2",
-   65
+   "snoop_dogg-2",
+   5
   ],
   [
-   "snoop_cigar-3",
-   46
+   "jolly_chimp-3",
+   3
   ],
   [
-   "voodoo_doll-1",
-   29
+   "jingle_bell-1",
+   1
   ],
   [
-   "low_rider-2",
-   23
+   "love_potion-3",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "swiss_watch-1",
+   1
+  ],
+  [
+   "mini_oscar-3",
+   1
+  ]
+ ],
+ "space": [
+  [
+   "ton_1000",
+   10
+  ],
+  [
+   "ton_5000",
+   2
+  ],
+  [
+   "chill_flame-2",
+   2
+  ],
+  [
+   "pool_float-3",
+   2
+  ],
+  [
+   "pet_snake-1",
+   2
+  ],
+  [
+   "victory_medal-3",
+   1
+  ],
+  [
+   "liberty_figure-3",
+   2
+  ],
+  [
+   "snoop_dogg-3",
+   1
+  ],
+  [
+   "jolly_chimp-3",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "jingle_bell-1",
+   1
+  ],
+  [
+   "love_potion-3",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "swiss_watch-1",
+   1
+  ],
+  [
+   "mini_oscar-1",
+   1
+  ]
+ ],
+ "adult18": [
+  [
+   "chill_flame-2",
+   13
+  ],
+  [
+   "pool_float-3",
+   13
+  ],
+  [
+   "whip_cupcake-2",
+   12
+  ],
+  [
+   "party_sparkler-1",
+   11
+  ],
+  [
+   "spring_basket-3",
+   10
+  ],
+  [
+   "surge_board-1",
+   9
+  ],
+  [
+   "jingle_bell-2",
+   6
+  ],
+  [
+   "snoop_cigar-1",
+   6
+  ],
+  [
+   "toy_bear-3",
+   3
+  ],
+  [
+   "sharp_tongue-1",
+   3
+  ],
+  [
+   "magic_potion-1",
+   2
+  ],
+  [
+   "westside_sign-1",
+   1
   ],
   [
    "loot_bag-3",
@@ -258,30 +466,50 @@
  "snoop": [
   [
    "chill_flame-2",
+   10
+  ],
+  [
+   "pool_float-3",
    9
   ],
   [
-   "pet_snake-3",
+   "whip_cupcake-1",
    8
   ],
   [
-   "liberty_figure-3",
-   4
+   "party_sparkler-1",
+   5
   ],
   [
-   "surge_board-3",
+   "spring_basket-1",
+   3
+  ],
+  [
+   "surge_board-2",
    2
   ],
   [
-   "snoop_cigar-1",
+   "jingle_bell-1",
    1
   ],
   [
-   "voodoo_doll-2",
+   "snoop_cigar-3",
    1
   ],
   [
-   "low_rider-3",
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-2",
    1
   ],
   [
@@ -291,32 +519,64 @@
  ],
  "money": [
   [
+   "ton_2000",
+   15
+  ],
+  [
+   "ton_5000",
+   2
+  ],
+  [
    "chill_flame-2",
-   9
+   2
   ],
   [
-   "pet_snake-1",
-   9
+   "pool_float-3",
+   2
   ],
   [
-   "liberty_figure-3",
-   8
+   "whip_cupcake-2",
+   2
   ],
   [
-   "surge_board-1",
-   7
+   "party_sparkler-1",
+   2
+  ],
+  [
+   "spring_basket-1",
+   1
+  ],
+  [
+   "surge_board-2",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "jingle_bell-1",
+   1
   ],
   [
    "snoop_cigar-3",
-   7
+   1
   ],
   [
-   "voodoo_doll-1",
-   3
+   "toy_bear-2",
+   1
   ],
   [
-   "low_rider-1",
-   2
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-3",
+   1
   ],
   [
    "loot_bag-3",
@@ -356,31 +616,51 @@
  "peach": [
   [
    "chill_flame-2",
-   9
+   277
   ],
   [
-   "pet_snake-1",
-   9
+   "pool_float-3",
+   272
   ],
   [
-   "liberty_figure-3",
-   8
+   "whip_cupcake-2",
+   269
   ],
   [
-   "surge_board-3",
-   7
+   "party_sparkler-1",
+   251
   ],
   [
-   "snoop_cigar-3",
-   7
+   "spring_basket-1",
+   236
   ],
   [
-   "voodoo_doll-1",
-   3
+   "surge_board-2",
+   217
   ],
   [
-   "low_rider-3",
-   2
+   "jingle_bell-2",
+   174
+  ],
+  [
+   "snoop_cigar-1",
+   154
+  ],
+  [
+   "toy_bear-3",
+   102
+  ],
+  [
+   "sharp_tongue-1",
+   86
+  ],
+  [
+   "magic_potion-1",
+   78
+  ],
+  [
+   "westside_sign-2",
+   57
   ],
   [
    "loot_bag-3",
@@ -389,32 +669,64 @@
  ],
  "gem": [
   [
+   "ton_2000",
+   15
+  ],
+  [
+   "ton_5000",
+   2
+  ],
+  [
    "chill_flame-2",
-   9
+   2
   ],
   [
-   "pet_snake-3",
-   9
+   "pool_float-3",
+   2
   ],
   [
-   "liberty_figure-3",
-   8
+   "whip_cupcake-1",
+   2
   ],
   [
-   "surge_board-1",
-   7
+   "party_sparkler-1",
+   2
+  ],
+  [
+   "spring_basket-1",
+   1
+  ],
+  [
+   "surge_board-2",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "jingle_bell-2",
+   1
   ],
   [
    "snoop_cigar-1",
-   7
+   1
   ],
   [
-   "voodoo_doll-2",
-   3
+   "toy_bear-3",
+   1
   ],
   [
-   "low_rider-1",
-   2
+   "sharp_tongue-1",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-3",
+   1
   ],
   [
    "loot_bag-3",
@@ -423,35 +735,67 @@
  ],
  "pepe": [
   [
+   "ton_5000",
+   4
+  ],
+  [
    "chill_flame-2",
-   5
-  ],
-  [
-   "pet_snake-1",
    4
   ],
   [
-   "liberty_figure-3",
-   4
-  ],
-  [
-   "input_key-1",
+   "pool_float-3",
    3
   ],
   [
-   "crystal_ball-1",
+   "whip_cupcake-1",
+   3
+  ],
+  [
+   "party_sparkler-1",
+   3
+  ],
+  [
+   "spring_basket-1",
    2
   ],
   [
-   "signet_ring-1",
+   "surge_board-2",
    1
   ],
   [
-   "swiss_watch-1",
+   "ton_10000",
    1
   ],
   [
-   "astral_shard-2",
+   "jingle_bell-2",
+   1
+  ],
+  [
+   "snoop_cigar-1",
+   1
+  ],
+  [
+   "ton_25000",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-1",
+   1
+  ],
+  [
+   "loot_bag-3",
    1
   ],
   [
@@ -465,31 +809,51 @@
    5
   ],
   [
-   "pet_snake-3",
-   4
+   "pool_float-3",
+   5
   ],
   [
-   "liberty_figure-3",
-   4
+   "whip_cupcake-1",
+   5
   ],
   [
-   "input_key-1",
+   "party_sparkler-1",
    3
   ],
   [
-   "crystal_ball-1",
+   "spring_basket-1",
    2
   ],
   [
-   "signet_ring-3",
+   "surge_board-2",
    1
   ],
   [
-   "swiss_watch-1",
+   "jingle_bell-1",
    1
   ],
   [
-   "astral_shard-3",
+   "snoop_cigar-3",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-2",
+   1
+  ],
+  [
+   "loot_bag-3",
    1
   ],
   [
@@ -499,35 +863,67 @@
  ],
  "ring": [
   [
+   "ton_5000",
+   4
+  ],
+  [
    "chill_flame-2",
-   5
-  ],
-  [
-   "pet_snake-1",
    4
   ],
   [
-   "liberty_figure-3",
-   4
-  ],
-  [
-   "input_key-1",
+   "pool_float-3",
    3
   ],
   [
-   "crystal_ball-1",
+   "whip_cupcake-1",
+   3
+  ],
+  [
+   "party_sparkler-1",
+   3
+  ],
+  [
+   "spring_basket-3",
    2
   ],
   [
-   "signet_ring-1",
+   "surge_board-1",
    1
   ],
   [
-   "swiss_watch-1",
+   "ton_10000",
    1
   ],
   [
-   "astral_shard-2",
+   "jingle_bell-2",
+   1
+  ],
+  [
+   "snoop_cigar-1",
+   1
+  ],
+  [
+   "ton_25000",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-3",
+   1
+  ],
+  [
+   "loot_bag-3",
    1
   ],
   [
@@ -538,22 +934,34 @@
  "black": [
   [
    "chill_flame-1",
-   5
-  ],
-  [
-   "big_year-3",
-   5
-  ],
-  [
-   "clover_pin-3",
    3
   ],
   [
-   "witch_hat-2",
+   "pool_float-2",
+   3
+  ],
+  [
+   "whip_cupcake-3",
+   3
+  ],
+  [
+   "liberty_figure-2",
+   3
+  ],
+  [
+   "input_key-2",
    2
   ],
   [
-   "love_potion-2",
+   "witch_hat-1",
+   2
+  ],
+  [
+   "snoop_cigar-2",
+   1
+  ],
+  [
+   "mad_pumpkin-3",
    1
   ],
   [
@@ -561,11 +969,19 @@
    1
   ],
   [
-   "kissed_frog-2",
+   "voodoo_doll-3",
    1
   ],
   [
-   "mighty_arm-2",
+   "swiss_watch-2",
+   1
+  ],
+  [
+   "ion_gem-1",
+   1
+  ],
+  [
+   "loot_bag-2",
    1
   ],
   [
@@ -576,38 +992,132 @@
  "epic": [
   [
    "chill_flame-2",
-   4
-  ],
-  [
-   "pet_snake-1",
-   4
-  ],
-  [
-   "party_sparkler-1",
-   4
-  ],
-  [
-   "input_key-1",
-   4
-  ],
-  [
-   "jingle_bell-2",
    3
   ],
   [
-   "toy_bear-2",
+   "pool_float-3",
+   3
+  ],
+  [
+   "whip_cupcake-2",
+   3
+  ],
+  [
+   "party_sparkler-1",
+   3
+  ],
+  [
+   "spring_basket-1",
+   3
+  ],
+  [
+   "surge_board-2",
    2
   ],
   [
-   "kissed_frog-3",
+   "ton_10000",
+   2
+  ],
+  [
+   "jingle_bell-1",
+   2
+  ],
+  [
+   "snoop_cigar-3",
    1
   ],
   [
-   "westside_sign-1",
+   "toy_bear-2",
    1
   ],
   [
-   "heroic_helmet-2",
+   "ton_50000",
+   1
+  ],
+  [
+   "sharp_tongue-1",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "ton_100000",
+   3
+  ],
+  [
+   "westside_sign-2",
+   1
+  ],
+  [
+   "loot_bag-3",
+   1
+  ],
+  [
+   "scared_cat-3",
+   1
+  ],
+  [
+   "heart_locket-2",
+   1
+  ]
+ ],
+ "vip": [
+  [
+   "chill_flame-2",
+   2
+  ],
+  [
+   "pool_float-3",
+   2
+  ],
+  [
+   "whip_cupcake-1",
+   2
+  ],
+  [
+   "party_sparkler-1",
+   2
+  ],
+  [
+   "spring_basket-2",
+   1
+  ],
+  [
+   "surge_board-3",
+   1
+  ],
+  [
+   "jingle_bell-1",
+   1
+  ],
+  [
+   "snoop_cigar-3",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-3",
+   7
+  ],
+  [
+   "loot_bag-3",
+   4
+  ],
+  [
+   "scared_cat-3",
    1
   ],
   [
@@ -615,75 +1125,57 @@
    1
   ]
  ],
- "vip": [
-  [
-   "chill_flame-2",
-   3
-  ],
-  [
-   "pet_snake-3",
-   3
-  ],
-  [
-   "party_sparkler-1",
-   2
-  ],
-  [
-   "input_key-1",
-   2
-  ],
-  [
-   "jingle_bell-1",
-   1
-  ],
-  [
-   "toy_bear-3",
-   1
-  ],
-  [
-   "kissed_frog-1",
-   1
-  ],
-  [
-   "westside_sign-2",
-   12
-  ],
-  [
-   "heroic_helmet-2",
-   1
-  ],
-  [
-   "heart_locket-1",
-   1
-  ]
- ],
  "elite": [
   [
    "chill_flame-2",
-   6
-  ],
-  [
-   "pet_snake-1",
-   6
-  ],
-  [
-   "party_sparkler-1",
-   4
-  ],
-  [
-   "input_key-1",
    3
   ],
   [
-   "crystal_ball-1",
+   "pool_float-3",
+   3
+  ],
+  [
+   "whip_cupcake-2",
+   3
+  ],
+  [
+   "party_sparkler-1",
+   3
+  ],
+  [
+   "spring_basket-3",
+   2
+  ],
+  [
+   "surge_board-1",
+   2
+  ],
+  [
+   "jingle_bell-2",
    1
   ],
   [
-   "toy_bear-2",
+   "love_potion-1",
    1
   ],
   [
-   "swiss_watch-1",
+   "ton_25000",
+   1
+  ],
+  [
+   "signet_ring-1",
+   1
+  ],
+  [
+   "kissed_frog-3",
+   1
+  ],
+  [
+   "low_rider-1",
+   1
+  ],
+  [
+   "ton_100000",
    1
   ],
   [
@@ -691,7 +1183,15 @@
    1
   ],
   [
-   "precious_peach-3",
+   "heroic_helmet-2",
+   1
+  ],
+  [
+   "ton_250000",
+   1
+  ],
+  [
+   "durovs_cap-3",
    1
   ],
   [
@@ -701,57 +1201,55 @@
  ],
  "free": [
   [
-   "chill_flame-2",
-   184
+   "ton_1000",
+   20
   ],
   [
-   "pet_snake-3",
-   172
+   "ton_5000",
+   2
   ],
-  [
-   "liberty_figure-3",
-   135
-  ],
-  [
-   "surge_board-3",
-   108
-  ],
-  [
-   "snoop_cigar-1",
-   48
-  ],
-  [
-   "voodoo_doll-2",
-   17
-  ],
-  [
-   "low_rider-3",
-   1
-  ]
- ],
- "free24": [
   [
    "chill_flame-2",
-   5
-  ],
-  [
-   "pet_snake-1",
-   5
-  ],
-  [
-   "party_sparkler-1",
-   4
-  ],
-  [
-   "input_key-1",
    3
   ],
   [
-   "jingle_bell-2",
+   "pool_float-3",
+   3
+  ],
+  [
+   "pet_snake-1",
+   3
+  ],
+  [
+   "victory_medal-2",
+   3
+  ],
+  [
+   "clover_pin-1",
+   3
+  ],
+  [
+   "input_key-1",
+   12
+  ],
+  [
+   "jolly_chimp-3",
+   2
+  ],
+  [
+   "ton_10000",
+   2
+  ],
+  [
+   "crystal_ball-1",
    1
   ],
   [
-   "toy_bear-2",
+   "khabibs_papakha-2",
+   1
+  ],
+  [
+   "voodoo_doll-1",
    1
   ],
   [
@@ -759,45 +1257,123 @@
    1
   ],
   [
-   "westside_sign-2",
+   "low_rider-2",
+   1
+  ]
+ ],
+ "free24": [
+  [
+   "ton_2000",
+   10
+  ],
+  [
+   "ton_5000",
+   1
+  ],
+  [
+   "chill_flame-2",
+   1
+  ],
+  [
+   "pool_float-3",
+   1
+  ],
+  [
+   "pet_snake-3",
+   1
+  ],
+  [
+   "victory_medal-3",
+   1
+  ],
+  [
+   "clover_pin-1",
+   1
+  ],
+  [
+   "snoop_dogg-2",
+   1
+  ],
+  [
+   "jolly_chimp-3",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "crystal_ball-1",
+   1
+  ],
+  [
+   "love_potion-1",
+   3
+  ],
+  [
+   "signet_ring-3",
+   1
+  ],
+  [
+   "kissed_frog-1",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ],
+  [
+   "westside_sign-1",
    1
   ]
  ],
  "sweet": [
   [
-   "chill_flame-2",
-   2
-  ],
-  [
-   "ice_cream-1",
-   2
-  ],
-  [
-   "lol_pop-1",
-   2
-  ],
-  [
-   "pool_float-3",
-   2
-  ],
-  [
-   "xmas_stocking-3",
-   2
-  ],
-  [
-   "whip_cupcake-2",
-   2
-  ],
-  [
-   "party_sparkler-1",
-   2
-  ],
-  [
-   "spring_basket-3",
+   "ton_500",
    1
   ],
   [
-   "jingle_bell-1",
+   "ton_2000",
+   1
+  ],
+  [
+   "ton_5000",
+   1
+  ],
+  [
+   "chill_flame-2",
+   1
+  ],
+  [
+   "lol_pop-1",
+   4
+  ],
+  [
+   "pool_float-3",
+   5
+  ],
+  [
+   "ice_cream-1",
+   5
+  ],
+  [
+   "xmas_stocking-3",
+   5
+  ],
+  [
+   "whip_cupcake-1",
+   7
+  ],
+  [
+   "party_sparkler-1",
+   17
+  ],
+  [
+   "spring_basket-3",
+   17
+  ],
+  [
+   "jingle_bell-2",
    1
   ]
  ],
@@ -859,66 +1435,90 @@
  ],
  "meme": [
   [
-   "pet_snake-3",
-   653
+   "ton_1000",
+   1179
+  ],
+  [
+   "ton_2000",
+   632
+  ],
+  [
+   "ton_5000",
+   276
+  ],
+  [
+   "pet_snake-1",
+   263
   ],
   [
    "liberty_figure-3",
-   548
+   214
   ],
   [
-   "snoop_dogg-3",
-   523
+   "snoop_dogg-2",
+   208
   ],
   [
    "jolly_chimp-3",
-   431
+   165
   ],
   [
-   "snoop_cigar-3",
-   260
+   "snoop_cigar-1",
+   93
   ],
   [
-   "toy_bear-2",
-   139
+   "toy_bear-3",
+   46
   ],
   [
-   "kissed_frog-3",
-   97
+   "kissed_frog-1",
+   31
   ],
   [
-   "plush_pepe-1",
+   "plush_pepe-3",
    1
   ]
  ],
  "party": [
   [
-   "lol_pop-1",
-   173
+   "ton_500",
+   778
   ],
   [
-   "timeless_book-3",
-   151
+   "ton_2000",
+   389
+  ],
+  [
+   "ton_5000",
+   246
+  ],
+  [
+   "lol_pop-1",
+   241
+  ],
+  [
+   "timeless_book-1",
+   228
   ],
   [
    "victory_medal-2",
-   143
+   228
   ],
   [
    "party_sparkler-1",
-   136
+   224
   ],
   [
    "surge_board-1",
-   87
+   192
   ],
   [
-   "jingle_bell-2",
-   46
+   "jingle_bell-1",
+   155
   ],
   [
    "mini_oscar-3",
-   3
+   63
   ],
   [
    "westside_sign-1",
@@ -961,28 +1561,40 @@
  ],
  "street": [
   [
-   "snoop_dogg-2",
-   127
+   "ton_1000",
+   79
+  ],
+  [
+   "ton_2000",
+   47
+  ],
+  [
+   "ton_5000",
+   25
+  ],
+  [
+   "snoop_dogg-3",
+   27
   ],
   [
    "input_key-1",
-   104
+   20
   ],
   [
    "surge_board-1",
-   98
+   19
   ],
   [
-   "snoop_cigar-3",
-   31
+   "snoop_cigar-1",
+   11
   ],
   [
-   "sharp_tongue-1",
+   "sharp_tongue-3",
    5
   ],
   [
    "low_rider-1",
-   3
+   4
   ],
   [
    "westside_sign-2",
@@ -991,28 +1603,40 @@
  ],
  "cute": [
   [
-   "whip_cupcake-2",
-   179
+   "ton_500",
+   195
   ],
   [
-   "pet_snake-1",
-   179
+   "ton_2000",
+   85
+  ],
+  [
+   "ton_5000",
+   47
+  ],
+  [
+   "whip_cupcake-1",
+   47
+  ],
+  [
+   "pet_snake-3",
+   47
   ],
   [
    "spring_basket-2",
-   124
+   42
   ],
   [
    "jolly_chimp-3",
-   87
+   36
   ],
   [
-   "toy_bear-3",
-   12
+   "toy_bear-2",
+   15
   ],
   [
-   "kissed_frog-1",
-   6
+   "kissed_frog-3",
+   11
   ],
   [
    "scared_cat-3",

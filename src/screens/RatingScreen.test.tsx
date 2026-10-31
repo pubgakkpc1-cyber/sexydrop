@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import { RatingScreen, formatCountdown, formatPoints, maskName } from './RatingScreen'
+import userEvent from '@testing-library/user-event'
+import { RatingScreen, formatPoints, maskName } from './RatingScreen'
 import { useProfileStore } from '../store/profile'
 import { useQuestsStore } from '../store/quests'
 import { useGamesHistoryStore } from '../store/gamesHistory'
@@ -14,7 +15,7 @@ beforeEach(() => {
 })
 
 describe('RatingScreen (матовый рейтинг по референсу)', () => {
-  it('без плашки сезона (временно скрыта), заголовок списка и 10 мест с призами', () => {
+  it('без плашки сезона и призов, заголовок списка и 10 мест с призами', () => {
     render(<RatingScreen />)
     expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
     expect(screen.queryByText('Заканчивается через')).not.toBeInTheDocument()
@@ -24,12 +25,11 @@ describe('RatingScreen (матовый рейтинг по референсу)',
     expect(within(list).getAllByRole('listitem')).toHaveLength(10)
   })
 
-  it('без раундов закреплённая строка «ВЫ» показывает 999+ и пустой приз', () => {
+  it('без раундов закреплённая строка «ВЫ» показывает 999+', () => {
     render(<RatingScreen />)
     const bar = screen.getByLabelText('Ваше место')
     expect(within(bar).getByText('999+')).toBeInTheDocument()
     expect(within(bar).getByText('ВЫ')).toBeInTheDocument()
-    expect(within(bar).getByLabelText('Без приза')).toBeInTheDocument()
   })
 
   it('реальная статистика: очки = оборот × 100, вы попадаете в таблицу по месту', () => {
@@ -57,8 +57,10 @@ describe('форматтеры рейтинга', () => {
     expect(formatPoints(0)).toBe('0')
   })
 
-  it('formatCountdown: «2d 2h 40m 4s»', () => {
-    expect(formatCountdown(((2 * 24 + 2) * 3600 + 40 * 60 + 4) * 1000)).toBe('2d 2h 40m 4s')
-    expect(formatCountdown(-5)).toBe('0d 0h 0m 0s')
+  it('описание очков скрыто и раскрывается по нажатию', async () => {
+    render(<RatingScreen />)
+    expect(screen.queryByText(/100 очков за 1 TON/)).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /Что за очки/ }))
+    expect(screen.getByText(/100 очков за 1 TON/)).toBeInTheDocument()
   })
 })

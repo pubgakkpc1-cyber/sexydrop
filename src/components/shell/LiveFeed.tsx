@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { currentSlot, liveFeed, msToNextSlot } from '../../services/liveFeed'
 import { formatMinor } from '../../lib/money'
 import { cx } from '../../lib/cx'
@@ -35,9 +34,9 @@ export function LiveFeed() {
       </span>
       <div className={styles.track}>
         {drops.map((drop) => (
-          <Link
+          <div
             key={drop.slot}
-            to={`/case/${drop.caseId}`}
+            role="img"
             className={cx(styles.item, drop.isHit && styles.hit, drop.slot === slot && styles.fresh)}
             aria-label={`${drop.gift.name} из кейса ${drop.caseName} — ${formatMinor(drop.gift.priceMinor)} TON`}
           >
@@ -47,7 +46,7 @@ export function LiveFeed() {
               className={/_\d\.png$/.test(drop.gift.image) ? styles.imgFull : styles.imgContain}
               loading="lazy"
             />
-          </Link>
+          </div>
         ))}
       </div>
     </section>

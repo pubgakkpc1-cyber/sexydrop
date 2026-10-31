@@ -32,6 +32,32 @@ DARK = {"Black", "Onyx Black"}
 SPECIAL_BACKDROP = {"black": "Black", "onyx-black": "Onyx Black"}
 
 
+# --- TON-призы: в часть кейсов добавляются выигрыши прямо в TON (0.5 / 1 / 5 …) ---
+TON_PRIZES = {
+    "TON 0.5": 500, "TON 1": 1000, "TON 2": 2000, "TON 5": 5000, "TON 10": 10000,
+    "TON 25": 25000, "TON 50": 50000, "TON 100": 100000, "TON 250": 250000,
+}
+for _n, _v in TON_PRIZES.items():
+    GIFTS[_n] = (_v, [f"ton_{_v}"])
+    BACKDROP[f"ton_{_v}"] = "TON"
+TON_CASES = {
+    "farm", "movie", "magic", "space", "money", "gem", "pepe", "ring", "epic", "elite",
+    "sweet", "cute", "meme", "street", "party", "free", "free24",
+}
+
+
+def is_ton(name: str) -> bool:
+    return name in TON_PRIZES
+
+
+def ton_extras(price: int) -> list[str]:
+    """До трёх TON-призов, разнесённых по диапазону от 8% до 130% цены кейса."""
+    cands = sorted((n for n, v in TON_PRIZES.items() if 0.08 * price <= v <= 1.3 * price), key=lambda n: TON_PRIZES[n])
+    if len(cands) <= 3:
+        return cands
+    return [cands[0], cands[len(cands) // 2], cands[-1]]
+
+
 def allowed_variants(name: str, case_id: str) -> list[str]:
     ids = GIFTS[name][1]
     want = SPECIAL_BACKDROP.get(case_id)
@@ -41,7 +67,7 @@ def allowed_variants(name: str, case_id: str) -> list[str]:
 
 
 def ladder_for(case_id: str) -> list[str]:
-    names = [n for n in GIFTS if allowed_variants(n, case_id)]
+    names = [n for n in GIFTS if not is_ton(n) and allowed_variants(n, case_id)]
     return sorted(names, key=lambda n: GIFTS[n][0])
 
 # (id, название, цена в minor, коэффициент потолка топ-приза к цене кейса, число предметов)
@@ -133,7 +159,9 @@ for ci, (cid, name, price, mult, k) in enumerate(CASES):
     chosen = None
     for skew in (1.0, 1.6, 2.2, 3.0, 4.0):
         for extra in range(0, 3):
-            pool = pick_pool(price, mult + extra * 2, k, cid, skew)
+            pool = pick_pool(price, mult + extra * 2, k + 5, cid, skew)
+            if cid in TON_CASES:
+                pool = sorted(set(pool) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
             v = [GIFTS[n][0] for n in pool]
             w = solve(v, price)
             if not w:
@@ -172,17 +200,20 @@ PRICE_LADDER_TON = [6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24, 25, 30, 35, 40, 
 
 themed_prices = {}
 for ti, (cid, name, names) in enumerate(THEMED):
-    pool = sorted((n for n in names if n in GIFTS and allowed_variants(n, cid)), key=lambda n: GIFTS[n][0])
-    v = [GIFTS[n][0] for n in pool]
+    pool0 = sorted((n for n in names if n in GIFTS and allowed_variants(n, cid)), key=lambda n: GIFTS[n][0])
     best = None
     for ton in PRICE_LADDER_TON:
         price = ton * 1000
+        pool = pool0
+        if cid in TON_CASES:
+            pool = sorted(set(pool0) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
+        v = [GIFTS[n][0] for n in pool]
         w = solve(v, price)
         if w and util(w, v, price) >= 0.96:
-            best = (price, w)
+            best = (price, w, pool, v)
             break
     assert best, f"no price for themed case {cid}"
-    price, w = best
+    price, w, pool, v = best
     themed_prices[cid] = price
     ci = len(CASES) + ti
     result[cid] = []

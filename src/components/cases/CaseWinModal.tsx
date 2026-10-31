@@ -1,5 +1,5 @@
 import { useState, type CSSProperties } from 'react'
-import { RARITY_LABELS, type Gift } from '../../data/catalog'
+import { RARITY_LABELS, isTonPrize, type Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
 import { hapticNotify } from '../../lib/telegram'
@@ -18,6 +18,7 @@ const SPARKS = Array.from({ length: 12 }, (_, i) => ({ a: i * 30 + (i % 2) * 9, 
 export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
   const [sold, setSold] = useState(false)
   const [selling, setSelling] = useState(false)
+  const isTon = isTonPrize(gift)
 
   const handleSell = () => {
     if (selling || sold) return
@@ -43,7 +44,7 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
           <SparkleIcon style={{ width: '20px', height: '20px', display: 'inline', verticalAlign: '-2px', marginRight: '6px', color: '#c35c61' }} />
           <span>Поздравляем!</span>
         </h2>
-        <p className={styles.subtitle}>Вам выпал новый подарок</p>
+        <p className={styles.subtitle}>{isTon ? 'Выигрыш уже на вашем балансе' : 'Вам выпал новый подарок'}</p>
 
         <div className={styles.stageWrap}>
           <div className={styles.rays} aria-hidden />
@@ -80,19 +81,21 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
             onClick={onClose}
             disabled={selling || sold}
           >
-            Забрать в инвентарь
+            {isTon ? 'Отлично!' : 'Забрать в инвентарь'}
           </button>
 
-          <button
-            type="button"
-            className={`${styles.sellButton} ${sold ? styles.sellButtonSold : ''}`}
-            onClick={handleSell}
-            disabled={selling || sold}
-          >
-            {sold
-              ? `Продано! +${formatMinor(gift.priceMinor)} TON`
-              : `Продать за ${formatMinor(gift.priceMinor)} TON`}
-          </button>
+          {!isTon && (
+            <button
+              type="button"
+              className={`${styles.sellButton} ${sold ? styles.sellButtonSold : ''}`}
+              onClick={handleSell}
+              disabled={selling || sold}
+            >
+              {sold
+                ? `Продано! +${formatMinor(gift.priceMinor)} TON`
+                : `Продать за ${formatMinor(gift.priceMinor)} TON`}
+            </button>
+          )}
         </div>
       </div>
     </div>

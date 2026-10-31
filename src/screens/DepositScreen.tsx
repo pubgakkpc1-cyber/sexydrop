@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useStarsBalanceStore } from '../store/starsBalance'
 import { formatMinor, toMinor, type Minor } from '../lib/money'
 import {
   STARS_MAX,
@@ -153,6 +154,8 @@ function StarsPanel({ onDone }: { onDone: (minor: Minor) => void }) {
         disabled={!valid || payout <= 0}
         onClick={() => {
           if (valid && payout > 0) {
+            // заработанные звёзды расходуются первыми
+            useStarsBalanceStore.getState().spend(stars)
             onDone(payout)
             setInput('')
           }
@@ -256,6 +259,7 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
   const stars = parseStars(input)
   const valid = isValidStars(stars)
   const payout = valid ? starsToMinor(stars) : stars !== null ? starsToMinor(stars) : 0
+  const earned = useStarsBalanceStore((s) => s.stars)
 
   return (
     <div className={styles.panel}>
@@ -301,6 +305,11 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
       <p className={styles.rate}>
         От {STARS_MIN} до {STARS_MAX.toLocaleString('ru-RU')} Stars за раз
       </p>
+      {earned > 0 && (
+        <button type="button" className={styles.preset} onClick={() => setInput(String(Math.min(STARS_MAX, earned)))}>
+          Мои звёзды: {earned.toLocaleString('ru-RU')} ★ — подставить
+        </button>
+      )}
       <div className={styles.presetsRow}>
         {STARS_PRESETS.map((p) => (
           <button
@@ -338,7 +347,9 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
 export function DepositScreen() {
   const navigate = useNavigate()
   const credit = useWalletStore((s) => s.credit)
-  const [tab, setTab] = useState<TabId>('ton')
+  const [params] = useSearchParams()
+  const startTab = params.get('tab')
+  const [tab, setTab] = useState<TabId>(TABS.some((x) => x.id === startTab) ? (startTab as TabId) : 'ton')
   const [done, setDone] = useState<string | null>(null)
 
   const finish = (minor: Minor) => {

@@ -1,4 +1,4 @@
-import { caseById, type CaseDefinition, type FreeCaseId } from '../data/catalog'
+import { caseById, isTonPrize, type CaseDefinition, type FreeCaseId } from '../data/catalog'
 import { pickWeighted } from '../lib/caseMath'
 import { createRequestMemo } from '../lib/requestMemo'
 import { useFreeCasesStore } from '../store/freeCases'
@@ -57,6 +57,12 @@ export function openCase(
     // await, поэтому состояние не может «разъехаться» посреди операции.
     wallet.debit(definition.priceMinor)
     const chosen = pickWeighted(definition.entries, rng)
+    if (isTonPrize(chosen.itemId)) {
+      // выигрыш в TON: сразу на баланс, в инвентарь не попадает
+      const amount = Number(chosen.itemId.slice(4))
+      wallet.credit(amount)
+      return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
+    }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'case-open')
     if (!item) throw new Error('Inventory did not accept the gift')
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const
@@ -82,6 +88,11 @@ export function claimFreeCase(
     }
 
     const chosen = pickWeighted(definition.entries, rng)
+    if (isTonPrize(chosen.itemId)) {
+      useWalletStore.getState().credit(Number(chosen.itemId.slice(4)))
+      freeCases.claim(caseId, now)
+      return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
+    }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'free-case')
     if (!item) throw new Error('Inventory did not accept the gift')
     freeCases.claim(caseId, now)

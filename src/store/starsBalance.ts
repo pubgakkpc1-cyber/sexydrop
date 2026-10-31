@@ -9,6 +9,8 @@ interface StarsBalanceState {
   /** Заработанные звёзды (за задания и бонусы). */
   stars: number
   add: (amount: number) => void
+  /** Списать звёзды (не больше, чем есть); возвращает сколько реально списано. */
+  spend: (amount: number) => number
   /** Обмен звёзд на TON по курсу 175 Stars = 1 TON (вниз); возвращает статус. */
   exchange: (stars: number) => 'ok' | 'too_small' | 'insufficient'
 }
@@ -17,6 +19,11 @@ export const useStarsBalanceStore = create<StarsBalanceState>((set, get) => ({
   stars: 0,
   add: (amount) => {
     if (amount > 0) set((s) => ({ stars: s.stars + Math.floor(amount) }))
+  },
+  spend: (amount) => {
+    const used = Math.max(0, Math.min(Math.floor(amount), get().stars))
+    if (used > 0) set((s) => ({ stars: s.stars - used }))
+    return used
   },
   exchange: (stars) => {
     const amount = Math.floor(stars)

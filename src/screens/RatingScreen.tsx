@@ -1,10 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useProfileStore } from '../store/profile'
-import { giftById } from '../data/catalog'
-import { ClockIcon, TrophyIcon, UsersIcon } from '../components/shell/icons'
+import { TrophyIcon } from '../components/shell/icons'
 import { UserAvatar } from '../components/ui/UserAvatar'
+import { TgAvatar } from '../components/ui/TgAvatar'
 import { cx } from '../lib/cx'
-import { FEATURES } from '../lib/features'
 import styles from './RatingScreen.module.css'
 
 interface LeaderboardBot {
@@ -14,20 +13,6 @@ interface LeaderboardBot {
   /** Очки = оборот в TON × 100 */
   points: number
 }
-
-/** Призы топ-10: реальные NFT из каталога, по местам. */
-const PRIZE_IDS = [
-  'plush_pepe-1',
-  'heart_locket-1',
-  'resistance_dog-1',
-  'durovs_cap-1',
-  'scared_cat-1',
-  'precious_peach-1',
-  'heroic_helmet-1',
-  'loot_bag-1',
-  'mighty_arm-1',
-  'astral_shard-1',
-] as const
 
 const TOP_BOTS: readonly LeaderboardBot[] = [
   { id: 'b1', name: 'kamronbek', avatar: '/avatars/bot_03.svg', points: 84_000 },
@@ -55,23 +40,6 @@ export function formatPoints(points: number): string {
   return String(Math.floor(points))
 }
 
-/** Недельный сезон: заканчивается в ближайший понедельник 00:00 UTC. */
-function msUntilSeasonEnd(now: number): number {
-  const d = new Date(now)
-  const daysToMonday = ((8 - d.getUTCDay()) % 7) || 7
-  const end = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + daysToMonday)
-  return end - now
-}
-
-export function formatCountdown(ms: number): string {
-  const total = Math.max(0, Math.floor(ms / 1000))
-  const d = Math.floor(total / 86400)
-  const h = Math.floor((total % 86400) / 3600)
-  const m = Math.floor((total % 3600) / 60)
-  const s = total % 60
-  return `${d}d ${h}h ${m}m ${s}s`
-}
-
 interface Row {
   key: string
   me: boolean
@@ -83,13 +51,8 @@ interface Row {
 export function RatingScreen() {
   const { rounds, wageredMinor, pvpMatches } = useProfileStore()
   const noData = rounds === 0
+  const [infoOpen, setInfoOpen] = useState(false)
   const myPoints = Math.floor(wageredMinor / 10) // 1 TON оборота = 100 очков
-
-  const [left, setLeft] = useState(() => msUntilSeasonEnd(Date.now()))
-  useEffect(() => {
-    const id = setInterval(() => setLeft(msUntilSeasonEnd(Date.now())), 1000)
-    return () => clearInterval(id)
-  }, [])
 
   // Таблица: боты + вы (если есть реальные раунды), по убыванию очков
   const rows = useMemo<Row[]>(() => {
@@ -100,54 +63,41 @@ export function RatingScreen() {
 
   const myIndex = rows.findIndex((r) => r.me)
   const myRankLabel = noData ? '999+' : myIndex >= 0 ? String(myIndex + 1) : '10+'
-  const myPrize = myIndex >= 0 ? giftById.get(PRIZE_IDS[myIndex] ?? '') : undefined
 
   return (
     <div className={styles.screen}>
-      {FEATURES.ratingHero ? (
-        <section className={styles.hero} aria-label="Рейтинг">
-        <div className={styles.heroTop}>
-          <span className={styles.heroIcon}>
-            <TrophyIcon className={styles.heroIconSvg} aria-hidden />
-          </span>
-          <h1 className={styles.title}>Рейтинг</h1>
-        </div>
-        <div className={styles.heroRow}>
-          <div className={styles.heroCol}>
-            <span className={styles.heroLabel}>Заканчивается через</span>
-            <span className={styles.timer} role="timer">
-              <ClockIcon className={styles.timerIcon} aria-hidden />
-              {formatCountdown(left)}
-            </span>
+      <h1 className={styles.title}>Рейтинг</h1>
+
+      {/* Маленькое описание очков: раскрывается только по нажатию */}
+      <div className={styles.info}>
+        <button
+          type="button"
+          className={styles.infoBtn}
+          aria-expanded={infoOpen}
+          onClick={() => setInfoOpen((v) => !v)}
+        >
+          Что за очки? <span className={cx(styles.infoCaret, infoOpen && styles.infoCaretOpen)} aria-hidden>▾</span>
+        </button>
+        {infoOpen && (
+          <div className={styles.infoPanel} role="note">
+            <p><b>Очки</b> показывают, как много вы играете. За каждую ставку в Ракетке и мини-играх
+            вы получаете <b>100 очков за 1 TON</b> ставки (1 TON оборота = 100 очков).</p>
+            <p>Выигрыш и проигрыш не важны — считается только оборот. Таблица обновляется после
+            каждого раунда. Места ботов — демо.</p>
           </div>
-          <div className={cx(styles.heroCol, styles.heroColRight)}>
-            <span className={styles.heroLabel}>Призы и победители</span>
-            <span className={styles.winners}>
-              <UsersIcon className={styles.winnersIcon} aria-hidden />
-              {PRIZE_IDS.length}
-            </span>
-          </div>
-        </div>
-        <p className={styles.heroText}>
-          Соревнуйтесь с другими пользователями и выигрывайте потрясающие призы!
-        </p>
-      </section>
-      ) : (
-        <h1 className={styles.title}>Рейтинг</h1>
-      )}
+        )}
+      </div>
 
       <div className={styles.listHead}>
         <span className={styles.listTitle}>
           <TrophyIcon className={styles.listTitleIcon} aria-hidden />
           Топ игроков
         </span>
-        <span className={styles.colLabel}>Приз</span>
         <span className={styles.colLabel}>Очки</span>
       </div>
 
       <ol className={styles.list} aria-label="Рейтинг игроков">
         {rows.map((row, idx) => {
-          const prize = giftById.get(PRIZE_IDS[idx] ?? '')
           return (
             <li
               key={row.key}
@@ -172,13 +122,10 @@ export function RatingScreen() {
               {row.me ? (
                 <UserAvatar size={44} className={styles.avatar} />
               ) : (
-                <img className={styles.avatar} src={row.avatar} alt="" />
+                <TgAvatar name={row.name} size={44} className={styles.avatar} />
               )}
               <span className={styles.name}>
                 {row.me ? 'Вы' : maskName(row.name)}
-              </span>
-              <span className={styles.prize}>
-                {prize && <img src={prize.image} alt="" className={styles.prizeImg} />}
               </span>
               <span className={styles.points}>{formatPoints(row.points)}</span>
             </li>
@@ -190,21 +137,11 @@ export function RatingScreen() {
         <span className={styles.meRank}>{myRankLabel}</span>
         <UserAvatar size={40} className={styles.avatar} />
         <span className={styles.meChip}>ВЫ</span>
-        <span className={styles.prize}>
-          {myPrize ? (
-            <img src={myPrize.image} alt="" className={styles.prizeImg} />
-          ) : (
-            <span className={styles.noPrize} aria-label="Без приза">
-              ✕
-            </span>
-          )}
-        </span>
         <span className={styles.points}>{formatPoints(myPoints)}</span>
       </div>
 
       <p className={styles.note}>
-        PVP-матчей: {pvpMatches}. Очки — оборот ставок в TON × 100. Таблица лидеров обновляется по
-        результатам раундов; места ботов — демо.
+        PVP-матчей: {pvpMatches}.
       </p>
     </div>
   )

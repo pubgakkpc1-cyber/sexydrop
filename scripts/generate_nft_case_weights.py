@@ -35,6 +35,7 @@ SPECIAL_BACKDROP = {"black": "Black", "onyx-black": "Onyx Black"}
 # --- TON-призы: в часть кейсов добавляются выигрыши прямо в TON (0.5 / 1 / 5 …) ---
 TON_PRIZES = {
     "TON 0.5": 500, "TON 1": 1000, "TON 2": 2000, "TON 5": 5000, "TON 10": 10000,
+    "TON 0.002": 2, "TON 0.005": 5, "TON 0.01": 10, "TON 0.05": 50,
     "TON 25": 25000, "TON 50": 50000, "TON 100": 100000, "TON 250": 250000,
 }
 for _n, _v in TON_PRIZES.items():
@@ -42,7 +43,7 @@ for _n, _v in TON_PRIZES.items():
     BACKDROP[f"ton_{_v}"] = "TON"
 TON_CASES = {
     "farm", "movie", "magic", "space", "money", "gem", "pepe", "ring", "epic", "elite",
-    "sweet", "cute", "meme", "street", "party", "free", "free24",
+    "sweet", "cute", "meme", "street", "party", "free",
 }
 
 
@@ -106,7 +107,6 @@ CASES = [
     ("elite", "Elite", 300000, 25, 10),
     # бесплатные: «цена» — целевой EV содержимого
     ("free", "FREE", 8000, 9, 7),
-    ("free24", "FREE 24", 16000, 8, 8),
 ]
 # Прямые ограничения на пул: для elite нужен Plush Pepe (джекпот с шансом ~0.1%)
 FORCE_TOP = {"elite": "Plush Pepe"}
@@ -242,6 +242,36 @@ for ti, (cid, name, names) in enumerate(THEMED):
     )
 
 (ROOT / "scripts/themed_cases.json").write_text(json.dumps(themed_prices, indent=1), encoding="utf-8")
+
+# --- FREE 24: микро-TON призы (0.002 / 0.005 / 0.01 / 0.05) и только самые дешёвые NFT ---
+FREE24_MICRO = ["TON 0.002", "TON 0.005", "TON 0.01", "TON 0.05"]
+FREE24_MICRO_W = [400, 300, 200, 100]
+cheap_nft = sorted(
+    (n for n in GIFTS if not is_ton(n) and allowed_variants(n, "free24")),
+    key=lambda n: GIFTS[n][0],
+)[:6]
+pool24 = sorted(FREE24_MICRO + cheap_nft, key=lambda n: GIFTS[n][0])
+v24 = [GIFTS[n][0] for n in pool24]
+best24 = None
+for target in (300, 400, 500, 600, 800, 1000, 1500, 2000):
+    for per_nft in range(4, 80):
+        w24 = [FREE24_MICRO_W[FREE24_MICRO.index(n)] if n in FREE24_MICRO else per_nft for n in pool24]
+        if feasible(w24, v24, target) and util(w24, v24, target) >= 0.96:
+            best24 = (target, w24)
+            break
+    if best24:
+        break
+assert best24, "no solution for free24"
+free24_price, w24 = best24
+result["free24"] = []
+for j, (n, wt) in enumerate(zip(pool24, w24)):
+    picks = variant_picks(n, "free24", 7 + j)
+    q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
+    for vi, vid in enumerate(picks):
+        result["free24"].append([vid, q + (1 if vi < r else 0)])
+report.append(f"free24      P={free24_price/1000:>6}  util={util(w24, v24, free24_price):.3f}  {list(zip(pool24, w24))}")
+(ROOT / "scripts/free24_target.json").write_text(json.dumps({"targetMinor": free24_price}), encoding="utf-8")
+
 
 # --- Кейсы с обычными подарками Telegram (не NFT): цены по Stars (175 Stars = 1 TON, вниз) ---
 REGULAR = {

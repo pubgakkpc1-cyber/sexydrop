@@ -26,11 +26,10 @@ describe('RatingScreen (матовый рейтинг по референсу)',
     expect(screen.getByText(/Пока в рейтинге никого нет/)).toBeInTheDocument()
   })
 
-  it('без раундов закреплённая строка «ВЫ» показывает 999+', () => {
+  it('без игры нет ни «999+», ни строки «ВЫ» — пока пользователей нет, показывать нечего', () => {
     render(<RatingScreen />)
-    const bar = screen.getByLabelText('Ваше место')
-    expect(within(bar).getByText('999+')).toBeInTheDocument()
-    expect(within(bar).getByText('ВЫ')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Ваше место')).not.toBeInTheDocument()
+    expect(screen.queryByText('999+')).not.toBeInTheDocument()
   })
 
   it('реальная статистика: очки = оборот × 100, в таблице только вы', () => {

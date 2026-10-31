@@ -110,8 +110,9 @@ function tonPrize(minor: Minor): Gift {
   const ton = minor / 1000
   return {
     id: `ton_${minor}`,
-    name: `${Number.isInteger(ton) ? ton : ton.toFixed(1)} TON`,
-    image: `/gifts/tonprize_${minor}.png`,
+    name: `${ton} TON`,
+    // единый значок TON (синий камень с белой искрой) — без подписей на картинке
+    image: '/gifts/ton_gem.png',
     priceMinor: minor,
     rarity: minor >= 25000 ? 'legendary' : minor >= 5000 ? 'epic' : minor >= 2000 ? 'rare' : 'common',
     priceSource: 'catalog-config',
@@ -179,6 +180,10 @@ export const gifts: readonly Gift[] = [
   regularGift('reg-diamond', 'Diamond', 571, 'blue_diamond_gem'),
 
   /* --- ПРИЗЫ В TON --- */
+  tonPrize(2),
+  tonPrize(5),
+  tonPrize(10),
+  tonPrize(50),
   tonPrize(500),
   tonPrize(1000),
   tonPrize(2000),

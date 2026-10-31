@@ -164,7 +164,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
       expect(gameCase.priceMinor).toBe(0)
       expect(gameCase.freeCooldownMs).toBeGreaterThan(0)
       const entries = priced(gameCase.id)
-      const targetMinor = gameCase.id === 'free24' ? 16_000 : 8_000
+      const targetMinor = gameCase.id === 'free24' ? 500 : 8_000
       expect(isWithinRtp(entries, targetMinor, RTP_BPS)).toBe(true)
       expect(rtpUtilizationBps(entries, targetMinor, RTP_BPS)).toBeGreaterThanOrEqual(9_000)
     }

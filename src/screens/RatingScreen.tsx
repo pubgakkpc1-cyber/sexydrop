@@ -114,12 +114,14 @@ export function RatingScreen() {
         })}
       </ol>
 
+      {!noData && (
       <div className={styles.meBar} aria-label="Ваше место">
         <span className={styles.meRank}>{myRankLabel}</span>
         <UserAvatar size={40} className={styles.avatar} />
         <span className={styles.meChip}>ВЫ</span>
         <span className={styles.points}>{formatPoints(myPoints)}</span>
       </div>
+      )}
 
       <p className={styles.note}>
         PVP-матчей: {pvpMatches}.

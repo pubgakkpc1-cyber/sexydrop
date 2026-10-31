@@ -1,0 +1,174 @@
+.bar {
+  position: relative;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 14px 6px;
+  padding-top: calc(10px + var(--safe-top));
+  flex-shrink: 0;
+}
+
+.left {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status,
+.gear,
+.balance {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  background: #1c1b1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  color: #fff;
+}
+
+.status {
+  gap: 7px;
+  padding: 0 13px;
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3fd47e;
+  box-shadow: 0 0 8px rgba(63, 212, 126, 0.85);
+}
+
+.dotOff {
+  background: #e0484f;
+  box-shadow: 0 0 8px rgba(224, 72, 79, 0.85);
+}
+
+.wifi {
+  width: 19px;
+  height: 19px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.wifiOff {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.gear {
+  justify-content: center;
+  width: 38px;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.gear:active {
+  transform: scale(0.94);
+}
+
+.gearIcon {
+  width: 19px;
+  height: 19px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.menu {
+  position: absolute;
+  top: 46px;
+  left: 0;
+  min-width: 170px;
+  padding: 6px;
+  background: #1f1e22;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+  animation: menuIn 0.16s ease-out;
+}
+
+@keyframes menuIn {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+
+.menuTitle {
+  display: block;
+  padding: 8px 12px 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.6px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 11px 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  background: transparent;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.menuItemActive {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+}
+
+.check {
+  color: #3fd47e;
+  font-weight: 800;
+}
+
+.balance {
+  gap: 8px;
+  padding: 0 6px 0 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.balance:active {
+  transform: scale(0.97);
+}
+
+.coin {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+.coinStar {
+  color: #ffc93c;
+}
+
+.amount {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.plus {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  font-size: 18px;
+  line-height: 1;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu { animation: none; }
+}

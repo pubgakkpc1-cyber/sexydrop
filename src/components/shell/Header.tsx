@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { formatMinor } from '../../lib/money'
+import { formatBalanceTon } from '../../lib/balanceFormat'
 import { minorToStars } from '../../lib/stars'
 import { useDisplayCurrencyStore } from '../../store/displayCurrency'
 import { BalanceCurrencySheet } from './BalanceCurrencySheet'
@@ -11,12 +11,6 @@ import { Button } from '../ui'
 import { UserAvatar } from '../ui/UserAvatar'
 import { DiamondIcon, WalletIcon, TonIcon, StarIcon } from './icons'
 import styles from './Header.module.css'
-
-/** Баланс с одной цифрой после точки, округление вниз: 94.57 → «94.5», 100 → «100». */
-function formatBalance1(minor: number): string {
-  const tenths = Math.floor(minor / 100)
-  return tenths % 10 === 0 ? String(tenths / 10) : `${Math.floor(tenths / 10)}.${tenths % 10}`
-}
 
 export function Header() {
   const balance = useWalletStore((s) => s.balances[s.mode] ?? s.balances.demo ?? s.balances.real)
@@ -31,7 +25,7 @@ export function Header() {
       return { int: minorToStars(balance).toLocaleString('ru-RU').replace(/\u00a0/g, ' '), frac: '' }
     }
     // Больше 0.1 TON — одна цифра после точки (вниз); меньше — как есть (например 0.023)
-    const shown = balance > 100 ? formatBalance1(balance) : formatMinor(balance)
+    const shown = formatBalanceTon(balance)
     const [int = '0', frac] = shown.split('.')
     return { int, frac: frac ? `.${frac}` : '' }
   }, [balance, currency])

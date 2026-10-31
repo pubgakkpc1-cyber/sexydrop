@@ -4,6 +4,7 @@ import { getWebApp, isTelegramEnv } from '../../lib/telegram'
 import { BottomNav } from './BottomNav'
 import { Header } from './Header'
 import { LiveFeed } from './LiveFeed'
+import { GameTopBar } from './GameTopBar'
 import { CubeIcon, GiftIcon, RocketIcon, SlotIcon, TonIcon } from './icons'
 import styles from './MobileShell.module.css'
 
@@ -18,6 +19,8 @@ export function MobileShell() {
 
   const [inTelegram] = useState(() => isTelegramEnv())
   const isCustomHeaderScreen = location.pathname === '/games/crash'
+  // Мини-игры (/games/mines, /games/upgrade …): компактная панель вместо обычной шапки и ленты Live
+  const isMiniGame = location.pathname.startsWith('/games/') && !isCustomHeaderScreen
   const [isWideScreen, setIsWideScreen] = useState(() => {
     if (typeof window === 'undefined') return false
     return window.innerWidth >= 1024
@@ -54,8 +57,9 @@ export function MobileShell() {
     return (
       <div className={styles.rootWrapper}>
         <div className={styles.shellContainer}>
-          {!isCustomHeaderScreen && <Header />}
-          {!isCustomHeaderScreen && <LiveFeed />}
+          {isMiniGame && <GameTopBar />}
+          {!isCustomHeaderScreen && !isMiniGame && <Header />}
+          {!isCustomHeaderScreen && !isMiniGame && <LiveFeed />}
           <main
             className={isCustomHeaderScreen ? `${styles.main} ${styles.mainCustomHeader}` : styles.main}
             key={location.pathname}
@@ -130,8 +134,9 @@ export function MobileShell() {
 
         {/* Рабочая область приложения */}
         <div className={styles.shellContainer}>
-          {!isCustomHeaderScreen && <Header />}
-          {!isCustomHeaderScreen && <LiveFeed />}
+          {isMiniGame && <GameTopBar />}
+          {!isCustomHeaderScreen && !isMiniGame && <Header />}
+          {!isCustomHeaderScreen && !isMiniGame && <LiveFeed />}
           <main className={styles.main} key={location.pathname}>
             <Outlet />
           </main>

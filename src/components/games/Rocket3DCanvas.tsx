@@ -1,3 +1,4 @@
+import { GRAPHICS_PRESETS, useGraphicsStore } from '../../store/graphics'
 import { useEffect, useRef } from 'react'
 import type { CrashPhase } from '../../store/crash'
 
@@ -613,7 +614,7 @@ export function Rocket3DCanvas({
   // Инициализация фоновых звёзд по всему экрану (Starfield)
   useEffect(() => {
     const stars: Star[] = []
-    const count = 16
+    const count = GRAPHICS_PRESETS[useGraphicsStore.getState().quality].stars
     for (let i = 0; i < count; i++) {
       const layer = Math.random() < 0.6 ? 1 : Math.random() < 0.85 ? 2 : 3
       stars.push({
@@ -667,7 +668,8 @@ export function Rocket3DCanvas({
         // 1. Создаём частицы огненного взрыва
         const exp: ExplosionParticle[] = []
         const colors = ['#ffffff', '#c7696d', '#d3878b', '#c35c61', '#ce6565', '#c96e72']
-        for (let i = 0; i < 12; i++) {
+        const expCount = GRAPHICS_PRESETS[useGraphicsStore.getState().quality].explosion
+        for (let i = 0; i < expCount; i++) {
           const angle = Math.random() * Math.PI * 2
           const speed = 2.5 + Math.random() * 9
           const maxLife = 40 + Math.floor(Math.random() * 40)
@@ -835,7 +837,7 @@ export function Rocket3DCanvas({
         ? window.innerHeight
         : (canvas.clientHeight || 280)
       const dprRaw = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1
-      const dpr = stateRef.current.lowQ ? 1 : Math.min(1.25, dprRaw)
+      const dpr = stateRef.current.lowQ ? 1 : Math.min(GRAPHICS_PRESETS[useGraphicsStore.getState().quality].dpr, dprRaw)
 
       if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
         canvas.width = width * dpr

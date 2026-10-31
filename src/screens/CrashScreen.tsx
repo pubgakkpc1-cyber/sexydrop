@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useCrashStore, type CrashBet } from '../store/crash'
-import { useWalletStore } from '../store/wallet'
 import { mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
@@ -24,15 +22,15 @@ import {
 import { getWebApp, getTelegramUser } from '../lib/telegram'
 import { MoneyRain } from '../components/effects/MoneyRain'
 import { BetSheet } from '../components/games/BetSheet'
+import { GRAPHICS_PRESETS, useGraphicsStore } from '../store/graphics'
+import { GameTopBar } from '../components/shell/GameTopBar'
 import { RocketRewardSheet } from '../components/games/RocketRewardSheet'
 import { MULT_TIER_STYLE, multTier } from '../lib/multTier'
 import { tileGiftFor } from '../lib/crashTile'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
-  ChevronLeftIcon,
   TonIcon,
-  CrownIcon,
 } from '../components/shell/icons'
 import { giftById, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
@@ -141,7 +139,7 @@ function FloatingNfts() {
   )
 }
 
-function ScreenStarfield() {
+function ScreenStarfield({ count }: { count: number }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   useEffect(() => {
@@ -154,7 +152,6 @@ function ScreenStarfield() {
     const dpr = 1
 
     const stars: Array<{ x: number; y: number; size: number; speed: number; opacity: number }> = []
-    const count = 18
     const initW = typeof window !== 'undefined' ? window.innerWidth : 420
     const initH = typeof window !== 'undefined' ? window.innerHeight : 840
 
@@ -202,10 +199,8 @@ function ScreenStarfield() {
 }
 
 export function CrashScreen() {
-  const navigate = useNavigate()
+  const graphics = GRAPHICS_PRESETS[useGraphicsStore((s) => s.quality)]
   const { phase, ticksLeft, multiplier, history, myBet, roundId, queuedNextBet } = useCrashStore()
-  const wallet = useWalletStore()
-  const balance = wallet.balances[wallet.mode]
 
   const [betSheetOpen, setBetSheetOpen] = useState(false)
   const [adminModalOpen, setAdminModalOpen] = useState(false)
@@ -428,53 +423,11 @@ export function CrashScreen() {
   return (
     <div className={styles.screen}>
       {/* Фоновый звёздный космос на весь экран под всеми элементами */}
-      <ScreenStarfield />
-      <FloatingNfts />
+      {graphics.bgStars > 0 && <ScreenStarfield count={graphics.bgStars} />}
+      {graphics.floaters && <FloatingNfts />}
 
       {/* 1. Верхний чистый бар (без лишних квадратов, только Назад и Баланс) */}
-      <div className={styles.topHeader}>
-        <button
-          type="button"
-          className={styles.backBtn}
-          onClick={() => navigate(-1)}
-          aria-label="Назад"
-        >
-          <ChevronLeftIcon className={styles.backIcon} aria-hidden />
-          <span className={styles.backText}>Назад</span>
-        </button>
-
-        <div className={styles.brandBadge} aria-label="SEXY DROP">
-          <svg viewBox="0 0 24 24" className={styles.brandDrop} aria-hidden="true">
-            <path d="M12 2.5c3.6 4.3 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.7 6-11z" fill="currentColor" />
-          </svg>
-          <span>SEXY DROP</span>
-        </div>
-
-        <div className={styles.headerRight}>
-          {isAdmin && (
-            <button
-              type="button"
-              className={styles.adminQuickBtn}
-              onClick={() => setAdminModalOpen(true)}
-              aria-label="Панель администратора"
-            >
-              <CrownIcon className={styles.adminCrownIcon} />
-              <span>Админ</span>
-            </button>
-          )}
-
-          <button
-            type="button"
-            className={styles.balancePill}
-            onClick={() => navigate('/deposit')}
-            aria-label="Пополнить баланс"
-          >
-            <TonIcon className={styles.diamondIcon} />
-            <span>{formatTonMaxOneDecimal(balance)}</span>
-            <span className={styles.plusBadge}>+</span>
-          </button>
-        </div>
-      </div>
+      <GameTopBar onAdmin={isAdmin ? () => setAdminModalOpen(true) : undefined} />
 
       <h1 className={styles.srOnly}>Ракетка</h1>
 

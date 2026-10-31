@@ -9,6 +9,7 @@ from app.api.games import router as games_router
 from app.api.health import router as health_router
 from app.api.inventory import router as inventory_router
 from app.api.realtime import router as realtime_router
+from app.api.stats import router as stats_router
 from app.api.subscriptions import router as subscriptions_router
 from app.api.telegram import router as telegram_router
 from app.api.wallet import router as wallet_router
@@ -26,3 +27,4 @@ api_router.include_router(realtime_router)
 api_router.include_router(telegram_router)
 api_router.include_router(deposits_router)
 api_router.include_router(subscriptions_router)
+api_router.include_router(stats_router)

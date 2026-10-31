@@ -3,7 +3,19 @@ import { useState } from 'react'
 import { getTelegramUser } from '../../lib/telegram'
 import { useWalletStore } from '../../store/wallet'
 import { Button, Input, Modal } from '../ui'
+import { AdminChancesTab } from './AdminChancesTab'
+import { AdminStatsTab } from './AdminStatsTab'
+import { AdminSystemTab } from './AdminSystemTab'
+import panel from './AdminPanel.module.css'
 import styles from './AdminPanelModal.module.css'
+
+type AdminTab = 'stats' | 'chances' | 'give' | 'system'
+const ADMIN_TABS: ReadonlyArray<{ id: AdminTab; label: string }> = [
+  { id: 'stats', label: 'Обзор' },
+  { id: 'chances', label: 'Шансы' },
+  { id: 'give', label: 'Выдача TON' },
+  { id: 'system', label: 'Система' },
+]
 
 interface AdminPanelModalProps {
   open: boolean
@@ -11,6 +23,7 @@ interface AdminPanelModalProps {
 }
 
 export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
+  const [tab, setTab] = useState<AdminTab>('stats')
   const [username, setUsername] = useState('')
   const [amount, setAmount] = useState('10')
   const [status, setStatus] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
@@ -85,7 +98,27 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
   }
 
   return (
-    <Modal open={open} onClose={onClose} title="Панель Администратора">
+    <Modal open={open} onClose={onClose} title="Панель Администратора" className={panel.wide}>
+      <div className={panel.tabs} role="tablist" aria-label="Разделы админки">
+        {ADMIN_TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            role="tab"
+            aria-selected={tab === t.id}
+            className={`${panel.tabBtn} ${tab === t.id ? panel.tabActive : ''}`}
+            onClick={() => setTab(t.id)}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {tab === 'stats' && <AdminStatsTab />}
+      {tab === 'chances' && <AdminChancesTab />}
+      {tab === 'system' && <AdminSystemTab />}
+
+      {tab === 'give' && (
       <div className={styles.body}>
         <div className={styles.adminBadge}>
           <span className={styles.adminIcon}>👑</span>
@@ -139,6 +172,7 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
           {loading ? 'Начисление...' : '🚀 Выдать TON'}
         </Button>
       </div>
+      )}
     </Modal>
   )
 }

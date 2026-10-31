@@ -48,6 +48,8 @@ class Settings(BaseSettings):
     sub_public_url: str = "https://t.me/SexyDrop_official"
     sub_private_chat_id: str = ""
     sub_private_url: str = "https://t.me/+YZoeECjxGmszNzZk"
+    # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
+    stats_path: str = "/tmp/sexydrop_stats.json"
     jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400

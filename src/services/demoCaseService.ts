@@ -1,10 +1,11 @@
-import { caseById, isTonPrize, type CaseDefinition, type FreeCaseId } from '../data/catalog'
+import { caseById, giftById, isTonPrize, type CaseDefinition, type FreeCaseId } from '../data/catalog'
 import { pickWeighted } from '../lib/caseMath'
 import { createRequestMemo } from '../lib/requestMemo'
 import { useFreeCasesStore } from '../store/freeCases'
 import { useInventoryStore } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
 import { useReferralsStore } from '../store/referrals'
+import { track } from '../lib/telemetry'
 import { useProfileStore } from '../store/profile'
 import { getTelegramUser } from '../lib/telegram'
 
@@ -65,11 +66,13 @@ export function openCase(
       const amount = Number(chosen.itemId.slice(4))
       wallet.credit(amount)
       useProfileStore.getState().caseOpened()
+      track({ type: 'case', case: caseId, price: definition.priceMinor, prize: amount })
       return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
     }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'case-open')
     if (!item) throw new Error('Inventory did not accept the gift')
     useProfileStore.getState().caseOpened()
+    track({ type: 'case', case: caseId, price: definition.priceMinor, prize: giftById.get(chosen.itemId)?.priceMinor ?? 0 })
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const
   })
 }
@@ -98,6 +101,7 @@ export function claimFreeCase(
       freeCases.claim(caseId, now)
       useProfileStore.getState().caseOpened()
       useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
+      track({ type: 'case', case: caseId, price: 0, prize: Number(chosen.itemId.slice(4)) })
       return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
     }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'free-case')
@@ -105,6 +109,7 @@ export function claimFreeCase(
     freeCases.claim(caseId, now)
     useProfileStore.getState().caseOpened()
     useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
+    track({ type: 'case', case: caseId, price: 0, prize: giftById.get(chosen.itemId)?.priceMinor ?? 0 })
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const
   })
 }

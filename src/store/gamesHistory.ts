@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import { safeJsonStorage } from '../lib/persistStorage'
 import type { Minor } from '../lib/money'
 import { useProfileStore } from './profile'
+import { track } from '../lib/telemetry'
 
 /** Игры, попадающие в общую историю ставок (4.3). */
 export type GameName = 'Ракетка' | 'Апгрейд' | 'Крафт' | 'Плинко' | 'Дайс' | 'Мины' | 'Спины'
@@ -49,6 +50,7 @@ export const useGamesHistoryStore = create<GamesHistoryState>()(
       deltaMinor: entry.deltaMinor,
       game: entry.game,
     })
+    track({ type: 'game', game: entry.game, stake: Math.max(0, entry.stakeMinor ?? 0), delta: entry.deltaMinor })
     set((state) => ({
       entries: [{ ...entry, at: Date.now() }, ...state.entries].slice(0, MAX_ENTRIES),
     }))

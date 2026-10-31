@@ -4,6 +4,7 @@ import App from './App'
 import { getStartParam, getTelegramUser, initTelegram, isTelegramEnv } from './lib/telegram'
 import { parseReferrerId } from './lib/referral'
 import { useReferralsStore } from './store/referrals'
+import { track } from './lib/telemetry'
 import { normalizeStartRoute } from './lib/startRoute'
 import { startCrashEngine } from './services/demoCrashService'
 import './styles/global.css'
@@ -19,6 +20,8 @@ if (referrer) useReferralsStore.getState().setReferrer(referrer, getTelegramUser
 normalizeStartRoute(isTelegramEnv())
 // Ракетка всегда активна (глобальный непрерывный цикл раундов 24/7)
 startCrashEngine()
+// Заход игрока — для статистики «онлайн за 24 часа» в админ-панели
+track({ type: 'open' })
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

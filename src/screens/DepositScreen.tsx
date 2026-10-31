@@ -28,6 +28,7 @@ import {
 } from '../lib/deposits'
 import { getTonConnect } from '../lib/tonconnect'
 import { getWebApp, openOwnerChat } from '../lib/telegram'
+import { track } from '../lib/telemetry'
 import { PENDING_TTL_MS, useDepositsStore } from '../store/deposits'
 import {
   BotIcon,
@@ -407,7 +408,10 @@ function usePendingDeposits(onPaid: (minor: Minor) => void) {
                 ? await tonPaymentStatus(p.secret)
                 : await cryptoInvoiceStatus(p.invoiceId, p.secret)
           if (res.status === 'paid') {
-            if (markCredited(p.secret)) onPaid(res.amount_minor)
+            if (markCredited(p.secret)) {
+              onPaid(res.amount_minor)
+              track({ type: 'deposit', method: p.kind, amount: res.amount_minor })
+            }
           } else if (res.status === 'expired') {
             remove(p.secret)
           }

@@ -391,3 +391,14 @@
   flex-shrink: 0;
   max-width: 100%;
 }
+
+/* Заголовок в Unbounded шире — уменьшаем, плашка сброса не переносится */
+.title {
+  font-size: 13px;
+  min-width: 0;
+}
+
+.resetBadge {
+  white-space: nowrap;
+  flex-shrink: 0;
+}

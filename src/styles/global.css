@@ -1,7 +1,9 @@
 @import './tokens.css';
+@import './fonts.css';
+@import './typography.css';
 
 :root {
-  font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'SF Pro Text', 'SF Pro Display', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji';
+  font-family: var(--font-body), 'Apple Color Emoji', 'Segoe UI Emoji';
   line-height: 1.5;
   font-weight: var(--font-weight-regular);
 

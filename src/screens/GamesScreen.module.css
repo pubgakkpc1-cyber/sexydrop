@@ -372,3 +372,16 @@ button.tile:hover {
   font-size: var(--font-size-xs);
   color: var(--text-faint);
 }
+
+/* Unbounded шире — заголовки баннеров уменьшены, чтобы не обрезались */
+.bannerTitle {
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  min-width: 0;
+}
+
+@media (max-width: 350px) {
+  .bannerTitle {
+    font-size: 18px;
+  }
+}

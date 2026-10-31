@@ -194,7 +194,7 @@ function drawCartoonRocket(
 
   // Надпись SEXY DROP на полосе + капля
   ctx.save()
-  ctx.font = '800 8px system-ui, -apple-system, "Segoe UI", Arial, sans-serif'
+  ctx.font = '700 7px Unbounded, "Golos Text", system-ui, sans-serif'
   ctx.textAlign = 'center'
   ctx.textBaseline = 'middle'
   try {

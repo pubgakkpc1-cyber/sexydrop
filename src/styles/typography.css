@@ -1,0 +1,95 @@
+/*
+ * Типографика (ЗАФИКСИРОВАНА, см. AI_RULES.md):
+ *   --font-display  Unbounded    — заголовки, баланс, цены, большие кнопки-призывы
+ *   --font-body     Golos Text   — всё остальное (описания, меню, поля, мелкий текст)
+ * Другие шрифты не подключать без прямой просьбы владельца проекта.
+ *
+ * Правила ниже имеют специфичность выше одиночного класса модулей (html body …),
+ * поэтому действуют на все экраны, не требуя правок в каждом CSS-модуле.
+ */
+
+/* --- Базовые правила --- */
+html body,
+html body button,
+html body input,
+html body textarea,
+html body select {
+  font-family: var(--font-body);
+}
+
+html body h1,
+html body h2,
+html body h3,
+html body .font-heading {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+/* --- Акцентный шрифт: заголовки экранов и секций, цены, баланс, большие кнопки --- */
+html body [class*='title' i]:not([class*='subtitle' i]):not([class*='titleRow' i]):not([class*='titleIcon' i]),
+html body [class*='balanceValue' i],
+html body [class*='balanceVal' i],
+html body [class*='balanceFrac' i],
+html body [class*='_gram_' i],
+html body [class*='price' i],
+html body [class*='points' i],
+html body [class*='payoutVal' i],
+html body [class*='multiplier' i],
+html body [class*='caseName' i],
+html body [class*='tileName' i],
+html body [class*='primary' i],
+html body [class*='_cta' i],
+html body [class*='raffleCta' i],
+html body [class*='mainActionBtn' i],
+html body [class*='openButton' i],
+html body [class*='depositBtn' i],
+html body [class*='submitBtn' i],
+html body [class*='inviteButton' i],
+html body [class*='claimButton' i],
+html body [class*='claimBtn' i],
+html body [class*='sellButton' i],
+html body [class*='exchangeButton' i],
+html body [class*='btnBetting' i],
+html body [class*='btnCashout' i],
+html body [class*='btnNextRound' i],
+html body [class*='countdownNumber' i] {
+  font-family: var(--font-display);
+}
+
+/* Unbounded шире обычного текста: слегка стягиваем и фиксируем насыщенность */
+html body [class*='depositBtn' i],
+html body [class*='primary' i],
+html body [class*='mainActionBtn' i],
+html body [class*='openButton' i] {
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+/* --- Числа не «прыгают»: цены, балансы, ID, очки --- */
+.font-numeric,
+html body [class*='balance' i],
+html body [class*='price' i],
+html body [class*='points' i],
+html body [class*='payout' i],
+html body [class*='multiplier' i],
+html body [class*='_gram_' i] {
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: 'tnum' 1, 'lnum' 1;
+}
+
+/* --- Компенсация ширины Unbounded: размеры подобраны так, чтобы всё помещалось на 340–430px --- */
+html body [class*='balanceValue' i] {
+  font-size: 22px;
+  gap: 6px;
+}
+
+html body [class*='depositBtn' i] {
+  font-size: 13px;
+  padding: 0 14px;
+  height: 40px;
+}
+
+html body [class*='sectionTitle' i],
+html body [class*='FreeCases'] [class*='title' i] {
+  font-size: 15px;
+}

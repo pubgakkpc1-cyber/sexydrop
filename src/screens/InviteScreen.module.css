@@ -291,3 +291,10 @@
   padding: 3px 8px;
   font-size: 15px;
 }
+
+@media (max-width: 350px) {
+  .bonus {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+}

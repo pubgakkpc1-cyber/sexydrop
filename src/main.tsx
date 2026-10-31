@@ -6,6 +6,9 @@ import { normalizeStartRoute } from './lib/startRoute'
 import { startCrashEngine } from './services/demoCrashService'
 import './styles/global.css'
 
+// Прогрев шрифтов: текст на канвасе ракеты рисуется до первого DOM-использования
+void document.fonts?.load('800 12px Unbounded')
+void document.fonts?.load('600 14px "Golos Text"')
 initTelegram()
 // Открытие приложения — всегда главная, кнопка «Главная» активна
 normalizeStartRoute(isTelegramEnv())

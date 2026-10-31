@@ -4,6 +4,10 @@
  */
 
 :root {
+  /* --- Типографика (зафиксирована, см. AI_RULES.md) --- */
+  --font-display: 'Unbounded', 'Golos Text', system-ui, sans-serif;
+  --font-body: 'Golos Text', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+
   /* --- Цвета: поверхности (Премиальный матовый графит / глубокий серый сланцевый) --- */
   --bg: #131212;
   --card: #1c1a1a;

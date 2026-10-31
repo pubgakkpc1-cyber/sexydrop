@@ -62,14 +62,14 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
 
     expect(screen.getAllByText('Fresh Socks').length).toBeGreaterThan(0)
 
-    // Цель Heart Locket (1000): p = 50/1000 × 0.98 = 4.9%
-    await user.click(screen.getAllByRole('button', { name: /^Heart Locket$/ })[0]!)
-    expect(screen.getAllByText('4.9%').length).toBeGreaterThan(0)
+    // Цель Snoop Dogg (7000): p = 50/7000 × 0.98 = 0.7%
+    await user.click(screen.getAllByRole('button', { name: /^Snoop Dogg$/ })[0]!)
+    expect(screen.getAllByText('0.7%').length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
   })
 
   it('раунд: проигрыш сжигает предмет, результат в шите, история записана', async () => {
-    _setUpgradeRngForTests(() => 0.5) // p = 4.9% → мимо
+    _setUpgradeRngForTests(() => 0.5) // p = 0.7% → мимо
     vi.spyOn(Math, 'random').mockReturnValue(0.5)
     useInventoryStore.setState({
       items: [{ uid: 'u1', giftId: 'fresh-socks', acquiredAt: 0, source: 'case-open' }],
@@ -81,12 +81,12 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     const dialog = screen.getByRole('dialog')
     await user.click(within(dialog).getByText('Fresh Socks'))
     await user.click(within(dialog).getByRole('button', { name: 'Подтвердить' }))
-    await user.click(screen.getAllByRole('button', { name: /^Heart Locket$/ })[0]!)
+    await user.click(screen.getAllByRole('button', { name: /^Snoop Dogg$/ })[0]!)
     await user.click(screen.getByRole('button', { name: 'Апгрейдить' }))
 
     const resultDialog = await screen.findByRole('dialog', {}, { timeout: 5000 })
     expect(within(resultDialog).getByText('Не получилось')).toBeInTheDocument()
-    expect(within(resultDialog).getByText(/шанс был 4\.9%/)).toBeInTheDocument()
+    expect(within(resultDialog).getByText(/шанс был 0.7%/)).toBeInTheDocument()
 
     await user.click(within(resultDialog).getByRole('button', { name: 'Готово' }))
     expect(useInventoryStore.getState().items).toHaveLength(0)

@@ -72,6 +72,8 @@ export function UpgradeScreen() {
   const allTargets = useMemo(() => {
     const byName = new Map<string, Gift>()
     for (const gift of gifts) {
+      // только актуальные NFT-подарки с реальными ценами (старые подарки каталога не показываем)
+      if (!/-\d$/.test(gift.id) || !gift.image.endsWith('.png')) continue
       if (!gift.available || gift.priceMinor <= 0) continue
       if (!byName.has(gift.name)) byName.set(gift.name, gift)
     }

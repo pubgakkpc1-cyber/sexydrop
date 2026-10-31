@@ -307,3 +307,32 @@
 .avatarRing {
   border-color: #b83a3f;
 }
+
+/* Баланс — кнопка, открывающая выбор валюты */
+.avatarLink {
+  display: inline-flex;
+  color: var(--text);
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+button.balanceCol {
+  padding: 0;
+  margin: 0;
+  font-family: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-items: flex-start;
+}
+
+button.balanceCol:active {
+  opacity: 0.75;
+}
+
+.caret {
+  font-size: 10px;
+  opacity: 0.8;
+}

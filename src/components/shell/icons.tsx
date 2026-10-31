@@ -567,24 +567,6 @@ export function WrenchIcon(props: IconProps) {
 }
 
 /**
- * 30. Билет (Ticket Icon)
- */
-export function TicketIcon(props: IconProps) {
-  return (
-    <svg {...base(props)} viewBox="0 0 24 24" fill="none">
-      <path
-        d="M3 8.5 C3 7.7 3.7 7 4.5 7 H19.5 C20.3 7 21 7.7 21 8.5 V10 C19.9 10 19 10.9 19 12 C19 13.1 19.9 14 21 14 V15.5 C21 16.3 20.3 17 19.5 17 H4.5 C3.7 17 3 16.3 3 15.5 V14 C4.1 14 5 13.1 5 12 C5 10.9 4.1 10 3 10 Z"
-        fill="currentColor"
-        fillOpacity="0.25"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <line x1="9" y1="7" x2="9" y2="17" stroke="currentColor" strokeWidth="1.5" strokeDasharray="2 2" />
-    </svg>
-  )
-}
-
-/**
  * 31. Галочка (Check Icon)
  */
 export function CheckIcon(props: IconProps) {

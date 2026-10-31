@@ -50,4 +50,15 @@ describe('Header (аватар, «Ваш баланс», TON, Пополнить
     renderHeader()
     expect(screen.getByText(/Баланс: 100 TON/)).toBeInTheDocument()
   })
+  it('нажатие на баланс открывает выбор валюты; Stars меняют показ баланса', async () => {
+    renderHeader()
+    await userEvent.click(screen.getByRole('button', { name: 'Баланс: 100 TON' }))
+    expect(screen.getByText('В чём показывать баланс')).toBeInTheDocument()
+    await userEvent.click(screen.getByRole('radio', { name: /Telegram Stars/ }))
+    expect(screen.getByRole('button', { name: 'Баланс: 17 500 Stars' })).toBeInTheDocument()
+    // вернуть TON, чтобы не влиять на другие тесты
+    await userEvent.click(screen.getByRole('button', { name: 'Баланс: 17 500 Stars' }))
+    await userEvent.click(screen.getByRole('radio', { name: /^TON/ }))
+    expect(screen.getByRole('button', { name: 'Баланс: 100 TON' })).toBeInTheDocument()
+  })
 })

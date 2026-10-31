@@ -130,7 +130,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
             <span
               key={i}
               className={styles.wordLetter}
-              style={{ animationDelay: `${0.62 + i * 0.05}s` }}
+              style={{ animationDelay: `${0.62 + i * 0.05}s`, '--i': i } as CSSProperties}
             >
               {ch === ' ' ? ' ' : ch}
             </span>

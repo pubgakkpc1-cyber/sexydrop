@@ -29,3 +29,9 @@ export function parseStars(input: string): number | null {
 export function isValidStars(stars: number | null): stars is number {
   return stars !== null && stars >= STARS_MIN && stars <= STARS_MAX
 }
+
+/** Сколько Stars соответствует сумме в minor TON (округление вниз). */
+export function minorToStars(minor: Minor): number {
+  if (!Number.isFinite(minor) || minor <= 0) return 0
+  return Math.floor((minor * STARS_PER_TON) / 1000)
+}

@@ -5,7 +5,6 @@ import {
   CopyIcon,
   HelpIcon,
   ShareIcon,
-  TicketIcon,
   TonIcon,
   UsersIcon,
 } from '../components/shell/icons'
@@ -17,8 +16,6 @@ export const REFERRAL_BOT_USERNAME = 'sexydropbot'
 /** Условия реферальной программы (настройка продукта; начисляет их сервер — TIER 7). */
 export const REFERRAL_RULES = {
   percent: 10,
-  ticketsPerFriend: 5,
-  dailyTicketsLimit: 50,
 } as const
 
 /**
@@ -70,15 +67,6 @@ export function InviteScreen() {
             друзей
           </h1>
           <p className={styles.sub}>с их пополнений</p>
-          <p className={styles.bonus}>
-            А также по
-            <span className={styles.ticketChip}>
-              <TicketIcon className={styles.ticketIcon} aria-hidden />
-              {REFERRAL_RULES.ticketsPerFriend}
-            </span>
-            за каждого
-          </p>
-          <p className={styles.limit}>но не более {REFERRAL_RULES.dailyTicketsLimit} в день</p>
         </div>
         <button
           type="button"
@@ -96,8 +84,7 @@ export function InviteScreen() {
           <strong>Реферальная программа</strong>
           <p>
             Друг переходит по вашей ссылке и запускает игру. Вы получаете до {REFERRAL_RULES.percent}%
-            от его пополнений и по {REFERRAL_RULES.ticketsPerFriend} билетов за каждого нового друга
-            (не более {REFERRAL_RULES.dailyTicketsLimit} билетов в день). Начисления считает сервер.
+            от его пополнений. Начисления считает сервер, выплата — в Заработке.
           </p>
         </div>
       )}
@@ -143,8 +130,8 @@ export function InviteScreen() {
         <div className={styles.statRow}>
           <span className={styles.statLabel}>Сегодня заработано</span>
           <span className={styles.statValue}>
-            0 / {REFERRAL_RULES.dailyTicketsLimit}
-            <TicketIcon className={styles.statIcon} aria-hidden />
+            0
+            <TonIcon className={styles.statIcon} aria-hidden />
           </span>
         </div>
       </section>

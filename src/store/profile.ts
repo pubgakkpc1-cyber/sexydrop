@@ -1,6 +1,5 @@
 import { create } from 'zustand'
 import type { Minor } from '../lib/money'
-import { useTicketsStore } from './tickets'
 
 export interface ProfileStats {
   rounds: number
@@ -35,7 +34,5 @@ export const useProfileStore = create<ProfileState>((set) => ({
       wageredMinor: state.wageredMinor + (entry.stakeMinor ?? 0),
       netMinor: state.netMinor + entry.deltaMinor,
     }))
-    // Начисление билетов — по новому совокупному обороту (водяной знак в tickets).
-    useTicketsStore.getState().accrueForWagered(useProfileStore.getState().wageredMinor)
   },
 }))

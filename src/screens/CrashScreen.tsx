@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCrashStore, type CrashBet } from '../store/crash'
 import { useWalletStore } from '../store/wallet'
-import { useInventoryStore } from '../store/inventory'
 import { mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import {
@@ -35,7 +34,7 @@ import {
   TonIcon,
   CrownIcon,
 } from '../components/shell/icons'
-import { giftById, gifts, type Gift } from '../data/catalog'
+import { giftById, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
 import styles from './CrashScreen.module.css'
 
@@ -305,24 +304,13 @@ export function CrashScreen() {
     getWebApp()?.HapticFeedback?.notificationOccurred('success')
     const res = cashout(makeRequestId())
 
-    // Если выпал равноценный NFT или высокий полёт — показываем модалку
+    // Шторка «Награда Ракеты!» — только если выигран NFT. Выигрыш в TON — без шторки.
     if (res.status === 'ok') {
       setShowMoneyRain(true)
-      if (res.wonGift) {
-        setCosmicReward(res.wonGift)
-      } else if (res.multiplier >= 2.5 && Math.random() < 0.45) {
-        const dropCandidates = gifts.filter((g) => g.rarity !== 'common')
-        const chosen = dropCandidates[Math.floor(Math.random() * dropCandidates.length)]
-        if (chosen) {
-          useInventoryStore.getState().addGifts([chosen.id], 'crash-drop')
-          setCosmicReward(chosen)
-        }
-      }
+      if (res.wonGift) setCosmicReward(res.wonGift)
     }
   }
 
-
-  
   // Тема обратного отсчёта от 5 с плавными неоновыми переливами
   const countNumber = Math.min(5, Math.max(1, Math.ceil(secondsLeft)))
   const currentTheme = COUNTDOWN_THEMES[countNumber] ?? COUNTDOWN_THEMES[1]!
@@ -399,23 +387,18 @@ export function CrashScreen() {
       })
     }
 
-    // Сортировка:
-    // 1. Выигравшие игроки (isCashed) — ВВЕРХУ (выше всех)
-    // 2. Активные ставки (в полёте) — ПОСЕРЕДИНЕ
-    // 3. Слившие игроки (в фазе краша без кешаута) — В САМЫЙ НИЗ
-    // Внутри каждой группы — сортировка по величине ставки (descending)
+    // Порядок списка (моя ставка — всегда первая):
+    //  • в полёте: сверху те, кто ещё не забрал; под ними победители (уже забрали); в самом низу проигравшие;
+    //  • после взрыва: победители, под ними проигравшие.
+    // Внутри каждой группы — по размеру ставки (по убыванию).
+    const rank = (r: BetRow): number => {
+      if (phase === 'crashed') return r.isCashed ? 1 : 3
+      return r.isCashed ? 2 : 1
+    }
     return rows.sort((a, b) => {
-      // Моя ставка всегда первая, независимо от статуса и суммы
       if (a.isUser !== b.isUser) return a.isUser ? -1 : 1
-      const isLostA = phase === 'crashed' && !a.isCashed
-      const isLostB = phase === 'crashed' && !b.isCashed
-      const priorityA = a.isCashed ? 1 : isLostA ? 3 : 2
-      const priorityB = b.isCashed ? 1 : isLostB ? 3 : 2
-
-      if (priorityA !== priorityB) {
-        return priorityA - priorityB
-      }
-      return b.stakeMinor - a.stakeMinor
+      const diff = rank(a) - rank(b)
+      return diff !== 0 ? diff : b.stakeMinor - a.stakeMinor
     })
   }, [players, myBet, phase, multiplier])
 

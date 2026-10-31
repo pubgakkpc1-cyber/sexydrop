@@ -2,14 +2,12 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import { RatingScreen, formatCountdown, formatPoints, maskName } from './RatingScreen'
 import { useProfileStore } from '../store/profile'
-import { useTicketsStore } from '../store/tickets'
 import { useQuestsStore } from '../store/quests'
 import { useGamesHistoryStore } from '../store/gamesHistory'
 import { usePvpMatchesStore } from '../store/pvpMatches'
 
 beforeEach(() => {
   useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0 })
-  useTicketsStore.setState({ balance: 0, creditedWageredMinor: 0, accruedTickets: 0 })
   useQuestsStore.setState({ claimed: {} })
   useGamesHistoryStore.setState({ entries: [] })
   usePvpMatchesStore.setState({ entries: [] })

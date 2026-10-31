@@ -1,134 +1,127 @@
 import { useState } from 'react'
 import { QUESTS, useQuestsStore } from '../store/quests'
 import { useProfileStore } from '../store/profile'
-import {
-  TICKET_STEP_MINOR,
-  TICKET_VALUE_MINOR,
-  useTicketsStore,
-} from '../store/tickets'
-import { drawRaffle, raffleRecentDraws } from '../services/demoRaffleService'
-import { RAFFLE_PRIZES, RAFFLE_TICKET_COST } from '../lib/raffleMath'
-import { formatMinor, type Minor } from '../lib/money'
-import { makeRequestId } from '../lib/requestId'
-import { giftById } from '../data/catalog'
+import { PAYOUT_MIN_MINOR, usePayoutsStore } from '../store/payouts'
+import { minorToStars } from '../lib/stars'
 import { useWalletStore } from '../store/wallet'
-import { TicketIcon } from '../components/shell/icons'
+import { formatMinor, type Minor } from '../lib/money'
+import { StarIcon, TonIcon } from '../components/shell/icons'
+import { cx } from '../lib/cx'
 import styles from './RewardsScreen.module.css'
 
-/** Обмен билетов на TON: 25 minor за билет (единая ценность 6.3). */
-const EXCHANGE_OPTIONS: readonly { tickets: number; gramMinor: Minor }[] = [
-  { tickets: 100, gramMinor: 2500 },
-  { tickets: 400, gramMinor: 10_000 },
-  { tickets: 1000, gramMinor: 25_000 },
-]
+/** Быстрые суммы выплаты, minor TON. */
+const PAYOUT_PRESETS: readonly Minor[] = [1000, 5000, 10_000, 25_000]
+
+function fmtStars(stars: number): string {
+  return stars.toLocaleString('ru-RU').replace(/\u00a0/g, ' ')
+}
 
 /**
- * Заработок (6.2–6.4): задания и прогресс, билеты и обмен, розыгрыш.
- * Всё считается из РЕАЛЬНОЙ статистики пользователя (store/profile ←
- * gamesHistory/pvpMatches); синтетика запрещена. Экономика раскрыта:
- * билет = 0.025 TON, начисление 1 билет / 2 TON оборота = кэшбэк 1.25%
- * (внутри house edge 2%); EV розыгрыша = ценности затраченных билетов.
- * Серверная проверка заданий — TIER 7 (6.6/7.6).
+ * Заработок: баланс и статистика, выплата звёздами и задания с наградой в TON.
+ * Всё считается из РЕАЛЬНОЙ статистики пользователя (store/profile); синтетика запрещена.
+ * Серверная проверка заданий и сама выплата Stars — TIER 7.
  */
 export function RewardsScreen() {
-  const tickets = useTicketsStore((s) => s.balance)
-  const accrued = useTicketsStore((s) => s.accruedTickets)
+  const balance = useWalletStore((s) => s.balances[s.mode])
   const claimed = useQuestsStore((s) => s.claimed)
   const claim = useQuestsStore((s) => s.claim)
   const progressOf = useQuestsStore((s) => s.progressOf)
   const profile = useProfileStore()
-  const [lastDraw, setLastDraw] = useState<string | null>(null)
-  const [exchangeError, setExchangeError] = useState<string | null>(null)
+  const requests = usePayoutsStore((s) => s.requests)
+  const [amount, setAmount] = useState<Minor>(PAYOUT_PRESETS[0] ?? PAYOUT_MIN_MINOR)
+  const [note, setNote] = useState<string | null>(null)
 
-  const exchange = (ticketsCost: number, gramMinor: Minor) => {
-    setExchangeError(null)
-    if (!useTicketsStore.getState().spend(ticketsCost)) {
-      setExchangeError('Недостаточно билетов')
-      return
-    }
-    // Кэшбэк-программа: билеты → TON по фиксированной ценности (25 minor).
-    // Обмен не создаёт раунд в профиле — это конвертация, а не игра.
-    useWalletStore.getState().credit(gramMinor)
-    setLastDraw(`Обмен ${ticketsCost} билетов → ${formatMinor(gramMinor)} TON`)
-  }
+  const doneQuests = QUESTS.filter((q) => claimed[q.id] === true).length
+  const canPay = balance >= amount && amount >= PAYOUT_MIN_MINOR
 
-  const spinRaffle = () => {
-    const result = drawRaffle(makeRequestId())
-    if (result.status !== 'ok') {
-      setLastDraw('Недостаточно билетов для тиража (нужно 100)')
-      return
-    }
-    setLastDraw(
-      result.prizeGiftId === null
-        ? 'Тираж: пусто — билеты сгорели (EV раскрыт: 2.5 TON)'
-        : `Тираж: ${giftById.get(result.prizeGiftId)?.name ?? result.prizeGiftId} → инвентарь`,
+  const requestPayout = () => {
+    const res = usePayoutsStore.getState().request(amount)
+    setNote(
+      res === 'ok'
+        ? `Заявка принята: ${fmtStars(minorToStars(amount))} Stars`
+        : res === 'insufficient'
+          ? 'Недостаточно средств на балансе'
+          : 'Минимальная выплата — 1 TON',
     )
   }
-
-  const draws = raffleRecentDraws()
-  const doneQuests = QUESTS.filter((q) => claimed[q.id] === true).length
 
   return (
     <div className={styles.screen}>
       <h1 className={styles.title}>Заработок</h1>
-      <p className={styles.lead}>Играй, выполняй задания и забирай TON</p>
+      <p className={styles.lead}>Играй, выполняй задания и забирай выплату звёздами</p>
 
-      {/* Сводка заработка: сколько TON уже можно забрать билетами */}
       <section className={styles.earnHero} aria-label="Сводка заработка">
         <div className={styles.earnMain}>
-          <span className={styles.earnLabel}>Можно обменять</span>
+          <span className={styles.earnLabel}>Доступно к выплате</span>
           <span className={styles.earnValue} data-testid="earn-value">
-            {formatMinor(tickets * TICKET_VALUE_MINOR)} TON
+            {formatMinor(balance)} TON
+          </span>
+          <span className={styles.earnSub}>
+            ≈ {fmtStars(minorToStars(balance))}
+            <StarIcon className={styles.earnStar} aria-hidden />
           </span>
         </div>
         <div className={styles.earnStats}>
-          <span><b>{tickets}</b> билетов</span>
           <span><b>{formatMinor(profile.wageredMinor)}</b> оборот</span>
+          <span><b>{profile.rounds}</b> раундов</span>
           <span><b>{doneQuests}/{QUESTS.length}</b> заданий</span>
         </div>
       </section>
 
-      {/* --- Билеты (6.3) --- */}
-      <section className={styles.section} aria-label="Билеты">
-        <div className={styles.ticketHead}>
-          <h2 className={styles.sectionTitle}>
-            <TicketIcon style={{ width: '18px', height: '18px', display: 'inline', verticalAlign: '-2px', marginRight: '6px' }} />
-            <span>Билеты</span>
-          </h2>
-          <span className={styles.ticketBalance} data-testid="tickets">
-            {tickets}
-          </span>
-        </div>
-        <p className={styles.rules}>
-          Начисление: 1 билет за каждые {formatMinor(TICKET_STEP_MINOR)} TON оборота
-          в играх и PVP — кэшбэк {(TICKET_VALUE_MINOR * 100) / TICKET_STEP_MINOR}% от
-          оборота (внутри house edge 2%). Ценность билета при обмене:{' '}
-          {formatMinor(TICKET_VALUE_MINOR)} TON. Начислено за сессию: {accrued}.
-        </p>
+      {/* --- Выплата звёздами --- */}
+      <section className={styles.section} aria-label="Выплата звёздами">
+        <h2 className={styles.sectionTitle}>
+          <StarIcon className={styles.titleStar} aria-hidden /> Выплата звёздами
+        </h2>
+        <p className={styles.rules}>Курс: 175 Stars = 1 TON. Минимальная выплата — 1 TON.</p>
 
-        <div className={styles.exchange} role="group" aria-label="Обмен билетов">
-          {EXCHANGE_OPTIONS.map((option) => (
+        <div className={styles.exchange} role="group" aria-label="Сумма выплаты">
+          {PAYOUT_PRESETS.map((preset) => (
             <button
-              key={option.tickets}
+              key={preset}
               type="button"
-              className={styles.exchangeButton}
-              disabled={tickets < option.tickets}
-              onClick={() => exchange(option.tickets, option.gramMinor)}
+              className={cx(styles.exchangeButton, amount === preset && styles.exchangeActive)}
+              aria-pressed={amount === preset}
+              onClick={() => {
+                setNote(null)
+                setAmount(preset)
+              }}
             >
-              {option.tickets} билетов → {formatMinor(option.gramMinor)} TON
+              <span className={styles.presetTon}>
+                {formatMinor(preset)} <TonIcon className={styles.presetIcon} aria-hidden />
+              </span>
+              <span className={styles.presetStars}>
+                {fmtStars(minorToStars(preset))} <StarIcon className={styles.presetIcon} aria-hidden />
+              </span>
             </button>
           ))}
         </div>
-        {exchangeError && (
-          <p className={styles.error} role="alert">
-            {exchangeError}
+
+        <button type="button" className={styles.raffleCta} disabled={!canPay} onClick={requestPayout}>
+          Вывести {fmtStars(minorToStars(amount))} Stars
+        </button>
+        {note && (
+          <p className={styles.drawResult} role="status" data-testid="payout-note">
+            {note}
           </p>
         )}
+
+        {requests.length > 0 && (
+          <div className={styles.drawHistory} aria-label="Заявки на выплату">
+            {requests.slice(0, 5).map((r) => (
+              <div key={r.id} className={styles.drawRow}>
+                <span>{fmtStars(r.stars)} Stars · в обработке</span>
+                <span>{formatMinor(r.minor)} TON</span>
+              </div>
+            ))}
+          </div>
+        )}
+        <p className={styles.rules}>Выплату проводит сервер после подключения платежей.</p>
       </section>
 
-      {/* --- Задания (6.2) --- */}
+      {/* --- Задания --- */}
       <section className={styles.section} aria-label="Задания">
-        <h2 className={styles.sectionTitle}>Задания — заработай билеты</h2>
+        <h2 className={styles.sectionTitle}>Задания — заработай TON</h2>
         <div className={styles.questList}>
           {QUESTS.map((quest) => {
             const progress = Math.min(progressOf(quest), quest.target)
@@ -139,9 +132,8 @@ export function RewardsScreen() {
               <div key={quest.id} className={styles.quest}>
                 <div className={styles.questTop}>
                   <span className={styles.questTitle}>{quest.title}</span>
-                  <span className={styles.questReward} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
-                    +{quest.rewardTickets} <TicketIcon style={{ width: '14px', height: '14px' }} />
-                    <small style={{ opacity: 0.7 }}>≈ {formatMinor(quest.rewardTickets * TICKET_VALUE_MINOR)} TON</small>
+                  <span className={styles.questReward}>
+                    +{formatMinor(quest.rewardMinor)} <TonIcon className={styles.presetIcon} aria-hidden />
                   </span>
                 </div>
                 <div className={styles.questBar}>
@@ -166,69 +158,8 @@ export function RewardsScreen() {
             )
           })}
         </div>
-        <p className={styles.rules}>
-          Задания считаются локально по реальным событиям; серверная проверка
-          по журналу транзакций — TIER 7 (6.6/7.6). Бонусы за задания разовые.
-        </p>
+        <p className={styles.rules}>Бонусы за задания разовые.</p>
       </section>
-
-      {/* --- Розыгрыш (6.4) --- */}
-      <section className={styles.section} aria-label="Розыгрыш">
-        <h2 className={styles.sectionTitle}>Розыгрыш</h2>
-        <p className={styles.rules}>
-          Тираж = {RAFFLE_TICKET_COST} билетов; приз — подарок каталога в инвентарь.
-          EV тиража = 2.5 TON = ровно ценность {RAFFLE_TICKET_COST} билетов
-          ({RAFFLE_TICKET_COST} × {formatMinor(TICKET_VALUE_MINOR)} TON); шансы ниже.
-        </p>
-        <div className={styles.prizeTable} aria-label="Шансы призов">
-          {RAFFLE_PRIZES.map((prize) => (
-            <div key={prize.giftId ?? 'empty'} className={styles.prizeRow}>
-              <span>
-                {prize.giftId === null
-                  ? 'Пусто'
-                  : (giftById.get(prize.giftId)?.name ?? prize.giftId)}
-              </span>
-              <span className={styles.prizeChance}>
-                {(prize.weight / 100).toFixed(2)}%
-              </span>
-            </div>
-          ))}
-        </div>
-        <button
-          type="button"
-          className={styles.raffleCta}
-          disabled={tickets < RAFFLE_TICKET_COST}
-          onClick={spinRaffle}
-        >
-          Крутить розыгрыш · {RAFFLE_TICKET_COST} билетов
-        </button>
-        {lastDraw && (
-          <p className={styles.drawResult} data-testid="raffle-result">
-            {lastDraw}
-          </p>
-        )}
-        {draws.length > 0 && (
-          <div className={styles.drawHistory}>
-            {draws.slice(0, 5).map((draw, index) => (
-              <div key={`${draw.at}-${index}`} className={styles.drawRow}>
-                <span>
-                  {draw.prizeGiftId === null
-                    ? 'Пусто'
-                    : (giftById.get(draw.prizeGiftId)?.name ?? draw.prizeGiftId)}
-                </span>
-                <span>
-                  {draw.prizeMinor > 0 ? `${formatMinor(draw.prizeMinor)} TON` : '—'}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
-
-      <p className={styles.note}>
-        Ваша статистика: раунды: {profile.rounds}, оборот: {formatMinor(profile.wageredMinor)} TON.
-        Чем больше играете, тем больше зарабатываете.
-      </p>
     </div>
   )
 }

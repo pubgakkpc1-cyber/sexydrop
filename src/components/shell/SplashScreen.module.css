@@ -242,7 +242,7 @@
 .wordmark {
   position: relative;
   display: flex;
-  overflow: hidden;
+  overflow: visible;
   margin: 0 0 10px;
   padding: 4px 6px;
   font-family: var(--font-display);
@@ -255,15 +255,32 @@
 .wordLetter {
   display: inline-block;
   opacity: 0;
-  animation: letterPop 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  /* золотисто-янтарный металл: цвет и эффект только на буквах, не на фоне */
+  background: linear-gradient(180deg, #fff6c2 0%, #ffd23c 42%, #ff8a1f 100%);
+  background-size: 100% 220%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 0 10px rgba(255, 170, 40, 0.55));
+  animation:
+    letterPop 0.6s cubic-bezier(0.2, 1.6, 0.4, 1) both,
+    letterWave 2.2s ease-in-out calc(1.4s + var(--i, 0) * 0.09s) infinite;
+}
+
+/* волна по буквам: каждая по очереди приподнимается и вспыхивает */
+@keyframes letterWave {
+  0%, 60%, 100% { transform: translateY(0) scale(1); background-position: 0 0; filter: drop-shadow(0 0 10px rgba(255, 170, 40, 0.55)); }
+  30% { transform: translateY(-5px) scale(1.14); background-position: 0 100%; filter: drop-shadow(0 0 18px rgba(255, 220, 90, 0.95)); }
 }
 
 @keyframes letterPop {
   0% { opacity: 0; transform: translateY(26px) scale(0.2) rotate(18deg); }
-  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); text-shadow: 0 0 18px rgba(214, 78, 84, 0.6); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0deg); }
 }
 
 .wordShine {
+  display: none;
   position: absolute;
   top: 0;
   bottom: 0;

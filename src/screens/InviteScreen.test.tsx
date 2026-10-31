@@ -61,9 +61,7 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
       screen.getByRole('heading', { name: new RegExp(`до ${REFERRAL_RULES.percent}% приглашая`) }),
     ).toBeInTheDocument()
     expect(screen.getByText('с их пополнений')).toBeInTheDocument()
-    expect(screen.getByText(`но не более ${REFERRAL_RULES.dailyTicketsLimit} в день`)).toBeInTheDocument()
     expect(screen.getByText('Всего заработано')).toBeInTheDocument()
-    expect(screen.getByText(`0 / ${REFERRAL_RULES.dailyTicketsLimit}`)).toBeInTheDocument()
     expect(screen.getByText('Мои рефералы')).toBeInTheDocument()
     expect(screen.getByText('Пока нет приглашений')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Пригласить друзей/ })).toBeDisabled()

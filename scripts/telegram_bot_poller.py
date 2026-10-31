@@ -5,6 +5,8 @@ from decimal import Decimal
 import httpx
 from dotenv import load_dotenv
 
+from bot_welcome import send_welcome
+
 load_dotenv()
 token = os.getenv("BOT_TOKEN")
 if not token:
@@ -38,7 +40,7 @@ while True:
             sender_username = (from_user.get("username") or "").lstrip("@").lower()
             text = (msg.get("text") or "").strip()
 
-            # Always ensure chat menu button is set for this chat (Emerald High Roller VIP)
+            # Always ensure chat menu button is set for this chat 
             try:
                 httpx.post(
                     f"{api_url}/setChatMenuButton",
@@ -46,7 +48,7 @@ while True:
                         "chat_id": chat_id,
                         "menu_button": {
                             "type": "web_app",
-                            "text": "🟢 SEXY DROP | VIP",
+                            "text": "SEXY DROP",
                             "web_app": {"url": app_url},
                         },
                     },
@@ -255,46 +257,8 @@ while True:
                     httpx.post(f"{api_url}/sendMessage", json={"chat_id": chat_id, "text": f"Ошибка: {e}"})
                 continue
 
-            # Standard player welcome message (Emerald High Roller Luxury Theme)
-            msg_text = (
-                "🟢 ⚜️ **SEXY DROP — EMERALD HIGH ROLLER** ⚜️ 🟢\n"
-                "────────────────────────\n\n"
-                "💎 **Премиальная Web3 платформа в Telegram**\n"
-                "🍀 Баланс, ставки и моментальный вывод строго в **TON**\n\n"
-                "⚡ **Игровые режимы платформы:**\n"
-                "• 🚀 **Ракетка (Crash 3D)** — объёмный космо-джет, общий полёт 24/7\n"
-                "• 🎁 **VIP NFT-Кейсы** — дроп реальных коллекционных подарков\n"
-                "• 🎲 **Classic Live Hub** — Mines, Plinko, Dice, Spins\n"
-                "• ⚔️ **PvP Hub** — Solo Jackpot и TVT (Ice vs Fire)\n"
-                "• 🔄 **Upgrade & Craft** — превращение предметов в ценные NFT\n\n"
-                "🛡️ Двусторонняя бухгалтерская книга транзакций (Ledger)\n"
-                "✨ Без лишнего шума — только чистый азарт и крупные иксы!\n\n"
-                "────────────────────────\n"
-                "👇 *Нажмите кнопку ниже для запуска:* "
-            )
-
-            payload = {
-                "chat_id": chat_id,
-                "text": msg_text,
-                "parse_mode": "Markdown",
-                "reply_markup": {
-                    "inline_keyboard": [
-                        [
-                            {
-                                "text": "🟢 Играть в SEXY DROP (TON)",
-                                "web_app": {"url": app_url},
-                            }
-                        ],
-                        [
-                            {
-                                "text": "⚜️ Открыть в браузере",
-                                "url": app_url,
-                            }
-                        ],
-                    ]
-                },
-            }
-            httpx.post(f"{api_url}/sendMessage", json=payload, timeout=5.0)
+            # Приветствие: баннер + HTML-подпись с премиум-эмодзи (scripts/bot_welcome.py)
+            send_welcome(api_url, chat_id, app_url)
             print(f"Replied to chat {chat_id}")
 
     except Exception as e:

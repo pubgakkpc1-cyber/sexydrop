@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     db_max_overflow: int = Field(default=10, ge=0, le=50)
 
     bot_token: str = ""
+    # Публичный адрес сервиса (https://...): по нему регистрируется вебхук бота. Пусто — вебхук не ставится.
+    public_base_url: str = ""
+    # Адрес мини-аппа для кнопки «Играть» и меню чата
+    app_url: str = "https://p01--sexydrop--86lmybxbkwwj.code.run"
+    # Секрет пути вебхука; пусто — вычисляется из BOT_TOKEN
+    telegram_webhook_secret: str = ""
     jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400

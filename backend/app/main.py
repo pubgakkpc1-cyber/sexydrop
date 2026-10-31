@@ -1,3 +1,4 @@
+import asyncio
 from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from pathlib import Path
@@ -10,6 +11,7 @@ from app.api import api_router
 from app.core.config import get_settings
 from app.core.db import dispose_engine
 from app.core.realtime import crash_manager
+from app.services.telegram_bot import register_webhook
 
 
 @asynccontextmanager
@@ -20,6 +22,8 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         # Server-authoritative Crash cycle; disabled under tests, which drive
         # the manager directly with controlled `step()` calls.
         crash_task = crash_manager.start()
+        # Бот отвечает на /start через вебхук (если задан PUBLIC_BASE_URL и BOT_TOKEN)
+        asyncio.create_task(register_webhook())
     try:
         yield
     finally:

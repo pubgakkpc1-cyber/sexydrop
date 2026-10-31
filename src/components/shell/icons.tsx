@@ -352,38 +352,15 @@ export function RocketArtIcon(props: IconProps) {
 }
 
 /**
- * 19. Значок валюты TON: синий гранёный камень с белой искрой (как у референса).
+ * 19. Значок валюты TON: синий камень с белой искрой (контур векторизован с присланной картинки).
  * Цвет фиксирован (не зависит от currentColor), поэтому одинаково выглядит везде.
  */
 export function TonIcon(props: IconProps) {
   const { style, ...rest } = props
   return (
-    <svg
-      {...base(rest)}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="none"
-      style={style}
-    >
-      <defs>
-        <linearGradient id="tonGemBody" x1="12" y1="3" x2="12" y2="22" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#5fd0ff" />
-          <stop offset="1" stopColor="#1b86e6" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M7.2 3.6h9.6c.5 0 1 .25 1.3.65l3.5 4.6c.35.45.3 1.1-.1 1.5l-8.9 10.6a1.1 1.1 0 0 1-1.7 0L2.1 10.35c-.4-.4-.45-1.05-.1-1.5l3.5-4.6c.3-.4.8-.65 1.3-.65z"
-        fill="url(#tonGemBody)"
-      />
-      <path
-        d="M7.2 3.6h9.6c.5 0 1 .25 1.3.65l3.5 4.6H2l3.5-4.6c.3-.4.8-.65 1.3-.65z"
-        fill="#ffffff"
-        fillOpacity="0.22"
-      />
-      <path
-        d="M12 7.6c.35 2.3 1.6 3.55 3.9 3.9-2.3.35-3.55 1.6-3.9 3.9-.35-2.3-1.6-3.55-3.9-3.9 2.3-.35 3.55-1.6 3.9-3.9z"
-        fill="#ffffff"
-      />
+    <svg {...base(rest)} viewBox="0 0 317 269" fill="none" stroke="none" style={style}>
+      <path d="M46.3 26.3Q62.5 1.0 92.5 1.0L219.3 1.0Q249.3 1.0 265.2 26.4L308.6 95.5Q317.1 109.1 305.7 120.3L164.9 259.2Q154.9 269.0 145.1 259.0L6.0 118.1Q-5.2 106.7 3.4 93.2Z" fill="#2ea2f4" />
+      <path d="M194.0 41.5Q199.4 90.1 248.0 95.5Q199.4 100.9 194.0 149.5Q188.6 100.9 140.0 95.5Q188.6 90.1 194.0 41.5Z" fill="#ffffff" stroke="#ffffff" strokeWidth="6" strokeLinejoin="round" />
     </svg>
   )
 }

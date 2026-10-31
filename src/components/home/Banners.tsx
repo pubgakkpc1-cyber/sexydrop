@@ -8,6 +8,7 @@ import {
   SwordsIcon,
   ZapIcon,
 } from '../shell/icons'
+import { FEATURES } from '../../lib/features'
 import styles from './Banners.module.css'
 
 const CRASH_MULTIPLIERS: ReadonlyArray<{ text: string; top?: string; right?: string; bottom?: string; rotate: string }> = [
@@ -65,6 +66,7 @@ export function Banners() {
         <RocketArtIcon className={styles.crashRocket} />
       </Link>
 
+      {FEATURES.pvp && (
       <Link to="/pvp" className={`${styles.banner} ${styles.pvp}`} aria-label="PVP Hub — дуэли и джекпот">
         <span className={styles.badge}>
           <ZapIcon style={{ width: '12px', height: '12px', display: 'inline', verticalAlign: '-1px', marginRight: '3px' }} />
@@ -85,6 +87,7 @@ export function Banners() {
           </span>
         </span>
       </Link>
+      )}
 
       <Link to="/games" className={`${styles.banner} ${styles.play}`} aria-label="Play Hub — мини-игры">
         <span className={styles.titleRow}>
@@ -96,10 +99,12 @@ export function Banners() {
             <span className={styles.upgradeRing} />
             <span className={styles.upgradePct}>24%</span>
           </span>
+          {FEATURES.plinko && (
           <span className={styles.playTilePlinko}>
             <i /><i /><i />
             <i /><i /><i />
           </span>
+          )}
           <span className={styles.playTileMines}>
             <span className={styles.mineCube} />
             <span className={styles.mineCube} />

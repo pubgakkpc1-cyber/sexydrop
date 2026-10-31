@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { MobileShell } from './components/shell/MobileShell'
 import { SplashScreen } from './components/shell/SplashScreen'
 import DevUiScreen from './screens/DevUiScreen'
@@ -21,6 +21,7 @@ import { PvpScreen } from './screens/PvpScreen'
 import { JackpotScreen } from './screens/JackpotScreen'
 import { TvtScreen } from './screens/TvtScreen'
 import { UpgradeScreen } from './screens/UpgradeScreen'
+import { FEATURES } from './lib/features'
 
 function App() {
   const [showSplash, setShowSplash] = useState(true)
@@ -40,14 +41,14 @@ function App() {
           <Route path="games" element={<GamesScreen />} />
           <Route path="games/crash" element={<CrashScreen />} />
           <Route path="games/upgrade" element={<UpgradeScreen />} />
-          <Route path="games/craft" element={<CraftScreen />} />
-          <Route path="games/plinko" element={<PlinkoScreen />} />
-          <Route path="games/dice" element={<DiceScreen />} />
+          <Route path="games/craft" element={FEATURES.craft ? <CraftScreen /> : <Navigate to="/" replace />} />
+          <Route path="games/plinko" element={FEATURES.plinko ? <PlinkoScreen /> : <Navigate to="/" replace />} />
+          <Route path="games/dice" element={FEATURES.dice ? <DiceScreen /> : <Navigate to="/" replace />} />
           <Route path="games/mines" element={<MinesScreen />} />
-          <Route path="games/spins" element={<SpinsScreen />} />
-          <Route path="pvp" element={<PvpScreen />} />
-          <Route path="pvp/jackpot" element={<JackpotScreen />} />
-          <Route path="pvp/tvt" element={<TvtScreen />} />
+          <Route path="games/spins" element={FEATURES.spins ? <SpinsScreen /> : <Navigate to="/" replace />} />
+          <Route path="pvp" element={FEATURES.pvp ? <PvpScreen /> : <Navigate to="/" replace />} />
+          <Route path="pvp/jackpot" element={FEATURES.pvp ? <JackpotScreen /> : <Navigate to="/" replace />} />
+          <Route path="pvp/tvt" element={FEATURES.pvp ? <TvtScreen /> : <Navigate to="/" replace />} />
           <Route path="case/:caseId" element={<CaseDetailScreen />} />
           <Route path="dev/ui" element={<DevUiScreen />} />
           <Route path="*" element={<HomeScreen />} />

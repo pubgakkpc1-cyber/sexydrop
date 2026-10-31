@@ -3,6 +3,7 @@ import { giftById } from '../data/catalog'
 import { formatMultiplier, plinkoMaxMultiplier } from '../lib/plinkoMath'
 import { GameHistory } from '../components/games/GameHistory'
 import { DiceIcon, FlameIcon, RocketArtIcon, ZapIcon } from '../components/shell/icons'
+import { FEATURES } from '../lib/features'
 import styles from './GamesScreen.module.css'
 
 const SPINS_ART_IDS = [
@@ -81,6 +82,7 @@ export function GamesScreen() {
           </span>
         </button>
 
+        {FEATURES.plinko && (
         <button
           type="button"
           className={`${styles.tile} ${styles.tilePlinko}`}
@@ -108,6 +110,7 @@ export function GamesScreen() {
             </span>
           </span>
         </button>
+)}
 
         {/* Мины → /games/mines (4.8) */}
         <button
@@ -127,7 +130,8 @@ export function GamesScreen() {
           </span>
         </button>
 
-        {/* Спины → /games/spins (4.9) */}
+                {/* Спины → /games/spins (4.9) */}
+{FEATURES.spins && (
         <button
           type="button"
           className={`${styles.tile} ${styles.tileMagenta}`}
@@ -152,8 +156,10 @@ export function GamesScreen() {
             <span className={styles.tileSubtitle}>Крути колесо подарков</span>
           </span>
         </button>
+        )}
 
-        {/* Дайс → /games/dice (4.7), во всю ширину */}
+                {/* Дайс → /games/dice (4.7), во всю ширину */}
+{FEATURES.dice && (
         <button
           type="button"
           className={`${styles.tile} ${styles.tileDice}`}
@@ -168,9 +174,11 @@ export function GamesScreen() {
             <span className={styles.tileSubtitle}>Больше или меньше X · до x98</span>
           </span>
         </button>
+        )}
       </div>
 
-      {/* Крафт → /games/craft */}
+            {/* Крафт → /games/craft */}
+{FEATURES.craft && (
       <button
         type="button"
         className={styles.bannerCraft}
@@ -187,6 +195,7 @@ export function GamesScreen() {
           <span className={styles.bannerSubtitle}>Собери новый подарок</span>
         </span>
       </button>
+      )}
 
       <GameHistory />
 

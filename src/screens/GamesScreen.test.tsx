@@ -29,22 +29,20 @@ beforeEach(() => {
 })
 
 describe('GamesScreen (PLAY HUB по кадру frame_126)', () => {
-  it('баннер «Улучшение» (ХИТ, кольцо 24%), плитки всех пяти игр, баннер «Крафт»', () => {
+  it('баннер «Улучшение» (ХИТ, кольцо 24%), Ракетка и Мины; Плинко, Спины, Дайс и Крафт временно скрыты', () => {
     renderHub()
     expect(screen.getByRole('button', { name: /Улучшение — выбери подарок мечты/ })).toBeInTheDocument()
     expect(screen.getByText(/ХИТ/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Ракетка — забери до краша/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Плинко — шарик по пирамиде/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Мины — обойди мины/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Спины — крути колесо подарков/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Дайс — угадай ролл 0–9999/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Крафт — собери новый подарок/ })).toBeInTheDocument()
 
-    // Заглушек «скоро» больше нет — все плитки ведут на реальные экраны
+    // Временно скрытые разделы (lib/features)
+    expect(screen.queryByRole('button', { name: /Плинко/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Спины/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Дайс/ })).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', { name: /Крафт/ })).not.toBeInTheDocument()
+
     expect(screen.queryByText('скоро')).not.toBeInTheDocument()
-    expect(screen.getByText(/NEW/)).toBeInTheDocument()
-    // Максимум плинко честно выведен из формулы
-    expect(screen.getByText(/Выигрывай до x3777\.95/)).toBeInTheDocument()
     // Честная заметка хаба
     expect(screen.getByText(/Все мини-игры работают с честной отдачей/)).toBeInTheDocument()
   })
@@ -55,26 +53,15 @@ describe('GamesScreen (PLAY HUB по кадру frame_126)', () => {
     expect(screen.getByText('UPGRADE-ROUTE')).toBeInTheDocument()
   })
 
-  it('плитки «Ракетка», «Плинко» и баннер «Крафт» ведут на свои экраны', async () => {
-    renderHub()
+  it('плитки «Ракетка» и «Мины» ведут на свои экраны', async () => {
+    const first = renderHub()
     await user.click(screen.getByRole('button', { name: /Ракетка/ }))
     expect(screen.getByText('CRASH-ROUTE')).toBeInTheDocument()
-  })
-
-  it('плитки «Дайс», «Мины» и «Спины» ведут на свои экраны (4.7–4.9)', async () => {
-    const first = renderHub()
-    await user.click(screen.getByRole('button', { name: /Дайс/ }))
-    expect(screen.getByText('DICE-ROUTE')).toBeInTheDocument()
     first.unmount()
 
     renderHub()
     await user.click(screen.getByRole('button', { name: /Мины/ }))
     expect(screen.getByText('MINES-ROUTE')).toBeInTheDocument()
-
-    const third = renderHub()
-    await user.click(screen.getByRole('button', { name: /Спины/ }))
-    expect(screen.getByText('SPINS-ROUTE')).toBeInTheDocument()
-    third.unmount()
   })
 
   it('история ставок скрыта без записей и показана при наличии', () => {

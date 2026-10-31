@@ -1,15 +1,16 @@
-import type { ComponentType } from 'react'
+import { useEffect, useRef, useState, type ComponentType } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { cx } from '../../lib/cx'
 import { hapticImpact } from '../../lib/telegram'
 import { useInventoryStore } from '../../store/inventory'
-import { CoinsRewardIcon, CubeIcon, HomeIcon, TrophyIcon, UserPlusIcon } from './icons'
+import { NavEarnIcon, NavHomeIcon, NavInventoryIcon, NavInviteIcon, NavTrophyIcon } from './NavIcons'
 import styles from './BottomNav.module.css'
 
 interface Tab {
   to: string
   label: string
-  icon: ComponentType<{ className?: string }>
+  id: string
+  icon: ComponentType<{ className?: string; active?: boolean }>
   /** Точное совпадение (нужно для корня «/»). */
   end?: boolean
 }
@@ -32,16 +33,28 @@ export function BottomNav() {
   const inventoryCount = useInventoryStore((s) => s.items.length)
 
   const tabs: readonly (Tab & { badge?: number })[] = [
-    { to: '/inventory', label: 'Инвентарь', icon: CubeIcon, badge: inventoryCount },
-    { to: '/invite', label: 'Пригласить', icon: UserPlusIcon },
-    { to: '/', label: 'Главная', icon: HomeIcon, end: true },
-    { to: '/rating', label: 'Рейтинг', icon: TrophyIcon },
-    { to: '/rewards', label: 'Заработок', icon: CoinsRewardIcon },
+    { to: '/inventory', id: 'inventory', label: 'Инвентарь', icon: NavInventoryIcon, badge: inventoryCount },
+    { to: '/invite', id: 'invite', label: 'Пригласить', icon: NavInviteIcon },
+    { to: '/', id: 'home', label: 'Главная', icon: NavHomeIcon, end: true },
+    { to: '/rating', id: 'rating', label: 'Рейтинг', icon: NavTrophyIcon },
+    { to: '/rewards', id: 'earn', label: 'Заработок', icon: NavEarnIcon },
   ]
 
   const activeIndex = tabs.findIndex((tab) =>
     tab.end ? location.pathname === tab.to : location.pathname.startsWith(tab.to),
   )
+
+  // Всплеск капель при смене вкладки (ключ меняется — анимация проигрывается заново)
+  const [burst, setBurst] = useState<{ key: number; index: number } | null>(null)
+  const prevIndex = useRef(activeIndex)
+  const burstKey = useRef(0)
+  useEffect(() => {
+    if (activeIndex >= 0 && activeIndex !== prevIndex.current) {
+      burstKey.current += 1
+      setBurst({ key: burstKey.current, index: activeIndex })
+    }
+    prevIndex.current = activeIndex
+  }, [activeIndex])
 
   return (
     <nav className={styles.nav} aria-label="Основная навигация">
@@ -53,6 +66,21 @@ export function BottomNav() {
           aria-hidden="true"
         >
           <div className={styles.slidingPill} />
+          {/* фирменная капля над активной вкладкой: «падает» на место при переключении */}
+          <span key={activeIndex} className={styles.dropMark} />
+        </div>
+      )}
+
+      {burst && (
+        <div
+          key={burst.key}
+          className={styles.burst}
+          style={{ left: `${burst.index * 20 + 10}%` }}
+          aria-hidden="true"
+        >
+          {Array.from({ length: 7 }, (_, i) => (
+            <i key={i} style={{ '--a': `${-150 + i * 50}deg`, '--d': `${22 + (i % 3) * 7}px` } as React.CSSProperties} />
+          ))}
         </div>
       )}
 
@@ -61,12 +89,12 @@ export function BottomNav() {
           key={tab.to}
           to={tab.to}
           end={tab.end}
-          className={({ isActive }) => cx(styles.tab, isActive && styles.active)}
+          className={({ isActive }) => cx(styles.tab, styles[`tab_${tab.id}`], isActive && styles.active)}
           onClick={() => hapticImpact('light')}
         >
           <div className={styles.tabInner}>
             <span className={styles.iconWrap}>
-              <tab.icon className={styles.icon} />
+              <tab.icon className={styles.icon} active={tab.end ? location.pathname === tab.to : location.pathname.startsWith(tab.to)} />
               {tab.badge !== undefined && tab.badge > 0 && (
                 <span className={styles.badge} aria-label={itemCountLabel(tab.badge)}>
                   {tab.badge > 99 ? '99+' : tab.badge}

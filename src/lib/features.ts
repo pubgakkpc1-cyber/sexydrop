@@ -9,4 +9,6 @@ export const FEATURES = {
   craft: false,
   spins: false,
   plinko: false,
+  /** Плашка рейтинга с таймером и призами (временно скрыта). */
+  ratingHero: false,
 } as const

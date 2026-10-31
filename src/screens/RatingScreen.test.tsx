@@ -14,11 +14,11 @@ beforeEach(() => {
 })
 
 describe('RatingScreen (матовый рейтинг по референсу)', () => {
-  it('карточка сезона, заголовок списка и 10 мест с призами', () => {
+  it('без плашки сезона (временно скрыта), заголовок списка и 10 мест с призами', () => {
     render(<RatingScreen />)
     expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
-    expect(screen.getByText('Заканчивается через')).toBeInTheDocument()
-    expect(screen.getByRole('timer')).toHaveTextContent(/\d+d \d+h \d+m \d+s/)
+    expect(screen.queryByText('Заканчивается через')).not.toBeInTheDocument()
+    expect(screen.queryByRole('timer')).not.toBeInTheDocument()
     expect(screen.getByText('Топ игроков')).toBeInTheDocument()
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
     expect(within(list).getAllByRole('listitem')).toHaveLength(10)

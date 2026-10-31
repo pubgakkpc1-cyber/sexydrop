@@ -4,6 +4,7 @@ import { giftById } from '../data/catalog'
 import { ClockIcon, TrophyIcon, UsersIcon } from '../components/shell/icons'
 import { UserAvatar } from '../components/ui/UserAvatar'
 import { cx } from '../lib/cx'
+import { FEATURES } from '../lib/features'
 import styles from './RatingScreen.module.css'
 
 interface LeaderboardBot {
@@ -103,7 +104,8 @@ export function RatingScreen() {
 
   return (
     <div className={styles.screen}>
-      <section className={styles.hero} aria-label="Рейтинг">
+      {FEATURES.ratingHero ? (
+        <section className={styles.hero} aria-label="Рейтинг">
         <div className={styles.heroTop}>
           <span className={styles.heroIcon}>
             <TrophyIcon className={styles.heroIconSvg} aria-hidden />
@@ -130,6 +132,9 @@ export function RatingScreen() {
           Соревнуйтесь с другими пользователями и выигрывайте потрясающие призы!
         </p>
       </section>
+      ) : (
+        <h1 className={styles.title}>Рейтинг</h1>
+      )}
 
       <div className={styles.listHead}>
         <span className={styles.listTitle}>

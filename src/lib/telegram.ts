@@ -14,7 +14,7 @@ export interface TelegramUser {
 }
 
 interface TelegramWebApp {
-  initDataUnsafe: { user?: TelegramUser }
+  initDataUnsafe: { user?: TelegramUser; start_param?: string }
   ready: () => void
   expand: () => void
   setHeaderColor: (color: string) => void
@@ -131,4 +131,9 @@ export function shareTelegramLink(link: string, text: string): void {
   const webApp = getWebApp()
   if (webApp?.openTelegramLink) webApp.openTelegramLink(url)
   else window.open(url, '_blank', 'noopener')
+}
+
+/** Параметр запуска мини-аппа (ссылка t.me/bot?startapp=ref-123) — нужен для реферальной программы. */
+export function getStartParam(): string | undefined {
+  return getWebApp()?.initDataUnsafe?.start_param
 }

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { InviteScreen, REFERRAL_BOT_USERNAME, REFERRAL_RULES } from './InviteScreen'
+import { InviteScreen, REFERRAL_BOT_USERNAME } from './InviteScreen'
 import type { TelegramUser } from '../lib/telegram'
 
 const user = userEvent.setup()
@@ -57,11 +57,9 @@ function stubClipboard(): ReturnType<typeof vi.fn> {
 describe('InviteScreen (6.5: честные нули, без фиктивной статистики)', () => {
   it('условия программы и нули в статистике; вне Telegram кнопки недоступны', () => {
     render(<InviteScreen />)
-    expect(
-      screen.getByRole('heading', { name: new RegExp(`до ${REFERRAL_RULES.percent}% приглашая`) }),
-    ).toBeInTheDocument()
-    expect(screen.getByText('с их пополнений')).toBeInTheDocument()
-    expect(screen.getByText('Всего заработано')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /2 ★ за каждого друга/ })).toBeInTheDocument()
+    expect(screen.getByText('как только он откроет бесплатный кейс')).toBeInTheDocument()
+    expect(screen.getByText('Заработано звёзд')).toBeInTheDocument()
     expect(screen.getByText('Мои рефералы')).toBeInTheDocument()
     expect(screen.getByText('Пока нет приглашений')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Пригласить друзей/ })).toBeDisabled()
@@ -69,11 +67,12 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
     expect(screen.getByText(/Откройте мини-апп в Telegram/)).toBeInTheDocument()
   })
 
-  it('кнопка «?» раскрывает правила программы', async () => {
+  it('правила видны сразу: друг должен открыть бесплатный кейс, награда +2 ★ мгновенно', () => {
     render(<InviteScreen />)
-    expect(screen.queryByRole('note')).not.toBeInTheDocument()
-    await user.click(screen.getByRole('button', { name: 'Как это работает' }))
-    expect(screen.getByRole('note')).toHaveTextContent(/Начисления считает сервер/)
+    const rules = screen.getByRole('region', { name: 'Правила' })
+    expect(rules).toHaveTextContent(/открывает бесплатный кейс/)
+    expect(rules).toHaveTextContent(/мгновенно получаете \+2 ★/)
+    expect(rules).toHaveTextContent(/один раз/)
   })
 
   it('в Telegram кнопки активны, ссылка ведёт на подтверждённого бота', () => {
@@ -91,7 +90,7 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
 
     await user.click(screen.getByRole('button', { name: /Скопировать ссылку/ }))
     expect(writeText).toHaveBeenCalledWith(
-      `https://t.me/${REFERRAL_BOT_USERNAME}?start=ref-77`,
+      `https://t.me/${REFERRAL_BOT_USERNAME}?startapp=ref-77`,
     )
     await waitFor(() => expect(screen.getByText('Скопировано')).toBeInTheDocument())
   })
@@ -105,6 +104,6 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
     expect(openTelegramLink).toHaveBeenCalledTimes(1)
     const url = String(openTelegramLink.mock.calls[0]?.[0])
     expect(url.startsWith('https://t.me/share/url?url=')).toBe(true)
-    expect(decodeURIComponent(url)).toContain(`https://t.me/${REFERRAL_BOT_USERNAME}?start=ref-5`)
+    expect(decodeURIComponent(url)).toContain(`https://t.me/${REFERRAL_BOT_USERNAME}?startapp=ref-5`)
   })
 })

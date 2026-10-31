@@ -3,11 +3,12 @@ import { getTelegramUser, isTelegramEnv, shareTelegramLink } from '../lib/telegr
 import {
   CheckIcon,
   CopyIcon,
-  HelpIcon,
   ShareIcon,
-  TonIcon,
+  StarIcon,
   UsersIcon,
 } from '../components/shell/icons'
+import { REFERRAL_BONUS_STARS } from '../lib/referral'
+import { referralStarsEarned, useReferralsStore } from '../store/referrals'
 import styles from './InviteScreen.module.css'
 
 /** Бот мини-аппа (username публичный; подтверждён через Bot API getMe: @sexydropbot). */
@@ -26,7 +27,9 @@ export const REFERRAL_RULES = {
 export function InviteScreen() {
   const tgUser = getTelegramUser()
   const [copied, setCopied] = useState(false)
-  const [helpOpen, setHelpOpen] = useState(false)
+  const credited = useReferralsStore((s) => s.credited)
+  const friends = Object.keys(credited).length
+  const starsEarned = referralStarsEarned(credited)
 
   const code = useMemo(() => {
     if (tgUser?.id === undefined) return null
@@ -34,7 +37,7 @@ export function InviteScreen() {
   }, [tgUser])
 
   const link = useMemo(
-    () => (code === null ? null : `https://t.me/${REFERRAL_BOT_USERNAME}?start=${code}`),
+    () => (code === null ? null : `https://t.me/${REFERRAL_BOT_USERNAME}?startapp=${code}`),
     [code],
   )
   const ready = isTelegramEnv() && link !== null
@@ -63,31 +66,22 @@ export function InviteScreen() {
         </span>
         <div className={styles.heroBody}>
           <h1 className={styles.title}>
-            Зарабатывай до <span className={styles.accent}>{REFERRAL_RULES.percent}%</span> приглашая
-            друзей
+            Получай <span className={styles.accent}>{REFERRAL_BONUS_STARS} ★</span> за каждого друга
           </h1>
-          <p className={styles.sub}>с их пополнений</p>
+          <p className={styles.sub}>как только он откроет бесплатный кейс</p>
         </div>
-        <button
-          type="button"
-          className={styles.help}
-          aria-label="Как это работает"
-          aria-expanded={helpOpen}
-          onClick={() => setHelpOpen((v) => !v)}
-        >
-          <HelpIcon className={styles.helpIcon} />
-        </button>
       </section>
 
-      {helpOpen && (
-        <div className={styles.rules} role="note">
-          <strong>Реферальная программа</strong>
-          <p>
-            Друг переходит по вашей ссылке и запускает игру. Вы получаете до {REFERRAL_RULES.percent}%
-            от его пополнений. Начисления считает сервер, выплата — в Заработке.
-          </p>
-        </div>
-      )}
+      <section className={styles.rules} aria-label="Правила">
+        <strong>Правила</strong>
+        <ol className={styles.rulesList}>
+          <li>Отправьте другу свою ссылку — он должен перейти по ней и запустить мини-апп.</li>
+          <li>Друг <b>открывает бесплатный кейс</b> (FREE или FREE 24).</li>
+          <li>Вы <b>мгновенно получаете +{REFERRAL_BONUS_STARS} ★</b> на баланс звёзд.</li>
+          <li>За одного друга награда выдаётся один раз. Пригласить самого себя нельзя.</li>
+          <li>Звёзды можно обменять на TON в разделе «Заработок».</li>
+        </ol>
+      </section>
 
       <section className={styles.card} aria-label="Приглашение">
         <button type="button" className={styles.primary} disabled={!ready} onClick={share}>
@@ -121,25 +115,22 @@ export function InviteScreen() {
 
       <section className={styles.card} aria-label="Заработок">
         <div className={styles.statRow}>
-          <span className={styles.statLabel}>Всего заработано</span>
+          <span className={styles.statLabel}>Заработано звёзд</span>
           <span className={styles.statValue}>
-            0
-            <TonIcon className={styles.statIcon} aria-hidden />
+            {starsEarned}
+            <StarIcon className={styles.statIcon} aria-hidden />
           </span>
         </div>
         <div className={styles.statRow}>
-          <span className={styles.statLabel}>Сегодня заработано</span>
-          <span className={styles.statValue}>
-            0
-            <TonIcon className={styles.statIcon} aria-hidden />
-          </span>
+          <span className={styles.statLabel}>Друзей получили награду</span>
+          <span className={styles.statValue}>{friends}</span>
         </div>
       </section>
 
       <section className={styles.card} aria-label="Мои рефералы">
         <div className={styles.refHead}>
           <h2 className={styles.refTitle}>Мои рефералы</h2>
-          <span className={styles.refCount}>0</span>
+          <span className={styles.refCount}>{friends}</span>
         </div>
         <div className={styles.empty}>
           <span className={styles.emptyIcon}>

@@ -65,9 +65,6 @@ export function FreeCasesSection() {
 
               {/* Верхняя строка бейджей */}
               <div className={styles.topBadgesRow}>
-                <span className={cx(styles.categoryPill, isDaily ? styles.pillGold : styles.pillPurple)}>
-                  {isDaily ? '⚡ 24 ЧАСА' : '⭐ 5 ДРУЗЕЙ'}
-                </span>
                 <span className={styles.freeZeroBadge}>0 TON</span>
               </div>
 

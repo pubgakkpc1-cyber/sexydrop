@@ -4,6 +4,8 @@ import { createRequestMemo } from '../lib/requestMemo'
 import { useFreeCasesStore } from '../store/freeCases'
 import { useInventoryStore } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
+import { useReferralsStore } from '../store/referrals'
+import { getTelegramUser } from '../lib/telegram'
 
 export type OpenCaseResult =
   | { status: 'ok'; giftId: string; uid: string }
@@ -91,11 +93,13 @@ export function claimFreeCase(
     if (isTonPrize(chosen.itemId)) {
       useWalletStore.getState().credit(Number(chosen.itemId.slice(4)))
       freeCases.claim(caseId, now)
+      useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
       return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
     }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'free-case')
     if (!item) throw new Error('Inventory did not accept the gift')
     freeCases.claim(caseId, now)
+    useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const
   })
 }

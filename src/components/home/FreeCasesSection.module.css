@@ -402,3 +402,8 @@
   white-space: nowrap;
   flex-shrink: 0;
 }
+
+/* без плашек «24 ЧАСА» / «5 ДРУЗЕЙ» — «0 TON» по центру */
+.topBadgesRow {
+  justify-content: center;
+}

@@ -654,37 +654,6 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
 ]
 
 /* --- Запуск: площадка, зарядка перед стартом и ударная волна с дымом при старте --- */
-function drawPad(ctx: CanvasRenderingContext2D, x: number, y: number, charge: number, accent: string) {
-  ctx.save()
-  // свечение под ракетой растёт к старту
-  for (const [rx, ry, a] of [[96, 22, 0.1], [62, 14, 0.18]] as const) {
-    ctx.globalAlpha = Math.min(0.7, a + charge * 0.3)
-    ctx.fillStyle = accent
-    ctx.beginPath()
-    ctx.ellipse(x, y, rx + charge * 18, ry + charge * 5, 0, 0, Math.PI * 2)
-    ctx.fill()
-  }
-  // плита площадки
-  ctx.globalAlpha = 1
-  ctx.fillStyle = '#26262a'
-  ctx.strokeStyle = '#4a4a52'
-  ctx.lineWidth = 2
-  ctx.beginPath()
-  ctx.ellipse(x, y, 58, 12, 0, 0, Math.PI * 2)
-  ctx.fill()
-  ctx.stroke()
-  // мигающие огни по краю — «готовность»
-  const blink = 0.4 + charge * 0.6
-  ctx.fillStyle = accent
-  for (const dx of [-44, -22, 22, 44]) {
-    ctx.globalAlpha = blink * (0.5 + 0.5 * Math.sin(performance.now() / (260 - charge * 180) + dx))
-    ctx.beginPath()
-    ctx.arc(x + dx, y + 1, 2.4, 0, Math.PI * 2)
-    ctx.fill()
-  }
-  ctx.restore()
-}
-
 function drawIgnition(ctx: CanvasRenderingContext2D, x: number, y: number, t: number, accent: string) {
   const k = Math.min(1, t / 1.2)
   ctx.save()
@@ -1094,11 +1063,7 @@ export function Rocket3DCanvas({
         if (currentPhase === 'betting') {
           state.ribbon = []
           state.speedStreaks = []
-          const left = currentProps.secondsLeft ?? 5
-          const charge = Math.max(0, Math.min(1, (2.4 - left) / 2.4))
-          const padX = width * 0.27
-          const padY = height * 0.58
-          drawPad(ctx, padX, padY + 40, charge, skin.accentColor)
+          // Во время отсчёта на арене ничего нет: ни ракеты, ни площадки — всё появляется после «0»
 
           return
         }

@@ -242,5 +242,6 @@
 
 /* Экраны со своей шапкой (Ракета и др.) — отступ под системную строку и кнопки Telegram в полноэкранном режиме */
 .mainCustomHeader {
-  padding-top: calc(var(--space-4) + var(--safe-top));
+  /* панель игры (GameTopBar) сама учитывает вырез/кнопки Telegram и липнет к верху */
+  padding-top: 0;
 }

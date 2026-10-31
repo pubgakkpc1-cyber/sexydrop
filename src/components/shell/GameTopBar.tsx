@@ -36,13 +36,15 @@ function GearIcon({ className }: { className?: string }) {
 interface GameTopBarProps {
   /** Если задан — рядом с настройками появляется кнопка админ-панели. */
   onAdmin?: () => void
+  /** Растянуть на всю ширину внутри прокручиваемого контейнера с боковыми отступами (Ракетка). */
+  bleed?: boolean
 }
 
 /**
  * Компактная верхняя панель игр (Ракетка и мини-игры): слева статус связи и настройки графики,
  * справа баланс с кнопкой «+». Без «назад» и без названия — как в референсе.
  */
-export function GameTopBar({ onAdmin }: GameTopBarProps) {
+export function GameTopBar({ onAdmin, bleed = false }: GameTopBarProps) {
   const navigate = useNavigate()
   const balance = useWalletStore((s) => s.balances[s.mode] ?? s.balances.demo ?? 0)
   const currency = useDisplayCurrencyStore((s) => s.currency)
@@ -75,7 +77,7 @@ export function GameTopBar({ onAdmin }: GameTopBarProps) {
   const amount = currency === 'STARS' ? formatBalanceStars(balance) : formatBalanceTon(balance)
 
   return (
-    <div className={styles.bar}>
+    <div className={cx(styles.bar, bleed && styles.bleed)}>
       <div className={styles.left} ref={menuRef}>
         <span className={styles.status} role="status" aria-label={online ? 'Связь стабильна' : 'Нет связи'}>
           <span className={cx(styles.dot, !online && styles.dotOff)} />

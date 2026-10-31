@@ -469,7 +469,7 @@ export function CrashScreen() {
       {graphics.floaters && <FloatingNfts />}
 
       {/* 1. Верхний чистый бар (без лишних квадратов, только Назад и Баланс) */}
-      <GameTopBar onAdmin={isAdmin ? () => setAdminModalOpen(true) : undefined} />
+      <GameTopBar bleed onAdmin={isAdmin ? () => setAdminModalOpen(true) : undefined} />
 
       <h1 className={styles.srOnly}>Ракетка</h1>
 

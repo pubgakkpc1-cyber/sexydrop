@@ -9,6 +9,7 @@ import { GAME_RTP } from '../lib/gameConfig'
 import { hapticImpact, hapticNotify } from '../lib/telegram'
 import { playRouletteTick, playWinChime } from '../lib/sound'
 import { GiftPickerSheet } from '../components/inventory/GiftPickerSheet'
+import { UpgradeTargetSheet } from '../components/inventory/UpgradeTargetSheet'
 import { BottomSheet, Button, GramAmount } from '../components/ui'
 import { ChevronLeftIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
@@ -44,6 +45,7 @@ export function UpgradeScreen() {
   const items = useInventoryStore((s) => s.items)
 
   const [pickerOpen, setPickerOpen] = useState(false)
+  const [targetPickerOpen, setTargetPickerOpen] = useState(false)
   const [sourceUid, setSourceUid] = useState<string | null>(null)
   const [targetId, setTargetId] = useState<string | null>(null)
   const [outcome, setOutcome] = useState<UpgradeOutcome | null>(null)
@@ -79,12 +81,6 @@ export function UpgradeScreen() {
     }
     return [...byName.values()].sort((a, b) => a.priceMinor - b.priceMinor)
   }, [])
-
-  // Когда предмет выбран, показываем только цели дороже него (иначе апгрейд бессмысленен)
-  const targets = useMemo(() => {
-    if (!sourceGift) return allTargets
-    return allTargets.filter((g) => g.priceMinor > sourceGift.priceMinor || g.id === targetId)
-  }, [allTargets, sourceGift, targetId])
 
   const targetGift = targetId ? giftById.get(targetId) ?? null : null
 
@@ -231,7 +227,12 @@ export function UpgradeScreen() {
             </div>
           </div>
 
-          <div className={cx(styles.slot, targetGift && styles.slotFilled, styles.slotTarget)}>
+          <button
+            type="button"
+            className={cx(styles.slot, targetGift && styles.slotFilled)}
+            onClick={() => !spinning && setTargetPickerOpen(true)}
+            aria-label="Выбрать цель"
+          >
             <span className={styles.slotLabel}>Цель</span>
             {targetGift ? (
               <>
@@ -242,10 +243,10 @@ export function UpgradeScreen() {
             ) : (
               <>
                 <span className={styles.slotPlus} aria-hidden>?</span>
-                <span className={styles.slotName}>не выбрана</span>
+                <span className={styles.slotName}>выбрать цель</span>
               </>
             )}
-          </div>
+          </button>
         </div>
       </div>
 
@@ -305,30 +306,6 @@ export function UpgradeScreen() {
         {spinning ? 'Крутим…' : 'Апгрейдить'}
       </button>
 
-      {/* Цели из каталога: шанс на каждой карточке считает сервис */}
-      <h2 className={styles.sectionTitle}>Выберите цель</h2>
-      <div className={styles.targetGrid}>
-        {targets.map((gift) => {
-          const pct = sourceGift ? upgradeChancePercent(sourceGift.priceMinor, gift.priceMinor) : null
-          return (
-            <button
-              key={gift.id}
-              type="button"
-              aria-label={gift.name}
-              className={cx(styles.target, targetId === gift.id && styles.targetActive)}
-              aria-pressed={targetId === gift.id}
-              disabled={spinning}
-              onClick={() => setTargetId(gift.id)}
-            >
-              {pct !== null && <span className={styles.targetChance}>{fmtPct(pct)}%</span>}
-              <img className={styles.targetImage} src={gift.image} alt="" />
-              <span className={styles.targetName}>{gift.name}</span>
-              <span className={styles.targetPrice}>{formatMinor(gift.priceMinor)} TON</span>
-            </button>
-          )
-        })}
-      </div>
-
       <p className={styles.note}>
         Апгрейд: шанс p = min(1, цена источника / цена цели × {GAME_RTP}).
         Улучшайте свои предметы до легендарных NFT.
@@ -339,6 +316,15 @@ export function UpgradeScreen() {
         onClose={() => setPickerOpen(false)}
         onConfirm={(item: InventoryItem) => setSourceUid(item.uid)}
         title="Предмет для апгрейда"
+      />
+
+      <UpgradeTargetSheet
+        open={targetPickerOpen}
+        onClose={() => setTargetPickerOpen(false)}
+        targets={allTargets}
+        sourcePriceMinor={sourceGift ? sourceGift.priceMinor : null}
+        selectedId={targetId}
+        onConfirm={(id) => setTargetId(id)}
       />
 
       <BottomSheet open={outcome !== null} onClose={() => setOutcome(null)} title="Результат">

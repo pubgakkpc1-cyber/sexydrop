@@ -99,7 +99,12 @@ export function GiftPickerSheet({
                   aria-pressed={item.uid === selectedUid}
                   onClick={() => setSelectedUid(item.uid)}
                 >
-                  <img className={styles.image} src={gift.image} alt="" />
+                  {item.uid === selectedUid && <span className={styles.check} aria-hidden>✓</span>}
+                  <img
+                    className={cx(styles.image, /_\d\.png$/.test(gift.image) ? styles.imageFull : styles.imageContain)}
+                    src={gift.image}
+                    alt=""
+                  />
                   <span className={styles.name}>{gift.name}</span>
                   <span className={styles.meta}>
                     <span className={styles.rarity}>{RARITY_LABELS[gift.rarity]}</span>

@@ -132,10 +132,10 @@ const FLOAT_POOL = [
   'pink_heart_box.png',
 ] as const
 const FLOATERS = [
-  { x: 10, y: 11, size: 30, swapMs: 7000, start: 0, dx: 26, dy: 16, dur: 9 },
-  { x: 78, y: 15, size: 28, swapMs: 8500, start: 3, dx: -22, dy: 20, dur: 11 },
-  { x: 42, y: 29, size: 26, swapMs: 9500, start: 6, dx: 24, dy: -18, dur: 13 },
-  { x: 88, y: 36, size: 28, swapMs: 7800, start: 9, dx: -20, dy: -14, dur: 10 },
+  { x: 8, y: 12, size: 30, swapMs: 5000, start: 0, dx: 120, dy: 48, dur: 3.6 },
+  { x: 70, y: 16, size: 28, swapMs: 6000, start: 3, dx: -150, dy: 62, dur: 4.4 },
+  { x: 36, y: 30, size: 26, swapMs: 7000, start: 6, dx: 140, dy: -54, dur: 5.2 },
+  { x: 86, y: 38, size: 28, swapMs: 5600, start: 9, dx: -110, dy: -44, dur: 3.9 },
 ] as const
 
 function Floater({ f }: { f: (typeof FLOATERS)[number] }) {
@@ -278,9 +278,12 @@ export function CrashScreen() {
     const started = launchPrevPhase.current !== 'flying' && phase === 'flying'
     launchPrevPhase.current = phase
     if (!started || multiplierRef.current >= 1.3) return
-    setShowLaunch(true)
-    const id = window.setTimeout(() => setShowLaunch(false), 1800)
-    return () => window.clearTimeout(id)
+    const showId = window.setTimeout(() => setShowLaunch(true), 450)
+    const hideId = window.setTimeout(() => setShowLaunch(false), 2250)
+    return () => {
+      window.clearTimeout(showId)
+      window.clearTimeout(hideId)
+    }
   }, [phase])
   const prevMyBetStatusRef = useRef(myBet?.status)
 

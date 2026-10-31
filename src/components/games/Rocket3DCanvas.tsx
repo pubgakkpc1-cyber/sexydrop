@@ -96,7 +96,7 @@ function drawFlameLayer(ctx: CanvasRenderingContext2D, len: number, w: number, f
   ctx.fill()
 }
 
-export function drawCartoonRocket(
+function drawShipClassic(
   ctx: CanvasRenderingContext2D,
   skin: RocketSkinConfig,
   t: number,
@@ -223,10 +223,21 @@ export function drawCartoonRocket(
     ctx.fill()
   }
 
-  // --- Plush Pepe сидит наверху ---
+  drawPepe(ctx, skin, t, 4, -33, -19.5, skin.pilotType)
+}
+
+/** Пилот-Пепе: сидит на корабле. pilot: 0 антенна, 1 очки, 2 корона, 3 без аксессуара. */
+function drawPepe(
+  ctx: CanvasRenderingContext2D,
+  skin: RocketSkinConfig,
+  t: number,
+  px: number,
+  py0: number,
+  handY: number,
+  pilot: number,
+) {
   const bob = Math.sin(t * 5.5) * 0.9
-  const px = 4
-  const py = -33 + bob
+  const py = py0 + bob
   const GREEN_OUT = '#235421'
 
   // Шарф развевается
@@ -249,7 +260,7 @@ export function drawCartoonRocket(
   ctx.lineWidth = 1.8
   for (const hx of [px - 11, px + 12]) {
     ctx.beginPath()
-    ctx.arc(hx, -19.5, 4.2, 0, Math.PI * 2)
+    ctx.arc(hx, handY, 4.2, 0, Math.PI * 2)
     ctx.fill()
     ctx.stroke()
   }
@@ -309,9 +320,7 @@ export function drawCartoonRocket(
     ctx.fill()
   }
 
-  // Аксессуар по скину
-  if (skin.pilotType === 0) {
-    // антенна-лампочка
+  if (pilot === 0) {
     ctx.strokeStyle = OUTLINE
     ctx.lineWidth = 1.8
     ctx.beginPath()
@@ -323,8 +332,7 @@ export function drawCartoonRocket(
     ctx.arc(px + 2, py - 23, 3.2, 0, Math.PI * 2)
     ctx.fill()
     ctx.stroke()
-  } else if (skin.pilotType === 1) {
-    // тёмные очки
+  } else if (pilot === 1) {
     ctx.fillStyle = '#161515'
     ctx.strokeStyle = OUTLINE
     ctx.lineWidth = 1.6
@@ -332,7 +340,7 @@ export function drawCartoonRocket(
     safeRoundRect(ctx, px - 14, py - 12, 28, 10, 4)
     ctx.fill()
     ctx.stroke()
-    ctx.strokeStyle = skin.accentColor
+    ctx.strokeStyle = '#ffd35a'
     ctx.lineWidth = 1.4
     ctx.beginPath()
     ctx.moveTo(px - 9, py - 9)
@@ -340,8 +348,7 @@ export function drawCartoonRocket(
     ctx.moveTo(px + 4, py - 9)
     ctx.lineTo(px + 9, py - 11)
     ctx.stroke()
-  } else {
-    // золотая корона
+  } else if (pilot === 2) {
     ctx.fillStyle = '#ce7b7f'
     ctx.strokeStyle = '#6b282b'
     ctx.lineWidth = 1.6
@@ -356,11 +363,194 @@ export function drawCartoonRocket(
     ctx.closePath()
     ctx.fill()
     ctx.stroke()
-    ctx.fillStyle = '#ce6565'
-    ctx.beginPath()
-    ctx.arc(px + 1, py - 15.5, 1.6, 0, Math.PI * 2)
-    ctx.fill()
   }
+}
+
+function flameFrom(ctx: CanvasRenderingContext2D, x0: number, len: number, w: number, fill: string) {
+  ctx.fillStyle = fill
+  ctx.beginPath()
+  ctx.moveTo(x0, -w)
+  ctx.quadraticCurveTo(x0 - len * 0.55, -w * 1.15, x0 - len, 0)
+  ctx.quadraticCurveTo(x0 - len * 0.55, w * 1.15, x0, w)
+  ctx.closePath()
+  ctx.fill()
+}
+
+/** Корабль 2 — «Ретро»: тонкая чёрно-золотая сигара с плавниками, как в старых комиксах. */
+function drawShipRetro(ctx: CanvasRenderingContext2D, skin: RocketSkinConfig, t: number, mult: number, withFlame: boolean) {
+  ctx.lineJoin = 'round'
+  ctx.lineCap = 'round'
+  const GOLD = '#f1c05a'
+  if (withFlame) {
+    const wob = 1 + Math.sin(t * 26) * 0.06 + Math.sin(t * 15) * 0.05
+    const len = (66 + Math.min(34, mult * 3)) * wob
+    flameFrom(ctx, -56, len, 8, '#ff8a2a')
+    flameFrom(ctx, -56, len * 0.72, 5.6, '#ffd35a')
+    flameFrom(ctx, -56, len * 0.4, 3, '#ffffff')
+  }
+  // Плавники
+  ctx.fillStyle = GOLD
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 2.6
+  for (const dir of [-1, 1]) {
+    ctx.beginPath()
+    ctx.moveTo(-14, dir * 11)
+    ctx.lineTo(-50, dir * 36)
+    ctx.lineTo(-58, dir * 36)
+    ctx.lineTo(-44, dir * 11)
+    ctx.closePath()
+    ctx.fill()
+    ctx.stroke()
+  }
+  // Сопло
+  ctx.fillStyle = '#b5832a'
+  ctx.beginPath()
+  safeRoundRect(ctx, -60, -8, 13, 16, 4)
+  ctx.fill()
+  ctx.stroke()
+
+  const body = () => {
+    ctx.beginPath()
+    ctx.moveTo(-48, -12)
+    ctx.lineTo(24, -13.5)
+    ctx.quadraticCurveTo(54, -11, 72, 0)
+    ctx.quadraticCurveTo(54, 11, 24, 13.5)
+    ctx.lineTo(-48, 12)
+    ctx.quadraticCurveTo(-56, 0, -48, -12)
+    ctx.closePath()
+  }
+  const hull = ctx.createLinearGradient(0, -14, 0, 14)
+  hull.addColorStop(0, '#5b5b66')
+  hull.addColorStop(0.45, '#2b2b32')
+  hull.addColorStop(1, '#141418')
+  ctx.fillStyle = hull
+  body()
+  ctx.fill()
+  ctx.save()
+  body()
+  ctx.clip()
+  ctx.fillStyle = GOLD
+  for (const x of [-36, -20, -4]) ctx.fillRect(x, -16, 7, 32)
+  ctx.fillRect(48, -16, 32, 32) // золотой нос
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'
+  ctx.beginPath()
+  ctx.ellipse(-2, -8.5, 34, 2.6, 0, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.restore()
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 3
+  body()
+  ctx.stroke()
+
+  // Иллюминатор с голубым стеклом
+  const glass = ctx.createLinearGradient(0, -8, 0, 6)
+  glass.addColorStop(0, '#b5f3ff')
+  glass.addColorStop(1, '#3aa7d6')
+  ctx.fillStyle = glass
+  ctx.strokeStyle = GOLD
+  ctx.lineWidth = 2.6
+  ctx.beginPath()
+  ctx.arc(24, -1, 6.5, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  drawPepe(ctx, skin, t, -4, -31, -15, 1)
+}
+
+/** Корабль 3 — «Капля»: фирменная глянцевая капсула-капля розово-фиолетового цвета. */
+function drawShipDrop(ctx: CanvasRenderingContext2D, skin: RocketSkinConfig, t: number, mult: number, withFlame: boolean) {
+  ctx.lineJoin = 'round'
+  ctx.lineCap = 'round'
+  if (withFlame) {
+    const wob = 1 + Math.sin(t * 22) * 0.08 + Math.sin(t * 11) * 0.06
+    const len = (36 + Math.min(26, mult * 2.6)) * wob
+    for (const [k, w, c] of [[1, 12, '#a043ff'], [0.7, 8.5, '#ff7ac2'], [0.4, 4.5, '#ffffff']] as const) {
+      ctx.fillStyle = c
+      ctx.beginPath()
+      ctx.ellipse(-32 - (len * k) / 2, 0, (len * k) / 2, w, 0, 0, Math.PI * 2)
+      ctx.fill()
+    }
+  }
+  // Боковые плавники
+  ctx.fillStyle = '#2b1b4d'
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 2.6
+  for (const dir of [-1, 1]) {
+    ctx.beginPath()
+    ctx.moveTo(-6, dir * 21)
+    ctx.quadraticCurveTo(-34, dir * 42, -50, dir * 24)
+    ctx.quadraticCurveTo(-34, dir * 22, -26, dir * 10)
+    ctx.closePath()
+    ctx.fill()
+    ctx.stroke()
+  }
+  // Сопло
+  ctx.fillStyle = '#1b1230'
+  ctx.beginPath()
+  ctx.ellipse(-30, 0, 5, 11, 0, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+
+  const body = () => {
+    ctx.beginPath()
+    ctx.moveTo(66, 0)
+    ctx.quadraticCurveTo(30, -7, 0, -22.6)
+    ctx.arc(-8, 0, 24, -1.2305, 1.2305, true)
+    ctx.quadraticCurveTo(30, 7, 66, 0)
+    ctx.closePath()
+  }
+  const hull = ctx.createRadialGradient(-14, -10, 2, -8, 0, 56)
+  hull.addColorStop(0, '#ffa8dc')
+  hull.addColorStop(0.45, '#d247d9')
+  hull.addColorStop(1, '#5d1fd1')
+  ctx.fillStyle = hull
+  body()
+  ctx.fill()
+  ctx.strokeStyle = OUTLINE
+  ctx.lineWidth = 3.2
+  body()
+  ctx.stroke()
+
+  // Глянец и бренд-капля на боку
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)'
+  ctx.beginPath()
+  ctx.ellipse(-16, -13, 11, 4.6, -0.55, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.fillStyle = '#ffffff'
+  ctx.beginPath()
+  ctx.moveTo(18, -9)
+  ctx.bezierCurveTo(25, -1, 25, 6, 18, 6)
+  ctx.bezierCurveTo(11, 6, 11, -1, 18, -9)
+  ctx.fill()
+
+  // Пепе в стеклянном пузыре
+  drawPepe(ctx, skin, t, -8, -31, -20, 3)
+  ctx.fillStyle = 'rgba(190, 235, 255, 0.2)'
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)'
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.arc(-8, -27, 19, 0, Math.PI * 2)
+  ctx.fill()
+  ctx.stroke()
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.9)'
+  ctx.lineWidth = 2
+  ctx.beginPath()
+  ctx.arc(-8, -27, 14, Math.PI * 1.1, Math.PI * 1.45)
+  ctx.stroke()
+}
+
+/** Корабль выбирается по скину: 0 — классика, 1 — ретро, 2 — капля. */
+export function drawCartoonRocket(
+  ctx: CanvasRenderingContext2D,
+  skin: RocketSkinConfig,
+  t: number,
+  mult: number,
+  withFlame: boolean,
+) {
+  const ship = Math.abs(skin.id) % 3
+  if (ship === 1) return drawShipRetro(ctx, skin, t, mult, withFlame)
+  if (ship === 2) return drawShipDrop(ctx, skin, t, mult, withFlame)
+  return drawShipClassic(ctx, skin, t, mult, withFlame)
 }
 
 export interface RocketSkinConfig {
@@ -910,16 +1100,6 @@ export function Rocket3DCanvas({
           const padY = height * 0.58
           drawPad(ctx, padX, padY + 40, charge, skin.accentColor)
 
-          ctx.save()
-          const jitter = charge * charge * 2.4
-          ctx.translate(
-            padX + (Math.random() - 0.5) * jitter,
-            padY + (Math.random() - 0.5) * jitter + Math.sin(state.time * 2.2) * 1.4,
-          )
-          ctx.rotate((-28 * Math.PI) / 180)
-          ctx.scale(1.1, 1.1)
-          drawCartoonRocket(ctx, skin, state.time, 1 + charge * 6, charge > 0.04)
-          ctx.restore()
           return
         }
 
@@ -981,67 +1161,74 @@ export function Rocket3DCanvas({
 
         state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
 
-        // --- 2. Лента-след (без частиц): сопло оставляет плавно сужающийся светящийся шлейф ---
+        // --- 2. След: у каждого корабля свой (дым / золотые искры / капли), без лент и теней ---
         if (currentPhase === 'flying') {
+          const ship = Math.abs(skin.id) % 3
           const rad = (currentAngle * Math.PI) / 180
-          const nozzleDist = 50 * 1.22
+          const nozzleDist = [61, 72, 54][ship]! * 1.22
           const nozzleX = currentX - Math.cos(rad) * nozzleDist
           const nozzleY = currentY - Math.sin(rad) * nozzleDist
+          const speed = 55 + Math.min(110, currentMult * 6)
 
-          // Шлейф сносит назад — ощущение скорости; чем выше множитель, тем быстрее
-          const drift = (55 + Math.min(110, currentMult * 6)) * dt
-          for (const pt of state.ribbon) pt.x -= drift
           state.ribbonAcc += dt
-          if (state.ribbonAcc >= 0.026) {
+          const interval = state.lowQ ? 0.09 : 0.05
+          if (state.ribbonAcc >= interval && state.trail.length < 28) {
             state.ribbonAcc = 0
-            state.ribbon.push({ x: nozzleX, y: nozzleY })
-            if (state.ribbon.length > 46) state.ribbon.shift()
+            const r = Math.random()
+            if (ship === 0) {
+              state.trail.push({ x: nozzleX, y: nozzleY, vx: -speed * (0.5 + r * 0.7), vy: (r - 0.5) * 18, size: 5 + r * 3, alpha: 0.55, color: '#dcdce2', life: 0, maxLife: 0.8, shape: 0 })
+            } else if (ship === 1) {
+              state.trail.push({ x: nozzleX, y: nozzleY, vx: -speed * (0.8 + r * 0.8), vy: (r - 0.5) * 46, size: 3.4 + r * 3.2, alpha: 1, color: r > 0.5 ? '#ffd35a' : '#fff3b0', life: 0, maxLife: 0.65, shape: 1 })
+            } else {
+              state.trail.push({ x: nozzleX, y: nozzleY, vx: -speed * (0.5 + r * 0.6), vy: 8 + r * 24, size: 4.6 + r * 3.4, alpha: 1, color: r > 0.5 ? '#ff8fd4' : '#b04dff', life: 0, maxLife: 0.75, shape: 2 })
+            }
           }
 
-          const n = state.ribbon.length
-          if (n > 2) {
-            ctx.save()
-            ctx.lineCap = 'round'
-            ctx.lineJoin = 'round'
-            // Внешний мягкий слой (пропускается на слабых устройствах)
-            if (!state.lowQ) {
-              ctx.strokeStyle = skin.accentGlow
-              for (let i = 1; i < n; i++) {
-                const k = i / (n - 1)
-                ctx.globalAlpha = k * k * 0.3
-                ctx.lineWidth = 4 + k * 18
-                ctx.beginPath()
-                ctx.moveTo(state.ribbon[i - 1]!.x, state.ribbon[i - 1]!.y)
-                ctx.lineTo(state.ribbon[i]!.x, state.ribbon[i]!.y)
-                ctx.stroke()
-              }
+          ctx.save()
+          for (let i = state.trail.length - 1; i >= 0; i--) {
+            const p = state.trail[i]!
+            p.life += dt
+            if (p.life >= p.maxLife) {
+              state.trail.splice(i, 1)
+              continue
             }
-            // Основная лента цвета скина
-            ctx.strokeStyle = skin.accentColor
-            for (let i = 1; i < n; i++) {
-              const k = i / (n - 1)
-              ctx.globalAlpha = k * 0.95
-              ctx.lineWidth = 1.5 + k * 8
+            p.x += p.vx * dt
+            p.y += p.vy * dt
+            if (p.shape === 2) p.vy += 150 * dt
+            const k = p.life / p.maxLife
+            ctx.fillStyle = p.color
+            if (p.shape === 0) {
+              ctx.globalAlpha = p.alpha * (1 - k)
               ctx.beginPath()
-              ctx.moveTo(state.ribbon[i - 1]!.x, state.ribbon[i - 1]!.y)
-              ctx.lineTo(state.ribbon[i]!.x, state.ribbon[i]!.y)
-              ctx.stroke()
-            }
-            // Белая жила у сопла
-            ctx.strokeStyle = '#ffffff'
-            for (let i = Math.floor(n * 0.45); i < n; i++) {
-              const k = i / (n - 1)
-              ctx.globalAlpha = k * 0.9
-              ctx.lineWidth = 0.8 + k * 2.4
+              ctx.arc(p.x, p.y, p.size * (1 + k * 1.3), 0, Math.PI * 2)
+              ctx.fill()
+            } else if (p.shape === 1) {
+              ctx.globalAlpha = (1 - k) * (0.6 + 0.4 * Math.sin(p.life * 40))
+              const s = p.size * (1 - k * 0.4)
               ctx.beginPath()
-              ctx.moveTo(state.ribbon[i - 1]!.x, state.ribbon[i - 1]!.y)
-              ctx.lineTo(state.ribbon[i]!.x, state.ribbon[i]!.y)
-              ctx.stroke()
+              ctx.moveTo(p.x, p.y - s)
+              ctx.lineTo(p.x + s * 0.28, p.y - s * 0.28)
+              ctx.lineTo(p.x + s, p.y)
+              ctx.lineTo(p.x + s * 0.28, p.y + s * 0.28)
+              ctx.lineTo(p.x, p.y + s)
+              ctx.lineTo(p.x - s * 0.28, p.y + s * 0.28)
+              ctx.lineTo(p.x - s, p.y)
+              ctx.lineTo(p.x - s * 0.28, p.y - s * 0.28)
+              ctx.closePath()
+              ctx.fill()
+            } else {
+              ctx.globalAlpha = (1 - k) * 0.95
+              const s = p.size * (1 - k * 0.3)
+              ctx.beginPath()
+              ctx.moveTo(p.x, p.y - s * 1.5)
+              ctx.bezierCurveTo(p.x + s, p.y - s * 0.2, p.x + s, p.y + s, p.x, p.y + s)
+              ctx.bezierCurveTo(p.x - s, p.y + s, p.x - s, p.y - s * 0.2, p.x, p.y - s * 1.5)
+              ctx.fill()
             }
-            ctx.restore()
           }
-        } else if (state.ribbon.length > 0) {
-          state.ribbon = []
+          ctx.restore()
+        } else if (state.trail.length > 0) {
+          state.trail = []
         }
 
       // Плавный «надув» корпуса по мере роста множителя (лёгкое надувание)

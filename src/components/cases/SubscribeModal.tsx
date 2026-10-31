@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { checkSubscriptions, type SubChannel } from '../../lib/subscriptions'
+import { checkSubscriptions, isChannelOpened, markChannelOpened, type SubChannel } from '../../lib/subscriptions'
 import { getWebApp } from '../../lib/telegram'
 import styles from './SubscribeModal.module.css'
 
@@ -21,6 +21,7 @@ export function SubscribeModal({ channels: initial, onPassed, onClose }: Subscri
   const [channels, setChannels] = useState(initial)
   const [busy, setBusy] = useState(false)
   const [failed, setFailed] = useState(false)
+  const [, setOpenedTick] = useState(0)
 
   const recheck = async () => {
     setBusy(true)
@@ -49,9 +50,18 @@ export function SubscribeModal({ channels: initial, onPassed, onClose }: Subscri
               <span className={styles.name}>
                 {c.title}
                 {c.subscribed === true && <span className={styles.done}> ✓ подписаны</span>}
+                {c.subscribed === null && isChannelOpened(c.key) && <span className={styles.done}> ✓ открыт</span>}
               </span>
               {c.subscribed !== true && (
-                <button type="button" className={styles.subBtn} onClick={() => openLink(c.url)}>
+                <button
+                  type="button"
+                  className={styles.subBtn}
+                  onClick={() => {
+                    markChannelOpened(c.key)
+                    openLink(c.url)
+                    setOpenedTick((n) => n + 1)
+                  }}
+                >
                   Подписаться
                 </button>
               )}

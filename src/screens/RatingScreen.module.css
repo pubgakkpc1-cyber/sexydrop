@@ -411,3 +411,59 @@
   from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: none; }
 }
+
+/* ===== Выравнивание после удаления колонки призов: очки строго справа и чуть ниже карточки ===== */
+.listHead {
+  grid-template-columns: minmax(0, 1fr) 76px;
+  padding-right: 10px;
+}
+
+.colLabel {
+  text-align: center;
+}
+
+.row {
+  grid-template-columns: 34px 44px minmax(0, 1fr) 76px;
+}
+
+.points {
+  justify-self: stretch;
+  height: 36px;
+  min-width: 0;
+  padding: 0 8px;
+  border-radius: 11px;
+  font-size: 15px;
+  white-space: nowrap;
+}
+
+.meBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.meRank {
+  min-width: 56px;
+  padding: 0 10px;
+  flex-shrink: 0;
+}
+
+.meBar .avatar {
+  flex-shrink: 0;
+}
+
+.meChip {
+  margin-right: auto;
+  flex-shrink: 0;
+}
+
+.meBar .points {
+  flex: 0 0 76px;
+  width: 76px;
+}
+
+@media (max-width: 350px) {
+  .listHead { grid-template-columns: minmax(0, 1fr) 64px; }
+  .row { grid-template-columns: 30px 38px minmax(0, 1fr) 64px; gap: 6px; }
+  .meBar .points { flex-basis: 64px; width: 64px; }
+}

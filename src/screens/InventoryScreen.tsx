@@ -1,12 +1,14 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { giftById, type Rarity } from '../data/catalog'
-import { useInventoryStore, type InventoryItem } from '../store/inventory'
-import { DiamondIcon, SearchIcon } from '../components/shell/icons'
-import { GiftCard } from '../components/inventory/GiftCard'
-import { ItemActionsSheet } from '../components/inventory/ItemActionsSheet'
+import { useInventoryStore } from '../store/inventory'
+import { DiamondIcon, SearchIcon, ShareIcon } from '../components/shell/icons'
+import { InventoryGiftCard } from '../components/inventory/InventoryGiftCard'
 import { InventoryHistory } from '../components/inventory/InventoryHistory'
 import { Button, Input } from '../components/ui'
+import { sellItem } from '../services/demoInventoryService'
+import { makeRequestId } from '../lib/requestId'
+import { formatMinor } from '../lib/money'
 import { cx } from '../lib/cx'
 import styles from './screens.module.css'
 import filterStyles from './InventoryScreen.module.css'
@@ -40,8 +42,8 @@ export function InventoryScreen() {
   const [query, setQuery] = useState('')
   const [rarity, setRarity] = useState<RarityFilter>('all')
   const [sort, setSort] = useState<SortMode>('new')
-  /** Предмет, для которого открыт шит действий (3.4: продажа/передача). */
-  const [selected, setSelected] = useState<InventoryItem | null>(null)
+  /** Короткое подтверждение продажи («Продано +X TON»). */
+  const [soldNote, setSoldNote] = useState<string | null>(null)
 
   const joined = useMemo(
     () =>
@@ -75,6 +77,14 @@ export function InventoryScreen() {
 
   const filtering = query.trim() !== '' || rarity !== 'all'
 
+  const handleSell = (uid: string) => {
+    const res = sellItem(uid, makeRequestId())
+    if (res.status === 'ok') {
+      setSoldNote(`Продано: +${formatMinor(res.creditedMinor)} TON`)
+      window.setTimeout(() => setSoldNote(null), 2500)
+    }
+  }
+
   const resetFilters = () => {
     setQuery('')
     setRarity('all')
@@ -83,14 +93,36 @@ export function InventoryScreen() {
 
   return (
     <div className={styles.screen}>
-      <h1 className={styles.title}>Инвентарь</h1>
+      <h1 className={styles.title}>Ваши подарки</h1>
       <p className={styles.lead}>
         {filtering
           ? `Показано ${visible.length} из ${items.length}`
           : items.length > 0
             ? `${items.length} шт.`
-            : 'Твои подарки'}
+            : 'Здесь появятся ваши подарки'}
       </p>
+
+      <div className={filterStyles.sendBanner}>
+        <div className={filterStyles.sendText}>
+          <strong>Отправьте подарки боту @sexydropbot</strong>
+          <span>Используйте их в Апгрейде или Быстрой продаже</span>
+        </div>
+        <button
+          type="button"
+          className={filterStyles.sendBtn}
+          disabled
+          title="Приём подарков включится после подключения сервера"
+        >
+          <ShareIcon className={filterStyles.sendIcon} aria-hidden />
+          Скоро
+        </button>
+      </div>
+
+      {soldNote && (
+        <p className={filterStyles.soldNote} role="status">
+          {soldNote}
+        </p>
+      )}
 
       {items.length === 0 ? (
         /* Пустое состояние по референсу @epic_gift_bot: тёмная карточка, алмаз
@@ -164,7 +196,7 @@ export function InventoryScreen() {
           ) : (
             <div className={filterStyles.grid}>
               {visible.map(({ item, gift }) => (
-                <GiftCard key={item.uid} gift={gift} onClick={() => setSelected(item)} />
+                <InventoryGiftCard key={item.uid} gift={gift} onSell={() => handleSell(item.uid)} />
               ))}
             </div>
           )}
@@ -173,15 +205,10 @@ export function InventoryScreen() {
 
       <InventoryHistory />
 
-      {selected && (
-        <ItemActionsSheet
-          item={selected}
-          onClose={() => {
-            // Если предмет продан, он уже удалён из стора — селект очищается
-            setSelected(null)
-          }}
-        />
-      )}
+      <p className={filterStyles.helpCard}>
+        Нужна помощь с подарками? Напишите нам в боте @sexydropbot — поддержка поможет.
+      </p>
+
     </div>
   )
 }

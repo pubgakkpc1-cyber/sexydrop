@@ -3,32 +3,44 @@ import { act, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { useInventoryStore, type InventoryItem } from '../store/inventory'
+import { useWalletStore } from '../store/wallet'
 import { InventoryScreen } from './InventoryScreen'
 
 function renderScreen() {
   return render(
     <MemoryRouter initialEntries={['/inventory']}>
       <Routes>
-        {/* Проба навигации: проверяем, что CTA реально уводит с экрана инвентаря */}
+        {/* Проба навигации: проверяем, что кнопки реально уводят с экрана инвентаря */}
         <Route path="/" element={<div>Каталог кейсов</div>} />
+        <Route path="/games" element={<div>PLAY-HUB-ROUTE</div>} />
+        <Route path="/games/upgrade" element={<div>UPGRADE-ROUTE</div>} />
         <Route path="/inventory" element={<InventoryScreen />} />
       </Routes>
     </MemoryRouter>,
   )
 }
 
+const card = (name: string) => screen.getByRole('article', { name })
+
 beforeEach(() => {
   useInventoryStore.setState({ items: [], history: [] })
+  useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
 })
 
-describe('InventoryScreen (3.1: пустой и заполненный инвентарь)', () => {
-  it('пустое состояние: карточка референса с CTA «Открыть кейсы»', () => {
+describe('InventoryScreen (пустой и заполненный инвентарь)', () => {
+  it('пустое состояние: «Ваши подарки», карточка с CTA «Открыть кейсы»', () => {
     renderScreen()
+    expect(screen.getByRole('heading', { name: 'Ваши подарки' })).toBeInTheDocument()
     expect(screen.getByText('Ваш инвентарь пуст')).toBeInTheDocument()
     expect(screen.getByText(/Откройте кейсы — полученные подарки появятся здесь/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Открыть кейсы' })).toBeInTheDocument()
-    expect(screen.getByText('Твои подарки')).toBeInTheDocument()
     expect(screen.queryByText(/шт\./)).not.toBeInTheDocument()
+  })
+
+  it('плашка «Отправьте подарки боту @sexydropbot»: приём пока недоступен', () => {
+    renderScreen()
+    expect(screen.getByText(/Отправьте подарки боту @sexydropbot/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Скоро' })).toBeDisabled()
   })
 
   it('CTA «Открыть кейсы» реально ведёт на главную', async () => {
@@ -37,19 +49,36 @@ describe('InventoryScreen (3.1: пустой и заполненный инве�
     expect(screen.getByText('Каталог кейсов')).toBeInTheDocument()
   })
 
-  it('заполненное состояние: счётчик, карточки с названием и редкостью', () => {
+  it('заполненное состояние: карточки с названием, ценой и кнопками', () => {
     act(() => {
       useInventoryStore.getState().addGifts(['plush-pepe', 'fresh-socks'], 'case-open')
     })
     renderScreen()
     expect(screen.getByText('2 шт.')).toBeInTheDocument()
-    expect(screen.getByTitle('Plush Pepe · Легендарный')).toBeInTheDocument()
-    expect(screen.getByTitle('Fresh Socks · Обычный')).toBeInTheDocument()
-    // цена из каталога, а не выдуманная: Plush Pepe = 25 GRAM
-    expect(screen.getByText('25')).toBeInTheDocument()
+    const pepe = card('Plush Pepe')
+    // цена из каталога, а не выдуманная: Plush Pepe = 25 TON
+    expect(within(pepe).getByRole('button', { name: 'Продать за 25 TON' })).toBeInTheDocument()
+    expect(within(pepe).getByRole('button', { name: 'Вывести' })).toBeDisabled()
+    expect(within(pepe).getByRole('button', { name: 'Апгрейд' })).toBeInTheDocument()
+    expect(within(pepe).getByRole('button', { name: 'Play Hub' })).toBeInTheDocument()
+    expect(card('Fresh Socks')).toBeInTheDocument()
   })
 
-  it('жизненный цикл: наполнение и опустошение через операции стора (контракт 3.4)', () => {
+  it('кнопки «Апгрейд» и «Play Hub» ведут на свои экраны', async () => {
+    act(() => {
+      useInventoryStore.getState().addGifts(['astral-shard'], 'case-open')
+    })
+    const first = renderScreen()
+    await userEvent.click(within(card('Astral Shard')).getByRole('button', { name: 'Апгрейд' }))
+    expect(screen.getByText('UPGRADE-ROUTE')).toBeInTheDocument()
+    first.unmount()
+
+    renderScreen()
+    await userEvent.click(within(card('Astral Shard')).getByRole('button', { name: 'Play Hub' }))
+    expect(screen.getByText('PLAY-HUB-ROUTE')).toBeInTheDocument()
+  })
+
+  it('жизненный цикл: наполнение и опустошение через операции стора', () => {
     renderScreen()
     expect(screen.getByText('Ваш инвентарь пуст')).toBeInTheDocument()
 
@@ -58,7 +87,7 @@ describe('InventoryScreen (3.1: пустой и заполненный инве�
       added = useInventoryStore.getState().addGifts(['astral-shard'], 'case-open')
     })
     expect(screen.queryByText('Ваш инвентарь пуст')).not.toBeInTheDocument()
-    expect(screen.getByTitle('Astral Shard · Эпический')).toBeInTheDocument()
+    expect(card('Astral Shard')).toBeInTheDocument()
     expect(screen.getByText('1 шт.')).toBeInTheDocument()
 
     act(() => {
@@ -72,7 +101,7 @@ describe('InventoryScreen (3.1: пустой и заполненный инве�
   })
 })
 
-describe('InventoryScreen — фильтры (3.2)', () => {
+describe('InventoryScreen — фильтры', () => {
   function seedInventory() {
     act(() => {
       useInventoryStore.getState().addGifts(
@@ -89,8 +118,8 @@ describe('InventoryScreen — фильтры (3.2)', () => {
     // «Эпические» — ровно один подарок этой редкости в наборе
     await userEvent.click(screen.getByRole('button', { name: /Эпические/ }))
     expect(screen.getByText('Показано 1 из 4')).toBeInTheDocument()
-    expect(screen.getByTitle('Astral Shard · Эпический')).toBeInTheDocument()
-    expect(screen.queryByTitle('Plush Pepe · Легендарный')).not.toBeInTheDocument()
+    expect(card('Astral Shard')).toBeInTheDocument()
+    expect(screen.queryByRole('article', { name: 'Plush Pepe' })).not.toBeInTheDocument()
   })
 
   it('поиск по названию нечувствителен к регистру', async () => {
@@ -98,23 +127,16 @@ describe('InventoryScreen — фильтры (3.2)', () => {
     seedInventory()
     await userEvent.type(screen.getByRole('searchbox', { name: 'Поиск подарка' }), 'pepe')
     expect(screen.getByText('Показано 1 из 4')).toBeInTheDocument()
-    expect(screen.getByTitle('Plush Pepe · Легендарный')).toBeInTheDocument()
-    expect(screen.queryByTitle('Fresh Socks · Обычный')).not.toBeInTheDocument()
+    expect(card('Plush Pepe')).toBeInTheDocument()
+    expect(screen.queryByRole('article', { name: 'Fresh Socks' })).not.toBeInTheDocument()
   })
 
   it('сортировка «Дорогие» ставит самый дорогой подарок первым', async () => {
     renderScreen()
     seedInventory()
     await userEvent.click(screen.getByRole('button', { name: 'Дорогие' }))
-    const grid = screen.getByTitle('Plush Pepe · Легендарный').parentElement
-    if (!grid) throw new Error('Ожидается сетка карточек')
-    const titles = Array.from(grid.children).map((card) => card.getAttribute('title'))
-    expect(titles).toEqual([
-      'Plush Pepe · Легендарный', // 25 GRAM
-      'Astral Shard · Эпический', // 5 GRAM
-      'Heart Locket · Редкий', // 1 GRAM
-      'Fresh Socks · Обычный', // 0.05 GRAM
-    ])
+    const names = screen.getAllByRole('article').map((el) => el.getAttribute('aria-label'))
+    expect(names).toEqual(['Plush Pepe', 'Astral Shard', 'Heart Locket', 'Fresh Socks'])
   })
 
   it('когда фильтр ничего не находит — состояние «Ничего не найдено» и сброс', async () => {
@@ -122,35 +144,20 @@ describe('InventoryScreen — фильтры (3.2)', () => {
     seedInventory()
     await userEvent.type(screen.getByRole('searchbox', { name: 'Поиск подарка' }), 'нет-такого')
     expect(screen.getByText('Ничего не найдено')).toBeInTheDocument()
-    expect(screen.queryByTitle(/· /)).not.toBeInTheDocument()
+    expect(screen.queryAllByRole('article')).toHaveLength(0)
     await userEvent.click(screen.getByRole('button', { name: 'Сбросить фильтры' }))
     expect(screen.getByText('4 шт.')).toBeInTheDocument()
-    expect(screen.getByTitle('Plush Pepe · Легендарный')).toBeInTheDocument()
-    expect(screen.getByTitle('Fresh Socks · Обычный')).toBeInTheDocument()
+    expect(card('Plush Pepe')).toBeInTheDocument()
+    expect(card('Fresh Socks')).toBeInTheDocument()
   })
 
-  it('клик по карточке открывает действия предмета (3.4)', async () => {
+  it('«Продать за …» прямо на карточке: баланс растёт, карточка исчезает', async () => {
     renderScreen()
     seedInventory()
-    await userEvent.click(screen.getByTitle('Astral Shard · Эпический'))
-    const dialog = screen.getByRole('dialog')
-    expect(dialog.textContent).toContain('Предмет инвентаря')
-    expect(screen.getByRole('button', { name: 'Продать за 5 TON' })).toBeInTheDocument()
-    // закрытие крестиком возвращает экран без диалога
-    await userEvent.click(screen.getByRole('button', { name: 'Закрыть' }))
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
-  })
-
-  it('продажа через экран обновляет баланс и возвращает карточки в актуальном виде', async () => {
-    renderScreen()
-    seedInventory()
-    await userEvent.click(screen.getByTitle('Astral Shard · Эпический'))
-    await userEvent.click(screen.getByRole('button', { name: 'Продать за 5 TON' }))
-    // «Продано» появляется и в шите, и в истории (3.5) — смотрим именно в диалог
-    const dialog = screen.getByRole('dialog')
-    expect(within(dialog).getByText('Продано')).toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: 'Готово' }))
+    await userEvent.click(within(card('Astral Shard')).getByRole('button', { name: 'Продать за 5 TON' }))
+    expect(screen.getByRole('status')).toHaveTextContent('Продано: +5 TON')
+    expect(useWalletStore.getState().getBalance()).toBe(105_000)
     expect(screen.getByText('3 шт.')).toBeInTheDocument()
-    expect(screen.queryByTitle('Astral Shard · Эпический')).not.toBeInTheDocument()
+    expect(screen.queryByRole('article', { name: 'Astral Shard' })).not.toBeInTheDocument()
   })
 })

@@ -1,0 +1,129 @@
+.body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 6px;
+}
+
+.art {
+  display: grid;
+  place-items: center;
+  width: 190px;
+  height: 190px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: linear-gradient(145deg, #3c3c42, #26262a);
+}
+
+.art[data-rarity='rare'] {
+  background: linear-gradient(145deg, #4a5a78, #2a3347);
+}
+
+.art[data-rarity='epic'] {
+  background: linear-gradient(145deg, #6a4a78, #3b2a47);
+}
+
+.art[data-rarity='legendary'] {
+  background: linear-gradient(145deg, #8a6a3a, #4a3820);
+}
+
+.imageFull {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageContain {
+  width: 82%;
+  height: 82%;
+  object-fit: contain;
+}
+
+.name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #ffffff;
+  text-align: center;
+}
+
+.chip {
+  padding: 6px 16px;
+  border-radius: 10px;
+  background: #3a2426;
+  border: 1px solid rgba(224, 134, 138, 0.4);
+  color: #e0868a;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.price {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 14px;
+  background: #2b2b2f;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 800;
+}
+
+.priceIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.error {
+  margin: 0;
+  color: #ff8a80;
+  font-size: 14px;
+}
+
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 56px;
+  margin-top: 6px;
+  border: none;
+  border-radius: 18px;
+  background: #b83a3f;
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ctaIcon {
+  width: 22px;
+  height: 22px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+}
+
+.sell,
+.keep {
+  min-height: 52px;
+  border: none;
+  border-radius: 16px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sell {
+  background: #2f7a53;
+}
+
+.keep {
+  background: #2b2b2f;
+}

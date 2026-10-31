@@ -25,14 +25,13 @@ import {
 import { getWebApp, getTelegramUser } from '../lib/telegram'
 import { MoneyRain } from '../components/effects/MoneyRain'
 import { BetSheet } from '../components/games/BetSheet'
+import { RocketRewardSheet } from '../components/games/RocketRewardSheet'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
   ChevronLeftIcon,
   TonIcon,
   CrownIcon,
-  SparkleIcon,
-  RocketIcon,
 } from '../components/shell/icons'
 import { giftById, gifts, type Gift } from '../data/catalog'
 import { cx } from '../lib/cx'
@@ -860,67 +859,7 @@ export function CrashScreen() {
 
       {/* Модальное окно Космического Дропа / Победы с равноценным NFT */}
       {cosmicReward && (
-        <div
-          className={styles.cosmicModalOverlay}
-          onClick={() => setCosmicReward(null)}
-        >
-          <div
-            className={styles.cosmicModalCard}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <h3 className={styles.cosmicModalTitle}>
-              <RocketIcon className={styles.cosmicTitleIcon} />
-              <span>Выигран NFT подарок!</span>
-            </h3>
-            <p className={styles.cosmicModalSubtitle}>
-              Равноценный Telegram NFT зачислен прямо в ваш инвентарь!
-            </p>
-            <img
-              src={cosmicReward.image}
-              alt={cosmicReward.name}
-              className={styles.cosmicRewardImg}
-            />
-            <strong style={{ color: '#ffffff', fontSize: '17px' }}>
-              {cosmicReward.name}
-            </strong>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                gap: '3px',
-                margin: '4px 0 16px',
-              }}
-            >
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: '#c7696d',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontWeight: 700,
-                }}
-              >
-                <TonIcon style={{ width: '15px', height: '15px' }} />
-                <span>Стоимость: {formatTonMaxOneDecimal(cosmicReward.priceMinor)} TON</span>
-              </span>
-              {cosmicReward.fragmentFloorTon && (
-                <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.55)' }}>
-                  Флор на Fragment: ~{cosmicReward.fragmentFloorTon} TON
-                </span>
-              )}
-            </div>
-            <button
-              type="button"
-              className={styles.cosmicClaimBtn}
-              onClick={() => setCosmicReward(null)}
-            >
-              <span>Забрать в инвентарь</span>
-              <SparkleIcon style={{ width: '16px', height: '16px', marginLeft: '6px' }} />
-            </button>
-          </div>
-        </div>
+        <RocketRewardSheet gift={cosmicReward} onClose={() => setCosmicReward(null)} />
       )}
       {/* Лёгкий дождик деньгами при выигрыше (без просадки FPS на слабых устройствах) */}
       {showMoneyRain && (

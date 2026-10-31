@@ -1,0 +1,158 @@
+/* Карточка подарка в инвентаре — матовая, как в референсе */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #1d1d20;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+}
+
+.art {
+  position: relative;
+  aspect-ratio: 1 / 0.92;
+  background: linear-gradient(145deg, #3c3c42, #26262a);
+}
+
+.card[data-rarity='rare'] .art {
+  background: linear-gradient(145deg, #4a5a78, #2a3347);
+}
+
+.card[data-rarity='epic'] .art {
+  background: linear-gradient(145deg, #6a4a78, #3b2a47);
+}
+
+.card[data-rarity='legendary'] .art {
+  background: linear-gradient(145deg, #8a6a3a, #4a3820);
+}
+
+.imageFull {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imageContain {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 14px;
+  box-sizing: border-box;
+  object-fit: contain;
+}
+
+.priceBadge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 10px;
+  background: rgba(14, 14, 16, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.priceIcon {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px;
+}
+
+.name {
+  min-width: 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: #e0868a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.withdraw,
+.sell,
+.upgrade,
+.hub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  border: none;
+  border-radius: 14px;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.withdraw {
+  min-height: 46px;
+  background: #b83a3f;
+  font-size: 16px;
+}
+
+.withdraw:disabled {
+  background: #4a2a2c;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.sell {
+  min-height: 44px;
+  background: #2b2b2f;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.sellPrice {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-weight: 800;
+}
+
+.quick {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.upgrade,
+.hub {
+  min-height: 42px;
+  font-size: 12.5px;
+}
+
+.upgrade {
+  background: #2f7a53;
+}
+
+.hub {
+  background: #7a2c30;
+}
+
+@media (max-width: 350px) {
+  .name {
+    font-size: 14px;
+  }
+
+  .upgrade,
+  .hub {
+    font-size: 11px;
+  }
+}

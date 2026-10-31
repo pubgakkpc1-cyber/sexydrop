@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { giftById, gifts, RARITY_LABELS, type Gift } from '../data/catalog'
+import { giftById, gifts, type Gift } from '../data/catalog'
 import { useInventoryStore, type InventoryItem } from '../store/inventory'
 import { formatMinor, type Minor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
@@ -175,7 +175,7 @@ export function UpgradeScreen() {
           <button
             type="button"
             className={cx(styles.slot, sourceGift && styles.slotFilled)}
-            onClick={() => items.length > 0 && !spinning && setPickerOpen(true)}
+            onClick={() => !spinning && setPickerOpen(true)}
             aria-label="Выбрать предмет"
           >
             <span className={styles.slotLabel}>Ваш предмет</span>
@@ -248,38 +248,6 @@ export function UpgradeScreen() {
             )}
           </button>
         </div>
-      </div>
-
-      {/* Источник — только реальные предметы инвентаря */}
-      <div className={styles.sourceRow}>
-        <div className={styles.sourceInfo}>
-          {sourceGift ? (
-            <>
-              <img className={styles.sourceImage} src={sourceGift.image} alt="" />
-              <span className={styles.sourceMeta}>
-                <span className={styles.sourceName}>{sourceGift.name}</span>
-                <span className={styles.sourceHint}>
-                  {RARITY_LABELS[sourceGift.rarity]} · <GramAmount minor={sourceGift.priceMinor} />
-                </span>
-              </span>
-            </>
-          ) : (
-            <span className={styles.sourceMeta}>
-              <span className={styles.sourceName}>Предмет для апгрейда</span>
-              <span className={styles.sourceHint}>
-                {items.length === 0 ? 'Инвентарь пуст' : 'Выберите из инвентаря'}
-              </span>
-            </span>
-          )}
-        </div>
-        <button
-          type="button"
-          className={styles.pickButton}
-          onClick={() => setPickerOpen(true)}
-          disabled={items.length === 0 || spinning}
-        >
-          Выбрать
-        </button>
       </div>
 
       {/* Быстрый выбор цели по иксу */}

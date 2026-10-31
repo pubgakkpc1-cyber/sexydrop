@@ -41,10 +41,10 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     expect(screen.getByText(/Апгрейд: шанс p = min\(1/)).toBeInTheDocument()
   })
 
-  it('пустой инвентарь: «Выбрать» недоступна, CTA выключена', () => {
+  it('пустой инвентарь: окно выбора с подсказкой, CTA выключена', async () => {
     renderScreen()
-    expect(screen.getByText(/Инвентарь пуст/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Выбрать' })).toBeDisabled()
+    await user.click(screen.getByRole('button', { name: 'Выбрать предмет' }))
+    expect(screen.getByText('Пока нет подарков')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeDisabled()
   })
 
@@ -55,7 +55,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     })
     renderScreen()
 
-    await user.click(screen.getByRole('button', { name: 'Выбрать' }))
+    await user.click(screen.getByRole('button', { name: 'Выбрать предмет' }))
     const dialog = screen.getByRole('dialog')
     await user.click(within(dialog).getByText('Fresh Socks'))
     await user.click(within(dialog).getByRole('button', { name: 'Подтвердить' }))
@@ -80,7 +80,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     })
     renderScreen()
 
-    await user.click(screen.getByRole('button', { name: 'Выбрать' }))
+    await user.click(screen.getByRole('button', { name: 'Выбрать предмет' }))
     const dialog = screen.getByRole('dialog')
     await user.click(within(dialog).getByText('Fresh Socks'))
     await user.click(within(dialog).getByRole('button', { name: 'Подтвердить' }))

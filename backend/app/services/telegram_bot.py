@@ -237,18 +237,24 @@ async def register_webhook() -> bool:
     """Регистрирует вебхук {PUBLIC_BASE_URL}/api/telegram/webhook/{секрет}. Без URL или токена — пропуск."""
     settings = get_settings()
     secret = webhook_secret()
-    if not settings.bot_token or not settings.public_base_url or not secret:
-        log.info("telegram webhook: PUBLIC_BASE_URL/BOT_TOKEN не заданы — пропуск")
+    # PUBLIC_BASE_URL не обязателен: по умолчанию вебхук ставится на адрес мини-аппа (APP_URL)
+    base = settings.public_base_url or settings.app_url
+    if not settings.bot_token or not base or not secret:
+        log.info("telegram webhook: BOT_TOKEN или адрес сервиса не заданы — пропуск")
         return False
-    url = f"{settings.public_base_url.rstrip('/')}/api/telegram/webhook/{secret}"
+    url = f"{base.rstrip('/')}/api/telegram/webhook/{secret}"
     try:
         async with httpx.AsyncClient(timeout=15.0) as client:
             res = await client.post(
                 f"{_api_url()}/setWebhook",
                 json={"url": url, "allowed_updates": ["message", "pre_checkout_query"], "drop_pending_updates": False},
             )
-        ok = bool(res.json().get("ok"))
-        log.info("telegram webhook registered: %s", ok)
+        body = res.json()
+        ok = bool(body.get("ok"))
+        if ok:
+            log.info("telegram webhook registered: %s", url.rsplit("/", 1)[0] + "/***")
+        else:
+            log.warning("telegram webhook rejected: %s", body.get("description"))
         return ok
     except Exception as exc:  # noqa: BLE001
         log.warning("telegram webhook registration failed: %s", exc)

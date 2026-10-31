@@ -37,7 +37,17 @@ describe('InventoryScreen (пустой и заполненный инвента
     expect(screen.queryByText(/шт\./)).not.toBeInTheDocument()
   })
 
-  it('плашка «Отправьте подарки @SexyDropOwner» с активной кнопкой', () => {
+  it('пустой инвентарь: отправка подарков на @SexyDropOwner и «или» кейсы', () => {
+    renderScreen()
+    expect(screen.getByRole('button', { name: '@SexyDropOwner' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Отправить подарок' })).toBeEnabled()
+    expect(screen.getByText('или')).toBeInTheDocument()
+  })
+
+  it('с подарками: плашка «Отправьте подарки @SexyDropOwner» с активной кнопкой', () => {
+    act(() => {
+      useInventoryStore.getState().addGifts(['plush-pepe'], 'case-open')
+    })
     renderScreen()
     expect(screen.getByText(/Отправьте подарки @SexyDropOwner/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Отправить' })).toBeEnabled()
@@ -58,7 +68,7 @@ describe('InventoryScreen (пустой и заполненный инвента
     const pepe = card('Plush Pepe')
     // цена из каталога, а не выдуманная: Plush Pepe = 25 TON
     expect(within(pepe).getByRole('button', { name: 'Продать за 25 TON' })).toBeInTheDocument()
-    expect(within(pepe).getByRole('button', { name: 'Вывести' })).toBeDisabled()
+    expect(within(pepe).getByRole('button', { name: 'Вывести' })).toBeEnabled()
     expect(within(pepe).getByRole('button', { name: 'Апгрейд' })).toBeInTheDocument()
     expect(within(pepe).getByRole('button', { name: 'Play Hub' })).toBeInTheDocument()
     expect(card('Fresh Socks')).toBeInTheDocument()

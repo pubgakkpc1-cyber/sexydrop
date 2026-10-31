@@ -9,6 +9,7 @@ import { sellItem } from '../services/demoInventoryService'
 import { makeRequestId } from '../lib/requestId'
 import { formatMinor } from '../lib/money'
 import { openOwnerChat, OWNER_HANDLE } from '../lib/telegram'
+import { buildWithdrawMessage } from '../lib/withdraw'
 import styles from './screens.module.css'
 import filterStyles from './InventoryScreen.module.css'
 
@@ -77,6 +78,7 @@ export function InventoryScreen() {
             : 'Здесь появятся ваши подарки'}
       </p>
 
+      {items.length > 0 && (
       <div className={filterStyles.sendBanner}>
         <div className={filterStyles.sendText}>
           <strong>Отправьте подарки {OWNER_HANDLE}</strong>
@@ -85,12 +87,13 @@ export function InventoryScreen() {
         <button
           type="button"
           className={filterStyles.sendBtn}
-          onClick={openOwnerChat}
+          onClick={() => openOwnerChat()}
         >
           <ShareIcon className={filterStyles.sendIcon} aria-hidden />
           Отправить
         </button>
       </div>
+      )}
 
       {soldNote && (
         <p className={filterStyles.soldNote} role="status">
@@ -99,22 +102,32 @@ export function InventoryScreen() {
       )}
 
       {items.length === 0 ? (
-        /* Пустое состояние по референсу @epic_gift_bot: тёмная карточка, алмаз
-           в круге, честная CTA кейсов (внешние ссылки референса не подтверждены). */
+        /* Пустое состояние: алмаз в круге, отправка подарков менеджеру, «или» — кейсы. */
         <div className={filterStyles.emptyCard}>
           <span className={filterStyles.emptyIcon} aria-hidden>
             <DiamondIcon />
           </span>
           <strong className={filterStyles.emptyTitle}>Ваш инвентарь пуст</strong>
           <p className={filterStyles.emptyText}>
-            Откройте кейсы — полученные подарки появятся здесь
+            Отправьте подарки в{' '}
+            <button type="button" className={filterStyles.emptyLink} onClick={() => openOwnerChat()}>
+              {OWNER_HANDLE}
+            </button>{' '}
+            чтобы использовать их для пополнения баланса, апгрейдов или игры в Ракету.
           </p>
-          <Button fullWidth onClick={() => navigate('/')}>
-            Открыть кейсы
+          <Button fullWidth onClick={() => openOwnerChat()}>
+            Отправить подарок
           </Button>
           <p className={filterStyles.emptyHint}>
-            Открывайте кейсы и играйте, чтобы получать ценные подарки
+            Менеджер проверит подарок и зачислит его сюда.
           </p>
+          <span className={filterStyles.emptyOr}>или</span>
+          <p className={filterStyles.emptyText}>
+            Откройте кейсы — полученные подарки появятся здесь
+          </p>
+          <Button fullWidth variant="secondary" onClick={() => navigate('/')}>
+            Открыть кейсы
+          </Button>
         </div>
       ) : (
         <>
@@ -142,6 +155,7 @@ export function InventoryScreen() {
               {visible.map(({ item, gift }) => (
                 <InventoryGiftCard key={item.uid} gift={gift} selling={sellingUid === item.uid}
                   onSell={() => handleSell(item.uid)}
+                  onWithdraw={() => openOwnerChat(buildWithdrawMessage(gift, item.uid))}
                 />
               ))}
             </div>

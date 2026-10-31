@@ -143,8 +143,10 @@ export function getStartParam(): string | undefined {
 export const OWNER_HANDLE = '@SexyDropOwner'
 const OWNER_URL = 'https://t.me/SexyDropOwner'
 
-export function openOwnerChat(): void {
+/** Открывает чат с менеджером; с text сообщение уже написано в поле ввода. */
+export function openOwnerChat(text?: string): void {
+  const url = text ? `${OWNER_URL}?text=${encodeURIComponent(text)}` : OWNER_URL
   const webApp = getWebApp()
-  if (webApp?.openTelegramLink) webApp.openTelegramLink(OWNER_URL)
-  else window.open(OWNER_URL, '_blank', 'noopener')
+  if (webApp?.openTelegramLink) webApp.openTelegramLink(url)
+  else window.open(url, '_blank', 'noopener')
 }

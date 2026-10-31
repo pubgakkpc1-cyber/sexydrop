@@ -564,7 +564,7 @@ function GiftsPanel() {
         </div>
       )}
 
-      <button type="button" className={styles.primary} onClick={openOwnerChat}>
+      <button type="button" className={styles.primary} onClick={() => openOwnerChat()}>
         Открыть @SexyDropOwner
       </button>
       <p className={styles.note}>

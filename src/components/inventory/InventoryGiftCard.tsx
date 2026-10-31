@@ -7,16 +7,18 @@ import styles from './InventoryGiftCard.module.css'
 export interface InventoryGiftCardProps {
   gift: Gift
   onSell: () => void
+  /** «Вывести»: открывает чат с менеджером с готовым сообщением о выигранном подарке. */
+  onWithdraw: () => void
   /** Идёт анимация продажи: карточка плавно исчезает, всплывает «+X TON». */
   selling?: boolean
 }
 
 /**
  * Карточка подарка на экране инвентаря: крупная картинка на фоне NFT, цена в углу,
- * название, «Вывести» (серверная функция — пока недоступна), «Продать за …»,
+ * название, «Вывести» (чат с менеджером с готовым сообщением), «Продать за …»,
  * быстрые переходы в Апгрейд и Play Hub.
  */
-export function InventoryGiftCard({ gift, onSell, selling = false }: InventoryGiftCardProps) {
+export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }: InventoryGiftCardProps) {
   const navigate = useNavigate()
   const price = formatMinor(gift.priceMinor)
 
@@ -50,8 +52,8 @@ export function InventoryGiftCard({ gift, onSell, selling = false }: InventoryGi
         <button
           type="button"
           className={styles.withdraw}
-          disabled
-          title="Вывод подарков включится после подключения сервера"
+          onClick={onWithdraw}
+          title="Написать менеджеру @SexyDropOwner для вывода подарка"
         >
           Вывести
         </button>

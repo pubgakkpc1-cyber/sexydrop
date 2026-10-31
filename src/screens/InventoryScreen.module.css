@@ -45,6 +45,36 @@
   color: var(--text-muted);
 }
 
+.emptyLink {
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--text);
+  font: inherit;
+  font-weight: var(--font-weight-bold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.emptyOr {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  margin: var(--space-2) 0;
+  color: var(--text-faint);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+}
+
+.emptyOr::before,
+.emptyOr::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
 .emptyHint {
   font-size: var(--font-size-xs);
   color: var(--text-faint);

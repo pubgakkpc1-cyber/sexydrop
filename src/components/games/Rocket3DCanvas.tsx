@@ -95,7 +95,7 @@ function drawFlameLayer(ctx: CanvasRenderingContext2D, len: number, w: number, f
   ctx.fill()
 }
 
-function drawCartoonRocket(
+export function drawCartoonRocket(
   ctx: CanvasRenderingContext2D,
   skin: RocketSkinConfig,
   t: number,

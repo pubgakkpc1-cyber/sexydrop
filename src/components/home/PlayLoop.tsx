@@ -1,51 +1,35 @@
-import { TonIcon } from '../shell/icons'
-import { FEATURES } from '../../lib/features'
 import styles from './PlayLoop.module.css'
 
+/** Реальные NFT из каталога — лента крутится, как рулетка кейса. */
+const STRIP = [
+  '/gifts/plush_pepe_1.png',
+  '/gifts/heart_locket_1.png',
+  '/gifts/mini_oscar_1.png',
+  '/gifts/ion_gem_1.png',
+  '/gifts/astral_shard_1.png',
+  '/gifts/snoop_dogg_1.png',
+] as const
+
 /**
- * Зацикленная CSS-сцена для баннера Play Hub: стрелка апгрейда крутится по кольцу шанса,
- * шарик скачет по колышкам, куб открывается и показывает гем, всплывают «+TON».
- * Только transform/opacity — без нагрузки на главный поток.
+ * Сцена баннера Play Hub: бесконечная лента NFT-подарков едет под красным маркером,
+ * как рулетка в кейсе; карточка под маркером «вспыхивает». Только transform/opacity.
  */
 export function PlayLoop() {
+  const cards = [...STRIP, ...STRIP]
   return (
     <div className={styles.wrap} aria-hidden>
-      <div className={styles.glow} />
-
-      <div className={`${styles.tile} ${styles.upgrade}`}>
-        <span className={styles.ring}>
-          <span className={styles.needle} />
-        </span>
-        <span className={styles.pct}>24%</span>
-      </div>
-
-      {FEATURES.plinko && (
-        <div className={`${styles.tile} ${styles.plinko}`}>
-          <span className={styles.peg} style={{ left: '50%', top: '22%' }} />
-          <span className={styles.peg} style={{ left: '32%', top: '44%' }} />
-          <span className={styles.peg} style={{ left: '68%', top: '44%' }} />
-          <span className={styles.peg} style={{ left: '50%', top: '66%' }} />
-          <span className={styles.ball} />
+      <div className={styles.beams} />
+      <div className={styles.viewport}>
+        <div className={styles.strip}>
+          {cards.map((src, i) => (
+            <img key={`${src}-${i}`} src={src} alt="" className={styles.card} />
+          ))}
         </div>
-      )}
-
-      <div className={`${styles.tile} ${styles.mines}`}>
-        <span className={`${styles.cube} ${styles.cubeA}`}>
-          <span className={styles.cubeFront} />
-          <span className={styles.cubeBack}>◆</span>
-        </span>
-        <span className={`${styles.cube} ${styles.cubeB}`}>
-          <span className={styles.cubeFront} />
-          <span className={styles.cubeBack}>◆</span>
-        </span>
+        <span className={styles.markerTop} />
+        <span className={styles.markerBottom} />
+        <span className={styles.markerLine} />
+        <span className={styles.flash} />
       </div>
-
-      <span className={`${styles.coin} ${styles.coin1}`}>
-        +2.4 <TonIcon className={styles.coinIcon} />
-      </span>
-      <span className={`${styles.coin} ${styles.coin2}`}>
-        +0.8 <TonIcon className={styles.coinIcon} />
-      </span>
     </div>
   )
 }

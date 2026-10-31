@@ -27,6 +27,27 @@ async def telegram_webhook(secret: str, request: Request) -> dict[str, bool]:
     return {"ok": True, "handled": handled}
 
 
+async def _probe_channels(token: str, me: dict[str, Any]) -> list[dict[str, Any]]:
+    """Видит ли бот обязательные каналы и админ ли он там (без секретов)."""
+    from app.services import subscription_service
+
+    bot_id = (me.get("result") or {}).get("id")
+    rows: list[dict[str, Any]] = []
+    async with httpx.AsyncClient(timeout=10.0) as client:
+        for ch in subscription_service.channels():
+            row: dict[str, Any] = {"key": ch["key"], "chat": ch["chat"]}
+            if ch["chat"] and bot_id:
+                try:
+                    chat = (await client.get(f"https://api.telegram.org/bot{token}/getChat", params={"chat_id": ch["chat"]})).json()
+                    row["title"] = (chat.get("result") or {}).get("title") if chat.get("ok") else chat.get("description")
+                    mem = (await client.get(f"https://api.telegram.org/bot{token}/getChatMember", params={"chat_id": ch["chat"], "user_id": bot_id})).json()
+                    row["bot_status"] = (mem.get("result") or {}).get("status") if mem.get("ok") else mem.get("description")
+                except Exception as exc:  # noqa: BLE001
+                    row["error"] = type(exc).__name__
+            rows.append(row)
+    return rows
+
+
 @router.get("/telegram/status")
 async def telegram_status() -> dict[str, Any]:
     """Диагностика бота без секретов: чей токен на сервере и куда смотрит вебхук."""
@@ -49,5 +70,6 @@ async def telegram_status() -> dict[str, Any]:
     out["allowed_updates"] = res.get("allowed_updates")
     from app.services import subscription_service
 
+    out["subscription_channels"] = await _probe_channels(token, me)
     out["admin_in_chats"] = {str(k): v for k, v in subscription_service.discovered_chats.items()}
     return out

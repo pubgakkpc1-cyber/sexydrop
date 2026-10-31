@@ -46,7 +46,7 @@ class Settings(BaseSettings):
     # приватный — по числовому id (-100...): бот должен быть админом обоих каналов.
     sub_public_chat: str = "@SexyDrop_official"
     sub_public_url: str = "https://t.me/SexyDrop_official"
-    sub_private_chat_id: str = ""
+    sub_private_chat_id: str = "-1005262725960"
     sub_private_url: str = "https://t.me/+YZoeECjxGmszNzZk"
     # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
     stats_path: str = "/tmp/sexydrop_stats.json"

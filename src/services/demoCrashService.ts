@@ -6,6 +6,7 @@ import { useWalletStore } from '../store/wallet'
 import { useGamesHistoryStore } from '../store/gamesHistory'
 import { createRequestMemo } from '../lib/requestMemo'
 import { nftPriceFor } from '../lib/crashTile'
+import { MAX_BET_MINOR } from '../lib/gameConfig'
 import { recentCrashPoints, roundInfo, scheduleAt, sharedNow, syncClock } from './crashSchedule'
 import {
   MAX_HISTORY,
@@ -406,7 +407,7 @@ export function placeGramBet(
     if (s.myBet !== null) {
       return { status: 'rejected', reason: 'duplicate' } as const
     }
-    if (!Number.isSafeInteger(amountMinor) || amountMinor < 100) {
+    if (!Number.isSafeInteger(amountMinor) || amountMinor < 100 || amountMinor > MAX_BET_MINOR) {
       return { status: 'rejected', reason: 'invalid_amount' } as const
     }
     const wallet = useWalletStore.getState()
@@ -437,7 +438,7 @@ export function queueNextRoundGramBet(
     if (s.queuedNextBet !== null) {
       return { status: 'rejected', reason: 'duplicate' } as const
     }
-    if (!Number.isSafeInteger(amountMinor) || amountMinor < 100) {
+    if (!Number.isSafeInteger(amountMinor) || amountMinor < 100 || amountMinor > MAX_BET_MINOR) {
       return { status: 'rejected', reason: 'invalid_amount' } as const
     }
     const wallet = useWalletStore.getState()
@@ -476,6 +477,9 @@ export function queueNextRoundGiftBet(
     const price = item ? giftById.get(item.giftId)?.priceMinor : undefined
     if (!item || price === undefined) {
       return { status: 'rejected', reason: 'unknown_item' } as const
+    }
+    if (price > MAX_BET_MINOR) {
+      return { status: 'rejected', reason: 'invalid_amount' } as const
     }
     inventory.removeUids([uid], 'crash-bet')
     useCrashStore.setState({
@@ -526,6 +530,9 @@ export function placeGiftBet(
     const price = item ? giftById.get(item.giftId)?.priceMinor : undefined
     if (!item || price === undefined) {
       return { status: 'rejected', reason: 'unknown_item' } as const
+    }
+    if (price > MAX_BET_MINOR) {
+      return { status: 'rejected', reason: 'invalid_amount' } as const
     }
     // Предмет уходит со стола сразу (в журнал — причина 'crash-bet');
     // выигрыш в GRAM начисляется при «Забрать», при краше предмет сгорает.

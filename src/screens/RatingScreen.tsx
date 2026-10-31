@@ -6,27 +6,6 @@ import { TgAvatar } from '../components/ui/TgAvatar'
 import { cx } from '../lib/cx'
 import styles from './RatingScreen.module.css'
 
-interface LeaderboardBot {
-  id: string
-  name: string
-  avatar: string
-  /** Очки = оборот в TON × 100 */
-  points: number
-}
-
-const TOP_BOTS: readonly LeaderboardBot[] = [
-  { id: 'b1', name: 'kamronbek', avatar: '/avatars/bot_03.svg', points: 84_000 },
-  { id: 'b2', name: 'cryptowhale', avatar: '/avatars/bot_17.svg', points: 62_000 },
-  { id: 'b3', name: 'Saullmurder', avatar: '/avatars/bot_08.svg', points: 49_000 },
-  { id: 'b4', name: 'abdoo', avatar: '/avatars/bot_22.svg', points: 41_000 },
-  { id: 'b5', name: 'DIYORBEK', avatar: '/avatars/bot_30.svg', points: 35_000 },
-  { id: 'b6', name: 'Module_II', avatar: '/avatars/bot_11.svg', points: 29_000 },
-  { id: 'b7', name: 'moon_rider', avatar: '/avatars/bot_26.svg', points: 24_000 },
-  { id: 'b8', name: 'Al_Sheikh', avatar: '/avatars/bot_35.svg', points: 21_000 },
-  { id: 'b9', name: 'Pavel_D', avatar: '/avatars/bot_14.svg', points: 18_000 },
-  { id: 'b10', name: 'Artem_TON', avatar: '/avatars/bot_41.svg', points: 14_000 },
-]
-
 /** «kamronbek» → «ka***ek» */
 export function maskName(name: string): string {
   if (name.length <= 4) return `${name[0] ?? ''}***`
@@ -56,9 +35,8 @@ export function RatingScreen() {
 
   // Таблица: боты + вы (если есть реальные раунды), по убыванию очков
   const rows = useMemo<Row[]>(() => {
-    const list: Row[] = TOP_BOTS.map((b) => ({ key: b.id, me: false, name: b.name, avatar: b.avatar, points: b.points }))
-    if (!noData) list.push({ key: 'me', me: true, name: 'Вы', points: myPoints })
-    return list.sort((a, b) => b.points - a.points).slice(0, 10)
+    // Только реальные игроки: пока серверного рейтинга нет, в таблице только вы
+    return noData ? [] : [{ key: 'me', me: true, name: 'Вы', points: myPoints }]
   }, [noData, myPoints])
 
   const myIndex = rows.findIndex((r) => r.me)
@@ -96,6 +74,9 @@ export function RatingScreen() {
         <span className={styles.colLabel}>Очки</span>
       </div>
 
+      {rows.length === 0 && (
+        <p className={styles.emptyList}>Пока в рейтинге никого нет. Сделайте ставку — и вы окажетесь в таблице.</p>
+      )}
       <ol className={styles.list} aria-label="Рейтинг игроков">
         {rows.map((row, idx) => {
           return (

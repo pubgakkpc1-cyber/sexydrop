@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { safeJsonStorage } from '../lib/persistStorage'
 import type { Minor } from '../lib/money'
 
 export interface ProfileStats {
@@ -21,7 +23,9 @@ interface ProfileState extends ProfileStats {
  * синтетика запрещена. Оборот в GRAM конвертируется в билеты лояльности
  * (store/tickets). Серверный профиль и журнал — TIER 7 (7.2/7.3).
  */
-export const useProfileStore = create<ProfileState>((set) => ({
+export const useProfileStore = create<ProfileState>()(
+  persist(
+    (set) => ({
   rounds: 0,
   wageredMinor: 0,
   netMinor: 0,
@@ -35,4 +39,12 @@ export const useProfileStore = create<ProfileState>((set) => ({
       netMinor: state.netMinor + entry.deltaMinor,
     }))
   },
-}))
+}),
+    {
+      name: 'sexydrop.profile',
+      version: 1,
+      storage: safeJsonStorage<Pick<ProfileState, 'rounds' | 'wageredMinor' | 'netMinor' | 'pvpMatches'>>(),
+      partialize: (s) => ({ rounds: s.rounds, wageredMinor: s.wageredMinor, netMinor: s.netMinor, pvpMatches: s.pvpMatches }),
+    },
+  ),
+)

@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { safeJsonStorage } from '../lib/persistStorage'
 import { useProfileStore } from './profile'
 import { useStarsBalanceStore } from './starsBalance'
 
@@ -35,7 +37,9 @@ interface QuestsState {
   claim: (id: string) => 'ok' | 'already_claimed' | 'not_enough'
 }
 
-export const useQuestsStore = create<QuestsState>((set, get) => ({
+export const useQuestsStore = create<QuestsState>()(
+  persist(
+    (set, get) => ({
   claimed: {},
 
   progressOf: (quest) => {
@@ -59,4 +63,12 @@ export const useQuestsStore = create<QuestsState>((set, get) => ({
     useStarsBalanceStore.getState().add(quest.rewardStars)
     return 'ok'
   },
-}))
+}),
+    {
+      name: 'sexydrop.quests',
+      version: 1,
+      storage: safeJsonStorage<Pick<QuestsState, 'claimed'>>(),
+      partialize: (s) => ({ claimed: s.claimed }),
+    },
+  ),
+)

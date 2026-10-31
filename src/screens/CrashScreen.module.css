@@ -2728,3 +2728,14 @@
 .screenStarfield {
   z-index: -1;
 }
+
+.noBets {
+  margin: 0;
+  padding: 18px 12px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  background: var(--card);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+}

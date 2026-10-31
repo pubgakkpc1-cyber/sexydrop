@@ -467,3 +467,15 @@
   .row { grid-template-columns: 30px 38px minmax(0, 1fr) 64px; gap: 6px; }
   .meBar .points { flex-basis: 64px; width: 64px; }
 }
+
+.emptyList {
+  margin: 0;
+  padding: 22px 14px;
+  text-align: center;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text-muted);
+  background: var(--card);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+}

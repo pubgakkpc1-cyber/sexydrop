@@ -9,7 +9,6 @@ import {
   stopCrashEngine,
   TICK_MS,
 } from '../services/demoCrashService'
-import { generateRoundPlayers, type SimulatedPlayer } from '../services/crashLivePlayers'
 import {
   playCountdownTick,
   playRocketLaunch,
@@ -265,8 +264,6 @@ export function CrashScreen() {
   const multColor = MULT_TIER_STYLE[multTier(multiplier)].color
   const multGlow = MULT_TIER_STYLE[multTier(multiplier)].glow
 
-  // Пул живых игроков раунда
-  const [players, setPlayers] = useState<SimulatedPlayer[]>([])
   const [showMoneyRain, setShowMoneyRain] = useState(false)
   const [showLaunch, setShowLaunch] = useState(false)
   const launchPrevPhase = useRef(phase)
@@ -311,11 +308,6 @@ export function CrashScreen() {
       }
     }
   }, [])
-
-  // Обновление игроков при смене раунда
-  useEffect(() => {
-    setPlayers(generateRoundPlayers(roundId))
-  }, [roundId])
 
   // Расчёт секунд обратного отсчёта (5.0с .. 0.0с)
   const secondsLeft = (ticksLeft * TICK_MS) / 1000
@@ -424,29 +416,6 @@ export function CrashScreen() {
       })
     }
 
-    for (const p of players) {
-      const isCashed =
-        phase === 'crashed'
-          ? p.targetMultiplier <= multiplier
-          : phase === 'flying' && multiplier >= p.targetMultiplier
-      const multToShow = isCashed ? p.targetMultiplier : multiplier
-      const profitMinor = Math.round(p.stakeMinor * multToShow)
-      const stakeGift = p.stakeGiftId ? giftById.get(p.stakeGiftId) : undefined
-
-      rows.push({
-        id: p.id,
-        isUser: false,
-        name: p.name,
-        avatar: p.avatar,
-        stakeMinor: p.stakeMinor,
-        targetMultiplier: p.targetMultiplier,
-        isCashed,
-        multToShow,
-        profitMinor,
-        stakeGift,
-      })
-    }
-
     // Порядок списка (моя ставка — всегда первая):
     //  • в полёте: сверху те, кто ещё не забрал; под ними победители (уже забрали); в самом низу проигравшие;
     //  • после взрыва: победители, под ними проигравшие.
@@ -460,7 +429,7 @@ export function CrashScreen() {
       const diff = rank(a) - rank(b)
       return diff !== 0 ? diff : b.stakeMinor - a.stakeMinor
     })
-  }, [players, myBet, phase, multiplier])
+  }, [myBet, phase, multiplier])
 
   return (
     <div className={styles.screen}>
@@ -744,7 +713,7 @@ export function CrashScreen() {
         <div className={styles.liveBetsHeader}>
           <span className={styles.liveBetsTitle}>Ставки раунда</span>
           <span className={styles.liveBetsCount}>
-            {sortedBetRows.length} игроков
+            {sortedBetRows.length === 0 ? 'нет ставок' : `${sortedBetRows.length} ${sortedBetRows.length === 1 ? 'ставка' : 'ставок'}`}
           </span>
         </div>
 
@@ -757,6 +726,9 @@ export function CrashScreen() {
             } as React.CSSProperties
           }
         >
+          {sortedBetRows.length === 0 && (
+            <p className={styles.noBets}>Пока нет ставок — сделайте ставку, и она появится здесь</p>
+          )}
           {sortedBetRows.map((row) => {
             const isWon = row.isCashed
             const isLost = phase === 'crashed' && !row.isCashed

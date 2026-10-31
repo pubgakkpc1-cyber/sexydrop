@@ -15,14 +15,15 @@ beforeEach(() => {
 })
 
 describe('RatingScreen (матовый рейтинг по референсу)', () => {
-  it('без плашки сезона и призов, заголовок списка и 10 мест с призами', () => {
+  it('без ботов: пустая таблица с подсказкой, пока вы не играли', () => {
     render(<RatingScreen />)
     expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
     expect(screen.queryByText('Заканчивается через')).not.toBeInTheDocument()
     expect(screen.queryByRole('timer')).not.toBeInTheDocument()
     expect(screen.getByText('Топ игроков')).toBeInTheDocument()
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
-    expect(within(list).getAllByRole('listitem')).toHaveLength(10)
+    expect(within(list).queryAllByRole('listitem')).toHaveLength(0)
+    expect(screen.getByText(/Пока в рейтинге никого нет/)).toBeInTheDocument()
   })
 
   it('без раундов закреплённая строка «ВЫ» показывает 999+', () => {
@@ -32,14 +33,15 @@ describe('RatingScreen (матовый рейтинг по референсу)',
     expect(within(bar).getByText('ВЫ')).toBeInTheDocument()
   })
 
-  it('реальная статистика: очки = оборот × 100, вы попадаете в таблицу по месту', () => {
+  it('реальная статистика: очки = оборот × 100, в таблице только вы', () => {
     useProfileStore.setState({ rounds: 12, wageredMinor: 800_000, netMinor: -2_300, pvpMatches: 3 })
-    render(<RatingScreen />) // 800 TON оборота = 80K очков → 2 место после 84K
+    render(<RatingScreen />) // 800 TON оборота = 80K очков
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
     const items = within(list).getAllByRole('listitem')
-    expect(within(items[1]!).getByText('Вы')).toBeInTheDocument()
-    expect(within(items[1]!).getByText('80.0K')).toBeInTheDocument()
-    expect(within(screen.getByLabelText('Ваше место')).getByText('2')).toBeInTheDocument()
+    expect(items).toHaveLength(1)
+    expect(within(items[0]!).getByText('Вы')).toBeInTheDocument()
+    expect(within(items[0]!).getByText('80.0K')).toBeInTheDocument()
+    expect(within(screen.getByLabelText('Ваше место')).getByText('1')).toBeInTheDocument()
     expect(screen.getByText(/PVP-матчей: 3/)).toBeInTheDocument()
   })
 })

@@ -28,30 +28,25 @@ afterEach(() => {
 })
 
 describe('CrashScreen Player Cards Styling & NFT Frame', () => {
-  it('renders player cards with NFT framed box', () => {
-    const { container } = renderScreen()
+  it('без ботов: пока нет ставки — подсказка вместо карточек; после ставки одна карточка с NFT-рамкой', () => {
+    const { container, getByText } = renderScreen()
+    expect(container.querySelectorAll(`.${styles.playerCard}`)).toHaveLength(0)
+    expect(getByText(/Пока нет ставок/)).toBeInTheDocument()
 
-    // Проверяем наличие списка карточек
+    act(() => {
+      expect(placeGramBet(100, 'req-card')).toEqual({ status: 'ok' })
+    })
     const cards = container.querySelectorAll(`.${styles.playerCard}`)
-    expect(cards.length).toBeGreaterThan(0)
-
-    // Проверяем наличие NFT боксов у игроков
-    const nftBoxes = container.querySelectorAll(`.${styles.playerNftBox}`)
-    expect(nftBoxes.length).toBeGreaterThan(0)
-
-    // Проверяем наличие плашек ставок с TonIcon
-    const betPills = container.querySelectorAll(`.${styles.playerBetPill}`)
-    expect(betPills.length).toBe(cards.length)
-
-    // Проверяем наличие плашек выплат
-    const payoutPills = container.querySelectorAll(`.${styles.playerPayoutPill}`)
-    expect(payoutPills.length).toBe(cards.length)
+    expect(cards).toHaveLength(1)
+    expect(container.querySelectorAll(`.${styles.playerNftBox}`)).toHaveLength(1)
+    expect(container.querySelectorAll(`.${styles.playerBetPill}`)).toHaveLength(1)
+    expect(container.querySelectorAll(`.${styles.playerPayoutPill}`)).toHaveLength(1)
   })
 
-  it('моя ставка всегда первая в списке, даже если она самая маленькая', () => {
+  it('моя ставка — единственная и первая в списке', () => {
     const { container } = renderScreen()
     act(() => {
-      expect(placeGramBet(100, 'req-first')).toEqual({ status: 'ok' }) // 0.1 TON — меньше всех ставок ботов
+      expect(placeGramBet(100, 'req-first')).toEqual({ status: 'ok' }) // 0.1 TON
     })
     const cards = container.querySelectorAll(`.${styles.playerCard}`)
     expect(cards[0]?.classList.contains(styles.playerCardUser!)).toBe(true)

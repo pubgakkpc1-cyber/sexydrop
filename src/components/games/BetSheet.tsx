@@ -15,6 +15,7 @@ import { useCrashStore } from '../../store/crash'
 import { BottomSheet, Button, GramAmount, Input } from '../ui'
 import { CubeIcon, GiftIcon, TonIcon } from '../shell/icons'
 import { cx } from '../../lib/cx'
+import { MAX_BET_MINOR } from '../../lib/gameConfig'
 import styles from './BetSheet.module.css'
 
 export type BetSheetTab = 'gifts' | 'gram'
@@ -116,7 +117,8 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
   }, [amountInput])
 
   const selectedRow = selectedUid === null ? null : (giftRows.find(({ item }) => item.uid === selectedUid) ?? null)
-  const insufficient = amountMinor === null || balance < amountMinor
+  const tooBig = amountMinor !== null && amountMinor > MAX_BET_MINOR
+  const insufficient = amountMinor === null || balance < amountMinor || tooBig
 
   const phase = useCrashStore((s) => s.phase)
   const isNextRound = phase !== 'betting'
@@ -200,6 +202,13 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
                 {formatMinor(preset)}
               </button>
             ))}
+            <button
+              type="button"
+              className={styles.preset}
+              onClick={() => setAmountInput(formatMinor(Math.max(100, Math.min(balance, MAX_BET_MINOR))))}
+            >
+              Макс
+            </button>
           </div>
           <Input
             label="Сумма ставки"
@@ -214,6 +223,8 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
             error={
               amountMinor !== null && amountMinor < 100
                 ? 'Минимальная ставка — 0.1 TON'
+                : tooBig
+                ? 'Максимальная ставка — 1000 TON'
                 : amountMinor !== null && insufficient
                 ? 'Недостаточно TON'
                 : undefined

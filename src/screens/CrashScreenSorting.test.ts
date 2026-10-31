@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest'
 import { getGiftForValue, giftById } from '../data/catalog'
-import { generateRoundPlayers } from '../services/crashLivePlayers'
 
 describe('Crash Screen Stakes Sorting & NFT Value Mapping', () => {
   it('assigns golden-trophy for 60000 minor value', () => {
@@ -9,42 +8,6 @@ describe('Crash Screen Stakes Sorting & NFT Value Mapping', () => {
     expect(gift.name).toBe('Golden Trophy')
     expect(gift.priceMinor).toBe(60000)
     expect(gift.image).toBe('/gifts/golden-trophy.svg')
-  })
-
-  it('NFT-ставка бота равна реальной цене NFT; ставка TON — без подарка и с 1 знаком после точки', () => {
-    let nft = 0
-    let ton = 0
-    for (let round = 1; round <= 40; round++) {
-      for (const p of generateRoundPlayers(round)) {
-        if (p.stakeGiftId) {
-          nft++
-          const gift = giftById.get(p.stakeGiftId)
-          expect(gift).toBeDefined()
-          expect(p.stakeMinor).toBe(gift!.priceMinor)
-        } else {
-          ton++
-          expect(p.stakeMinor % 100).toBe(0) // кратно 0.1 TON
-          expect(p.stakeMinor).toBeGreaterThanOrEqual(100)
-        }
-      }
-    }
-    expect(nft).toBeGreaterThan(0)
-    expect(ton).toBeGreaterThan(0)
-  })
-
-  it('ники и аватарки меняются между раундами и не повторяются внутри раунда', () => {
-    const r1 = generateRoundPlayers(1)
-    const r9 = generateRoundPlayers(9)
-    expect(new Set(r1.map((p) => p.name)).size).toBe(r1.length)
-    expect(new Set(r1.map((p) => p.avatar)).size).toBe(r1.length)
-    expect(r1.map((p) => p.name).join()).not.toBe(r9.map((p) => p.name).join())
-  })
-
-  it('orders generated round players strictly descending by stakeMinor (от большого к маленькому)', () => {
-    const players = generateRoundPlayers(100)
-    for (let i = 0; i < players.length - 1; i++) {
-      expect(players[i]!.stakeMinor).toBeGreaterThanOrEqual(players[i + 1]!.stakeMinor)
-    }
   })
 
   it('verifies golden trophy is present in catalog and giftById', () => {

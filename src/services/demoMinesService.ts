@@ -1,3 +1,4 @@
+import { MAX_BET_MINOR } from '../lib/gameConfig'
 import type { Minor } from '../lib/money'
 import { mulByMultiplier, formatMinor } from '../lib/money'
 import {
@@ -114,7 +115,7 @@ export function startMines(
     if (round !== null && !round.finished) {
       return { status: 'rejected', reason: 'round_in_progress' } as const
     }
-    if (!Number.isSafeInteger(betMinor) || betMinor <= 0) {
+    if (!Number.isSafeInteger(betMinor) || betMinor <= 0 || betMinor > MAX_BET_MINOR) {
       return { status: 'rejected', reason: 'invalid_amount' } as const
     }
     if (!isValidMinesCount(minesCount)) {

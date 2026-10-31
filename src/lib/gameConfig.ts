@@ -11,3 +11,6 @@ export const GAME_RTP = 0.98
  * (lib/pvpMath, TIER 5), где все вероятности считаются без плавающей точки.
  */
 export const GAME_RTP_BPS = 9800
+
+/** Максимальная ставка в играх: 1000 TON (в minor-единицах, 1 TON = 1000). */
+export const MAX_BET_MINOR = 1_000_000

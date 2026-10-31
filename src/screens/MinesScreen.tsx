@@ -14,7 +14,7 @@ import {
   type MinesPickResult,
 } from '../services/demoMinesService'
 import { useWalletStore } from '../store/wallet'
-import { GAME_RTP } from '../lib/gameConfig'
+import { GAME_RTP, MAX_BET_MINOR } from '../lib/gameConfig'
 import { Input } from '../components/ui'
 import { ChevronLeftIcon, DropBombIcon, TonIcon } from '../components/shell/icons'
 import { MULT_TIER_STYLE, multTier } from '../lib/multTier'
@@ -64,7 +64,8 @@ export function MinesScreen() {
       return null
     }
   }, [amountInput])
-  const insufficient = amountMinor === null || balance < amountMinor
+  const tooBig = amountMinor !== null && amountMinor > MAX_BET_MINOR
+  const insufficient = amountMinor === null || balance < amountMinor || tooBig
   const playing = round !== null && round.phase === 'playing'
   const finished = round !== null && round.phase !== 'playing'
 
@@ -322,7 +323,7 @@ export function MinesScreen() {
                 setError(null)
                 setAmountInput(event.target.value)
               }}
-              hint={`Баланс: ${formatMinor(balance)} TON`}
+              hint={tooBig ? 'Максимальная ставка — 1000 TON' : `Баланс: ${formatMinor(balance)} TON`}
             />
 
             {error && (

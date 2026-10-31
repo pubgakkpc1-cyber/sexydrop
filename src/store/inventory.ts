@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { safeJsonStorage } from '../lib/persistStorage'
 
 export type InventorySource =
   | 'case-open'
@@ -42,7 +44,9 @@ function makeUid(): string {
  * Инвентарь. В production операции валидируются сервером и выполняются
  * атомарно с балансом (TIER 7); здесь — demo-хранилище с тем же контрактом.
  */
-export const useInventoryStore = create<InventoryState>((set) => ({
+export const useInventoryStore = create<InventoryState>()(
+  persist(
+    (set) => ({
   items: [],
   history: [],
 
@@ -93,4 +97,12 @@ export const useInventoryStore = create<InventoryState>((set) => ({
       }
     })
   },
-}))
+}),
+    {
+      name: 'sexydrop.inventory',
+      version: 1,
+      storage: safeJsonStorage<Pick<InventoryState, 'items' | 'history'>>(),
+      partialize: (s) => ({ items: s.items, history: s.history.slice(0, 200) }),
+    },
+  ),
+)

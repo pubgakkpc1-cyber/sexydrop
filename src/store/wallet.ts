@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { safeJsonStorage } from '../lib/persistStorage'
 import { addMinor, subMinor, type Minor } from '../lib/money'
 
 export type WalletMode = 'demo' | 'real'
@@ -19,7 +21,9 @@ export interface WalletState {
 
 const DEFAULT_DEMO_START: Minor = 100_000 // 100 GRAM
 
-export const useWalletStore = create<WalletState>((set, get) => ({
+export const useWalletStore = create<WalletState>()(
+  persist(
+    (set, get) => ({
   mode: 'demo',
   balances: { demo: DEFAULT_DEMO_START, real: 0 },
   demoStartBalance: DEFAULT_DEMO_START,
@@ -49,4 +53,12 @@ export const useWalletStore = create<WalletState>((set, get) => ({
     set((state) => ({
       balances: { ...state.balances, demo: state.demoStartBalance },
     })),
-}))
+}),
+    {
+      name: 'sexydrop.wallet',
+      version: 1,
+      storage: safeJsonStorage<{ mode: WalletState['mode']; balances: WalletState['balances'] }>(),
+      partialize: (s) => ({ mode: s.mode, balances: s.balances }),
+    },
+  ),
+)

@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { safeJsonStorage } from '../lib/persistStorage'
 import { STARS_PER_TON, starsToMinor } from '../lib/stars'
 import { useWalletStore } from './wallet'
 
@@ -15,7 +17,9 @@ interface StarsBalanceState {
   exchange: (stars: number) => 'ok' | 'too_small' | 'insufficient'
 }
 
-export const useStarsBalanceStore = create<StarsBalanceState>((set, get) => ({
+export const useStarsBalanceStore = create<StarsBalanceState>()(
+  persist(
+    (set, get) => ({
   stars: 0,
   add: (amount) => {
     if (amount > 0) set((s) => ({ stars: s.stars + Math.floor(amount) }))
@@ -33,4 +37,12 @@ export const useStarsBalanceStore = create<StarsBalanceState>((set, get) => ({
     useWalletStore.getState().credit(starsToMinor(amount))
     return 'ok'
   },
-}))
+}),
+    {
+      name: 'sexydrop.stars',
+      version: 1,
+      storage: safeJsonStorage<Pick<StarsBalanceState, 'stars'>>(),
+      partialize: (s) => ({ stars: s.stars }),
+    },
+  ),
+)

@@ -397,4 +397,11 @@ describe('история ставок (4.3: записи в useGamesHistoryStore
       detail: 'краш x2.00',
     })
   })
+
+  it('максимальная ставка — 1000 TON: больше отклоняется, ровно 1000 принимается', () => {
+    useWalletStore.setState({ mode: 'demo', balances: { demo: 5_000_000, real: 0 } })
+    startCrashEngine()
+    expect(placeGramBet(1_000_001, 'req-max-over')).toMatchObject({ status: 'rejected', reason: 'invalid_amount' })
+    expect(placeGramBet(1_000_000, 'req-max-ok')).toEqual({ status: 'ok' })
+  })
 })

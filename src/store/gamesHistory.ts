@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
+import { safeJsonStorage } from '../lib/persistStorage'
 import type { Minor } from '../lib/money'
 import { useProfileStore } from './profile'
 
@@ -36,7 +38,9 @@ interface GamesHistoryState {
  * локальные demo-сервисы — только реальные результаты пользователя,
  * никакой синтетики. Серверная история раундов — TIER 7 (7.6).
  */
-export const useGamesHistoryStore = create<GamesHistoryState>((set) => ({
+export const useGamesHistoryStore = create<GamesHistoryState>()(
+  persist(
+    (set) => ({
   entries: [],
   push: (entry) => {
     // Кумулятивная статистика реальной игры (6.1/6.2) — одна запись на раунд.
@@ -48,4 +52,12 @@ export const useGamesHistoryStore = create<GamesHistoryState>((set) => ({
       entries: [{ ...entry, at: Date.now() }, ...state.entries].slice(0, MAX_ENTRIES),
     }))
   },
-}))
+}),
+    {
+      name: 'sexydrop.gamesHistory',
+      version: 1,
+      storage: safeJsonStorage<Pick<GamesHistoryState, 'entries'>>(),
+      partialize: (s) => ({ entries: s.entries }),
+    },
+  ),
+)

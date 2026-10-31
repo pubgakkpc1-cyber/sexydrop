@@ -16,16 +16,18 @@ import { cx } from '../lib/cx'
 import {
   commentPayload,
   createCryptoInvoice,
+  createStarsInvoice,
   cryptoInvoiceStatus,
   loadDepositConfig,
   minorToNano,
   newSecret,
+  starsPaymentStatus,
   tonComment,
   tonPaymentStatus,
   type DepositConfig,
 } from '../lib/deposits'
 import { getTonConnect } from '../lib/tonconnect'
-import { getWebApp } from '../lib/telegram'
+import { getWebApp, openOwnerChat } from '../lib/telegram'
 import { PENDING_TTL_MS, useDepositsStore } from '../store/deposits'
 import {
   BotIcon,
@@ -306,6 +308,81 @@ function CryptoBotPanel({ config }: { config: DepositConfig }) {
   )
 }
 
+/** «Stars»: настоящая оплата Telegram Stars через счёт бота, зачисление в TON по курсу. */
+function StarsRealPanel() {
+  const [input, setInput] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [sent, setSent] = useState(false)
+  const stars = parseStars(input)
+  const valid = isValidStars(stars)
+  const payout = valid ? starsToMinor(stars) : 0
+  const add = (n: number) => setInput(String(Math.min(STARS_MAX, (stars ?? 0) + n)))
+
+  const submit = async () => {
+    if (!valid) return
+    setError(null)
+    setBusy(true)
+    try {
+      const secret = newSecret()
+      const { invoice_url } = await createStarsInvoice(stars, secret)
+      useDepositsStore.getState().add({ secret, kind: 'stars', amount: payout, createdAt: Date.now() })
+      getWebApp()?.openInvoice?.(invoice_url, (status) => {
+        if (status === 'paid') setSent(true)
+        else if (status === 'cancelled' || status === 'failed') useDepositsStore.getState().remove(secret)
+      })
+      setInput('')
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Не удалось создать счёт')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className={styles.panel}>
+      <p className={styles.note}>
+        Оплата настоящими Telegram Stars. После оплаты баланс TON пополнится по курсу автоматически.
+      </p>
+      <label className={styles.label} htmlFor="dep-stars">
+        Количество Stars ({STARS_MIN} – 10 000)
+      </label>
+      <div className={styles.inputRow}>
+        <input
+          id="dep-stars"
+          className={styles.input}
+          inputMode="numeric"
+          placeholder="0"
+          value={input}
+          onChange={(e) => setInput(e.target.value.replace(/[^\d]/g, ''))}
+        />
+        <StarIcon className={styles.inputIcon} aria-hidden />
+      </div>
+      <div className={styles.presetsRow}>
+        {STARS_PRESETS.map((p) => (
+          <button key={p.label} type="button" className={styles.preset} onClick={() => add(p.value)}>
+            {p.label}
+          </button>
+        ))}
+      </div>
+      {valid && (
+        <p className={styles.rate}>
+          Вы получите <strong>{formatMinor(payout)} TON</strong> · курс {STARS_PER_TON} Stars = 1 TON
+        </p>
+      )}
+      <button type="button" className={styles.primary} disabled={!valid || busy || payout <= 0} onClick={() => void submit()}>
+        Оплатить Stars
+      </button>
+      {sent && <p className={styles.rate}>Оплата получена — зачисляем на баланс…</p>}
+      {error && (
+        <p className={styles.note} role="alert">
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
 /**
  * Следит за неподтверждёнными платежами (TON и CryptoBot) и зачисляет оплаченные.
  * Пока открыт экран, опрашивает сервер каждые 4 секунды; незавершённые платежи
@@ -324,9 +401,11 @@ function usePendingDeposits(onPaid: (minor: Minor) => void) {
         }
         try {
           const res =
-            p.kind === 'ton' || p.invoiceId === undefined
-              ? await tonPaymentStatus(p.secret)
-              : await cryptoInvoiceStatus(p.invoiceId, p.secret)
+            p.kind === 'stars'
+              ? await starsPaymentStatus(p.secret)
+              : p.kind === 'ton' || p.invoiceId === undefined
+                ? await tonPaymentStatus(p.secret)
+                : await cryptoInvoiceStatus(p.invoiceId, p.secret)
           if (res.status === 'paid') {
             if (markCredited(p.secret)) onPaid(res.amount_minor)
           } else if (res.status === 'expired') {
@@ -446,23 +525,23 @@ function GiftsPanel() {
             <li>
               <span className={styles.stepNum}>1</span>
               <div>
-                <strong>Откройте бота</strong>
-                <p>Нажмите кнопку ниже, чтобы открыть нашего бота @sexydropbot.</p>
+                <strong>Откройте аккаунт менеджера</strong>
+                <p>Нажмите кнопку ниже, чтобы открыть @SexyDropOwner.</p>
               </div>
             </li>
             <li>
               <span className={styles.stepNum}>2</span>
               <div>
                 <strong>Отправьте подарок</strong>
-                <p>Отправьте подарок напрямую боту.</p>
+                <p>Отправьте подарок в личные сообщения @SexyDropOwner.</p>
               </div>
             </li>
             <li>
               <span className={styles.stepNum}>3</span>
               <div>
-                <strong>Подарок добавлен в инвентарь</strong>
+                <strong>Менеджер зачислит подарок</strong>
                 <p>
-                  Подарок появится в инвентаре в течение нескольких секунд. Затем вы сможете быстро
+                  Менеджер проверит подарок и добавит его в ваш инвентарь. Затем вы сможете
                   продать его за баланс TON.
                 </p>
               </div>
@@ -472,7 +551,7 @@ function GiftsPanel() {
             <li>
               <CheckIcon className={styles.perkIcon} aria-hidden />
               <span>
-                <b>Мгновенная обработка:</b> подарки появляются в инвентаре сразу после отправки
+                <b>Отправка напрямую:</b> подарок уходит на аккаунт @SexyDropOwner
               </span>
             </li>
             <li>
@@ -485,12 +564,11 @@ function GiftsPanel() {
         </div>
       )}
 
-      <button type="button" className={styles.primary} disabled>
-        Приём подарков скоро
+      <button type="button" className={styles.primary} onClick={openOwnerChat}>
+        Открыть @SexyDropOwner
       </button>
       <p className={styles.note}>
-        Приём подарков включится после подключения сервера — сейчас кнопка недоступна, чтобы не
-        вводить в заблуждение.
+        Зачисление подарков выполняет менеджер вручную после получения подарка.
       </p>
     </div>
   )
@@ -664,7 +742,12 @@ export function DepositScreen() {
         ) : (
           <TonPanel via="bot" onDone={finish} locked={config === undefined} />
         ))}
-      {tab === 'stars' && <StarsPanel onDone={finish} />}
+      {tab === 'stars' &&
+        (config?.stars && getWebApp()?.openInvoice ? (
+          <StarsRealPanel />
+        ) : (
+          <StarsPanel onDone={finish} />
+        ))}
       {tab === 'gifts' && <GiftsPanel />}
       {tab === 'convert' && <ConvertPanel onDone={finish} />}
     </div>

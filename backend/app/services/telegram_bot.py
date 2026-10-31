@@ -186,11 +186,42 @@ async def _set_menu_button(chat_id: int) -> None:
         log.warning("setChatMenuButton failed: %s", exc)
 
 
+async def _answer_pre_checkout(query: dict[str, Any]) -> bool:
+    """Подтверждает оплату Stars только для наших счетов (payload «sd-stars-…», валюта XTR)."""
+    ok = str(query.get("invoice_payload", "")).startswith("sd-stars-") and query.get("currency") == "XTR"
+    body: dict[str, Any] = {"pre_checkout_query_id": query.get("id"), "ok": ok}
+    if not ok:
+        body["error_message"] = "Неизвестный счёт"
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            await client.post(f"{_api_url()}/answerPreCheckoutQuery", json=body)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("answerPreCheckoutQuery failed: %s", exc)
+    return ok
+
+
+def _record_payment(payment: dict[str, Any]) -> None:
+    payload = str(payment.get("invoice_payload", ""))
+    total = payment.get("total_amount")
+    if payload.startswith("sd-stars-") and payment.get("currency") == "XTR" and isinstance(total, int):
+        from app.services import deposit_service
+
+        deposit_service.paid_stars[payload] = total
+        log.info("stars payment recorded: %s stars", total)
+
+
 async def handle_update(update: dict[str, Any]) -> bool:
     """Обработка входящего апдейта: на любое личное сообщение (в т.ч. /start) — приветствие."""
+    pre = update.get("pre_checkout_query")
+    if isinstance(pre, dict):
+        return await _answer_pre_checkout(pre)
     message = update.get("message")
     if not isinstance(message, dict):
         return False
+    payment = message.get("successful_payment")
+    if isinstance(payment, dict):
+        _record_payment(payment)
+        return True
     chat = message.get("chat") or {}
     if chat.get("type") not in (None, "private"):
         return False
@@ -214,7 +245,7 @@ async def register_webhook() -> bool:
         async with httpx.AsyncClient(timeout=15.0) as client:
             res = await client.post(
                 f"{_api_url()}/setWebhook",
-                json={"url": url, "allowed_updates": ["message"], "drop_pending_updates": False},
+                json={"url": url, "allowed_updates": ["message", "pre_checkout_query"], "drop_pending_updates": False},
             )
         ok = bool(res.json().get("ok"))
         log.info("telegram webhook registered: %s", ok)

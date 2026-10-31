@@ -52,6 +52,7 @@ def config() -> dict[str, Any]:
     return {
         "ton_address": s.ton_deposit_address or None,
         "cryptobot": bool(s.cryptobot_token),
+        "stars": bool(s.bot_token),
         "min_minor": MIN_DEPOSIT_MINOR,
         "max_minor": MAX_DEPOSIT_MINOR,
     }
@@ -160,3 +161,57 @@ async def ton_payment_status(secret: str) -> dict[str, Any]:
         if minor >= MIN_DEPOSIT_MINOR:
             return {"status": "paid", "amount_minor": min(minor, MAX_DEPOSIT_MINOR)}
     return {"status": "pending"}
+
+
+# ------------------------------------------------------------------- Stars ----
+
+STARS_PER_TON = 175
+STARS_MIN = 10
+STARS_MAX = 10_000
+
+# payload счёта → сколько Stars реально оплачено (заполняется вебхуком бота).
+# Хранится в памяти процесса: после перезапуска сервера неподтверждённые оплаты теряются.
+paid_stars: dict[str, int] = {}
+
+
+def stars_to_minor(stars: int) -> int:
+    return (stars * MINOR_PER_TON) // STARS_PER_TON
+
+
+def stars_payload(secret: str) -> str:
+    return "sd-stars-" + hashlib.sha256(f"sexydrop-stars:{secret}".encode()).hexdigest()[:24]
+
+
+async def create_stars_invoice(stars: int, secret: str) -> dict[str, Any]:
+    if not STARS_MIN <= stars <= STARS_MAX:
+        raise DepositError(400, "Количество Stars вне допустимых пределов")
+    s = get_settings()
+    if not s.bot_token:
+        raise DepositError(503, "Оплата Stars не настроена")
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            res = await client.post(
+                f"https://api.telegram.org/bot{s.bot_token}/createInvoiceLink",
+                json={
+                    "title": "Пополнение SEXY DROP",
+                    "description": f"{stars} Stars → {stars_to_minor(stars) / MINOR_PER_TON:.3f} TON на баланс",
+                    "payload": stars_payload(secret),
+                    "currency": "XTR",
+                    "prices": [{"label": "Stars", "amount": stars}],
+                },
+            )
+        body = res.json()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("createInvoiceLink failed: %s", exc)
+        raise DepositError(502, "Telegram недоступен") from exc
+    if not body.get("ok"):
+        log.warning("createInvoiceLink error: %s", body.get("description"))
+        raise DepositError(502, "Telegram отклонил счёт")
+    return {"invoice_url": body["result"]}
+
+
+def stars_status(secret: str) -> dict[str, Any]:
+    stars = paid_stars.get(stars_payload(secret))
+    if stars is None:
+        return {"status": "pending"}
+    return {"status": "paid", "amount_minor": stars_to_minor(stars)}

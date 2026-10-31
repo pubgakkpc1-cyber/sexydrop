@@ -4,6 +4,7 @@ import type { Minor } from './money'
 export interface DepositConfig {
   ton_address: string | null
   cryptobot: boolean
+  stars: boolean
   min_minor: Minor
   max_minor: Minor
 }
@@ -59,6 +60,20 @@ export async function cryptoInvoiceStatus(invoiceId: number, secret: string): Pr
   const res = await fetch(`/api/deposits/cryptobot/invoice/${invoiceId}?secret=${encodeURIComponent(secret)}`, {
     cache: 'no-store',
   })
+  return json(res)
+}
+
+export async function createStarsInvoice(stars: number, secret: string): Promise<{ invoice_url: string }> {
+  const res = await fetch('/api/deposits/stars/invoice', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ stars, secret }),
+  })
+  return json(res)
+}
+
+export async function starsPaymentStatus(secret: string): Promise<PaymentStatus> {
+  const res = await fetch(`/api/deposits/stars/status?secret=${encodeURIComponent(secret)}`, { cache: 'no-store' })
   return json(res)
 }
 

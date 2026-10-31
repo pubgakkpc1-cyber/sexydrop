@@ -37,10 +37,10 @@ describe('InventoryScreen (пустой и заполненный инвента
     expect(screen.queryByText(/шт\./)).not.toBeInTheDocument()
   })
 
-  it('плашка «Отправьте подарки боту @sexydropbot»: приём пока недоступен', () => {
+  it('плашка «Отправьте подарки @SexyDropOwner» с активной кнопкой', () => {
     renderScreen()
-    expect(screen.getByText(/Отправьте подарки боту @sexydropbot/)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Скоро' })).toBeDisabled()
+    expect(screen.getByText(/Отправьте подарки @SexyDropOwner/)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Отправить' })).toBeEnabled()
   })
 
   it('CTA «Открыть кейсы» реально ведёт на главную', async () => {

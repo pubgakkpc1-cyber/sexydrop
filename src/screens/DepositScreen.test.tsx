@@ -99,12 +99,12 @@ describe('DepositScreen (пополнение баланса)', () => {
     expect(useWalletStore.getState().getBalance()).toBe(106_000)
   })
 
-  it('Подарки: шаги раскрываются, приём подарков честно недоступен', async () => {
+  it('Подарки: шаги раскрываются, кнопка ведёт на @SexyDropOwner', async () => {
     renderScreen()
     await user.click(screen.getByRole('tab', { name: 'Подарки' }))
     expect(screen.getByText('Пополнить подарками')).toBeInTheDocument()
     expect(screen.getByText('Отправьте подарок')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Приём подарков скоро' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Открыть @SexyDropOwner' })).toBeEnabled()
 
     await user.click(screen.getByRole('button', { name: /Как это работает/ }))
     expect(screen.queryByText('Отправьте подарок')).not.toBeInTheDocument()

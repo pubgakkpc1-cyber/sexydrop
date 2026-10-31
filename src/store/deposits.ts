@@ -6,7 +6,7 @@ import type { Minor } from '../lib/money'
 export interface PendingDeposit {
   /** Секрет платежа: по нему сервер подтверждает оплату, никому не показывается. */
   secret: string
-  kind: 'ton' | 'crypto'
+  kind: 'ton' | 'crypto' | 'stars'
   /** Номер счёта CryptoBot (только для kind = crypto). */
   invoiceId?: number
   /** Сколько ожидаем, minor (для подсказки пользователю). */

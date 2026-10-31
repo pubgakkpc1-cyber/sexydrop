@@ -39,6 +39,7 @@ interface TelegramWebApp {
   contentSafeAreaInset?: { top: number; bottom: number; left: number; right: number }
   onEvent?: (event: string, cb: () => void) => void
   openTelegramLink?: (url: string) => void
+  openInvoice?: (url: string, cb?: (status: 'paid' | 'cancelled' | 'failed' | 'pending') => void) => void
 }
 
 declare global {
@@ -136,4 +137,14 @@ export function shareTelegramLink(link: string, text: string): void {
 /** Параметр запуска мини-аппа (ссылка t.me/bot?startapp=ref-123) — нужен для реферальной программы. */
 export function getStartParam(): string | undefined {
   return getWebApp()?.initDataUnsafe?.start_param
+}
+
+/** Аккаунт менеджера: на него отправляют подарки для пополнения. */
+export const OWNER_HANDLE = '@SexyDropOwner'
+const OWNER_URL = 'https://t.me/SexyDropOwner'
+
+export function openOwnerChat(): void {
+  const webApp = getWebApp()
+  if (webApp?.openTelegramLink) webApp.openTelegramLink(OWNER_URL)
+  else window.open(OWNER_URL, '_blank', 'noopener')
 }

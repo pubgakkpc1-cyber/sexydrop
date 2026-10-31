@@ -59,3 +59,23 @@ async def ton_status(
         return await svc.ton_payment_status(secret)
     except svc.DepositError as exc:
         raise _raise(exc) from exc
+
+
+class StarsRequest(BaseModel):
+    stars: int = Field(ge=1)
+    secret: str = _SECRET
+
+
+@router.post("/stars/invoice")
+async def stars_invoice(payload: StarsRequest) -> dict[str, Any]:
+    try:
+        return await svc.create_stars_invoice(payload.stars, payload.secret)
+    except svc.DepositError as exc:
+        raise _raise(exc) from exc
+
+
+@router.get("/stars/status")
+async def stars_status(
+    secret: str = Query(min_length=16, max_length=64, pattern=r"^[A-Za-z0-9_-]+$"),
+) -> dict[str, Any]:
+    return svc.stars_status(secret)

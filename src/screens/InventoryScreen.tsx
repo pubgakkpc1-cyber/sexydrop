@@ -8,6 +8,7 @@ import { Button, Input } from '../components/ui'
 import { sellItem } from '../services/demoInventoryService'
 import { makeRequestId } from '../lib/requestId'
 import { formatMinor } from '../lib/money'
+import { openOwnerChat, OWNER_HANDLE } from '../lib/telegram'
 import styles from './screens.module.css'
 import filterStyles from './InventoryScreen.module.css'
 
@@ -78,17 +79,16 @@ export function InventoryScreen() {
 
       <div className={filterStyles.sendBanner}>
         <div className={filterStyles.sendText}>
-          <strong>Отправьте подарки боту @sexydropbot</strong>
+          <strong>Отправьте подарки {OWNER_HANDLE}</strong>
           <span>Используйте их в Апгрейде или Быстрой продаже</span>
         </div>
         <button
           type="button"
           className={filterStyles.sendBtn}
-          disabled
-          title="Приём подарков включится после подключения сервера"
+          onClick={openOwnerChat}
         >
           <ShareIcon className={filterStyles.sendIcon} aria-hidden />
-          Скоро
+          Отправить
         </button>
       </div>
 
@@ -150,7 +150,7 @@ export function InventoryScreen() {
       )}
 
       <p className={filterStyles.helpCard}>
-        Нужна помощь с подарками? Напишите нам в боте @sexydropbot — поддержка поможет.
+        Нужна помощь с подарками? Напишите {OWNER_HANDLE} — поддержка поможет.
       </p>
 
     </div>

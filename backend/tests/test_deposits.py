@@ -105,3 +105,31 @@ async def test_ton_status_matches_comment_and_value(monkeypatch):
         assert await svc.ton_payment_status("c" * 32) == {"status": "pending"}
     finally:
         get_settings.cache_clear()
+
+
+def test_stars_conversion_and_status():
+    assert svc.stars_to_minor(175) == 1000
+    assert svc.stars_to_minor(10) == 57
+    svc.paid_stars.clear()
+    assert svc.stars_status(SECRET) == {"status": "pending"}
+    svc.paid_stars[svc.stars_payload(SECRET)] = 350
+    assert svc.stars_status(SECRET) == {"status": "paid", "amount_minor": 2000}
+    assert svc.stars_status("d" * 32) == {"status": "pending"}
+
+
+@pytest.mark.asyncio
+async def test_successful_payment_is_recorded_and_precheckout_validated(monkeypatch):
+    from app.services import telegram_bot
+
+    svc.paid_stars.clear()
+    payload = svc.stars_payload(SECRET)
+    handled = await telegram_bot.handle_update(
+        {"message": {"chat": {"id": 1, "type": "private"},
+                     "successful_payment": {"invoice_payload": payload, "currency": "XTR", "total_amount": 100}}}
+    )
+    assert handled and svc.paid_stars[payload] == 100
+    # чужой payload не записывается
+    await telegram_bot.handle_update(
+        {"message": {"chat": {"id": 1}, "successful_payment": {"invoice_payload": "evil", "currency": "XTR", "total_amount": 5}}}
+    )
+    assert "evil" not in svc.paid_stars

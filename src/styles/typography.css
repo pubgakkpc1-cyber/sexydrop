@@ -93,3 +93,26 @@ html body [class*='sectionTitle' i],
 html body [class*='FreeCases'] [class*='title' i] {
   font-size: 15px;
 }
+
+/* --- Узкие телефоны: Unbounded шире, поэтому размеры ужимаются ступенями --- */
+@media (max-width: 380px) {
+  html body [class*='title' i]:not([class*='subtitle' i]) {
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 345px) {
+  html body [class*='balanceValue' i] {
+    font-size: 18px;
+  }
+
+  html body [class*='depositBtn' i] {
+    font-size: 11px;
+    padding: 0 10px;
+    height: 36px;
+  }
+
+  html body [class*='depositIcon' i] {
+    display: none;
+  }
+}

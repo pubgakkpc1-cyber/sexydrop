@@ -5,8 +5,8 @@
 
 :root {
   /* --- Типографика (зафиксирована, см. AI_RULES.md) --- */
-  --font-display: 'Unbounded', 'Golos Text', system-ui, sans-serif;
-  --font-body: 'Golos Text', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Unbounded', 'Golos Text', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-body: 'Golos Text', Roboto, 'Helvetica Neue', Arial, sans-serif;
 
   /* --- Цвета: поверхности (Премиальный матовый графит / глубокий серый сланцевый) --- */
   --bg: #131212;

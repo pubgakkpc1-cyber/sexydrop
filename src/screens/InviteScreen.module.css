@@ -298,3 +298,14 @@
     white-space: normal;
   }
 }
+
+@media (max-width: 400px) {
+  .title {
+    font-size: 18px;
+  }
+
+  .bonus {
+    flex-wrap: wrap;
+    white-space: normal;
+  }
+}

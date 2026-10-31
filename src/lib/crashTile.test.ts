@@ -10,15 +10,19 @@ describe('tileGiftFor (плитка ставки Ракеты)', () => {
   })
 
   it('берёт самый дорогой NFT не дороже выплаты и меняется по мере роста', () => {
-    expect(tileGiftFor(7_000, 'a')?.priceMinor).toBe(7_000) // Snoop Dogg
-    expect(tileGiftFor(7_001, 'a')?.priceMinor).toBe(7_000)
-    expect(tileGiftFor(194_300, 'a')?.priceMinor).toBe(194_300) // Heroic Helmet
-    expect(tileGiftFor(99_999_999, 'a')?.priceMinor).toBe(6_720_000) // Plush Pepe
+    const snoop = giftById.get('snoop_dogg-1')!.priceMinor
+    const helmet = giftById.get('heroic_helmet-1')!.priceMinor
+    const pepe = giftById.get('plush_pepe-1')!.priceMinor
+    expect(tileGiftFor(snoop, 'a')?.priceMinor).toBe(snoop)
+    expect(tileGiftFor(snoop + 1, 'a')?.priceMinor).toBe(snoop)
+    expect(tileGiftFor(helmet, 'a')?.priceMinor).toBe(helmet)
+    expect(tileGiftFor(99_999_999, 'a')?.priceMinor).toBe(pepe)
   })
 
   it('nftPriceFor — та же цена, по которой сервис платит NFT, остаток уходит в TON', () => {
     expect(nftPriceFor(4_999)).toBeUndefined()
-    expect(nftPriceFor(7_450)).toBe(7_000)
+    const snoop = giftById.get('snoop_dogg-1')!.priceMinor
+    expect(nftPriceFor(snoop + 450)).toBe(snoop)
   })
 
   it('если цена совпала с поставленным NFT — берётся именно он', () => {

@@ -95,19 +95,36 @@ export function UpgradeScreen() {
     if (spin === null && sourceUid !== null && source === null) setSourceUid(null)
   }, [source, sourceUid, spin])
 
+  // Цель для каждого икса. Предметов в каталоге мало и цены сильно разнесены, поэтому ближайшая цель
+  // у соседних иксов часто совпадала — и кнопки «ничего не делали». Теперь цели подбираются по порядку
+  // и всегда РАЗНЫЕ: каждый следующий икс даёт более дорогую цель, чем предыдущий.
+  const chipTargets = useMemo(() => {
+    const map = new Map<number, Gift | null>()
+    if (!sourceGift) return map
+    const above = allTargets.filter((g) => g.priceMinor > sourceGift.priceMinor)
+    let floorIdx = 0
+    for (const mult of MULTIPLIERS) {
+      const want = sourceGift.priceMinor * mult
+      let bestIdx = -1
+      for (let i = floorIdx; i < above.length; i += 1) {
+        const dist = Math.abs(Math.log(above[i]!.priceMinor / want))
+        if (bestIdx === -1 || dist < Math.abs(Math.log(above[bestIdx]!.priceMinor / want))) bestIdx = i
+      }
+      if (bestIdx === -1) {
+        map.set(mult, null)
+      } else {
+        map.set(mult, above[bestIdx]!)
+        floorIdx = bestIdx + 1
+      }
+    }
+    return map
+  }, [allTargets, sourceGift])
+
   const pickMultiplier = (mult: number) => {
-    if (!sourceGift) return
-    const want = sourceGift.priceMinor * mult
-    // ближайшая по цене цель к желаемому иксу
-    let best: Gift | null = null
-    for (const g of allTargets) {
-      if (g.priceMinor <= sourceGift.priceMinor) continue
-      if (!best || Math.abs(g.priceMinor - want) < Math.abs(best.priceMinor - want)) best = g
-    }
-    if (best) {
-      hapticImpact('light')
-      setTargetId(best.id)
-    }
+    const target = chipTargets.get(mult)
+    if (!target) return
+    hapticImpact('light')
+    setTargetId(target.id)
   }
 
   const confirm = () => {
@@ -256,8 +273,9 @@ export function UpgradeScreen() {
           <button
             key={m}
             type="button"
-            className={styles.multChip}
-            disabled={!sourceGift || spinning}
+            className={cx(styles.multChip, targetId !== null && chipTargets.get(m)?.id === targetId && styles.multChipActive)}
+            disabled={!sourceGift || spinning || !chipTargets.get(m)}
+            aria-pressed={targetId !== null && chipTargets.get(m)?.id === targetId}
             onClick={() => pickMultiplier(m)}
           >
             x{m}

@@ -58,3 +58,8 @@
 - Аккаунт выдач («Секси менеджер», авто-выдача подарков) использует ту же айдентику; его аватарка и
   брендовые картинки бота лежат в `public/brand/` (`bot-avatar.png`, `bot-welcome.png`,
   `manager-avatar.png`). Использовать только эти хэндлы в ссылках, текстах и документах.
+- **Премиум-эмодзи бота:** свой пак `t.me/addemoji/sexydrop_by_sexydropbot` (создан ботом; иконки в
+  `public/brand/emoji/`, id в `scripts/bot_emoji_ids.json`). Приветствие `/start` (баннер + подпись +
+  кнопки) собирает `scripts/bot_welcome.py`, его вызывает `scripts/telegram_bot_poller.py`
+  (запускается вручную: `python scripts/telegram_bot_poller.py`, Dockerfile его не стартует).
+  Новое эмодзи: добавить PNG 100×100 в пак через `addStickerToSet` и вписать id в json.

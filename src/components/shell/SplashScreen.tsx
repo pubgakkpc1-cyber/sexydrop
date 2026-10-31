@@ -1,19 +1,26 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { getTelegramUser, hapticImpact } from '../../lib/telegram'
 import { UserAvatar } from '../ui/UserAvatar'
-import { FlameIcon, SparkleIcon } from './icons'
+import { FlameIcon } from './icons'
 import styles from './SplashScreen.module.css'
 
 interface SplashScreenProps {
   onFinish: () => void
 }
 
-const FAN_GIFTS = [
-  '/gifts/heart_locket_1.png',
-  '/gifts/plush_pepe_1.png',
-  '/gifts/mini_oscar_1.png',
-] as const
+const DURATION_MS = 2400
 const WORDMARK = 'SEXY DROP'.split('')
+/** Подарки вылетают из точки удара в свои места (dx/dy в px от центра, поворот). */
+const FAN = [
+  { src: '/gifts/heart_locket_1.png', x: -108, y: -150, r: -14 },
+  { src: '/gifts/plush_pepe_1.png', x: 108, y: -168, r: 12 },
+  { src: '/gifts/mini_oscar_1.png', x: -112, y: -22, r: 10 },
+  { src: '/gifts/ion_gem_1.png', x: 112, y: -10, r: -10 },
+] as const
+const SPARKS = Array.from({ length: 16 }, (_, i) => ({
+  a: (i / 16) * 360 + (i % 2) * 8,
+  d: 110 + (i % 4) * 34,
+}))
 
 export function SplashScreen({ onFinish }: SplashScreenProps) {
   const [progress, setProgress] = useState(0)
@@ -23,14 +30,19 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
   const userName = tgUser?.first_name || tgUser?.username || 'Игрок'
 
   useEffect(() => {
-    // Плавное заполнение прогресс-бара от 0 до 100 за ~1.5 секунды
     const startTime = performance.now()
-    const duration = 1400
+    let impacted = false
 
     const interval = setInterval(() => {
       const elapsed = performance.now() - startTime
-      const current = Math.min(100, Math.round((elapsed / duration) * 100))
+      const current = Math.min(100, Math.round((elapsed / DURATION_MS) * 100))
       setProgress(current)
+
+      // Момент удара капли — тактильный отклик
+      if (!impacted && elapsed >= 520) {
+        impacted = true
+        hapticImpact('heavy')
+      }
 
       if (current >= 100) {
         clearInterval(interval)
@@ -66,46 +78,76 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
       }}
     >
       <div className={styles.ambientGlow} aria-hidden />
+      <div className={styles.flash} aria-hidden />
 
-      {/* Веер NFT-подарков: «выпадают» снизу и парят */}
-      <div className={styles.giftFan} aria-hidden>
-        {FAN_GIFTS.map((src, i) => (
-          <img key={src} src={src} alt="" className={`${styles.fanCard} ${styles[`fan${i}`]}`} />
+      {/* Сцена: всё, что происходит в точке удара, трясётся при ударе */}
+      <div className={styles.stage}>
+        {/* Падающая капля со шлейфом */}
+        <div className={styles.dropWrap} aria-hidden>
+          <span className={styles.dropTrail} />
+          <svg viewBox="0 0 24 24" className={styles.dropSvg}>
+            <path d="M12 1.8c3.9 4.6 6.4 8 6.4 11.6a6.4 6.4 0 0 1-12.8 0c0-3.6 2.5-7 6.4-11.6z" fill="currentColor" />
+          </svg>
+        </div>
+
+        {/* Ударные кольца */}
+        <span className={`${styles.ring} ${styles.ring1}`} aria-hidden />
+        <span className={`${styles.ring} ${styles.ring2}`} aria-hidden />
+        <span className={`${styles.ring} ${styles.ring3}`} aria-hidden />
+
+        {/* Искры разлетаются от удара */}
+        {SPARKS.map((s, i) => (
+          <span
+            key={i}
+            className={styles.spark}
+            aria-hidden
+            style={{ '--a': `${s.a}deg`, '--d': `${s.d}px`, animationDelay: `${0.52 + (i % 3) * 0.03}s` } as CSSProperties}
+          />
         ))}
+
+        {/* Подарки вылетают веером */}
+        {FAN.map((g, i) => (
+          <img
+            key={g.src}
+            src={g.src}
+            alt=""
+            aria-hidden
+            className={styles.fanCard}
+            style={
+              { '--x': `${g.x}px`, '--y': `${g.y}px`, '--r': `${g.r}deg`, '--i': i } as CSSProperties
+            }
+          />
+        ))}
+
+        <div className={styles.avatarWrapper}>
+          <div className={styles.rotatingRing} aria-hidden />
+          <div className={styles.avatarInner}>
+            <UserAvatar size={80} />
+          </div>
+        </div>
       </div>
 
       <div className={styles.content}>
-        {/* Моушн-аватар с вращающимся градиентным кольцом и пульсирующими волнами */}
-        <div className={styles.avatarWrapper}>
-          <div className={styles.pulseWave} aria-hidden />
-          <div className={styles.pulseWaveSecond} aria-hidden />
-          <div className={styles.rotatingRing} aria-hidden />
-
-          <div className={styles.avatarInner}>
-            <UserAvatar size={80} />
-            <span className={styles.badgeStar} aria-hidden>
-              <SparkleIcon style={{ width: '13px', height: '13px', color: '#c35c61' }} />
-            </span>
-          </div>
-        </div>
-
-        {/* Логотип: буквы по очереди «падают» (drop) */}
+        {/* Логотип: буквы вылетают после удара, затем проходит блик */}
         <div className={styles.wordmark} aria-hidden>
           {WORDMARK.map((ch, i) => (
-            <span key={i} className={styles.wordLetter} style={{ animationDelay: `${0.25 + i * 0.07}s` }}>
+            <span
+              key={i}
+              className={styles.wordLetter}
+              style={{ animationDelay: `${0.62 + i * 0.05}s` }}
+            >
               {ch === ' ' ? ' ' : ch}
             </span>
           ))}
+          <span className={styles.wordShine} />
         </div>
 
-        {/* Приветствие с именем пользователя */}
         <h1 className={styles.greetingTitle}>Привет, {userName}!</h1>
         <div className={styles.brandSub}>
           <FlameIcon style={{ width: '14px', height: '14px', color: '#be5156' }} />
           <span>SEXY DROP Mini App</span>
         </div>
 
-        {/* Полоса загрузки с динамическим статусом */}
         <div className={styles.progressContainer}>
           <div className={styles.progressBarTrack}>
             <div className={styles.progressBarFill} style={{ width: `${progress}%` }}>

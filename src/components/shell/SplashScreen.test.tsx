@@ -52,12 +52,12 @@ describe('SplashScreen (Моушн-загрузка и аватар)', () => {
     expect(onFinish).toHaveBeenCalled()
   })
 
-  it('автоматически завершает загрузку и вызывает onFinish через 1.8с', () => {
+  it('автоматически завершает загрузку и вызывает onFinish через 2.8с', () => {
     const onFinish = vi.fn()
     render(<SplashScreen onFinish={onFinish} />)
 
     act(() => {
-      vi.advanceTimersByTime(1500)
+      vi.advanceTimersByTime(2500)
     })
 
     act(() => {

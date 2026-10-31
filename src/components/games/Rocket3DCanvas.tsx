@@ -613,7 +613,7 @@ export function Rocket3DCanvas({
   // Инициализация фоновых звёзд по всему экрану (Starfield)
   useEffect(() => {
     const stars: Star[] = []
-    const count = 42
+    const count = 16
     for (let i = 0; i < count; i++) {
       const layer = Math.random() < 0.6 ? 1 : Math.random() < 0.85 ? 2 : 3
       stars.push({
@@ -667,9 +667,9 @@ export function Rocket3DCanvas({
         // 1. Создаём частицы огненного взрыва
         const exp: ExplosionParticle[] = []
         const colors = ['#ffffff', '#c7696d', '#d3878b', '#c35c61', '#ce6565', '#c96e72']
-        for (let i = 0; i < 26; i++) {
+        for (let i = 0; i < 12; i++) {
           const angle = Math.random() * Math.PI * 2
-          const speed = 2.5 + Math.random() * 10
+          const speed = 2.5 + Math.random() * 9
           const maxLife = 40 + Math.floor(Math.random() * 40)
           exp.push({
             x: rx,
@@ -834,7 +834,8 @@ export function Rocket3DCanvas({
       const height = currentProps.fullscreen && typeof window !== 'undefined'
         ? window.innerHeight
         : (canvas.clientHeight || 280)
-      const dpr = Math.min(1.5, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)
+      const dprRaw = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1
+      const dpr = stateRef.current.lowQ ? 1 : Math.min(1.25, dprRaw)
 
       if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
         canvas.width = width * dpr
@@ -874,14 +875,15 @@ export function Rocket3DCanvas({
           currentPhase === 'flying' ? Math.min(6.5, 1.2 + Math.log2(Math.max(1, currentMult)) * 1.6) : 0.65
 
         ctx.save()
+        const starsMove = currentPhase !== 'crashed'
         for (const star of state.stars) {
-          star.x -= star.speed * flightSpeedFactor
+          if (starsMove) star.x -= star.speed * flightSpeedFactor
           if (star.x < 0) {
             star.x = width + Math.random() * 50
             star.y = Math.random() * height
           }
 
-          if (currentPhase === 'flying' && star.layer >= 2) {
+          if (currentPhase === 'flying' && star.layer >= 3) {
             const streakLen = Math.min(26, star.speed * flightSpeedFactor * 2.4)
             ctx.strokeStyle = `rgba(255, 255, 255, ${star.opacity * 0.7})`
             ctx.lineWidth = star.size * 0.7
@@ -1069,7 +1071,12 @@ export function Rocket3DCanvas({
         // Медленный вдох-выдох + рост «надува»; перед взрывом корпус раздувается до ×1.5
         const puff = state.inflate * (1 + Math.sin(state.time * 2.2) * 0.022)
         const swellK = swelling ? 1 + Math.pow(state.swellT / SWELL_DURATION, 2) * 0.5 : 1
-        ctx.scale(1.22 * breathe * swellK * (1 + (puff - 1) * 0.5), 1.22 * breathe * swellK * puff)
+        // Появление после отсчёта: масштаб 0.55 → перелёт 1.12 → 1.0 за ~0.7 c
+        const enterT = currentPhase === 'flying' ? Math.min(1, state.flightSeconds / 0.7) : 1
+        const c1 = 1.70158
+        const enterK = enterT >= 1 ? 1 : 0.55 + 0.45 * (1 + (c1 + 1) * Math.pow(enterT - 1, 3) + c1 * Math.pow(enterT - 1, 2))
+        ctx.globalAlpha = Math.min(1, 0.35 + enterT * 0.9)
+        ctx.scale(1.22 * breathe * swellK * enterK * (1 + (puff - 1) * 0.5), 1.22 * breathe * swellK * enterK * puff)
 
         drawCartoonRocket(ctx, skin, state.time, currentMult, !swelling)
 
@@ -1102,8 +1109,6 @@ export function Rocket3DCanvas({
           ctx.save()
           ctx.strokeStyle = `rgba(239, 68, 68, ${state.shockwaveAlpha})`
           ctx.lineWidth = 3
-          ctx.shadowColor = '#ce6565'
-          ctx.shadowBlur = 14
           ctx.beginPath()
           ctx.arc(rx, ry, state.shockwaveRadius, 0, Math.PI * 2)
           ctx.stroke()
@@ -1250,8 +1255,6 @@ export function Rocket3DCanvas({
 
           ctx.fillStyle = exp.color
           ctx.globalAlpha = exp.alpha
-          ctx.shadowColor = exp.color
-          ctx.shadowBlur = 6
 
           ctx.beginPath()
           ctx.arc(exp.x, exp.y, exp.size / 2, 0, Math.PI * 2)

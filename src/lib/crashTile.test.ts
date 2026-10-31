@@ -1,20 +1,24 @@
 import { describe, expect, it } from 'vitest'
 import { giftById } from '../data/catalog'
-import { tileGiftFor } from './crashTile'
+import { nftPriceFor, tileGiftFor } from './crashTile'
 import { MULT_TIER_STYLE, multTier } from './multTier'
 
 describe('tileGiftFor (плитка ставки Ракеты)', () => {
-  it('NFT только при точном совпадении цены; иначе значок TON (undefined)', () => {
+  it('ниже самого дешёвого NFT (5 TON) — значок NFT не показывается, рисуется TON', () => {
     expect(tileGiftFor(4_999, 'a')).toBeUndefined()
     expect(tileGiftFor(0, 'a')).toBeUndefined()
-    expect(tileGiftFor(20_000, 'a')).toBeUndefined() // между NFT — выплата будет в TON
-    expect(tileGiftFor(7_001, 'a')).toBeUndefined()
   })
 
-  it('точная цена NFT — показывается именно NFT этой цены', () => {
+  it('берёт самый дорогой NFT не дороже выплаты и меняется по мере роста', () => {
     expect(tileGiftFor(7_000, 'a')?.priceMinor).toBe(7_000) // Snoop Dogg
+    expect(tileGiftFor(7_001, 'a')?.priceMinor).toBe(7_000)
     expect(tileGiftFor(194_300, 'a')?.priceMinor).toBe(194_300) // Heroic Helmet
-    expect(tileGiftFor(6_720_000, 'a')?.priceMinor).toBe(6_720_000) // Plush Pepe
+    expect(tileGiftFor(99_999_999, 'a')?.priceMinor).toBe(6_720_000) // Plush Pepe
+  })
+
+  it('nftPriceFor — та же цена, по которой сервис платит NFT, остаток уходит в TON', () => {
+    expect(nftPriceFor(4_999)).toBeUndefined()
+    expect(nftPriceFor(7_450)).toBe(7_000)
   })
 
   it('если цена совпала с поставленным NFT — берётся именно он', () => {
@@ -23,7 +27,7 @@ describe('tileGiftFor (плитка ставки Ракеты)', () => {
   })
 
   it('детерминирован: один и тот же seed — одна и та же картинка', () => {
-    expect(tileGiftFor(7_000, 'player-1')?.id).toBe(tileGiftFor(7_000, 'player-1')?.id)
+    expect(tileGiftFor(30_000, 'player-1')?.id).toBe(tileGiftFor(30_000, 'player-1')?.id)
   })
 })
 

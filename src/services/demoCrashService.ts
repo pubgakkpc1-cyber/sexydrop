@@ -5,6 +5,7 @@ import { useInventoryStore } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
 import { useGamesHistoryStore } from '../store/gamesHistory'
 import { createRequestMemo } from '../lib/requestMemo'
+import { nftPriceFor } from '../lib/crashTile'
 import { recentCrashPoints, roundInfo, scheduleAt, sharedNow, syncClock } from './crashSchedule'
 import {
   MAX_HISTORY,
@@ -568,14 +569,18 @@ function cashoutAt(multiplier: number): CashoutResult {
     }
     const wonMinor = mulByMultiplier(s.myBet.valueMinor, multiplier)
 
-    // Ищем равноценный NFT подарок в каталоге
-    const matchingGift = gifts.find((g) => /-\d$/.test(g.id) && g.priceMinor === wonMinor)
-
+    // Выплата: самый дорогой NFT не дороже выигрыша уходит в инвентарь, остаток — TON на баланс.
+    // Если выигрыш дешевле любого NFT — всё начисляется в TON.
+    const nftPrice = nftPriceFor(wonMinor)
+    const matchingGift =
+      nftPrice === undefined
+        ? undefined
+        : gifts.find((g) => /-\d$/.test(g.id) && g.priceMinor === nftPrice)
     if (matchingGift) {
-      // Равноценный NFT подарок зачисляется в инвентарь игрока
       useInventoryStore.getState().addGifts([matchingGift.id], 'crash-win')
+      const rest = wonMinor - matchingGift.priceMinor
+      if (rest > 0) useWalletStore.getState().credit(rest)
     } else {
-      // Если равноценного NFT нет — выигрыш начисляется в TON на баланс
       useWalletStore.getState().credit(wonMinor)
     }
 

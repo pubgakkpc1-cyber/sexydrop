@@ -2661,3 +2661,47 @@
 .launchTitle {
   font-size: 24px;
 }
+
+
+/* ===== Ракетка: матовый фон, мало движения ===== */
+.screenStarfield {
+  opacity: 0.6;
+}
+
+.floaters {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floater {
+  position: absolute;
+  left: 0;
+  border-radius: 7px;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  opacity: 0.4;
+  object-fit: cover;
+  animation-name: floaterDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: transform;
+}
+
+@keyframes floaterDrift {
+  0% { transform: translate3d(108vw, 0, 0) rotate(8deg); }
+  50% { transform: translate3d(50vw, -14px, 0) rotate(-6deg); }
+  100% { transform: translate3d(-14vw, 6px, 0) rotate(10deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .floater { animation: none; left: 70%; }
+}
+
+/* Производительность: никакого стеклянного размытия поверх анимированного холста (матовый стиль) */
+.screen,
+.screen * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}

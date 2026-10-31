@@ -118,6 +118,29 @@ function formatTonMaxOneDecimal(minor: number): string {
   return Number.isInteger(val) ? `${val}` : val.toFixed(1)
 }
 
+/** Три мелких NFT медленно плывут по фону (чистый CSS-transform, без нагрузки на canvas). */
+const FLOATERS = [
+  { src: '/gifts/plush_pepe_1.png', top: '14%', size: 26, dur: 34, delay: 0 },
+  { src: '/gifts/heart_locket_1.png', top: '27%', size: 22, dur: 44, delay: -16 },
+  { src: '/gifts/ion_gem_1.png', top: '36%', size: 24, dur: 38, delay: -27 },
+] as const
+
+function FloatingNfts() {
+  return (
+    <div className={styles.floaters} aria-hidden>
+      {FLOATERS.map((f) => (
+        <img
+          key={f.src}
+          src={f.src}
+          alt=""
+          className={styles.floater}
+          style={{ top: f.top, width: f.size, height: f.size, animationDuration: `${f.dur}s`, animationDelay: `${f.delay}s` }}
+        />
+      ))}
+    </div>
+  )
+}
+
 function ScreenStarfield() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
@@ -128,10 +151,10 @@ function ScreenStarfield() {
     if (!ctx) return
 
     let animId: number
-    const dpr = Math.min(2, typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1)
+    const dpr = 1
 
     const stars: Array<{ x: number; y: number; size: number; speed: number; opacity: number }> = []
-    const count = 85
+    const count = 18
     const initW = typeof window !== 'undefined' ? window.innerWidth : 420
     const initH = typeof window !== 'undefined' ? window.innerHeight : 840
 
@@ -139,9 +162,9 @@ function ScreenStarfield() {
       stars.push({
         x: Math.random() * initW,
         y: Math.random() * initH,
-        size: 0.8 + Math.random() * 2.2,
-        speed: 0.35 + Math.random() * 1.6,
-        opacity: 0.25 + Math.random() * 0.7,
+        size: 0.8 + Math.random() * 1.6,
+        speed: 0.2 + Math.random() * 0.7,
+        opacity: 0.2 + Math.random() * 0.45,
       })
     }
 
@@ -406,6 +429,7 @@ export function CrashScreen() {
     <div className={styles.screen}>
       {/* Фоновый звёздный космос на весь экран под всеми элементами */}
       <ScreenStarfield />
+      <FloatingNfts />
 
       {/* 1. Верхний чистый бар (без лишних квадратов, только Назад и Баланс) */}
       <div className={styles.topHeader}>

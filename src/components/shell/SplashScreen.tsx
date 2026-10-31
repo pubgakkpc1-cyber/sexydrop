@@ -56,7 +56,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
   const statusMessage = useMemo(() => {
     if (progress < 30) return 'Синхронизация профиля Telegram...'
     if (progress < 65) return 'Загрузка кейсов и 3D-подарков...'
-    if (progress < 90) return 'Проверка честности RTP 98%...'
+    if (progress < 90) return 'Подготовка кейсов и выплат...'
     return 'Добро пожаловать в игру!'
   }, [progress])
 

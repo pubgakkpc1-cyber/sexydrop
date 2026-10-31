@@ -14,7 +14,7 @@ import {
   type MinesPickResult,
 } from '../services/demoMinesService'
 import { useWalletStore } from '../store/wallet'
-import { GAME_RTP, MAX_BET_MINOR } from '../lib/gameConfig'
+import { MAX_BET_MINOR } from '../lib/gameConfig'
 import { Input } from '../components/ui'
 import { ChevronLeftIcon, DropBombIcon, TonIcon } from '../components/shell/icons'
 import { MULT_TIER_STYLE, multTier } from '../lib/multTier'
@@ -171,7 +171,6 @@ export function MinesScreen() {
     [minesCount, maxSteps],
   )
   const nextMult = openedCount < maxSteps ? minesMultiplierHundredths(minesCount, openedCount + 1) / 100 : null
-  const nextChancePct = Math.round(((MINES_TILES - minesCount - openedCount) / (MINES_TILES - openedCount)) * 100)
 
   const tileContent = (index: number) => {
     if (round === null) return null
@@ -203,7 +202,6 @@ export function MinesScreen() {
 
       <h1 className={styles.title}>Мины</h1>
       <div className={styles.badges}>
-        <span className={styles.badge}>RTP {Math.round(GAME_RTP * 100)}%</span>
         <span className={styles.badge}>
           <DropBombIcon className={styles.badgeIcon} aria-hidden /> {minesCount}
         </span>
@@ -264,7 +262,7 @@ export function MinesScreen() {
               ? `Открыто ${openedCount} · x${(minesMultiplier(minesCount, Math.max(1, openedCount)) || 0).toFixed(2)}`
               : finished
                 ? 'Раунд завершён'
-                : `Шанс на клетку: ${((100 * (MINES_TILES - minesCount)) / MINES_TILES).toFixed(0)}%`}
+                : 'Выбери клетку'}
           </span>
           <span>Мин: {minesCount}</span>
         </div>
@@ -288,7 +286,7 @@ export function MinesScreen() {
         </div>
         {playing && nextMult !== null && (
           <p className={styles.nextHint}>
-            Следующая клетка: x{nextMult.toFixed(2)} · шанс {nextChancePct}%
+            Следующая клетка: x{nextMult.toFixed(2)}
           </p>
         )}
       </div>
@@ -384,10 +382,7 @@ export function MinesScreen() {
         )}
       </div>
 
-      <p className={styles.note}>
-        Честная игра: множитель = floor2({GAME_RTP}·C(25,k)/C(25−m,k)) —
-        забирайте выигрыш в любой момент до взрыва мины.
-      </p>
+      <p className={styles.note}>Забирайте выигрыш в любой момент до взрыва мины.</p>
     </div>
   )
 }

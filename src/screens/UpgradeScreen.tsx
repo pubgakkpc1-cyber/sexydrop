@@ -5,7 +5,6 @@ import { useInventoryStore, type InventoryItem } from '../store/inventory'
 import { formatMinor, type Minor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import { placeUpgrade, upgradeChancePercent } from '../services/demoUpgradeService'
-import { GAME_RTP } from '../lib/gameConfig'
 import { hapticImpact, hapticNotify } from '../lib/telegram'
 import { playRouletteTick, playWinChime } from '../lib/sound'
 import { GiftPickerSheet } from '../components/inventory/GiftPickerSheet'
@@ -302,7 +301,6 @@ export function UpgradeScreen() {
       </button>
 
       <p className={styles.note}>
-        Апгрейд: шанс p = min(1, цена источника / цена цели × {GAME_RTP}).
         Улучшайте свои предметы до легендарных NFT.
       </p>
 

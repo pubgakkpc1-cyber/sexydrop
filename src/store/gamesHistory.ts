@@ -47,6 +47,7 @@ export const useGamesHistoryStore = create<GamesHistoryState>()(
     useProfileStore.getState().record({
       stakeMinor: entry.stakeMinor,
       deltaMinor: entry.deltaMinor,
+      game: entry.game,
     })
     set((state) => ({
       entries: [{ ...entry, at: Date.now() }, ...state.entries].slice(0, MAX_ENTRIES),

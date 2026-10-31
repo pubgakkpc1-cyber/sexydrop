@@ -23,7 +23,7 @@ function renderScreen() {
 
 beforeEach(() => {
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
-  useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0 })
+  useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0, casesOpened: 0, minesRounds: 0, upgrades: 0, friendDeposits: 0 })
   useQuestsStore.setState({ claimed: {} })
   useStarsBalanceStore.setState({ stars: 0 })
 })
@@ -46,7 +46,7 @@ describe('RewardsScreen (Заработок: звёзды за задания, �
   })
 
   it('задание даёт звёзды один раз; невыполненные показывают процент', async () => {
-    useProfileStore.setState({ rounds: 1, wageredMinor: 0, netMinor: 0, pvpMatches: 0 })
+    useProfileStore.setState({ upgrades: 1 })
     renderScreen()
     await user.click(screen.getByRole('button', { name: 'Забрать' }))
     expect(useStarsBalanceStore.getState().stars).toBe(50)

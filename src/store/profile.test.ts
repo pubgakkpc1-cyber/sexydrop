@@ -8,7 +8,7 @@ import { _resetDiceForTests, rollDice } from '../services/demoDiceService'
 beforeEach(() => {
   _resetDiceForTests()
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
-  useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0 })
+  useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0, casesOpened: 0, minesRounds: 0, upgrades: 0, friendDeposits: 0 })
   useQuestsStore.setState({ claimed: {} })
   useStarsBalanceStore.setState({ stars: 0 })
 })
@@ -20,9 +20,12 @@ describe('store/quests (6.2: прогресс из реальной статис
     expect(useQuestsStore.getState().progressOf(first)).toBe(0)
     expect(useQuestsStore.getState().claim(first.id)).toBe('not_enough')
 
-    // реальный раунд через сервис Дайса: проигрыш (stakeMinor учтён в обороте)
-    rollDice(1000, 5099, 'over', 'q-1')
-    expect(useQuestsStore.getState().progressOf(first)).toBe(1)
+    // открытые кейсы считаются счётчиком профиля; цель — 3 кейса
+    useProfileStore.getState().caseOpened()
+    useProfileStore.getState().caseOpened()
+    expect(useQuestsStore.getState().claim(first.id)).toBe('not_enough')
+    useProfileStore.getState().caseOpened()
+    expect(useQuestsStore.getState().progressOf(first)).toBe(3)
     expect(useQuestsStore.getState().claim(first.id)).toBe('ok')
     expect(useStarsBalanceStore.getState().stars).toBe(first.rewardStars)
     expect(useQuestsStore.getState().claim(first.id)).toBe('already_claimed')

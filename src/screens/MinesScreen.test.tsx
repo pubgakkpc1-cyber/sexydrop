@@ -43,8 +43,8 @@ describe('MinesScreen (4.8: доска 5×5, забор, честные исхо
     // конфиг мин: 1 / 3 / 5 / 10 / 24, активна 3
     expect(screen.getByRole('button', { name: '3', pressed: true })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '24' })).toBeInTheDocument()
-    expect(screen.getByText(/Шанс на клетку: 88%/)).toBeInTheDocument()
-    expect(screen.getByText(/Честная игра: множитель =/)).toBeInTheDocument()
+    expect(screen.getByText('Выбери клетку')).toBeInTheDocument()
+    expect(screen.getByText(/Забирайте выигрыш в любой момент/)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Начать · 1 TON' })).toBeEnabled()
   })
 
@@ -77,7 +77,7 @@ describe('MinesScreen (4.8: доска 5×5, забор, честные исхо
     })
     // «Играть снова» возвращает конфиг, раунд закрыт
     await user.click(screen.getByRole('button', { name: 'Играть снова' }))
-    expect(screen.getByText(/Шанс на клетку: 88%/)).toBeInTheDocument()
+    expect(screen.getByText('Выбери клетку')).toBeInTheDocument()
   })
 
   it('мина: честный проигрыш, раскрытие всех мин, история с −ставкой', async () => {
@@ -98,7 +98,7 @@ describe('MinesScreen (4.8: доска 5×5, забор, честные исхо
   it('смена числа мин до старта, блокировка в раунде', async () => {
     renderScreen()
     await user.click(screen.getByRole('button', { name: '24' }))
-    expect(screen.getByText(/Шанс на клетку: 4%/)).toBeInTheDocument()
+    expect(screen.getByText('Выбери клетку')).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: 'Начать · 1 TON' }))
     // в раунде конфиг заблокирован
     expect(screen.getByRole('button', { name: '24' })).toBeDisabled()

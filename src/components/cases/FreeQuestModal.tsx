@@ -5,7 +5,7 @@ import { makeRequestId } from '../../lib/requestId'
 import { hapticNotify, hapticImpact } from '../../lib/telegram'
 import { sellItem } from '../../services/demoInventoryService'
 import { useFreeCasesStore } from '../../store/freeCases'
-import { LockIcon, LockOpenIcon, TonIcon, SparkleIcon, UsersIcon, CheckIcon } from '../shell/icons'
+import { LockIcon, LockOpenIcon, TonIcon, UsersIcon, CheckIcon } from '../shell/icons'
 import styles from './FreeQuestModal.module.css'
 
 interface FreeQuestModalProps {
@@ -23,7 +23,6 @@ function formatHoursCountdown(expiresAt: number, now: number): string {
 
 export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
   const quest = useFreeCasesStore((s) => s.quest)
-  const simulateFriendJoin = useFreeCasesStore((s) => s.simulateFriendJoin)
   const clearQuestReward = useFreeCasesStore((s) => s.clearQuestReward)
 
   const [now, setNow] = useState(() => Date.now())
@@ -54,11 +53,6 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
     navigator.clipboard?.writeText(refLink)
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
-  }
-
-  const handleSimulate = () => {
-    hapticImpact('medium')
-    simulateFriendJoin()
   }
 
   const handleClaim = () => {
@@ -208,15 +202,6 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
                 <span>{copied ? '✓ Реферальная ссылка скопирована!' : 'Пригласить друзей'}</span>
               </button>
 
-              <button
-                type="button"
-                className={styles.simulateButton}
-                onClick={handleSimulate}
-                title="Для проверки и демонстрации работы механики"
-              >
-                <SparkleIcon style={{ width: '15px', height: '15px', marginRight: '5px' }} />
-                <span>+1 друг для теста (симуляция)</span>
-              </button>
             </>
           ) : (
             <div className={styles.unlockedActionsRow}>

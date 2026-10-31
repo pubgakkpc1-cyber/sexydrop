@@ -46,7 +46,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
   it('шапка: Назад, заголовок и честная формула', () => {
     renderScreen()
     expect(screen.getByText('Апгрейд')).toBeInTheDocument()
-    expect(screen.getByText(/Апгрейд: шанс p = min\(1/)).toBeInTheDocument()
+    expect(screen.getByText(/Улучшайте свои предметы/)).toBeInTheDocument()
   })
 
   it('пустой инвентарь: окно выбора с подсказкой, CTA выключена', async () => {

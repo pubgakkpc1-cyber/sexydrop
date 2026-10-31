@@ -92,14 +92,14 @@ export function MobileShell() {
               </div>
             </div>
             <p className={styles.brandDesc}>
-              Премиальная платформа кейсов подарков Telegram, Ракетка (Crash), Mines, Plinko и PVP турниры.
+              NFT-кейсы с подарками Telegram, Ракета, Мины и апгрейды. Баланс и выплаты в TON.
             </p>
           </div>
 
           <div className={styles.featuresCard}>
             <div className={styles.featureItem}>
               <CubeIcon style={{ width: '16px', height: '16px', color: '#c7696d', flexShrink: 0 }} />
-              <span>22 уникальных кейса с RTP 98%</span>
+              <span>Уникальные кейсы с NFT-подарками</span>
             </div>
             <div className={styles.featureItem}>
               <TonIcon style={{ width: '16px', height: '16px', color: '#ab3f45', flexShrink: 0 }} />
@@ -107,7 +107,7 @@ export function MobileShell() {
             </div>
             <div className={styles.featureItem}>
               <SlotIcon style={{ width: '16px', height: '16px', color: '#ba464b', flexShrink: 0 }} />
-              <span>7 игровых режимов + PVP арена</span>
+              <span>Ракета, Мины и Апгрейд</span>
             </div>
           </div>
 

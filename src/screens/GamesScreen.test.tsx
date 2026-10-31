@@ -43,8 +43,7 @@ describe('GamesScreen (PLAY HUB по кадру frame_126)', () => {
     expect(screen.queryByRole('button', { name: /Крафт/ })).not.toBeInTheDocument()
 
     expect(screen.queryByText('скоро')).not.toBeInTheDocument()
-    // Честная заметка хаба
-    expect(screen.getByText(/Все мини-игры работают с честной отдачей/)).toBeInTheDocument()
+    expect(screen.queryByText(/RTP/)).not.toBeInTheDocument()
   })
 
   it('баннер «Улучшение» ведёт на /games/upgrade', async () => {

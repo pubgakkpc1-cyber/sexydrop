@@ -10,10 +10,20 @@ export interface ProfileStats {
   /** Чистый результат всех раундов (со знаком). */
   netMinor: Minor
   pvpMatches: number
+  /** Открытые кейсы (платные и бесплатные). */
+  casesOpened: number
+  /** Сыгранные раунды в Мины. */
+  minesRounds: number
+  /** Сделанные апгрейды (любой исход). */
+  upgrades: number
+  /** Друзья по ссылке, пополнившие баланс (приходит с сервера, пока 0). */
+  friendDeposits: number
 }
 
 interface ProfileState extends ProfileStats {
-  record: (entry: { stakeMinor?: Minor; deltaMinor: Minor; isPvp?: boolean }) => void
+  record: (entry: { stakeMinor?: Minor; deltaMinor: Minor; isPvp?: boolean; game?: string }) => void
+  caseOpened: () => void
+  friendDeposited: () => void
 }
 
 /**
@@ -30,9 +40,18 @@ export const useProfileStore = create<ProfileState>()(
   wageredMinor: 0,
   netMinor: 0,
   pvpMatches: 0,
+  casesOpened: 0,
+  minesRounds: 0,
+  upgrades: 0,
+  friendDeposits: 0,
+
+  caseOpened: () => set((state) => ({ casesOpened: state.casesOpened + 1 })),
+  friendDeposited: () => set((state) => ({ friendDeposits: state.friendDeposits + 1 })),
 
   record: (entry) => {
     set((state) => ({
+      minesRounds: state.minesRounds + (entry.game === 'Мины' ? 1 : 0),
+      upgrades: state.upgrades + (entry.game === 'Апгрейд' ? 1 : 0),
       rounds: state.rounds + 1,
       pvpMatches: state.pvpMatches + (entry.isPvp === true ? 1 : 0),
       wageredMinor: state.wageredMinor + (entry.stakeMinor ?? 0),
@@ -43,8 +62,17 @@ export const useProfileStore = create<ProfileState>()(
     {
       name: 'sexydrop.profile',
       version: 1,
-      storage: safeJsonStorage<Pick<ProfileState, 'rounds' | 'wageredMinor' | 'netMinor' | 'pvpMatches'>>(),
-      partialize: (s) => ({ rounds: s.rounds, wageredMinor: s.wageredMinor, netMinor: s.netMinor, pvpMatches: s.pvpMatches }),
+      storage: safeJsonStorage<ProfileStats>(),
+      partialize: (s) => ({
+        rounds: s.rounds,
+        wageredMinor: s.wageredMinor,
+        netMinor: s.netMinor,
+        pvpMatches: s.pvpMatches,
+        casesOpened: s.casesOpened,
+        minesRounds: s.minesRounds,
+        upgrades: s.upgrades,
+        friendDeposits: s.friendDeposits,
+      }),
     },
   ),
 )

@@ -4,7 +4,7 @@ import { safeJsonStorage } from '../lib/persistStorage'
 import { useProfileStore } from './profile'
 import { useStarsBalanceStore } from './starsBalance'
 
-export type QuestMetric = 'rounds' | 'wagered' | 'pvpMatches'
+export type QuestMetric = 'casesOpened' | 'minesRounds' | 'upgrades' | 'wagered' | 'friendDeposits'
 
 export interface Quest {
   id: string
@@ -23,12 +23,11 @@ export interface Quest {
  * Серверная проверка заданий по журналу транзакций — TIER 7 (6.6/7.6).
  */
 export const QUESTS: readonly Quest[] = [
-  { id: 'first-round', title: 'Первый раунд', metric: 'rounds', target: 1, rewardStars: 50 },
-  { id: 'rounds-10', title: 'Разогрев: 10 раундов', metric: 'rounds', target: 10, rewardStars: 100 },
-  { id: 'rounds-50', title: 'Ветеран: 50 раундов', metric: 'rounds', target: 50, rewardStars: 400 },
-  { id: 'wagered-10', title: 'Оборот 10 TON', metric: 'wagered', target: 10_000, rewardStars: 200 },
-  { id: 'wagered-100', title: 'Оборот 100 TON', metric: 'wagered', target: 100_000, rewardStars: 2000 },
-  { id: 'pvp-5', title: 'Пять PVP-матчей', metric: 'pvpMatches', target: 5, rewardStars: 300 },
+  { id: 'open-3-cases', title: 'Открой 3 кейса', metric: 'casesOpened', target: 3, rewardStars: 50 },
+  { id: 'mines-10', title: 'Сыграй 10 раз в Мины', metric: 'minesRounds', target: 10, rewardStars: 50 },
+  { id: 'upgrade-1', title: 'Сделай апгрейд', metric: 'upgrades', target: 1, rewardStars: 50 },
+  { id: 'wagered-10', title: 'Сделай ставок на 10 TON', metric: 'wagered', target: 10_000, rewardStars: 200 },
+  { id: 'friend-deposit', title: 'Друг по твоей ссылке пополнил баланс', metric: 'friendDeposits', target: 1, rewardStars: 200 },
 ] as const
 
 interface QuestsState {
@@ -45,12 +44,16 @@ export const useQuestsStore = create<QuestsState>()(
   progressOf: (quest) => {
     const profile = useProfileStore.getState()
     switch (quest.metric) {
-      case 'rounds':
-        return profile.rounds
+      case 'casesOpened':
+        return profile.casesOpened
+      case 'minesRounds':
+        return profile.minesRounds
+      case 'upgrades':
+        return profile.upgrades
       case 'wagered':
         return profile.wageredMinor
-      case 'pvpMatches':
-        return profile.pvpMatches
+      case 'friendDeposits':
+        return profile.friendDeposits
     }
   },
 

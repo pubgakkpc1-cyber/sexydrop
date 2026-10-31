@@ -5,6 +5,7 @@ import { useFreeCasesStore } from '../store/freeCases'
 import { useInventoryStore } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
 import { useReferralsStore } from '../store/referrals'
+import { useProfileStore } from '../store/profile'
 import { getTelegramUser } from '../lib/telegram'
 
 export type OpenCaseResult =
@@ -63,10 +64,12 @@ export function openCase(
       // выигрыш в TON: сразу на баланс, в инвентарь не попадает
       const amount = Number(chosen.itemId.slice(4))
       wallet.credit(amount)
+      useProfileStore.getState().caseOpened()
       return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
     }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'case-open')
     if (!item) throw new Error('Inventory did not accept the gift')
+    useProfileStore.getState().caseOpened()
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const
   })
 }
@@ -93,12 +96,14 @@ export function claimFreeCase(
     if (isTonPrize(chosen.itemId)) {
       useWalletStore.getState().credit(Number(chosen.itemId.slice(4)))
       freeCases.claim(caseId, now)
+      useProfileStore.getState().caseOpened()
       useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
       return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
     }
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'free-case')
     if (!item) throw new Error('Inventory did not accept the gift')
     freeCases.claim(caseId, now)
+    useProfileStore.getState().caseOpened()
     useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const
   })

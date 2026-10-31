@@ -130,7 +130,7 @@ export function CrashMiniAdminModal({ open, onClose }: CrashMiniAdminModalProps)
           <div className={styles.telemetryRow}>
             <span>Запланированный краш:</span>
             <strong style={{ color: telemetry.nextOverride ? '#389173' : '#b89496' }}>
-              {telemetry.nextOverride ? `x${telemetry.nextOverride.toFixed(2)}` : 'Рандом (RTP 0.98)'}
+              {telemetry.nextOverride ? `x${telemetry.nextOverride.toFixed(2)}` : 'Рандом'}
             </strong>
           </div>
         </div>

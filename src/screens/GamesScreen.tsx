@@ -199,10 +199,6 @@ export function GamesScreen() {
       )}
 
       <GameHistory />
-
-      <p className={styles.footerNote}>
-        Все мини-игры работают с честной отдачей (RTP 0.98) и мгновенными выплатами.
-      </p>
     </div>
   )
 }

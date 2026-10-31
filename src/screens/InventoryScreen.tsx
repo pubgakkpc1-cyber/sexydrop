@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { giftById, type Rarity } from '../data/catalog'
+import { giftById } from '../data/catalog'
 import { useInventoryStore } from '../store/inventory'
 import { DiamondIcon, SearchIcon, ShareIcon } from '../components/shell/icons'
 import { InventoryGiftCard } from '../components/inventory/InventoryGiftCard'
@@ -8,26 +8,8 @@ import { Button, Input } from '../components/ui'
 import { sellItem } from '../services/demoInventoryService'
 import { makeRequestId } from '../lib/requestId'
 import { formatMinor } from '../lib/money'
-import { cx } from '../lib/cx'
 import styles from './screens.module.css'
 import filterStyles from './InventoryScreen.module.css'
-
-type RarityFilter = 'all' | Rarity
-type SortMode = 'new' | 'expensive' | 'cheap'
-
-const RARITY_FILTERS: ReadonlyArray<{ id: RarityFilter; label: string }> = [
-  { id: 'all', label: 'Все' },
-  { id: 'common', label: 'Обычные' },
-  { id: 'rare', label: 'Редкие' },
-  { id: 'epic', label: 'Эпические' },
-  { id: 'legendary', label: 'Легендарные' },
-]
-
-const SORT_MODES: ReadonlyArray<{ id: SortMode; label: string }> = [
-  { id: 'new', label: 'Новые' },
-  { id: 'expensive', label: 'Дорогие' },
-  { id: 'cheap', label: 'Дешёвые' },
-]
 
 /**
  * Инвентарь (3.1/3.2): пустое и заполненное состояния, карточки подарков
@@ -41,8 +23,6 @@ export function InventoryScreen() {
   const items = useInventoryStore((s) => s.items)
 
   const [query, setQuery] = useState('')
-  const [rarity, setRarity] = useState<RarityFilter>('all')
-  const [sort, setSort] = useState<SortMode>('new')
   /** Короткое подтверждение продажи («Продано +X TON»). */
   const [soldNote, setSoldNote] = useState<string | null>(null)
   const [sellingUid, setSellingUid] = useState<string | null>(null)
@@ -56,28 +36,16 @@ export function InventoryScreen() {
     [items],
   )
 
-  const counts = useMemo(() => {
-    const map: Record<Rarity, number> = { common: 0, rare: 0, epic: 0, legendary: 0 }
-    for (const { gift } of joined) map[gift.rarity] += 1
-    return map
-  }, [joined])
-
   const visible = useMemo(() => {
     const q = query.trim().toLowerCase()
-    const filtered = joined.filter(
-      ({ gift }) =>
-        (rarity === 'all' || gift.rarity === rarity) &&
-        (q === '' || gift.name.toLowerCase().includes(q)),
+    const filtered = joined.filter(({ gift }) => q === '' || gift.name.toLowerCase().includes(q))
+    // Новые сверху: по времени получения, при равенстве — стабильный порядок по uid
+    return [...filtered].sort(
+      (x, y) => y.item.acquiredAt - x.item.acquiredAt || x.item.uid.localeCompare(y.item.uid),
     )
-    return [...filtered].sort((a, b) => {
-      if (sort === 'expensive') return b.gift.priceMinor - a.gift.priceMinor
-      if (sort === 'cheap') return a.gift.priceMinor - b.gift.priceMinor
-      // «Новые»: по времени получения, при равенстве — стабильный порядок по uid
-      return b.item.acquiredAt - a.item.acquiredAt || a.item.uid.localeCompare(b.item.uid)
-    })
-  }, [joined, query, rarity, sort])
+  }, [joined, query])
 
-  const filtering = query.trim() !== '' || rarity !== 'all'
+  const filtering = query.trim() !== ''
 
   // Продажа в два шага: карточка плавно «улетает» (с плашкой +X TON), затем подарок реально продаётся
   const handleSell = (uid: string) => {
@@ -95,8 +63,6 @@ export function InventoryScreen() {
 
   const resetFilters = () => {
     setQuery('')
-    setRarity('all')
-    setSort('new')
   }
 
   return (
@@ -160,36 +126,6 @@ export function InventoryScreen() {
               value={query}
               onChange={(event) => setQuery(event.target.value)}
             />
-            <div role="group" aria-label="Фильтр по редкости" className={filterStyles.chips}>
-              {RARITY_FILTERS.map(({ id, label }) => {
-                const count = id === 'all' ? joined.length : counts[id]
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    className={cx(filterStyles.chip, rarity === id && filterStyles.chipActive)}
-                    aria-pressed={rarity === id}
-                    onClick={() => setRarity(id)}
-                  >
-                    {label}
-                    <span className={filterStyles.chipCount}>{count}</span>
-                  </button>
-                )
-              })}
-            </div>
-            <div role="group" aria-label="Сортировка" className={filterStyles.chips}>
-              {SORT_MODES.map(({ id, label }) => (
-                <button
-                  key={id}
-                  type="button"
-                  className={cx(filterStyles.chip, sort === id && filterStyles.chipActive)}
-                  aria-pressed={sort === id}
-                  onClick={() => setSort(id)}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
           </div>
 
           {visible.length === 0 ? (

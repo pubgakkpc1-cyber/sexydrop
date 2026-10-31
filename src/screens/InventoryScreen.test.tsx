@@ -111,17 +111,6 @@ describe('InventoryScreen — фильтры', () => {
     })
   }
 
-  it('чипы редкости показывают счётчики и фильтруют карточки', async () => {
-    renderScreen()
-    seedInventory()
-    expect(screen.getByText('4 шт.')).toBeInTheDocument()
-    // «Эпические» — ровно один подарок этой редкости в наборе
-    await userEvent.click(screen.getByRole('button', { name: /Эпические/ }))
-    expect(screen.getByText('Показано 1 из 4')).toBeInTheDocument()
-    expect(card('Astral Shard')).toBeInTheDocument()
-    expect(screen.queryByRole('article', { name: 'Plush Pepe' })).not.toBeInTheDocument()
-  })
-
   it('поиск по названию нечувствителен к регистру', async () => {
     renderScreen()
     seedInventory()
@@ -129,14 +118,6 @@ describe('InventoryScreen — фильтры', () => {
     expect(screen.getByText('Показано 1 из 4')).toBeInTheDocument()
     expect(card('Plush Pepe')).toBeInTheDocument()
     expect(screen.queryByRole('article', { name: 'Fresh Socks' })).not.toBeInTheDocument()
-  })
-
-  it('сортировка «Дорогие» ставит самый дорогой подарок первым', async () => {
-    renderScreen()
-    seedInventory()
-    await userEvent.click(screen.getByRole('button', { name: 'Дорогие' }))
-    const names = screen.getAllByRole('article').map((el) => el.getAttribute('aria-label'))
-    expect(names).toEqual(['Plush Pepe', 'Astral Shard', 'Heart Locket', 'Fresh Socks'])
   })
 
   it('когда фильтр ничего не находит — состояние «Ничего не найдено» и сброс', async () => {

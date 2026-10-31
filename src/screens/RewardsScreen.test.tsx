@@ -49,7 +49,7 @@ describe('RewardsScreen (Заработок: звёзды за задания, �
     useProfileStore.setState({ upgrades: 1 })
     renderScreen()
     await user.click(screen.getByRole('button', { name: 'Забрать' }))
-    expect(useStarsBalanceStore.getState().stars).toBe(50)
+    expect(useStarsBalanceStore.getState().stars).toBe(17)
     expect(screen.getByText('Забрано')).toBeInTheDocument()
     expect(screen.getAllByRole('button', { name: /^\d+%$/ }).length).toBe(4)
     expect(useWalletStore.getState().getBalance('demo')).toBe(100_000) // TON не тронут

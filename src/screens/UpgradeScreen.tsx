@@ -82,6 +82,15 @@ export function UpgradeScreen() {
     return [...byName.values()].sort((a, b) => a.priceMinor - b.priceMinor)
   }, [])
 
+  // В окне выбора цели — ВСЕ виды NFT (фон/модель), а не только первый у каждого подарка
+  const allVariants = useMemo(
+    () =>
+      gifts
+        .filter((g) => g.available && g.priceMinor > 0 && /-\d$/.test(g.id) && g.image.endsWith('.png'))
+        .sort((x, y) => x.priceMinor - y.priceMinor || x.id.localeCompare(y.id)),
+    [],
+  )
+
   const targetGift = targetId ? giftById.get(targetId) ?? null : null
 
   // Процент кольца — целочисленный floor2(p×100) из сервиса (без float-хвостов).
@@ -307,7 +316,7 @@ export function UpgradeScreen() {
       <UpgradeTargetSheet
         open={targetPickerOpen}
         onClose={() => setTargetPickerOpen(false)}
-        targets={allTargets}
+        targets={allVariants}
         sourcePriceMinor={sourceGift ? sourceGift.priceMinor : null}
         selectedId={targetId}
         onConfirm={(id) => setTargetId(id)}

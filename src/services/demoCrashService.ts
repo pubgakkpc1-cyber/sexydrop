@@ -576,8 +576,7 @@ function cashoutAt(multiplier: number): CashoutResult {
     }
     const wonMinor = mulByMultiplier(s.myBet.valueMinor, multiplier)
 
-    // Выплата: самый дорогой NFT не дороже выигрыша уходит в инвентарь, остаток — TON на баланс.
-    // Если выигрыш дешевле любого NFT — всё начисляется в TON.
+    // Выплата: если выигрыш в точности равен цене NFT — NFT уходит в инвентарь; иначе всё идёт в TON на баланс.
     const nftPrice = nftPriceFor(wonMinor)
     const matchingGift =
       nftPrice === undefined

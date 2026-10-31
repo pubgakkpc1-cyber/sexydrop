@@ -300,7 +300,7 @@ describe('placeGramBet / cashout (fake timers)', () => {
     expect(useWalletStore.getState().getBalance('demo')).toBe(100_000)
   })
 
-  it('ставка подарком: выигрыш 35250 = NFT не дороже + остаток в TON', () => {
+  it('ставка подарком: выигрыш 35250 не равен цене NFT — выдаётся в TON, без NFT', () => {
     _setCrashRngForTests(() => 0.99) // краш далеко (≈x98) — не мешает кешауту
     startCrashEngine()
     const [item] = useInventoryStore.getState().addGifts(['plush-pepe'], 'case-open')
@@ -310,12 +310,10 @@ describe('placeGramBet / cashout (fake timers)', () => {
     vi.advanceTimersByTime(BETTING_TICKS * TICK_MS + 2000)
     expect(useCrashStore.getState().multiplier).toBe(1.41)
 
-    const res = cashout('req-cash')
-    expect(res).toMatchObject({ status: 'ok', wonMinor: 35_250, multiplier: 1.41 })
-    const nftPrice = nftPriceFor(35_250)!
-    expect(nftPrice).toBeLessThanOrEqual(35_250)
-    // NFT ушёл в инвентарь, остаток (выигрыш − цена NFT) — на баланс
-    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 + (35_250 - nftPrice))
+    expect(nftPriceFor(35_250)).toBeUndefined()
+    expect(cashout('req-cash')).toEqual({ status: 'ok', wonMinor: 35_250, multiplier: 1.41 })
+    expect(useWalletStore.getState().getBalance('demo')).toBe(135_250)
+    expect(useInventoryStore.getState().items).toHaveLength(0)
   })
 
   it('победа с равноценной суммой начисляет NFT в инвентарь (если есть), иначе TON', () => {

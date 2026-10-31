@@ -66,6 +66,18 @@ def allowed_variants(name: str, case_id: str) -> list[str]:
     return [i for i in ids if BACKDROP[i] not in DARK]
 
 
+VARIANTS_PER_GIFT = 3  # в сундуке каждый NFT представлен несколькими видами (фон/модель) с равными весами
+
+
+def variant_picks(name: str, case_id: str, shift: int) -> list[str]:
+    """До VARIANTS_PER_GIFT разных видов подарка; у TON-призов и обычных подарков вид один.
+    Суммарный вес подарка = VARIANTS_PER_GIFT × solver-вес и делится между его видами, поэтому
+    шансы подарков и EV кейса не меняются, даже если у подарка меньше трёх разрешённых видов."""
+    opts = allowed_variants(name, case_id)
+    k = min(VARIANTS_PER_GIFT, len(opts))
+    return [opts[(shift + i) % len(opts)] for i in range(k)]
+
+
 def ladder_for(case_id: str) -> list[str]:
     names = [n for n in GIFTS if not is_ton(n) and allowed_variants(n, case_id)]
     return sorted(names, key=lambda n: GIFTS[n][0])
@@ -178,8 +190,10 @@ for ci, (cid, name, price, mult, k) in enumerate(CASES):
     pool, v, w = chosen
     result[cid] = []
     for j, (n, wt) in enumerate(zip(pool, w)):
-        opts = allowed_variants(n, cid)
-        result[cid].append([opts[(ci + j) % len(opts)], wt])
+        picks = variant_picks(n, cid, ci + j)
+        q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
+        for vi, vid in enumerate(picks):
+            result[cid].append([vid, q + (1 if vi < r else 0)])
     report.append(
         f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
         f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"
@@ -218,8 +232,10 @@ for ti, (cid, name, names) in enumerate(THEMED):
     ci = len(CASES) + ti
     result[cid] = []
     for j, (n, wt) in enumerate(zip(pool, w)):
-        opts = allowed_variants(n, cid)
-        result[cid].append([opts[(ci + j) % len(opts)], wt])
+        picks = variant_picks(n, cid, ci + j)
+        q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
+        for vi, vid in enumerate(picks):
+            result[cid].append([vid, q + (1 if vi < r else 0)])
     report.append(
         f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
         f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"

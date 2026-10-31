@@ -73,7 +73,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     // Цель Snoop Dogg: p = 50 / цена × 0.98 (цена из каталога)
     await user.click(screen.getByRole('button', { name: 'Выбрать цель' }))
     const targetDialog = screen.getByRole('dialog')
-    await user.click(within(targetDialog).getByRole('button', { name: /^Snoop Dogg$/ }))
+    await user.click(within(targetDialog).getAllByRole('button', { name: /^Snoop Dogg$/ })[0]!)
     await user.click(within(targetDialog).getByRole('button', { name: 'Подтвердить' }))
     expect(screen.getAllByText(`${pctText(50, 'snoop_dogg-1')}%`).length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
@@ -94,7 +94,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     await user.click(within(dialog).getByRole('button', { name: 'Подтвердить' }))
     await user.click(screen.getByRole('button', { name: 'Выбрать цель' }))
     const targetDialog = screen.getByRole('dialog')
-    await user.click(within(targetDialog).getByRole('button', { name: /^Snoop Dogg$/ }))
+    await user.click(within(targetDialog).getAllByRole('button', { name: /^Snoop Dogg$/ })[0]!)
     await user.click(within(targetDialog).getByRole('button', { name: 'Подтвердить' }))
     await user.click(screen.getByRole('button', { name: 'Апгрейдить' }))
 

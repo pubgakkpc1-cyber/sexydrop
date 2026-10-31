@@ -4,25 +4,24 @@ import { nftPriceFor, tileGiftFor } from './crashTile'
 import { MULT_TIER_STYLE, multTier } from './multTier'
 
 describe('tileGiftFor (плитка ставки Ракеты)', () => {
-  it('ниже самого дешёвого NFT (5 TON) — значок NFT не показывается, рисуется TON', () => {
+  const snoop = giftById.get('snoop_dogg-1')!.priceMinor
+  const helmet = giftById.get('heroic_helmet-1')!.priceMinor
+
+  it('NFT только при точном совпадении цены; иначе значок TON (undefined)', () => {
     expect(tileGiftFor(4_999, 'a')).toBeUndefined()
     expect(tileGiftFor(0, 'a')).toBeUndefined()
+    expect(tileGiftFor(snoop + 100, 'a')).toBeUndefined() // NFT 7.07, выплата 7.17 — это TON
+    expect(tileGiftFor(snoop - 1, 'a')).toBeUndefined()
   })
 
-  it('берёт самый дорогой NFT не дороже выплаты и меняется по мере роста', () => {
-    const snoop = giftById.get('snoop_dogg-1')!.priceMinor
-    const helmet = giftById.get('heroic_helmet-1')!.priceMinor
-    const pepe = giftById.get('plush_pepe-1')!.priceMinor
+  it('точная цена NFT — показывается именно NFT этой цены', () => {
     expect(tileGiftFor(snoop, 'a')?.priceMinor).toBe(snoop)
-    expect(tileGiftFor(snoop + 1, 'a')?.priceMinor).toBe(snoop)
     expect(tileGiftFor(helmet, 'a')?.priceMinor).toBe(helmet)
-    expect(tileGiftFor(99_999_999, 'a')?.priceMinor).toBe(pepe)
   })
 
-  it('nftPriceFor — та же цена, по которой сервис платит NFT, остаток уходит в TON', () => {
-    expect(nftPriceFor(4_999)).toBeUndefined()
-    const snoop = giftById.get('snoop_dogg-1')!.priceMinor
-    expect(nftPriceFor(snoop + 450)).toBe(snoop)
+  it('nftPriceFor совпадает с тем, что платит сервис', () => {
+    expect(nftPriceFor(snoop)).toBe(snoop)
+    expect(nftPriceFor(snoop + 450)).toBeUndefined()
   })
 
   it('если цена совпала с поставленным NFT — берётся именно он', () => {
@@ -31,7 +30,7 @@ describe('tileGiftFor (плитка ставки Ракеты)', () => {
   })
 
   it('детерминирован: один и тот же seed — одна и та же картинка', () => {
-    expect(tileGiftFor(30_000, 'player-1')?.id).toBe(tileGiftFor(30_000, 'player-1')?.id)
+    expect(tileGiftFor(snoop, 'player-1')?.id).toBe(tileGiftFor(snoop, 'player-1')?.id)
   })
 })
 

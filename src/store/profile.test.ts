@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest'
 import { useProfileStore } from './profile'
 import { useQuestsStore, QUESTS } from './quests'
 import { useWalletStore } from './wallet'
+import { useStarsBalanceStore } from './starsBalance'
 import { _resetDiceForTests, rollDice } from '../services/demoDiceService'
 
 beforeEach(() => {
@@ -9,6 +10,7 @@ beforeEach(() => {
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
   useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0 })
   useQuestsStore.setState({ claimed: {} })
+  useStarsBalanceStore.setState({ stars: 0 })
 })
 
 describe('store/quests (6.2: прогресс из реальной статистики)', () => {
@@ -22,10 +24,10 @@ describe('store/quests (6.2: прогресс из реальной статис
     rollDice(1000, 5099, 'over', 'q-1')
     expect(useQuestsStore.getState().progressOf(first)).toBe(1)
     expect(useQuestsStore.getState().claim(first.id)).toBe('ok')
-    const afterClaim = useWalletStore.getState().getBalance('demo')
+    expect(useStarsBalanceStore.getState().stars).toBe(first.rewardStars)
     expect(useQuestsStore.getState().claim(first.id)).toBe('already_claimed')
     // повторный claim не начисляет
-    expect(useWalletStore.getState().getBalance('demo')).toBe(afterClaim)
+    expect(useStarsBalanceStore.getState().stars).toBe(first.rewardStars)
   })
 
   it('задание оборота: 10 GRAM оборота открывает награду', () => {
@@ -41,7 +43,7 @@ describe('store/quests (6.2: прогресс из реальной статис
   it('каталог заданий согласован: положительные цели и награды', () => {
     for (const quest of QUESTS) {
       expect(quest.target).toBeGreaterThan(0)
-      expect(quest.rewardMinor).toBeGreaterThan(0)
+      expect(quest.rewardStars).toBeGreaterThan(0)
       expect(QUESTS.filter((q) => q.id === quest.id)).toHaveLength(1)
     }
   })

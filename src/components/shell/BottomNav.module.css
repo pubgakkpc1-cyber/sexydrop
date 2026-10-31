@@ -273,3 +273,91 @@
   .slidingTrack { transition: none; }
   .slidingPill, .dropMark, .burst i, .active .icon, .active .icon :global(.nav-accent) { animation: none; }
 }
+
+/* ===== Новые залитые иконки и крупная «Главная» ===== */
+.nav {
+  --nav-cut: #131212;
+  overflow: visible;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.pillHidden {
+  opacity: 0;
+  animation: none;
+}
+
+/* «Главная» — приподнятая круглая кнопка бренда по центру */
+.homeTab {
+  overflow: visible;
+}
+
+.homeTab .tabInner {
+  position: relative;
+  overflow: visible;
+  justify-content: flex-end;
+  gap: 2px;
+}
+
+.homeTab .iconWrap {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  width: 58px;
+  height: 58px;
+  margin-left: -29px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #ff7b83 0%, #e0484f 45%, #a82a31 100%);
+  border: 4px solid #131212;
+  box-shadow: 0 6px 18px rgba(224, 72, 79, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  color: #fff;
+  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.3s ease;
+}
+
+.homeTab .icon {
+  width: 30px;
+  height: 30px;
+  color: #fff;
+}
+
+.homeTab .icon :global(.nav-accent) {
+  fill: #5a1318;
+}
+
+.homeTab .tabLabel {
+  position: relative;
+  top: -1px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.homeTab.active .iconWrap {
+  transform: scale(1.1) translateY(-2px);
+  box-shadow: 0 8px 26px rgba(224, 72, 79, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.18);
+  animation: homeBeat 2.4s ease-in-out infinite;
+}
+
+.homeTab.active .icon {
+  filter: none;
+}
+
+.homeTab:not(.active) .iconWrap {
+  background: radial-gradient(circle at 35% 28%, #5a5c63 0%, #3a3c42 55%, #2a2b30 100%);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.homeTab:not(.active) .icon {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+@keyframes homeBeat {
+  0%, 100% { box-shadow: 0 8px 26px rgba(224, 72, 79, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.18); }
+  50% { box-shadow: 0 8px 34px rgba(224, 72, 79, 0.9), 0 0 0 5px rgba(224, 72, 79, 0.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .homeTab.active .iconWrap { animation: none; }
+}

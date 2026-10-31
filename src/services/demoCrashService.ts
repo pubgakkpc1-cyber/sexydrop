@@ -569,7 +569,7 @@ function cashoutAt(multiplier: number): CashoutResult {
     const wonMinor = mulByMultiplier(s.myBet.valueMinor, multiplier)
 
     // Ищем равноценный NFT подарок в каталоге
-    const matchingGift = gifts.find((g) => g.priceMinor === wonMinor)
+    const matchingGift = gifts.find((g) => /-\d$/.test(g.id) && g.priceMinor === wonMinor)
 
     if (matchingGift) {
       // Равноценный NFT подарок зачисляется в инвентарь игрока

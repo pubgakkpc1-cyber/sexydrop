@@ -12,6 +12,12 @@ import { UserAvatar } from '../ui/UserAvatar'
 import { DiamondIcon, WalletIcon, TonIcon, StarIcon } from './icons'
 import styles from './Header.module.css'
 
+/** Баланс с одной цифрой после точки, округление вниз: 94.57 → «94.5», 100 → «100». */
+function formatBalance1(minor: number): string {
+  const tenths = Math.floor(minor / 100)
+  return tenths % 10 === 0 ? String(tenths / 10) : `${Math.floor(tenths / 10)}.${tenths % 10}`
+}
+
 export function Header() {
   const balance = useWalletStore((s) => s.balances[s.mode] ?? s.balances.demo ?? s.balances.real)
   const navigate = useNavigate()
@@ -24,10 +30,12 @@ export function Header() {
     if (currency === 'STARS') {
       return { int: minorToStars(balance).toLocaleString('ru-RU').replace(/\u00a0/g, ' '), frac: '' }
     }
-    const [int = '0', frac] = formatMinor(balance).split('.')
+    // Больше 0.1 TON — одна цифра после точки (вниз); меньше — как есть (например 0.023)
+    const shown = balance > 100 ? formatBalance1(balance) : formatMinor(balance)
+    const [int = '0', frac] = shown.split('.')
     return { int, frac: frac ? `.${frac}` : '' }
   }, [balance, currency])
-  const balanceText = currency === 'STARS' ? `${balanceParts.int} Stars` : `${formatMinor(balance)} TON`
+  const balanceText = currency === 'STARS' ? `${balanceParts.int} Stars` : `${balanceParts.int}${balanceParts.frac} TON`
   const usernameClean = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
   const isAdmin =
     usernameClean === 'zapixxgarant' ||

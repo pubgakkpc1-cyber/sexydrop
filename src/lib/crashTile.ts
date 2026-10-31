@@ -11,7 +11,6 @@ for (const g of POOL) {
   if (list) list.push(g)
   else BY_PRICE.set(g.priceMinor, [g])
 }
-const PRICES: readonly number[] = [...BY_PRICE.keys()].sort((a, b) => a - b)
 
 function hash(seed: string): number {
   let h = 2166136261
@@ -20,22 +19,14 @@ function hash(seed: string): number {
 }
 
 /**
- * Картинка в плитке ставки Ракеты: самый дорогой NFT, цена которого не выше текущей
- * выплаты. Пока выплата меньше самого дешёвого NFT — возвращает undefined (рисуется
- * значок TON). По мере роста множителя NFT в плитке сменяется на более дорогие.
+ * Картинка в плитке ставки Ракеты. NFT показывается ТОЛЬКО если текущая выплата в точности равна
+ * цене какого-то NFT — ровно так же решает сервис при кешауте (равноценный NFT в инвентарь,
+ * иначе TON на баланс). Если NFT с такой ценой нет — undefined, и рисуется значок TON.
  * `prefer` — NFT, который игрок реально поставил (берётся, если цена совпала).
  */
 export function tileGiftFor(valueMinor: number, seed: string, prefer?: Gift): Gift | undefined {
-  if (!(valueMinor >= (PRICES[0] ?? Infinity))) return undefined
-  let lo = 0
-  let hi = PRICES.length - 1
-  while (lo < hi) {
-    const mid = (lo + hi + 1) >> 1
-    if ((PRICES[mid] ?? 0) <= valueMinor) lo = mid
-    else hi = mid - 1
-  }
-  const price = PRICES[lo]!
-  if (prefer && prefer.priceMinor === price) return prefer
-  const variants = BY_PRICE.get(price)!
+  const variants = BY_PRICE.get(valueMinor)
+  if (!variants) return undefined
+  if (prefer && prefer.priceMinor === valueMinor) return prefer
   return variants[hash(seed) % variants.length]
 }

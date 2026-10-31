@@ -4,23 +4,17 @@ import { tileGiftFor } from './crashTile'
 import { MULT_TIER_STYLE, multTier } from './multTier'
 
 describe('tileGiftFor (плитка ставки Ракеты)', () => {
-  it('ниже самого дешёвого NFT (5 TON) — значка NFT нет, рисуется TON', () => {
+  it('NFT только при точном совпадении цены; иначе значок TON (undefined)', () => {
     expect(tileGiftFor(4_999, 'a')).toBeUndefined()
     expect(tileGiftFor(0, 'a')).toBeUndefined()
+    expect(tileGiftFor(20_000, 'a')).toBeUndefined() // между NFT — выплата будет в TON
+    expect(tileGiftFor(7_001, 'a')).toBeUndefined()
   })
 
-  it('берёт самый дорогой NFT не дороже выплаты и меняется по мере роста', () => {
-    const at7 = tileGiftFor(7_000, 'a')
-    const at20 = tileGiftFor(20_000, 'a')
-    const at200 = tileGiftFor(200_000, 'a')
-    expect(at7?.priceMinor).toBe(7_000) // Snoop Dogg
-    expect(at20?.priceMinor).toBe(18_900) // Mad Pumpkin / Trapped Heart
-    expect(at200?.priceMinor).toBe(194_300) // Heroic Helmet
-    expect(new Set([at7?.id, at20?.id, at200?.id]).size).toBe(3)
-  })
-
-  it('выше самого дорогого NFT остаётся самый дорогой (Plush Pepe)', () => {
-    expect(tileGiftFor(99_999_999, 'a')?.priceMinor).toBe(6_720_000)
+  it('точная цена NFT — показывается именно NFT этой цены', () => {
+    expect(tileGiftFor(7_000, 'a')?.priceMinor).toBe(7_000) // Snoop Dogg
+    expect(tileGiftFor(194_300, 'a')?.priceMinor).toBe(194_300) // Heroic Helmet
+    expect(tileGiftFor(6_720_000, 'a')?.priceMinor).toBe(6_720_000) // Plush Pepe
   })
 
   it('если цена совпала с поставленным NFT — берётся именно он', () => {
@@ -29,7 +23,7 @@ describe('tileGiftFor (плитка ставки Ракеты)', () => {
   })
 
   it('детерминирован: один и тот же seed — одна и та же картинка', () => {
-    expect(tileGiftFor(30_000, 'player-1')?.id).toBe(tileGiftFor(30_000, 'player-1')?.id)
+    expect(tileGiftFor(7_000, 'player-1')?.id).toBe(tileGiftFor(7_000, 'player-1')?.id)
   })
 })
 

@@ -1,65 +1,62 @@
-import type { SVGProps } from 'react'
+import type { ReactNode, SVGProps } from 'react'
 
 /**
- * Иконки нижнего меню SEXY DROP. Каждая — линейная в покое и «залитая» (дуотон) в активном
- * состоянии; у каждой есть красная деталь-«изюминка» в форме капли/искры бренда.
+ * Иконки нижнего меню SEXY DROP: плотные залитые глифы (цвет — currentColor) с красной
+ * деталью-«изюминкой» в фирменном стиле: каплей, искрой или звездой.
  */
 export interface NavIconProps extends Omit<SVGProps<SVGSVGElement>, 'viewBox' | 'fill'> {
   active?: boolean
 }
 
 const ACCENT = '#ff5a64'
+const CUT = 'var(--nav-cut, #131212)'
 
-function Svg({ active, children, ...rest }: NavIconProps & { children: React.ReactNode }) {
+function Svg({ active, children, ...rest }: NavIconProps & { children: ReactNode }) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-      data-active={active ? 'true' : 'false'}
-      {...rest}
-    >
+    <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden data-active={active ? 'true' : 'false'} {...rest}>
       {children}
     </svg>
   )
 }
 
-const fillOf = (active?: boolean) => ({ fill: active ? 'currentColor' : 'none', fillOpacity: active ? 0.2 : 0 })
-
-/** Инвентарь — подарочная коробка с каплей-искрой. */
+/** Инвентарь — подарочная коробка с красной лентой и бантом. */
 export function NavInventoryIcon({ active, ...rest }: NavIconProps) {
   return (
     <Svg active={active} {...rest}>
-      <rect x="4" y="10.5" width="16" height="9.5" rx="2.2" {...fillOf(active)} />
-      <rect x="3" y="7" width="18" height="4.2" rx="1.6" {...fillOf(active)} />
-      <path d="M12 7v13" />
-      <path d="M12 7C11 3.6 7.4 3.2 7.6 5.4 7.8 7 10.4 7 12 7zM12 7c1-3.4 4.6-3.8 4.4-1.6C16.2 7 13.6 7 12 7z" />
-      <path className="nav-accent" d="M19.2 2.6c1 1.2 1.6 2 1.6 2.7a1.6 1.6 0 0 1-3.2 0c0-.7.6-1.5 1.6-2.7z" fill={ACCENT} stroke="none" />
+      <path d="M3.6 11.2h16.8v7.3a2.6 2.6 0 0 1-2.6 2.6H6.2a2.6 2.6 0 0 1-2.6-2.6z" />
+      <rect x="2.4" y="7.4" width="19.2" height="4.4" rx="1.9" fillOpacity="0.88" />
+      <rect className="nav-accent" x="10.5" y="7.4" width="3" height="13.7" fill={ACCENT} />
+      <path
+        className="nav-accent"
+        d="M12 7.4C11.3 4 7.6 3.4 7.8 5.7c.15 1.7 2.7 1.7 4.2 1.7zM12 7.4c.7-3.4 4.4-4 4.2-1.7-.15 1.7-2.7 1.7-4.2 1.7z"
+        fill={ACCENT}
+      />
     </Svg>
   )
 }
 
-/** Пригласить — человек с плюсом. */
+/** Пригласить — человек со значком «+». */
 export function NavInviteIcon({ active, ...rest }: NavIconProps) {
   return (
     <Svg active={active} {...rest}>
-      <circle cx="9.5" cy="8.2" r="3.4" {...fillOf(active)} />
-      <path d="M3.4 19.6c.5-3.4 3-5.4 6.1-5.4s5.6 2 6.1 5.4" {...fillOf(active)} />
-      <path className="nav-accent" d="M18.4 7.4v6M15.4 10.4h6" stroke={ACCENT} strokeWidth="2" />
+      <circle cx="9.4" cy="8" r="4" />
+      <path d="M2.4 20.4c0-4 3.1-6.6 7-6.6 1.3 0 2.5.3 3.5.8a5.6 5.6 0 0 0-1 7.2z" />
+      <circle className="nav-accent" cx="18" cy="16.2" r="4.6" fill={ACCENT} />
+      <path d="M18 13.9v4.6M15.7 16.2h4.6" stroke="#fff" strokeWidth="1.9" strokeLinecap="round" />
     </Svg>
   )
 }
 
-/** Главная — дом, у которого дверь-капля. */
+/** Главная — дом с дверью-каплей бренда. */
 export function NavHomeIcon({ active, ...rest }: NavIconProps) {
   return (
     <Svg active={active} {...rest}>
-      <path d="M3.4 11.3 12 4l8.6 7.3V19a1.6 1.6 0 0 1-1.6 1.6H5A1.6 1.6 0 0 1 3.4 19z" {...fillOf(active)} />
-      <path className="nav-accent" d="M12 12.4c1.8 2.1 2.8 3.4 2.8 4.6a2.8 2.8 0 0 1-5.6 0c0-1.2 1-2.5 2.8-4.6z" fill={ACCENT} stroke="none" />
+      <path d="M11.2 2.9a1.2 1.2 0 0 1 1.6 0l8.2 7.1a1 1 0 0 1-.65 1.75H19V19a2.3 2.3 0 0 1-2.3 2.3H7.3A2.3 2.3 0 0 1 5 19v-7.25H3.65A1 1 0 0 1 3 10z" />
+      <path
+        className="nav-accent"
+        d="M12 11.6c2 2.3 3.1 3.8 3.1 5.2a3.1 3.1 0 0 1-6.2 0c0-1.4 1.1-2.9 3.1-5.2z"
+        fill={ACCENT}
+      />
     </Svg>
   )
 }
@@ -68,10 +65,15 @@ export function NavHomeIcon({ active, ...rest }: NavIconProps) {
 export function NavTrophyIcon({ active, ...rest }: NavIconProps) {
   return (
     <Svg active={active} {...rest}>
-      <path d="M7 3.8h10v5.2a5 5 0 0 1-10 0z" {...fillOf(active)} />
-      <path d="M7 5.6H4.4v1.6A3.2 3.2 0 0 0 7.6 10.4M17 5.6h2.6v1.6a3.2 3.2 0 0 1-3.2 3.2" />
-      <path d="M12 14v3.6M8.6 20.2h6.8M9.6 17.6h4.8" />
-      <path className="nav-accent" d="m12 6 .9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 8.1l2-.3z" fill={ACCENT} stroke="none" />
+      <path d="M6.4 3.2h11.2v6a5.6 5.6 0 0 1-11.2 0z" />
+      <path d="M6.4 5.2H3.6v1.7a3.8 3.8 0 0 0 3.5 3.8M17.6 5.2h2.8v1.7a3.8 3.8 0 0 1-3.5 3.8" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="10.7" y="14.4" width="2.6" height="3.4" />
+      <rect x="7.2" y="17.6" width="9.6" height="3.2" rx="1.6" />
+      <path
+        className="nav-accent"
+        d="m12 4.9 1.1 2.25 2.5.36-1.8 1.76.43 2.48L12 10.55l-2.23 1.2.43-2.48-1.8-1.76 2.5-.36z"
+        fill={ACCENT}
+      />
     </Svg>
   )
 }
@@ -80,10 +82,14 @@ export function NavTrophyIcon({ active, ...rest }: NavIconProps) {
 export function NavEarnIcon({ active, ...rest }: NavIconProps) {
   return (
     <Svg active={active} {...rest}>
-      <circle cx="12" cy="12.4" r="8" {...fillOf(active)} />
-      <circle cx="12" cy="12.4" r="5.2" strokeOpacity="0.55" />
-      <path className="nav-accent" d="m12 8.9 1.05 2.15 2.35.35-1.7 1.65.4 2.35L12 14.3l-2.1 1.1.4-2.35-1.7-1.65 2.35-.35z" fill={ACCENT} stroke="none" />
-      <path d="M19.4 2.8v3M17.9 4.3h3" strokeWidth="1.5" />
+      <circle cx="11.6" cy="12.6" r="8.6" />
+      <circle cx="11.6" cy="12.6" r="6.3" fill="none" style={{ stroke: CUT }} strokeWidth="1.2" strokeOpacity="0.55" />
+      <path
+        className="nav-accent"
+        d="m11.6 8.7 1.2 2.45 2.7.4-1.95 1.9.46 2.7-2.4-1.27-2.4 1.27.46-2.7-1.95-1.9 2.7-.4z"
+        fill={ACCENT}
+      />
+      <path d="M20.2 1.8v3.6M18.4 3.6H22" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
     </Svg>
   )
 }

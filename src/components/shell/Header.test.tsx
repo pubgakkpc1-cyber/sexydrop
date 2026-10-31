@@ -61,4 +61,13 @@ describe('Header (аватар, «Ваш баланс», TON, Пополнить
     await userEvent.click(screen.getByRole('radio', { name: /^TON/ }))
     expect(screen.getByRole('button', { name: 'Баланс: 100 TON' })).toBeInTheDocument()
   })
+  it('баланс больше 0.1 — одна цифра после точки (вниз), меньше — как есть', () => {
+    useWalletStore.setState({ mode: 'demo', balances: { demo: 94_570, real: 0 } })
+    const { unmount } = renderHeader()
+    expect(screen.getByRole('button', { name: 'Баланс: 94.5 TON' })).toBeInTheDocument()
+    unmount()
+    useWalletStore.setState({ mode: 'demo', balances: { demo: 23, real: 0 } })
+    renderHeader()
+    expect(screen.getByRole('button', { name: 'Баланс: 0.023 TON' })).toBeInTheDocument()
+  })
 })

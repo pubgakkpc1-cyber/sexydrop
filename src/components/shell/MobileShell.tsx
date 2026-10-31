@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { getWebApp, isTelegramEnv } from '../../lib/telegram'
 import { BottomNav } from './BottomNav'
 import { Header } from './Header'
+import { LiveFeed } from './LiveFeed'
 import { CubeIcon, GiftIcon, RocketIcon, SlotIcon, TonIcon } from './icons'
 import styles from './MobileShell.module.css'
 
@@ -54,6 +55,7 @@ export function MobileShell() {
       <div className={styles.rootWrapper}>
         <div className={styles.shellContainer}>
           {!isCustomHeaderScreen && <Header />}
+          {!isCustomHeaderScreen && <LiveFeed />}
           <main
             className={isCustomHeaderScreen ? `${styles.main} ${styles.mainCustomHeader}` : styles.main}
             key={location.pathname}
@@ -129,6 +131,7 @@ export function MobileShell() {
         {/* Рабочая область приложения */}
         <div className={styles.shellContainer}>
           {!isCustomHeaderScreen && <Header />}
+          {!isCustomHeaderScreen && <LiveFeed />}
           <main className={styles.main} key={location.pathname}>
             <Outlet />
           </main>

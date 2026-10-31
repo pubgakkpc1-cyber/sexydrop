@@ -116,16 +116,26 @@ function formatTonMaxOneDecimal(minor: number): string {
   return Number.isInteger(val) ? `${val}` : val.toFixed(1)
 }
 
-/** Мелкие NFT левитируют по всей арене и время от времени сменяются на другие (чистый CSS-transform). */
+/** Мелкие модельки NFT (без фонов) левитируют по всей арене и время от времени сменяются на другие (чистый CSS-transform). */
 const FLOAT_POOL = [
-  'plush_pepe_1', 'heart_locket_1', 'ion_gem_1', 'mini_oscar_1', 'astral_shard_1', 'snoop_dogg_1',
-  'liberty_figure_1', 'crystal_ball_1', 'jolly_chimp_1', 'swiss_watch_1', 'toy_bear_1', 'kissed_frog_1',
+  'gift_87.png',
+  'gift_04.png',
+  'gift_103.png',
+  'blue_diamond_gem.png',
+  'teddy_bear.png',
+  'gift_82.png',
+  'gift_78.png',
+  'gift_92.png',
+  'gift_02.png',
+  'gift_93.png',
+  'gift_26.png',
+  'pink_heart_box.png',
 ] as const
 const FLOATERS = [
-  { x: 10, y: 11, size: 26, swapMs: 7000, start: 0, dx: 26, dy: 16, dur: 9 },
-  { x: 78, y: 15, size: 24, swapMs: 8500, start: 3, dx: -22, dy: 20, dur: 11 },
-  { x: 42, y: 29, size: 22, swapMs: 9500, start: 6, dx: 24, dy: -18, dur: 13 },
-  { x: 88, y: 36, size: 24, swapMs: 7800, start: 9, dx: -20, dy: -14, dur: 10 },
+  { x: 10, y: 11, size: 30, swapMs: 7000, start: 0, dx: 26, dy: 16, dur: 9 },
+  { x: 78, y: 15, size: 28, swapMs: 8500, start: 3, dx: -22, dy: 20, dur: 11 },
+  { x: 42, y: 29, size: 26, swapMs: 9500, start: 6, dx: 24, dy: -18, dur: 13 },
+  { x: 88, y: 36, size: 28, swapMs: 7800, start: 9, dx: -20, dy: -14, dur: 10 },
 ] as const
 
 function Floater({ f }: { f: (typeof FLOATERS)[number] }) {
@@ -149,7 +159,7 @@ function Floater({ f }: { f: (typeof FLOATERS)[number] }) {
     >
       <img
         key={idx}
-        src={`/gifts/${FLOAT_POOL[idx % FLOAT_POOL.length]}.png`}
+        src={`/gifts/png/${FLOAT_POOL[idx % FLOAT_POOL.length]}`}
         alt=""
         className={styles.floater}
         style={{ width: f.size, height: f.size }}

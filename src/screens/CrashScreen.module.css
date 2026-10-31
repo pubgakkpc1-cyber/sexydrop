@@ -2688,10 +2688,9 @@
 
 .floater {
   display: block;
-  border-radius: 7px;
-  border: 1.5px solid rgba(255, 255, 255, 0.45);
-  opacity: 0.42;
-  object-fit: cover;
+  opacity: 0.6;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.55));
   animation: floaterSwap 0.9s ease-out both;
 }
 
@@ -2703,7 +2702,7 @@
 
 @keyframes floaterSwap {
   0% { opacity: 0; transform: scale(0.4) rotate(-25deg); }
-  100% { opacity: 0.42; transform: scale(1) rotate(0); }
+  100% { opacity: 0.6; transform: scale(1) rotate(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

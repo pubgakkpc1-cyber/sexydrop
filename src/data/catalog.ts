@@ -181,6 +181,11 @@ export const gifts: readonly Gift[] = [
 
   /* --- ПРИЗЫ В TON --- */
   tonPrize(2),
+  tonPrize(100),
+  tonPrize(1500),
+  tonPrize(2500),
+  tonPrize(3000),
+  tonPrize(4000),
   tonPrize(5),
   tonPrize(10),
   tonPrize(50),
@@ -534,6 +539,9 @@ const CASE_CONFIG: readonly {
   isNew?: boolean
   glow: string
 }[] = [
+  { id: 'bronze', name: 'Bronze', priceMinor: 2000, isNew: true, glow: '#d98a4a' },
+  { id: 'silver', name: 'Silver', priceMinor: 2500, isNew: true, glow: '#c4ccd8' },
+  { id: 'gold', name: 'Gold', priceMinor: 3000, isNew: true, glow: '#ffc93c' },
   { id: 'farm', name: 'Farm', priceMinor: 6000, glow: '#46d97b' },
   { id: 'autumn', name: 'Autumn', priceMinor: 8000, isNew: true, glow: '#ff9f2e' },
   { id: 'movie', name: 'Movie', priceMinor: 9000, glow: '#ff5d5d' },

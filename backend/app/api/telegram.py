@@ -47,4 +47,7 @@ async def telegram_status() -> dict[str, Any]:
     out["pending"] = res.get("pending_update_count")
     out["last_error"] = res.get("last_error_message")
     out["allowed_updates"] = res.get("allowed_updates")
+    from app.services import subscription_service
+
+    out["admin_in_chats"] = {str(k): v for k, v in subscription_service.discovered_chats.items()}
     return out

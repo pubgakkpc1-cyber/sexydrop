@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CaseRoulette } from '../components/cases/CaseRoulette'
 import { CaseWinModal } from '../components/cases/CaseWinModal'
 import { FreeQuestModal } from '../components/cases/FreeQuestModal'
+import { SubscribeModal } from '../components/cases/SubscribeModal'
+import { checkSubscriptions, type SubChannel } from '../lib/subscriptions'
 import {
   ChevronLeftIcon,
   ClockIcon,
@@ -49,6 +51,8 @@ export function CaseDetailScreen() {
   const [winModalOpen, setWinModalOpen] = useState(false)
   const [questModalOpen, setQuestModalOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [checkingSubs, setCheckingSubs] = useState(false)
+  const [subGate, setSubGate] = useState<SubChannel[] | null>(null)
 
   // Таймер для обновления кулдауна каждую секунду
   useEffect(() => {
@@ -93,23 +97,34 @@ export function CaseDetailScreen() {
     .filter((row): row is { gift: Gift; chance: number } => row.gift !== undefined)
     .sort((a, b) => b.gift.priceMinor - a.gift.priceMinor || b.chance - a.chance)
 
+  const claimFree = () => {
+    if (!freeCaseId) return
+    const result = claimFreeCase(freeCaseId, makeRequestId(), Date.now())
+    if (result.status === 'ok') {
+      const gift = giftById.get(result.giftId)
+      if (gift) {
+        setTargetGiftId(result.giftId)
+        setSpinResult({ gift, uid: result.uid })
+        setIsSpinning(true)
+      }
+    } else {
+      setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
+    }
+  }
+
   const handleOpen = () => {
-    if (isSpinning) return
+    if (isSpinning || checkingSubs) return
     setError(null)
 
     if (isFreeCase && freeCaseId) {
       if (onCooldown) return
-      const result = claimFreeCase(freeCaseId, makeRequestId(), Date.now())
-      if (result.status === 'ok') {
-        const gift = giftById.get(result.giftId)
-        if (gift) {
-          setTargetGiftId(result.giftId)
-          setSpinResult({ gift, uid: result.uid })
-          setIsSpinning(true)
-        }
-      } else {
-        setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
-      }
+      // Бесплатные кейсы открываются только после подписки на обязательные каналы
+      setCheckingSubs(true)
+      void checkSubscriptions().then((res) => {
+        setCheckingSubs(false)
+        if (res.ok) claimFree()
+        else setSubGate(res.channels)
+      })
     } else {
       if (!affordable) {
         navigate('/deposit')
@@ -303,6 +318,18 @@ export function CaseDetailScreen() {
           gift={spinResult.gift}
           uid={spinResult.uid}
           onClose={handleCloseWinModal}
+        />
+      )}
+
+      {/* Обязательные подписки перед бесплатным кейсом */}
+      {subGate && (
+        <SubscribeModal
+          channels={subGate}
+          onClose={() => setSubGate(null)}
+          onPassed={() => {
+            setSubGate(null)
+            claimFree()
+          }}
         />
       )}
 

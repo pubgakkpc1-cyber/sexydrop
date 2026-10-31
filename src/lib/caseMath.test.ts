@@ -91,9 +91,12 @@ describe('catalog: gifts', () => {
 })
 
 describe('catalog: cases — инвариант EV и RTP', () => {
-  it('у всех 31 платных кейсов цена из конфигурации продукта', () => {
+  it('у всех 34 платных кейсов цена из конфигурации продукта', () => {
     const expected = new Map(
       Object.entries({
+        bronze: 2000,
+        silver: 2500,
+        gold: 3000,
         farm: 6000,
         classic: 150,
         romance: 150,

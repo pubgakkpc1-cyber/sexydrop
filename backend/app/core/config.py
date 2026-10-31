@@ -42,6 +42,12 @@ class Settings(BaseSettings):
     ton_deposit_address: str = "UQCTiqlyiZ0YigN0391TXbV3vZFmR6xNx9G6HeHMP4f9Le5a"
     toncenter_api_url: str = "https://toncenter.com/api/v3"
     toncenter_api_key: str = ""
+    # Обязательные подписки для бесплатных кейсов. Публичный канал проверяется по @username,
+    # приватный — по числовому id (-100...): бот должен быть админом обоих каналов.
+    sub_public_chat: str = "@SexyDrop_official"
+    sub_public_url: str = "https://t.me/SexyDrop_official"
+    sub_private_chat_id: str = ""
+    sub_private_url: str = "https://t.me/+YZoeECjxGmszNzZk"
     jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400

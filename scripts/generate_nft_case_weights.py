@@ -36,8 +36,11 @@ SPECIAL_BACKDROP = {"black": "Black", "onyx-black": "Onyx Black"}
 TON_PRIZES = {
     "TON 0.5": 500, "TON 1": 1000, "TON 2": 2000, "TON 5": 5000, "TON 10": 10000,
     "TON 0.002": 2, "TON 0.005": 5, "TON 0.01": 10, "TON 0.05": 50,
+    "TON 0.1": 100, "TON 1.5": 1500, "TON 2.5": 2500, "TON 3": 3000, "TON 4": 4000,
     "TON 25": 25000, "TON 50": 50000, "TON 100": 100000, "TON 250": 250000,
 }
+# призы только для мини-кейсов: в уже существующие кейсы не подмешиваются
+MINI_ONLY_TON = {"TON 0.1", "TON 1.5", "TON 2.5", "TON 3", "TON 4"}
 for _n, _v in TON_PRIZES.items():
     GIFTS[_n] = (_v, [f"ton_{_v}"])
     BACKDROP[f"ton_{_v}"] = "TON"
@@ -53,7 +56,7 @@ def is_ton(name: str) -> bool:
 
 def ton_extras(price: int) -> list[str]:
     """До трёх TON-призов, разнесённых по диапазону от 8% до 130% цены кейса."""
-    cands = sorted((n for n, v in TON_PRIZES.items() if 0.08 * price <= v <= 1.3 * price), key=lambda n: TON_PRIZES[n])
+    cands = sorted((n for n, v in TON_PRIZES.items() if n not in MINI_ONLY_TON and 0.08 * price <= v <= 1.3 * price), key=lambda n: TON_PRIZES[n])
     if len(cands) <= 3:
         return cands
     return [cands[0], cands[len(cands) // 2], cands[-1]]
@@ -272,6 +275,63 @@ for j, (n, wt) in enumerate(zip(pool24, w24)):
 report.append(f"free24      P={free24_price/1000:>6}  util={util(w24, v24, free24_price):.3f}  {list(zip(pool24, w24))}")
 (ROOT / "scripts/free24_target.json").write_text(json.dumps({"targetMinor": free24_price}), encoding="utf-8")
 
+
+# --- Мини-кейсы 2 / 2.5 / 3 TON: TON-призы и самые дешёвые NFT с маленькими шансами ---
+def solve_mini(v: list[int], is_nft: list[bool], price: int) -> list[int]:
+    """Веса мини-кейса. Редкие: NFT (~0.3% каждый) и призы дороже кейса (убывающие доли ~1-3%).
+    Остальное — плавная кривая w = K * (v/price)^a: подбираем a и K так, чтобы EV был как можно
+    ближе к 98% цены (строго не выше), а ни один предмет не превышал 40% шанса."""
+    n = len(v)
+    fixed: dict[int, int] = {}
+    over = sorted((i for i in range(n) if not is_nft[i] and v[i] > price), key=lambda i: v[i])
+    for k, i in enumerate(over):
+        fixed[i] = max(6, 48 // (2 ** k))
+    for i in range(n):
+        if is_nft[i]:
+            fixed[i] = 1
+    free = [i for i in range(n) if i not in fixed]
+    best: tuple[float, float, list[int]] | None = None
+    for a100 in range(-300, 301, 5):
+        a = a100 / 100
+        for K in range(20, 1500, 4):
+            w = [0] * n
+            for i, wt in fixed.items():
+                w[i] = wt
+            for i in free:
+                w[i] = max(1, round(K * (v[i] / price) ** a))
+            tot = sum(w)
+            if max(w) * 100 > 40 * tot:
+                continue
+            if 100 * sum(x * y for x, y in zip(w, v)) > RTP_PCT * price * tot:
+                continue
+            u = util(w, v, price)
+            score = (u, -max(w) / tot)
+            if best is None or score > (best[0], best[1]):
+                best = (u, -max(w) / tot, w)
+    assert best is not None, "mini case infeasible"
+    return best[2]
+
+
+MINI_CASES = [
+    ("bronze", "Bronze", 2000, ["TON 0.1", "TON 0.5", "TON 1", "TON 1.5", "TON 2", "TON 2.5", "TON 3", "TON 5"], ["Lol Pop", "Ice Cream", "Whip Cupcake"]),
+    ("silver", "Silver", 2500, ["TON 0.1", "TON 0.5", "TON 1", "TON 1.5", "TON 2", "TON 3", "TON 4", "TON 5"], ["Pet Snake", "Pool Float", "Chill Flame", "Big Year"]),
+    ("gold", "Gold", 3000, ["TON 0.5", "TON 1", "TON 1.5", "TON 2", "TON 3", "TON 4", "TON 5", "TON 10"], ["Timeless Book", "Xmas Stocking", "Clover Pin", "Party Sparkler"]),
+]
+for mi, (cid, name, price, tons, nfts) in enumerate(MINI_CASES):
+    pool = sorted(tons + nfts, key=lambda n: GIFTS[n][0])
+    v = [GIFTS[n][0] for n in pool]
+    w = solve_mini(v, [n in nfts for n in pool], price)
+    result[cid] = []
+    for j, (n, wt) in enumerate(zip(pool, w)):
+        picks = variant_picks(n, cid, 40 + mi * 7 + j)
+        q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
+        for vi, vid in enumerate(picks):
+            result[cid].append([vid, q + (1 if vi < r else 0)])
+    tot = sum(w)
+    report.append(
+        f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  "
+        + "  ".join(f"{n}:{wt / tot:.1%}" for n, wt in zip(pool, w))
+    )
 
 # --- Кейсы с обычными подарками Telegram (не NFT): цены по Stars (175 Stars = 1 TON, вниз) ---
 REGULAR = {

@@ -133,3 +133,37 @@ async def test_successful_payment_is_recorded_and_precheckout_validated(monkeypa
         {"message": {"chat": {"id": 1}, "successful_payment": {"invoice_payload": "evil", "currency": "XTR", "total_amount": 5}}}
     )
     assert "evil" not in svc.paid_stars
+
+
+@pytest.mark.asyncio
+async def test_subscription_check_and_discovery(monkeypatch):
+    from app.services import subscription_service as subs
+    from app.services import telegram_bot
+
+    monkeypatch.setenv("BOT_TOKEN", "123456:TEST_TOKEN_FOR_TESTS_ONLY")
+    monkeypatch.setenv("SUB_PRIVATE_CHAT_ID", "-1001")
+    get_settings.cache_clear()
+    answers = {"@SexyDrop_official": "member", "-1001": "left"}
+
+    async def fake_member(client, token, chat, user_id):
+        return answers[chat] in ("member", "administrator", "creator")
+
+    monkeypatch.setattr(subs, "_is_member", fake_member)
+    try:
+        res = await subs.check(42)
+        assert res["ok"] is False
+        assert [c["subscribed"] for c in res["channels"]] == [True, False]
+        answers["-1001"] = "member"
+        assert (await subs.check(42))["ok"] is True
+        await telegram_bot.handle_update({"my_chat_member": {
+            "chat": {"id": -100777, "type": "channel", "title": "Закрытый"},
+            "new_chat_member": {"status": "administrator"}}})
+        assert subs.discovered_chats[-100777] == "Закрытый"
+    finally:
+        subs.discovered_chats.clear()
+        get_settings.cache_clear()
+
+
+def test_subscription_check_requires_valid_init_data(client):
+    res = client.post("/api/subscriptions/check", json={"init_data": "bogus"})
+    assert res.status_code == 401

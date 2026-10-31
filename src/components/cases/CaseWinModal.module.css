@@ -225,3 +225,128 @@
   color: #41a666 !important;
   background: rgba(65, 166, 102, 0.1) !important;
 }
+
+/* ---- Выпадение подарка: карточка переворачивается, лучи, искры, блик; дальше — лёгкий наклон ---- */
+.stageWrap {
+  position: relative;
+  width: 150px;
+  height: 150px;
+  margin: 4px 0 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 700px;
+}
+
+.rays {
+  position: absolute;
+  inset: -50px;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(214, 78, 84, 0.28) 0deg 10deg, rgba(214, 78, 84, 0) 10deg 24deg);
+  -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%);
+  mask: radial-gradient(circle, #000 18%, transparent 68%);
+  opacity: 0;
+  animation: raysIn 0.6s ease-out 0.25s forwards, raysSpin 14s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes raysIn { to { opacity: 1; } }
+@keyframes raysSpin { to { transform: rotate(360deg); } }
+
+.imageWrap {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  margin: 0;
+  padding: 0;
+  border: 3px solid rgba(255, 255, 255, 0.92);
+  border-radius: 24px;
+  background: #1d1d20;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4), 0 14px 30px rgba(0, 0, 0, 0.6), 0 0 34px rgba(214, 78, 84, 0.45);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  opacity: 0;
+  animation:
+    cardFlip 0.8s cubic-bezier(0.2, 1.1, 0.3, 1) 0.15s forwards,
+    cardTilt 4.2s ease-in-out 1s infinite;
+}
+
+.imageWrap[data-rarity='legendary'] { box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 14px 30px rgba(0,0,0,.6), 0 0 44px rgba(255, 196, 60, 0.7); }
+.imageWrap[data-rarity='epic'] { box-shadow: 0 0 0 1px rgba(0,0,0,.4), 0 14px 30px rgba(0,0,0,.6), 0 0 40px rgba(178, 125, 255, 0.65); }
+
+@keyframes cardFlip {
+  0% { opacity: 0; transform: rotateY(-100deg) scale(0.6) translateY(30px); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: rotateY(0deg) scale(1) translateY(0); }
+}
+
+@keyframes cardTilt {
+  0%, 100% { transform: rotateY(-5deg) rotateX(2deg); }
+  50% { transform: rotateY(5deg) rotateX(-2deg); }
+}
+
+.giftImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+  filter: none;
+  animation: none;
+  display: block;
+}
+
+.shine {
+  position: absolute;
+  top: -10%;
+  bottom: -10%;
+  width: 45%;
+  left: 0;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+  transform: translateX(-140%) skewX(-18deg);
+  animation: cardShine 0.9s ease-in-out 0.85s forwards, cardShine 0.9s ease-in-out 3.2s infinite;
+  pointer-events: none;
+}
+
+@keyframes cardShine { to { transform: translateX(320%) skewX(-18deg); } }
+
+.spark {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 50%;
+  background: #ffe1e1;
+  box-shadow: 0 0 8px #ff6b72;
+  opacity: 0;
+  animation: sparkBurst 0.9s cubic-bezier(0.1, 0.8, 0.3, 1) var(--t) both;
+  pointer-events: none;
+}
+
+@keyframes sparkBurst {
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(30px) scale(1.4); }
+  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(0.2); }
+}
+
+/* Остальное содержимое поднимается по очереди */
+.giftName, .metaRow, .actions {
+  opacity: 0;
+  animation: riseUp 0.5s ease-out forwards;
+}
+.giftName { animation-delay: 0.7s; }
+.metaRow { animation-delay: 0.82s; }
+.actions { animation-delay: 0.95s; }
+
+@keyframes riseUp {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rays, .imageWrap, .shine, .spark, .giftName, .metaRow, .actions {
+    animation-duration: 0.01s;
+    animation-delay: 0s;
+    animation-iteration-count: 1;
+  }
+}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import { RARITY_LABELS, type Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
@@ -12,6 +12,8 @@ interface CaseWinModalProps {
   uid: string
   onClose: () => void
 }
+
+const SPARKS = Array.from({ length: 12 }, (_, i) => ({ a: i * 30 + (i % 2) * 9, d: 92 + (i % 3) * 22 }))
 
 export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
   const [sold, setSold] = useState(false)
@@ -43,8 +45,20 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
         </h2>
         <p className={styles.subtitle}>Вам выпал новый подарок</p>
 
-        <div className={styles.imageWrap}>
-          <img className={styles.giftImage} src={gift.image} alt={gift.name} />
+        <div className={styles.stageWrap}>
+          <div className={styles.rays} aria-hidden />
+          {SPARKS.map((s, i) => (
+            <span
+              key={i}
+              className={styles.spark}
+              aria-hidden
+              style={{ '--a': `${s.a}deg`, '--d': `${s.d}px`, '--t': `${0.5 + (i % 4) * 0.06}s` } as CSSProperties}
+            />
+          ))}
+          <div className={styles.imageWrap} data-rarity={gift.rarity}>
+            <img className={styles.giftImage} src={gift.image} alt={gift.name} />
+            <span className={styles.shine} aria-hidden />
+          </div>
         </div>
 
         <strong className={styles.giftName}>{gift.name}</strong>

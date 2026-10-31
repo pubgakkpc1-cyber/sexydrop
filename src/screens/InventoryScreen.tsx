@@ -4,7 +4,6 @@ import { giftById, type Rarity } from '../data/catalog'
 import { useInventoryStore } from '../store/inventory'
 import { DiamondIcon, SearchIcon, ShareIcon } from '../components/shell/icons'
 import { InventoryGiftCard } from '../components/inventory/InventoryGiftCard'
-import { InventoryHistory } from '../components/inventory/InventoryHistory'
 import { Button, Input } from '../components/ui'
 import { sellItem } from '../services/demoInventoryService'
 import { makeRequestId } from '../lib/requestId'
@@ -213,8 +212,6 @@ export function InventoryScreen() {
           )}
         </>
       )}
-
-      <InventoryHistory />
 
       <p className={filterStyles.helpCard}>
         Нужна помощь с подарками? Напишите нам в боте @sexydropbot — поддержка поможет.

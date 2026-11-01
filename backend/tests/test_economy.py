@@ -408,7 +408,7 @@ async def test_free_case_nft_is_locked_until_five_premium_friends(client: AsyncC
     st = await state(client, owner)
     assert st["items"] == [] and st["free_quest"]["pending"] is not None
     # новый FREE, пока задание не выполнено, открыть нельзя
-    assert (await client.post("/api/play/free/free/claim", headers=h(owner), json={"client_request_id": "q2"})).json()["status"] == "cooldown"
+    assert (await client.post("/api/play/free/free/claim", headers=h(owner), json={"client_request_id": "q2"})).json()["status"] == "used"
 
     # друзья: приходят по ссылке, но без Premium не считаются
     for _ in range(5):
@@ -463,7 +463,11 @@ async def test_leaderboard_counts_turnover_without_leaking_ids(client: AsyncClie
     board = (await client.get("/api/leaderboard")).json()
     assert board["total"] >= 1
     assert all(set(r) == {"rank", "name", "points", "me"} for r in board["rows"])
-    assert any(r["name"] == player["_user"]["username"] and r["points"] == 650 for r in board["rows"])
+    async with get_session_factory()() as session:
+        full = await account_service.leaderboard(session, uuid.UUID(player["_user"]["id"]), limit=100_000)
+    mine = next(r for r in full["rows"] if r["me"])
+    assert mine["name"] == player["_user"]["username"] and mine["points"] == 650
+    assert full["me"]["points"] == 650
 
 
 # ------------------------------------------------------------------ пополнения
@@ -582,3 +586,48 @@ async def test_parallel_same_request_id_charges_once(client: AsyncClient, admin:
     prize = ok[0].json()["gift_id"]
     expected = 20_000 - 6_500 + (catalog.ton_prize_minor(prize) if catalog.is_ton_prize(prize) else 0)
     assert balance == expected
+
+
+# ------------------------------------------------------------------ правила бесплатных кейсов
+
+async def test_free24_asks_for_deposit_after_three_spins(client: AsyncClient, monkeypatch) -> None:
+    user = await login(client)
+    day = 24 * 3600 * 1000
+    clock = {"t": 1_900_000_000_000}
+    monkeypatch.setattr(play_service, "now_ms", lambda: clock["t"])
+    flags = []
+    for i in range(3):
+        res = await client.post("/api/play/free/free24/claim", headers=h(user), json={"client_request_id": f"g{i}"})
+        assert res.status_code == 200 and res.json()["status"] == "ok", res.text
+        flags.append(res.json().get("deposit_required"))
+        clock["t"] += day
+    assert flags == [None, None, True]  # окно с просьбой пополнения появляется после третьего прокрута
+    assert (await state(client, user))["free_gate"]["deposit_required"] is True
+    blocked = await client.post("/api/play/free/free24/claim", headers=h(user), json={"client_request_id": "g3"})
+    assert blocked.status_code == 403 and blocked.json()["code"] == "deposit_required"
+
+    # маленькое пополнение не снимает блок, 0.25 TON — снимает
+    uid = uuid.UUID(user["_user"]["id"])
+    async with get_session_factory()() as session:
+        small = await account_service.create_deposit_order(session, uid, "ton", uuid.uuid4().hex, 0)
+        await account_service.credit_deposit(session, small.id, 100, "dep-" + uuid.uuid4().hex)
+    assert (await client.post("/api/play/free/free24/claim", headers=h(user), json={"client_request_id": "g4"})).status_code == 403
+    async with get_session_factory()() as session:
+        more = await account_service.create_deposit_order(session, uid, "ton", uuid.uuid4().hex, 0)
+        await account_service.credit_deposit(session, more.id, 150, "dep-" + uuid.uuid4().hex)
+    ok = await client.post("/api/play/free/free24/claim", headers=h(user), json={"client_request_id": "g5"})
+    assert ok.status_code == 200 and ok.json()["status"] == "ok"
+    assert (await state(client, user))["free_gate"]["deposit_required"] is False
+
+
+async def test_expensive_free_case_can_be_spun_only_once(client: AsyncClient, monkeypatch) -> None:
+    user = await login(client)
+    clock = {"t": 1_950_000_000_000}
+    monkeypatch.setattr(play_service, "now_ms", lambda: clock["t"])
+    first = await client.post("/api/play/free/free/claim", headers=h(user), json={"client_request_id": "o1"})
+    assert first.json()["status"] == "ok"
+    for days in (1, 5, 30):
+        clock["t"] += days * 24 * 3600 * 1000
+        again = await client.post("/api/play/free/free/claim", headers=h(user), json={"client_request_id": f"again{days}"})
+        assert again.json()["status"] == "used"
+    assert (await state(client, user))["free_used"]["free"] is True

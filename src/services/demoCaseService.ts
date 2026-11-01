@@ -14,8 +14,12 @@ export type OpenCaseResult =
   | { status: 'insufficient_funds' }
 
 export type ClaimFreeResult =
-  | { status: 'ok'; giftId: string; uid: string }
+  | { status: 'ok'; giftId: string; uid: string; depositRequired?: boolean }
   | { status: 'cooldown'; nextAvailableAt: number }
+  /** Дорогой FREE уже открывался (доступен один раз за всё время). */
+  | { status: 'used' }
+  /** FREE 24: после трёх прокрутов нужно пополнение. */
+  | { status: 'deposit_required' }
 
 /**
  * DEMO MODE ONLY. Эмулирует серверный цикл «проверка → списание → розыгрыш →

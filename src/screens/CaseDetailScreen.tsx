@@ -4,6 +4,7 @@ import { CaseRoulette } from '../components/cases/CaseRoulette'
 import { CaseWinModal } from '../components/cases/CaseWinModal'
 import { FreeQuestModal } from '../components/cases/FreeQuestModal'
 import { SubscribeModal } from '../components/cases/SubscribeModal'
+import { DepositRequiredSheet } from '../components/cases/DepositRequiredSheet'
 import { checkSubscriptions, type SubChannel } from '../lib/subscriptions'
 import {
   ChevronLeftIcon,
@@ -43,6 +44,7 @@ export function CaseDetailScreen() {
   const balance = useWalletStore((s) => s.balances[s.mode])
   const lastClaimAt = useFreeCasesStore((s) => s.lastClaimAt)
   const quest = useFreeCasesStore((s) => s.quest)
+  const freeUsed = useFreeCasesStore((s) => s.freeUsed)
 
   const [now, setNow] = useState(() => Date.now())
   const [isSpinning, setIsSpinning] = useState(false)
@@ -53,6 +55,8 @@ export function CaseDetailScreen() {
   const [error, setError] = useState<string | null>(null)
   const [checkingSubs, setCheckingSubs] = useState(false)
   const [opening, setOpening] = useState(false)
+  const [depositPrompt, setDepositPrompt] = useState(false)
+  const [promptAfterWin, setPromptAfterWin] = useState(false)
   const [subGate, setSubGate] = useState<SubChannel[] | null>(null)
 
   // Таймер для обновления кулдауна каждую секунду
@@ -81,7 +85,8 @@ export function CaseDetailScreen() {
   const resetInfo = getMsk23ResetInfo(now)
   const lastClaim = freeCaseId ? lastClaimAt[freeCaseId] : 0
   const isAvailable = isFreeCase ? resetInfo.isAvailable(lastClaim) : true
-  const onCooldown = isFreeCase && !isAvailable
+  const questFreeUsed = isQuestFree && freeUsed
+  const onCooldown = isFreeCase && !isAvailable && !questFreeUsed
   const cooldownRemainingMs = onCooldown ? resetInfo.remainingMs : 0
 
   const hasPendingQuestReward =
@@ -108,7 +113,13 @@ export function CaseDetailScreen() {
           setTargetGiftId(result.giftId)
           setSpinResult({ gift, uid: result.uid })
           setIsSpinning(true)
+          // после третьего прокрута FREE 24 просим пополнение — окно появится, когда закроется выигрыш
+          if (result.depositRequired) setPromptAfterWin(true)
         }
+      } else if (result.status === 'deposit_required') {
+        setDepositPrompt(true)
+      } else if (result.status === 'used') {
+        setError('Этот кейс можно открыть только один раз')
       } else {
         setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
       }
@@ -122,7 +133,7 @@ export function CaseDetailScreen() {
     setError(null)
 
     if (isFreeCase && freeCaseId) {
-      if (onCooldown) return
+      if (onCooldown || questFreeUsed) return
       // Бесплатные кейсы открываются только после подписки на обязательные каналы
       setCheckingSubs(true)
       void checkSubscriptions().then(async (res) => {
@@ -170,6 +181,10 @@ export function CaseDetailScreen() {
     setWinModalOpen(false)
     setSpinResult(null)
     setTargetGiftId(null)
+    if (promptAfterWin) {
+      setPromptAfterWin(false)
+      setDepositPrompt(true)
+    }
   }
 
   const handleCloseQuestModal = () => {
@@ -198,7 +213,7 @@ export function CaseDetailScreen() {
           {isDailyFree
             ? 'Ежедневный сундук · Доступно 1 раз в 24 часа (сброс в 23:00 МСК)'
             : isQuestFree
-            ? 'Фри кейс с заданием · Пригласите 5 друзей с TG Premium (3 дня на активацию)'
+            ? 'Фри кейс с заданием · Открывается один раз · Пригласите 5 друзей с TG Premium (3 дня на активацию)'
             : 'Официальные Telegram подарки · Мгновенный вывод или продажа за TON'}
         </p>
       </div>
@@ -265,6 +280,13 @@ export function CaseDetailScreen() {
             <LockIcon style={{ width: '19px', height: '19px', marginRight: '6px' }} />
             <span>Активировать выигрыш (Квест 3 дня)</span>
           </button>
+        ) : questFreeUsed ? (
+          <div className={styles.cooldownContainer}>
+            <button type="button" className={`${styles.openButton} ${styles.openButtonWaiting}`} disabled>
+              <LockIcon style={{ width: '18px', height: '18px', marginRight: '6px' }} />
+              <span>Уже открыт — второй раз нельзя</span>
+            </button>
+          </div>
         ) : !isFreeCase && !affordable ? (
           /* Не хватает баланса — кнопка как на фото «Пополнить баланс» */
           <button
@@ -345,6 +367,8 @@ export function CaseDetailScreen() {
           }}
         />
       )}
+
+      {depositPrompt && <DepositRequiredSheet onClose={() => setDepositPrompt(false)} />}
 
       {/* 7. Модалка квеста с замком для кейса FREE */}
       {questModalOpen && (

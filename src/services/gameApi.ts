@@ -59,10 +59,29 @@ export async function openCaseApi(caseId: string, requestId: string): Promise<Op
 
 export async function claimFreeCaseApi(caseId: FreeCaseId, requestId: string): Promise<ClaimFreeResult> {
   if (!SERVER_MODE) return claimFreeCase(caseId, requestId, Date.now())
-  const res = await apiPost<
-    { status: 'ok' | 'cooldown'; gift_id?: string; uid?: string; next_available_at?: number } & WithBalance
-  >(`/api/play/free/${caseId}/claim`, { client_request_id: requestId })
+  let res
+  try {
+    res = await apiPost<
+      {
+        status: 'ok' | 'cooldown' | 'used'
+        gift_id?: string
+        uid?: string
+        next_available_at?: number
+        deposit_required?: boolean
+      } & WithBalance
+    >(`/api/play/free/${caseId}/claim`, { client_request_id: requestId })
+  } catch (error) {
+    if (error instanceof ApiError && error.code === 'deposit_required') {
+      await hydrateFromServer()
+      return { status: 'deposit_required' }
+    }
+    throw error
+  }
   applyBalance(res)
+  if (res.status === 'used') {
+    await hydrateFromServer()
+    return { status: 'used' }
+  }
   if (res.status === 'cooldown') return { status: 'cooldown', nextAvailableAt: res.next_available_at ?? Date.now() }
   const uid = res.uid ?? ''
   if (caseId === 'free') {
@@ -72,7 +91,7 @@ export async function claimFreeCaseApi(caseId: FreeCaseId, requestId: string): P
     addServerItem(uid, res.gift_id ?? '', 'free-case')
     void hydrateFromServer()
   }
-  return { status: 'ok', giftId: res.gift_id ?? '', uid }
+  return { status: 'ok', giftId: res.gift_id ?? '', uid, depositRequired: res.deposit_required === true }
 }
 
 /* ------------------------------------------------------------------ инвентарь */

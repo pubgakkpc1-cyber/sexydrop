@@ -23,6 +23,10 @@ interface FreeCasesState {
   lastClaimAt: Record<FreeCaseId, number>
   /** Состояние квеста для бесплатного кейса «free» (с заданиями на 5 TG Premium друзей). */
   quest: FreeQuestState
+  /** Дорогой FREE открывается один раз за всё время: уже открыт (данные сервера). */
+  freeUsed: boolean
+  /** FREE 24: после трёх прокрутов нужно пополнение (50 Stars или 0.25 TON). */
+  depositRequired: boolean
   claim: (id: FreeCaseId, at: number) => void
   nextAvailableAt: (id: FreeCaseId, now?: number) => number
   isCaseAvailable: (id: FreeCaseId, now?: number) => boolean
@@ -141,6 +145,8 @@ function saveQuest(quest: FreeQuestState): void {
 export const useFreeCasesStore = create<FreeCasesState>((set, get) => ({
   lastClaimAt: loadLastClaim(),
   quest: loadQuest(),
+  freeUsed: false,
+  depositRequired: false,
 
   claim: (id, at) => {
     const next = { ...get().lastClaimAt, [id]: at }

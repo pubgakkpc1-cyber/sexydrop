@@ -17,6 +17,7 @@ function formatCountdown(ms: number): string {
 export function FreeCasesSection() {
   const lastClaimAt = useFreeCasesStore((s) => s.lastClaimAt)
   const quest = useFreeCasesStore((s) => s.quest)
+  const freeUsed = useFreeCasesStore((s) => s.freeUsed)
   const [now, setNow] = useState(() => Date.now())
 
   useEffect(() => {
@@ -43,7 +44,8 @@ export function FreeCasesSection() {
           const caseId = gameCase.id as FreeCaseId
           const isDaily = caseId === 'free24'
           const lastClaim = lastClaimAt[caseId]
-          const available = resetInfo.isAvailable(lastClaim)
+          const used = !isDaily && freeUsed
+          const available = !used && resetInfo.isAvailable(lastClaim)
           const remainingMs = resetInfo.remainingMs
 
           const hasPendingQuest =
@@ -98,6 +100,11 @@ export function FreeCasesSection() {
                   <span className={cx(styles.actionPill, styles.pillLocked)}>
                     <LockIcon className={styles.pillIcon} aria-hidden />
                     <span>Квест: 3 дня</span>
+                  </span>
+                ) : used ? (
+                  <span className={cx(styles.actionPill, styles.pillWaiting)}>
+                    <LockIcon className={styles.pillIcon} aria-hidden />
+                    <span>Уже открыт</span>
                   </span>
                 ) : available ? (
                   <span

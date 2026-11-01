@@ -123,6 +123,11 @@ async def get_state(session: AsyncSession, user: User) -> dict[str, Any]:
         "quests_claimed": {k: v for k, v in (meta.quests_claimed or {}).items() if not k.startswith("_")},
         "metrics": await quest_metrics(session, user.id),
         "free_next_at": cooldowns,
+        "free_used": {"free": int(free_state.get("free", {}).get("last_at", 0)) > 0},
+        "free_gate": {
+            "deposit_required": int(free_state.get("free24", {}).get("count", 0)) >= play_service.FREE24_SPINS_BEFORE_DEPOSIT
+            and not await play_service.has_unlock_deposit(session, user.id)
+        },
         "free_quest": quest,
         "server_now_ms": play_service.now_ms(),
         "me": {"id": user.telegram_id, "username": user.username, "name": user.first_name},

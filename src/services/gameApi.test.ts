@@ -115,4 +115,21 @@ describe('gameApi (серверный режим)', () => {
     vi.stubGlobal('fetch', vi.fn(async () => reply(409, { detail: 'Недостаточно звёзд', code: 'insufficient_stars' })))
     expect(await api.exchangeStarsApi(350)).toBe('insufficient')
   })
+
+  it('FREE 24: после третьего прокрута сервер просит пополнение, дорогой FREE — только один раз', async () => {
+    const { api } = await load()
+    const state = { balance_minor: 0, items: [], stars: 0, quests_claimed: {}, metrics: {}, free_next_at: {}, free_used: { free: true }, free_gate: { deposit_required: true }, free_quest: { pending: null, joined: 0, target: 5, completed: false }, me: {} }
+    const responses = [
+      reply(200, { status: 'ok', gift_id: 'ton_5', uid: '', deposit_required: true, balance_minor: 5 }),
+      reply(200, state),
+      reply(403, { detail: 'Пополните', code: 'deposit_required' }),
+      reply(200, state),
+      reply(200, { status: 'used', balance_minor: 0 }),
+      reply(200, state),
+    ]
+    vi.stubGlobal('fetch', vi.fn(async () => responses.shift() ?? reply(200, state)))
+    expect(await api.claimFreeCaseApi('free24', 'a')).toMatchObject({ status: 'ok', depositRequired: true })
+    expect(await api.claimFreeCaseApi('free24', 'b')).toEqual({ status: 'deposit_required' })
+    expect(await api.claimFreeCaseApi('free', 'c')).toEqual({ status: 'used' })
+  })
 })

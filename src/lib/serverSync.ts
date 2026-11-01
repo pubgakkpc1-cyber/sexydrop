@@ -29,6 +29,8 @@ export interface ServerState {
   quests_claimed: Record<string, boolean>
   metrics: { casesOpened: number; minesRounds: number; upgrades: number; wagered: number; friendDeposits: number }
   free_next_at: Record<string, number>
+  free_used: { free: boolean }
+  free_gate: { deposit_required: boolean }
   free_quest: FreeQuestServer
   me: { id: number; username: string | null; name: string | null }
 }
@@ -94,7 +96,13 @@ export function applyServerState(state: ServerState): void {
     // время следующего сброса > 0 — кейс уже открыт в этом периоде
     claims[id] = (state.free_next_at[id] ?? 0) > 0 ? Date.now() : 0
   }
-  useFreeCasesStore.setState({ lastClaimAt: claims })
+  // дорогой FREE открывается один раз за всё время
+  if (state.free_used?.free) claims.free = 4_102_444_800_000
+  useFreeCasesStore.setState({
+    lastClaimAt: claims,
+    freeUsed: state.free_used?.free ?? false,
+    depositRequired: state.free_gate?.deposit_required ?? false,
+  })
   applyFreeQuest(state.free_quest)
   // задание выполнено, сервер уже выдал подарок: окно «Награда разблокирована» остаётся, пока игрок его не закроет
   if (prevPending && !state.free_quest.pending && state.items.some((i) => i.uid === prevPending.uid)) {

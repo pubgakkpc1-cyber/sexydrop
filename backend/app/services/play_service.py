@@ -29,6 +29,9 @@ from app.services.economy_core import (
 )
 
 QUEST_FRIENDS = 5
+# FREE 24 (дешёвые подарки каждый день): после стольких прокрутов нужно пополнение, чтобы продолжить
+FREE24_SPINS_BEFORE_DEPOSIT = 3
+DEPOSIT_UNLOCK_MINOR = 250  # 0.25 TON; 50 Stars = 0.285 TON тоже проходит
 QUEST_TTL_MS = 3 * 24 * 3600 * 1000
 MINES_TILES = 25
 
@@ -180,6 +183,22 @@ async def friends_joined(session: AsyncSession, user_id: uuid.UUID, since_ms: in
     return int((await session.execute(stmt)).scalar_one())
 
 
+async def has_unlock_deposit(session: AsyncSession, user_id: uuid.UUID) -> bool:
+    """Игрок пополнял баланс (TON, CryptoBot или Stars) минимум на 0.25 TON суммарно."""
+    from sqlalchemy import func
+
+    from app.models.economy import DepositOrder
+
+    total = (
+        await session.execute(
+            select(func.coalesce(func.sum(DepositOrder.amount_minor), 0)).where(
+                DepositOrder.user_id == user_id, DepositOrder.status == "paid"
+            )
+        )
+    ).scalar_one()
+    return int(total) >= DEPOSIT_UNLOCK_MINOR
+
+
 async def quest_status(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any]:
     """Состояние задания FREE; при выполнении подарок переходит в инвентарь."""
     meta = await _lock_meta(session, user_id)
@@ -219,16 +238,23 @@ async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, re
     now = now_ms()
     state = dict(meta.free_state or {})
     last_at = int(state.get(case_id, {}).get("last_at", 0))
-    next_at = free_next_available(last_at, now)
-    if next_at:
-        await session.rollback()
-        return {"status": "cooldown", "next_available_at": next_at}
     if case_id == "free":
-        pending = await _active_quest_item(session, user_id, meta, now)
-        if pending is not None:
+        # дорогой FREE открывается ровно один раз за всё время
+        if last_at > 0:
             await session.rollback()
-            return {"status": "cooldown", "next_available_at": int(meta.free_state["quest"]["expires_at"])}
-        state = dict(meta.free_state or {})
+            return {"status": "used"}
+    else:
+        next_at = free_next_available(last_at, now)
+        if next_at:
+            await session.rollback()
+            return {"status": "cooldown", "next_available_at": next_at}
+        spins = int(state.get(case_id, {}).get("count", 0))
+        if spins >= FREE24_SPINS_BEFORE_DEPOSIT and not await has_unlock_deposit(session, user_id):
+            raise GameError(
+                "deposit_required",
+                403,
+                "Чтобы продолжить бесплатные прокруты, пополните баланс на 50 Stars или 0.25 TON",
+            )
 
     prize = pick_weighted(catalog.effective_entries(case))
     result: dict[str, Any] = {"status": "ok", "gift_id": prize, "uid": ""}
@@ -252,8 +278,12 @@ async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, re
             item = await add_item(session, user_id, prize, price, "free-case")
         result["uid"] = str(item.id)
         round_.payout_minor = price
-    state[case_id] = {"last_at": now}
+    spins_done = int(state.get(case_id, {}).get("count", 0)) + 1
+    state[case_id] = {"last_at": now, "count": spins_done}
     meta.free_state = state
+    if case_id == "free24" and spins_done >= FREE24_SPINS_BEFORE_DEPOSIT:
+        # после третьего прокрута приложение просит пополнение (игроку об этом заранее не сообщается)
+        result["deposit_required"] = not await has_unlock_deposit(session, user_id)
     round_.result = result
     await session.commit()
     return result

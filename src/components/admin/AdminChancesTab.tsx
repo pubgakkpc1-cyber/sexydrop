@@ -99,6 +99,7 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
 
   const ev = evOf(groups)
   const rtp = free || def.priceMinor === 0 ? null : (ev / def.priceMinor) * 100
+  const profit = def.priceMinor - ev
   const beatCase = groups.filter((g) => g.priceMinor > def.priceMinor).reduce((s, g) => s + g.pct, 0)
   const atLeastBack = groups.filter((g) => g.priceMinor >= def.priceMinor).reduce((s, g) => s + g.pct, 0)
 
@@ -107,6 +108,7 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
     if (!Number.isFinite(n)) return
     setGroups((g) => withPct(g, name, n))
     setDirty(true)
+    setStatus(null)
     setSim(null)
   }
 
@@ -181,6 +183,12 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
         Впишите нужный шанс призу — остальные сами подстроятся, чтобы в сумме было 100%.
       </p>
       <div className={styles.sumRow}>
+        <strong className={profit >= 0 ? styles.good : styles.bad}>
+          {free
+            ? `Расход на 1 открытие: ${formatMinor(Math.round(ev))} TON`
+            : `Заработок с 1 открытия: ${profit >= 0 ? '+' : '−'}${formatMinor(Math.round(Math.abs(profit)))} TON`}
+        </strong>
+        {!free && <span>С 1000 открытий: {profit >= 0 ? '+' : '−'}{formatMinor(Math.round(Math.abs(profit) * 1000))} TON</span>}
         <span>{rtp !== null ? `Возврат игрокам (RTP): ${rtp.toFixed(1)}%` : `Средний выигрыш: ${formatMinor(Math.round(ev))}`}</span>
         {!free && <span>Дороже кейса: {fmtPct(beatCase)}%</span>}
         {!free && <span>Хотя бы вернуть цену: {fmtPct(atLeastBack)}%</span>}

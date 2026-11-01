@@ -50,6 +50,10 @@ class Settings(BaseSettings):
     sub_private_url: str = "https://t.me/+YZoeECjxGmszNzZk"
     # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
     stats_path: str = "/tmp/sexydrop_stats.json"
+    # Реестр приглашений (JSON). Без постоянного тома сбрасывается при деплое.
+    referrals_path: str = "/tmp/sexydrop_referrals.json"
+    # Шансы кейсов от админа (JSON). Без постоянного тома сбрасывается при деплое.
+    odds_path: str = "/tmp/sexydrop_odds.json"
     jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400

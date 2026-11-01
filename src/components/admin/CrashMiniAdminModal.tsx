@@ -72,19 +72,18 @@ export function CrashMiniAdminModal({ open, onClose }: CrashMiniAdminModalProps)
       await resp.json().catch(() => ({}))
 
       if (!resp.ok) {
-        // Если оффлайн / демо-режим, начисляем в локальный стор кошелька
-        const minor = Math.round(amount * 1000)
-        useWalletStore.getState().credit(minor)
-        setStatusMessage(`Баланс пополнен на +${amount} TON (Local/Demo)`)
+        // Без подтверждения сервера деньги не создаются
+        setStatusMessage('Сервер отклонил выдачу — баланс не изменён')
       } else {
-        const minor = Math.round(amount * 1000)
-        useWalletStore.getState().credit(minor)
+        // Локальный баланс растёт только если админ выдал себе; остальным начисляет сервер
+        const own = (getTelegramUser()?.username ?? '').toLowerCase()
+        if (own !== '' && own === cleanUser.toLowerCase()) {
+          useWalletStore.getState().credit(Math.round(amount * 1000))
+        }
         setStatusMessage(`Успешно начислено +${amount} TON для @${cleanUser}!`)
       }
     } catch {
-      const minor = Math.round(amount * 1000)
-      useWalletStore.getState().credit(minor)
-      setStatusMessage(`Баланс пополнен на +${amount} TON`)
+      setStatusMessage('Сервер недоступен — баланс не изменён')
     } finally {
       setLoading(false)
     }

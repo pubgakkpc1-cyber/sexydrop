@@ -40,7 +40,9 @@ export const useStarsBalanceStore = create<StarsBalanceState>()(
 }),
     {
       name: 'sexydrop.stars',
-      version: 1,
+      // v2: обнуление звёзд после исправления накруток
+      version: 2,
+      migrate: () => ({ stars: 0 }),
       storage: safeJsonStorage<Pick<StarsBalanceState, 'stars'>>(),
       partialize: (s) => ({ stars: s.stars }),
     },

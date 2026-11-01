@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import { giftById } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
-import { hapticNotify, hapticImpact } from '../../lib/telegram'
+import { getTelegramUser, hapticNotify, hapticImpact, shareTelegramLink } from '../../lib/telegram'
+import { syncReferrals } from '../../lib/referralSync'
+import { useInventoryStore } from '../../store/inventory'
 import { sellItem } from '../../services/demoInventoryService'
 import { useFreeCasesStore } from '../../store/freeCases'
 import { LockIcon, LockOpenIcon, TonIcon, UsersIcon, CheckIcon } from '../shell/icons'
@@ -35,36 +37,57 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
     return () => clearInterval(t)
   }, [])
 
+  // Пока окно открыто, подтягиваем с сервера друзей, которые уже выполнили условие
+  useEffect(() => {
+    void syncReferrals()
+    const t = setInterval(() => void syncReferrals(), 15_000)
+    return () => clearInterval(t)
+  }, [])
+
   if (!quest.pendingReward) return null
 
   const gift = giftById.get(quest.pendingReward.giftId)
   if (!gift) return null
 
   const isExpired = now >= quest.pendingReward.expiresAt
-  const isCompleted =
-    !isExpired &&
-    quest.referralsJoined >= 5 &&
-    quest.channelsSubscribed >= 5 &&
-    quest.spinsWithPremium >= 5
+  const isCompleted = !isExpired && quest.referralsJoined >= 5
+
+  const tgId = getTelegramUser()?.id
+  const refLink = tgId === undefined ? null : `https://t.me/sexydropbot?startapp=ref-${tgId}`
 
   const handleCopy = () => {
     hapticImpact('light')
-    const refLink = `https://t.me/sexydropbot?start=ref_${makeRequestId().slice(0, 8)}`
+    if (refLink === null) return
     navigator.clipboard?.writeText(refLink)
+    shareTelegramLink(refLink, 'Залетай в SEXY DROP — кейсы, ракета и призы!')
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
   }
 
+  /** Подарок попадает в инвентарь только после выполнения задания. */
+  const grantToInventory = () => {
+    if (!quest.pendingReward) return null
+    const [item] = useInventoryStore.getState().addGifts([quest.pendingReward.giftId], 'free-case')
+    return item ?? null
+  }
+
   const handleClaim = () => {
+    if (!isCompleted) return
+    if (!grantToInventory()) return
     hapticNotify('success')
     clearQuestReward()
     onClose()
   }
 
   const handleSell = () => {
-    if (selling || sold || !quest.pendingReward) return
+    if (selling || sold || !quest.pendingReward || !isCompleted) return
     setSelling(true)
-    const result = sellItem(quest.pendingReward.uid, makeRequestId())
+    const item = grantToInventory()
+    if (!item) {
+      setSelling(false)
+      return
+    }
+    const result = sellItem(item.uid, makeRequestId())
     if (result.status === 'ok') {
       setSold(true)
       hapticNotify('success')
@@ -109,7 +132,7 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
         <p className={styles.subtitle}>
           {isCompleted
             ? 'Все задания выполнены! Вы можете забрать подарок в инвентарь или продать его за TON.'
-            : 'Чтобы получить, вывести или продать этот подарок, пригласите 5 друзей с Telegram Premium, которые прокрутят колесо:'}
+            : 'Чтобы получить, вывести или продать этот подарок, пригласите 5 друзей с Telegram Premium: каждый должен перейти по вашей ссылке и открыть бесплатный кейс.'}
         </p>
 
         {/* Карточка выигранного подарка */}
@@ -133,7 +156,7 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
             <div className={styles.counterHeader}>
               <span className={styles.counterLabel}>
                 <span className={styles.stepNum}>1</span>
-                Друзья перешли по ссылке
+                Друзья с Premium открыли бесплатный кейс
               </span>
               <span className={styles.counterValue}>
                 {quest.referralsJoined} / 5
@@ -144,46 +167,6 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
               <div
                 className={styles.progressBarFill}
                 style={{ width: `${Math.min(100, (quest.referralsJoined / 5) * 100)}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Счётчик 2: Подписка на каналы */}
-          <div className={styles.counterRow}>
-            <div className={styles.counterHeader}>
-              <span className={styles.counterLabel}>
-                <span className={styles.stepNum}>2</span>
-                Подписались на нужные каналы
-              </span>
-              <span className={styles.counterValue}>
-                {quest.channelsSubscribed} / 5
-                {quest.channelsSubscribed >= 5 && <CheckIcon className={styles.checkDone} />}
-              </span>
-            </div>
-            <div className={styles.progressBarBg}>
-              <div
-                className={styles.progressBarFill}
-                style={{ width: `${Math.min(100, (quest.channelsSubscribed / 5) * 100)}%` }}
-              />
-            </div>
-          </div>
-
-          {/* Счётчик 3: TG Premium + прокрут */}
-          <div className={styles.counterRow}>
-            <div className={styles.counterHeader}>
-              <span className={styles.counterLabel}>
-                <span className={styles.stepNum}>3</span>
-                Прокрутили колесо + TG Premium
-              </span>
-              <span className={styles.counterValue}>
-                {quest.spinsWithPremium} / 5
-                {quest.spinsWithPremium >= 5 && <CheckIcon className={styles.checkDone} />}
-              </span>
-            </div>
-            <div className={styles.progressBarBg}>
-              <div
-                className={styles.progressBarFill}
-                style={{ width: `${Math.min(100, (quest.spinsWithPremium / 5) * 100)}%` }}
               />
             </div>
           </div>

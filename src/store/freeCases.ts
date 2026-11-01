@@ -8,9 +8,14 @@ export interface FreeQuestState {
     wonAt: number
     expiresAt: number
   } | null
+  /** Сколько друзей с Telegram Premium открыли бесплатный кейс ПОСЛЕ выигрыша (0–5). */
   referralsJoined: number
   channelsSubscribed: number
   spinsWithPremium: number
+  /** Всего таких друзей на сервере (растёт со временем). */
+  premiumTotal: number
+  /** Сколько их уже было в момент выигрыша: засчитываются только новые. */
+  friendsBaseline: number
 }
 
 interface FreeCasesState {
@@ -26,6 +31,8 @@ interface FreeCasesState {
   simulateFriendJoin: () => void
   clearQuestReward: () => void
   isQuestCompleted: () => boolean
+  /** Обновляет общее число засчитанных друзей с Premium (данные сервера). */
+  setPremiumTotal: (total: number) => void
 }
 
 const STORAGE_KEY = 'giftcase.demo.freeCases'
@@ -94,6 +101,8 @@ function loadQuest(): FreeQuestState {
     referralsJoined: 0,
     channelsSubscribed: 0,
     spinsWithPremium: 0,
+    premiumTotal: 0,
+    friendsBaseline: 0,
   }
   try {
     const raw = localStorage.getItem(QUEST_STORAGE_KEY)
@@ -105,6 +114,8 @@ function loadQuest(): FreeQuestState {
       referralsJoined: parsed.referralsJoined ?? 0,
       channelsSubscribed: parsed.channelsSubscribed ?? 0,
       spinsWithPremium: parsed.spinsWithPremium ?? 0,
+      premiumTotal: parsed.premiumTotal ?? 0,
+      friendsBaseline: parsed.friendsBaseline ?? 0,
     }
   } catch {
     return defaultQuest
@@ -162,6 +173,8 @@ export const useFreeCasesStore = create<FreeCasesState>((set, get) => ({
       referralsJoined: 0,
       channelsSubscribed: 0,
       spinsWithPremium: 0,
+      premiumTotal: get().quest.premiumTotal,
+      friendsBaseline: get().quest.premiumTotal,
     }
     saveQuest(nextQuest)
     set({ quest: nextQuest })
@@ -192,6 +205,8 @@ export const useFreeCasesStore = create<FreeCasesState>((set, get) => ({
       referralsJoined: 0,
       channelsSubscribed: 0,
       spinsWithPremium: 0,
+      premiumTotal: get().quest.premiumTotal,
+      friendsBaseline: get().quest.premiumTotal,
     }
     saveQuest(nextQuest)
     set({ quest: nextQuest })
@@ -199,12 +214,13 @@ export const useFreeCasesStore = create<FreeCasesState>((set, get) => ({
 
   isQuestCompleted: () => {
     const q = get().quest
-    return (
-      q.referralsJoined >= 5 &&
-      q.channelsSubscribed >= 5 &&
-      q.spinsWithPremium >= 5 &&
-      q.pendingReward !== null &&
-      Date.now() < q.pendingReward.expiresAt
-    )
+    return q.referralsJoined >= 5 && q.pendingReward !== null && Date.now() < q.pendingReward.expiresAt
+  },
+
+  setPremiumTotal: (total) => {
+    const q = { ...get().quest, premiumTotal: Math.max(0, total) }
+    q.referralsJoined = q.pendingReward ? Math.min(5, Math.max(0, q.premiumTotal - q.friendsBaseline)) : 0
+    saveQuest(q)
+    set({ quest: q })
   },
 }))

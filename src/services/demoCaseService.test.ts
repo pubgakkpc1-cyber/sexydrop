@@ -14,6 +14,8 @@ const resetAll = () => {
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
   useInventoryStore.setState({ items: [], history: [] })
   useFreeCasesStore.setState({ lastClaimAt: { free: 0, free24: 0 } })
+  useFreeCasesStore.getState().clearQuestReward()
+  useFreeCasesStore.getState().setPremiumTotal(0)
 }
 
 beforeEach(resetAll)
@@ -71,31 +73,30 @@ describe('demoCaseService: openCase', () => {
 })
 
 describe('demoCaseService: claimFreeCase', () => {
-  it('выдаёт бесплатный кейс и фиксирует кулдаун', () => {
+  it('FREE 24: выдаёт NFT сразу и фиксирует кулдаун', () => {
     const now = 1_700_000_000_000
-    const result = claimFreeCase('free', 'req-f1', now, rngFirst)
+    const result = claimFreeCase('free24', 'req-f1', now, rngFirst)
     if (result.status !== 'ok') throw new Error('expected ok')
     expect(useInventoryStore.getState().items).toHaveLength(1)
-    expect(useFreeCasesStore.getState().lastClaimAt.free).toBe(now)
+    expect(useFreeCasesStore.getState().lastClaimAt.free24).toBe(now)
     // списаний нет
     expect(useWalletStore.getState().getBalance('demo')).toBe(100_000)
   })
 
   it('повторное получение внутри кулдауна отклоняется', () => {
     const now = 1_700_000_000_000
-    expect(claimFreeCase('free', 'req-f2', now, rngFirst).status).toBe('ok')
-    const second = claimFreeCase('free', 'req-f3', now + 1000, rngFirst)
+    expect(claimFreeCase('free24', 'req-f2', now, rngFirst).status).toBe('ok')
+    const second = claimFreeCase('free24', 'req-f3', now + 1000, rngFirst)
     expect(second.status).toBe('cooldown')
     expect(useInventoryStore.getState().items).toHaveLength(1)
   })
 
   it('после истечения кулдауна выдача снова работает', () => {
     const now = 1_700_000_000_000
-    const first = claimFreeCase('free', 'req-f4', now, rngFirst)
-    expect(first.status).toBe('ok')
+    expect(claimFreeCase('free24', 'req-f4', now, rngFirst).status).toBe('ok')
     // После 23:00 МСК (следующий день)
     const later = now + 24 * 60 * 60 * 1000 + 1000
-    expect(claimFreeCase('free', 'req-f5', later, rngFirst).status).toBe('ok')
+    expect(claimFreeCase('free24', 'req-f5', later, rngFirst).status).toBe('ok')
     expect(useInventoryStore.getState().items).toHaveLength(2)
   })
 
@@ -107,20 +108,39 @@ describe('demoCaseService: claimFreeCase', () => {
 
   it('идемпотентно по client_request_id', () => {
     const now = 1_700_000_000_000
-    const first = claimFreeCase('free', 'req-f8', now, rngFirst)
-    const second = claimFreeCase('free', 'req-f8', now + 1000, rngFirst)
+    const first = claimFreeCase('free24', 'req-f8', now, rngFirst)
+    const second = claimFreeCase('free24', 'req-f8', now + 1000, rngFirst)
     expect(second).toEqual(first)
     expect(useInventoryStore.getState().items).toHaveLength(1)
   })
 
-  it('TON-приз из кейса зачисляется на баланс и не попадает в инвентарь', () => {
-    const before = useWalletStore.getState().getBalance()
-    const result = openCase('farm', 'req-ton', () => 0) // самый дешёвый приз кейса — TON 0.5
-    expect(result.status).toBe('ok')
-    if (result.status !== 'ok') return
-    expect(result.giftId).toBe('ton_500')
-    expect(result.uid).toBe('')
+  it('обычный FREE: NFT не попадает в инвентарь, а ждёт 5 друзей с Premium', () => {
+    const now = 1_700_000_000_000
+    const result = claimFreeCase('free', 'req-q1', now, rngFirst)
+    if (result.status !== 'ok') throw new Error('expected ok')
     expect(useInventoryStore.getState().items).toHaveLength(0)
-    expect(useWalletStore.getState().getBalance()).toBe(before - 6000 + 500)
+    const quest = useFreeCasesStore.getState().quest
+    expect(quest.pendingReward?.giftId).toBe(result.giftId)
+    expect(quest.pendingReward?.expiresAt).toBe(now + 3 * 24 * 60 * 60 * 1000)
+    expect(useFreeCasesStore.getState().isQuestCompleted()).toBe(false)
+  })
+
+  it('пока задание не выполнено, новый FREE открыть нельзя', () => {
+    const now = 1_700_000_000_000
+    expect(claimFreeCase('free', 'req-q2', now, rngFirst).status).toBe('ok')
+    const next = claimFreeCase('free', 'req-q3', now + 25 * 60 * 60 * 1000, rngFirst)
+    expect(next.status).toBe('cooldown')
+  })
+
+  it('засчитываются только друзья с Premium, пришедшие после выигрыша', () => {
+    const store = useFreeCasesStore
+    store.getState().setPremiumTotal(2) // двое уже были до выигрыша
+    expect(claimFreeCase('free', 'req-q4', Date.now(), rngFirst).status).toBe('ok')
+    store.getState().setPremiumTotal(6)
+    expect(store.getState().quest.referralsJoined).toBe(4)
+    expect(store.getState().isQuestCompleted()).toBe(false)
+    store.getState().setPremiumTotal(7)
+    expect(store.getState().quest.referralsJoined).toBe(5)
+    expect(store.getState().isQuestCompleted()).toBe(true)
   })
 })

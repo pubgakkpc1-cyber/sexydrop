@@ -95,7 +95,23 @@ export function claimFreeCase(
       return { status: 'cooldown', nextAvailableAt } as const
     }
 
+    // Обычный FREE: пока висит невыполненное задание «5 друзей с Premium», новый кейс не открыть
+    const pending = freeCases.quest.pendingReward
+    if (caseId === 'free' && pending !== null && now < pending.expiresAt) {
+      return { status: 'cooldown', nextAvailableAt: pending.expiresAt } as const
+    }
+
     const chosen = pickWeighted(definition.entries, rng)
+    if (caseId === 'free' && !isTonPrize(chosen.itemId)) {
+      // NFT из FREE выдаётся только после того, как 5 друзей с Telegram Premium откроют бесплатный кейс
+      const uid = `quest-${clientRequestId}`
+      freeCases.setQuestPendingReward(chosen.itemId, uid, now)
+      freeCases.claim(caseId, now)
+      useProfileStore.getState().caseOpened()
+      useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
+      track({ type: 'case', case: caseId, price: 0, prize: 0 })
+      return { status: 'ok', giftId: chosen.itemId, uid } as const
+    }
     if (isTonPrize(chosen.itemId)) {
       useWalletStore.getState().credit(Number(chosen.itemId.slice(4)))
       freeCases.claim(caseId, now)

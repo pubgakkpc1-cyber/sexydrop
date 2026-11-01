@@ -61,6 +61,20 @@ async def post_event(payload: EventRequest) -> None:
     stats_service.record(_user(payload.init_data), payload.event.model_dump())
 
 
+@router.get("/leaderboard")
+async def leaderboard(
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Публичный рейтинг игроков по обороту. С initData дополнительно помечает строку игрока."""
+    my_id: int | None = None
+    if x_telegram_init_data:
+        try:
+            my_id = int(_user(x_telegram_init_data)["id"])
+        except HTTPException:
+            my_id = None
+    return stats_service.leaderboard(my_id)
+
+
 @router.get("/admin/stats")
 async def admin_stats(
     x_telegram_init_data: Annotated[str | None, Header()] = None,

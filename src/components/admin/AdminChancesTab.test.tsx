@@ -3,6 +3,10 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { AdminChancesTab } from './AdminChancesTab'
 
+function chanceInputs(): HTMLInputElement[] {
+  return screen.getAllByRole('textbox', { name: /^Шанс / }) as HTMLInputElement[]
+}
+
 describe('AdminChancesTab', () => {
   it('показывает кейсы с RTP не выше 98% и раскрывает таблицу шансов', async () => {
     render(<AdminChancesTab />)
@@ -12,12 +16,25 @@ describe('AdminChancesTab', () => {
     expect(rtp).toBeLessThanOrEqual(98)
 
     await userEvent.click(bronze)
-    expect(screen.getAllByText('Шанс').length).toBeGreaterThan(0)
     // шансы раскрытого кейса в сумме дают 100%
-    const cells = screen.getAllByRole('cell').filter((c) => /%$/.test(c.textContent ?? ''))
-    const sum = cells.reduce((s, c) => s + parseFloat(c.textContent ?? '0'), 0)
+    const sum = chanceInputs().reduce((s, i) => s + parseFloat(i.value), 0)
     expect(sum).toBeGreaterThan(99.5)
     expect(sum).toBeLessThan(100.5)
+  })
+
+  it('впиши шанс приза — остальные подстраиваются до 100%', async () => {
+    render(<AdminChancesTab />)
+    await userEvent.click(screen.getByRole('button', { name: /Bronze/ }))
+    const [first] = chanceInputs()
+    await userEvent.clear(first!)
+    await userEvent.type(first!, '50')
+    await userEvent.tab()
+    const inputs = chanceInputs()
+    expect(parseFloat(inputs[0]!.value)).toBe(50)
+    const sum = inputs.reduce((s, i) => s + parseFloat(i.value), 0)
+    expect(sum).toBeGreaterThan(99.5)
+    expect(sum).toBeLessThan(100.5)
+    expect(screen.getByRole('button', { name: 'Сохранить' })).toBeEnabled()
   })
 
   it('поиск фильтрует кейсы', async () => {

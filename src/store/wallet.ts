@@ -19,7 +19,8 @@ export interface WalletState {
   resetDemo: () => void
 }
 
-const DEFAULT_DEMO_START: Minor = 100_000 // 100 GRAM
+/** Бесплатных денег нет: новый игрок начинает с нуля. */
+const DEFAULT_DEMO_START: Minor = 0
 
 export const useWalletStore = create<WalletState>()(
   persist(
@@ -56,7 +57,9 @@ export const useWalletStore = create<WalletState>()(
 }),
     {
       name: 'sexydrop.wallet',
-      version: 1,
+      // v2: обнуление всех накопленных балансов (устранены дыры с бесплатным TON)
+      version: 2,
+      migrate: () => ({ mode: 'demo' as WalletMode, balances: { demo: 0, real: 0 } }),
       storage: safeJsonStorage<{ mode: WalletState['mode']; balances: WalletState['balances'] }>(),
       partialize: (s) => ({ mode: s.mode, balances: s.balances }),
     },

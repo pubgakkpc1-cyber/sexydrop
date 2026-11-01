@@ -84,8 +84,9 @@ def record(user: dict[str, Any], event: dict[str, Any]) -> None:
         u = _bucket(users, uid, first=now, last=now, events=0, wagered=0, delta=0)
         u["last"] = now
         u["events"] += 1
-        if user.get("username"):
-            u["name"] = str(user["username"])[:64]
+        shown = user.get("username") or user.get("first_name")
+        if shown:
+            u["name"] = str(shown)[:64]
         d = _bucket(st["days"], day, events=0)
         d["events"] += 1
         d.setdefault("users", [])
@@ -148,6 +149,23 @@ def snapshot() -> dict[str, Any]:
             "series": series,
             "top": [{"id": k, "name": v.get("name"), "wagered": v["wagered"], "delta": v["delta"], "events": v["events"]} for k, v in top],
         }
+
+
+def leaderboard(my_id: int | None = None, limit: int = 50) -> dict[str, Any]:
+    """Рейтинг по обороту (1 TON оборота = 100 очков). Чужие id не отдаются: только имя и очки."""
+    with _lock:
+        users = _load()["users"]
+        ranked = sorted(
+            ((uid, u) for uid, u in users.items() if u["wagered"] > 0),
+            key=lambda kv: kv[1]["wagered"],
+            reverse=True,
+        )
+        rows = [
+            {"rank": i + 1, "name": u.get("name") or "Игрок", "points": u["wagered"] // 10, "me": uid == str(my_id)}
+            for i, (uid, u) in enumerate(ranked[:limit])
+        ]
+        me = next(({"rank": i + 1, "points": u["wagered"] // 10} for i, (uid, u) in enumerate(ranked) if uid == str(my_id)), None)
+        return {"rows": rows, "me": me, "total": len(ranked)}
 
 
 def deposits_items(st: dict[str, Any]) -> list[tuple[str, dict[str, Any]]]:

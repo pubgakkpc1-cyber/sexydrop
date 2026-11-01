@@ -54,7 +54,7 @@ describe('wallet store', () => {
     getState().debit(30_000)
     getState().credit(7_777, 'real')
     getState().resetDemo()
-    expect(getState().getBalance('demo')).toBe(100_000)
+    expect(getState().getBalance('demo')).toBe(0)
     expect(getState().getBalance('real')).toBe(7_777)
   })
 })

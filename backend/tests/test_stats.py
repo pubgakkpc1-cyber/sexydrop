@@ -51,3 +51,15 @@ def test_event_endpoint_validates_input(monkeypatch):
     bad = client.post("/api/events", json={"init_data": "x", "event": {"type": "game", "game": "g", "stake": -5, "delta": 0}})
     assert bad.status_code == 422
     assert stats_service.snapshot()["users_total"] == 1
+
+
+def test_leaderboard_ranks_by_turnover_without_exposing_ids():
+    stats_service.record({"id": 1, "username": "alice"}, {"type": "game", "game": "g", "stake": 5000, "delta": 0})
+    stats_service.record({"id": 2, "first_name": "Bob"}, {"type": "game", "game": "g", "stake": 9000, "delta": 0})
+    stats_service.record({"id": 3, "username": "idle"}, {"type": "open"})
+    board = stats_service.leaderboard(my_id=1)
+    assert [r["name"] for r in board["rows"]] == ["Bob", "alice"]
+    assert [r["points"] for r in board["rows"]] == [900, 500]
+    assert board["rows"][1]["me"] is True and board["me"] == {"rank": 2, "points": 500}
+    assert board["total"] == 2
+    assert all("id" not in r for r in board["rows"])

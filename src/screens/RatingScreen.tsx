@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useProfileStore } from '../store/profile'
 import { TrophyIcon } from '../components/shell/icons'
 import { UserAvatar } from '../components/ui/UserAvatar'
 import { TgAvatar } from '../components/ui/TgAvatar'
 import { cx } from '../lib/cx'
+import { getWebApp } from '../lib/telegram'
 import styles from './RatingScreen.module.css'
 
 /** «kamronbek» → «ka***ek» */
@@ -27,20 +28,52 @@ interface Row {
   points: number
 }
 
+interface BoardResponse {
+  rows: Array<{ rank: number; name: string; points: number; me: boolean }>
+  me: { rank: number; points: number } | null
+  total: number
+}
+
 export function RatingScreen() {
   const { rounds, wageredMinor, pvpMatches } = useProfileStore()
-  const noData = rounds === 0
+  const [board, setBoard] = useState<BoardResponse | null>(null)
+
+  // Общий рейтинг всех игроков с сервера; без ответа остаётся только ваша строка
+  useEffect(() => {
+    let dead = false
+    const initData = (getWebApp() as unknown as { initData?: string } | undefined)?.initData
+    fetch('/api/leaderboard', { headers: initData ? { 'X-Telegram-Init-Data': initData } : {}, cache: 'no-store' })
+      .then((r) => (r.ok ? (r.json() as Promise<BoardResponse>) : null))
+      .then((b) => {
+        if (!dead && b) setBoard(b)
+      })
+      .catch(() => undefined)
+    return () => {
+      dead = true
+    }
+  }, [])
+
+  const noData = rounds === 0 && (board?.rows.length ?? 0) === 0
   const [infoOpen, setInfoOpen] = useState(false)
   const myPoints = Math.floor(wageredMinor / 10) // 1 TON оборота = 100 очков
 
   // Таблица: боты + вы (если есть реальные раунды), по убыванию очков
   const rows = useMemo<Row[]>(() => {
-    // Только реальные игроки: пока серверного рейтинга нет, в таблице только вы
+    // Реальные игроки с сервера; если он не ответил, показываем только себя
+    if (board && board.rows.length > 0) {
+      return board.rows.map((r) => ({ key: `r${r.rank}`, me: r.me, name: r.name, points: r.points }))
+    }
     return noData ? [] : [{ key: 'me', me: true, name: 'Вы', points: myPoints }]
-  }, [noData, myPoints])
+  }, [board, noData, myPoints])
 
   const myIndex = rows.findIndex((r) => r.me)
-  const myRankLabel = noData ? '999+' : myIndex >= 0 ? String(myIndex + 1) : '10+'
+  const myRankLabel = noData
+    ? '999+'
+    : board?.me
+      ? String(board.me.rank)
+      : myIndex >= 0
+        ? String(myIndex + 1)
+        : '10+'
 
   return (
     <div className={styles.screen}>
@@ -119,7 +152,7 @@ export function RatingScreen() {
         <span className={styles.meRank}>{myRankLabel}</span>
         <UserAvatar size={40} className={styles.avatar} />
         <span className={styles.meChip}>ВЫ</span>
-        <span className={styles.points}>{formatPoints(myPoints)}</span>
+        <span className={styles.points}>{formatPoints(board?.me?.points ?? myPoints)}</span>
       </div>
       )}
 

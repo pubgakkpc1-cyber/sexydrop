@@ -70,10 +70,10 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
           text: `Успешно! Пользователю @${cleanUser} начислено ${numAmount} TON. Текущий баланс: ${data.new_balance} TON.`,
         })
 
-        // Also credit local active store if the recipient is the logged in user
+        // Локально зачисляем только если выдача подтверждена сервером и получатель — сам админ
         const tgUser = getTelegramUser()
         const currentActiveUsername = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
-        if (currentActiveUsername === cleanUser.toLowerCase() || cleanUser.toLowerCase() === 'zapixxgarant') {
+        if (currentActiveUsername !== '' && currentActiveUsername === cleanUser.toLowerCase()) {
           credit(Math.round(numAmount * 1000))
         }
 
@@ -85,13 +85,8 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
         })
       }
     } catch {
-      // In standalone client demo fallback
-      credit(Math.round(numAmount * 1000))
-      setStatus({
-        type: 'success',
-        text: `Успешно! Начислено ${numAmount} TON пользователю @${cleanUser}.`,
-      })
-      setUsername('')
+      // Без ответа сервера деньги не создаются
+      setStatus({ type: 'error', text: 'Сервер недоступен — выдача не выполнена, баланс не изменён.' })
     } finally {
       setLoading(false)
     }

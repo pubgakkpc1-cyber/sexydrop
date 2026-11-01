@@ -54,6 +54,9 @@ const TABS: ReadonlyArray<{ id: TabId; label: string; Icon: typeof WalletIcon }>
 ]
 
 const MIN_TON_MINOR: Minor = 100 // 0.1 TON
+
+/** Виртуальное пополнение без оплаты существует только в разработке и тестах, в боевой сборке его нет. */
+const DEMO_DEPOSIT_ALLOWED = !import.meta.env.PROD
 const TON_PRESETS: readonly Minor[] = [1_000, 10_000, 100_000]
 const STARS_PRESETS: ReadonlyArray<{ label: string; value: number }> = [
   { label: '+50', value: 50 },
@@ -75,14 +78,15 @@ function parseTon(input: string): Minor | null {
 function TonPanel({ via, onDone, locked = false }: { via: 'wallet' | 'bot'; onDone: (minor: Minor) => void; locked?: boolean }) {
   const [input, setInput] = useState('')
   const minor = useMemo(() => parseTon(input), [input])
-  const valid = minor !== null && minor >= MIN_TON_MINOR && !locked
+  const valid = minor !== null && minor >= MIN_TON_MINOR && !locked && DEMO_DEPOSIT_ALLOWED
   const add = (preset: Minor) => setInput(formatMinor((minor ?? 0) + preset))
 
   return (
     <div className={styles.panel}>
       <p className={styles.demo}>
-        Демо-режим: баланс пополняется виртуально. Реальная оплата
-        {via === 'bot' ? ' через @CryptoBot' : ' с кошелька'} появится после подключения сервера.
+        {DEMO_DEPOSIT_ALLOWED
+          ? `Демо-режим: баланс пополняется виртуально. Реальная оплата${via === 'bot' ? ' через @CryptoBot' : ' с кошелька'} появится после подключения сервера.`
+          : `Оплата${via === 'bot' ? ' через @CryptoBot' : ' с кошелька'} сейчас недоступна: сервер не отвечает. Попробуйте позже.`}
       </p>
       <label className={styles.label} htmlFor="dep-ton">
         Сумма (минимум 0.1 TON)
@@ -435,15 +439,16 @@ function usePendingDeposits(onPaid: (minor: Minor) => void) {
 function StarsPanel({ onDone }: { onDone: (minor: Minor) => void }) {
   const [input, setInput] = useState('')
   const stars = parseStars(input)
-  const valid = isValidStars(stars)
+  const valid = isValidStars(stars) && DEMO_DEPOSIT_ALLOWED
   const payout = valid ? starsToMinor(stars) : 0
   const add = (n: number) => setInput(String(Math.min(STARS_MAX, (stars ?? 0) + n)))
 
   return (
     <div className={styles.panel}>
       <p className={styles.demo}>
-        Демо-режим: Stars не списываются, баланс TON пополняется виртуально. Оплата Stars появится
-        после подключения сервера.
+        {DEMO_DEPOSIT_ALLOWED
+          ? 'Демо-режим: Stars не списываются, баланс TON пополняется виртуально. Оплата Stars появится после подключения сервера.'
+          : 'Оплата Stars работает внутри Telegram. Откройте приложение через @sexydropbot.'}
       </p>
       <label className={styles.label} htmlFor="dep-stars">
         Количество Stars ({STARS_MIN} – 10 000)
@@ -648,9 +653,11 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
           </button>
         ))}
       </div>
-      {valid && !enough && (
+      {stars !== null && !enough && (
         <p className={styles.note} role="alert">
-          Недостаточно звёзд: у вас {earned.toLocaleString('ru-RU')} ★
+          {!valid
+            ? `Можно конвертировать от ${STARS_MIN} до ${STARS_MAX.toLocaleString('ru-RU')} ★ за раз`
+            : `Недостаточно звёзд: у вас ${earned.toLocaleString('ru-RU')} ★`}
         </p>
       )}
       <button

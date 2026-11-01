@@ -1,104 +1,65 @@
-/* Нижнее меню: плавающая полупрозрачная стеклянная «таблетка» поверх контента */
+/* Нижнее меню: «живая капсула» — активная вкладка раскрывается в красную капсулу с подписью */
 .nav {
+  --nav-cut: #1b1819;
   position: absolute;
-  left: 12px;
-  right: 12px;
+  left: 10px;
+  right: 10px;
   bottom: calc(10px + var(--safe-bottom));
   z-index: 50;
-  height: 66px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  padding: 0 4px;
-  box-sizing: border-box;
-  border-radius: 26px;
-  background: linear-gradient(180deg, rgba(60, 58, 60, 0.5) 0%, rgba(26, 24, 25, 0.5) 100%);
-  -webkit-backdrop-filter: blur(22px) saturate(170%);
-  backdrop-filter: blur(22px) saturate(170%);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow:
-    0 12px 32px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.18),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
-}
-
-/* Скользящая «линза» активной вкладки */
-.slidingTrack {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 4px;
-  width: calc((100% - 8px) / 5);
+  height: 62px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  pointer-events: none;
-  z-index: 1;
-  transition: transform 0.55s cubic-bezier(0.34, 1.4, 0.5, 1);
-  will-change: transform;
-}
-
-.slidingPill {
-  width: calc(100% - 6px);
-  height: 52px;
-  border-radius: 20px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.25);
-  animation: lensSquish 0.55s cubic-bezier(0.3, 1.2, 0.4, 1);
-}
-
-@keyframes lensSquish {
-  0% { transform: scaleX(1.35) scaleY(0.9); }
-  55% { transform: scaleX(0.96) scaleY(1.04); }
-  100% { transform: scaleX(1) scaleY(1); }
-}
-
-/* красный огонёк под активной вкладкой */
-.dropMark {
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  width: 18px;
-  height: 3px;
-  margin-left: -9px;
-  border-radius: 3px;
-  background: var(--accent, #e0484f);
-  box-shadow: 0 0 10px rgba(224, 72, 79, 0.85);
-  animation: glowIn 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
-}
-
-@keyframes glowIn {
-  0% { transform: scaleX(0); opacity: 0; }
-  100% { transform: scaleX(1); opacity: 1; }
+  gap: 2px;
+  padding: 0 7px;
+  box-sizing: border-box;
+  border-radius: 31px;
+  background: rgba(28, 25, 26, 0.55);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 2px 0 rgba(255, 255, 255, 0.05) inset;
 }
 
 .tab {
   position: relative;
-  z-index: 2;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 66px;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.5);
   text-decoration: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.15s ease, color 0.25s ease;
-  padding: 0 2px;
+  border-radius: 24px;
+  transition: flex-grow 0.55s cubic-bezier(0.3, 1.25, 0.4, 1), color 0.25s ease, transform 0.15s ease;
 }
 
 .tab:active {
-  transform: scale(0.9);
+  transform: scale(0.92);
+}
+
+/* красная капсула появляется внутри активной вкладки */
+.tab::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #ff6b73 0%, #d9333c 100%);
+  box-shadow: 0 6px 18px rgba(224, 72, 79, 0.5);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity 0.25s ease, transform 0.5s cubic-bezier(0.3, 1.4, 0.4, 1);
 }
 
 .tabInner {
+  position: relative;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 3px;
-  width: 100%;
-  height: 52px;
+  gap: 0;
+  padding: 0 10px;
+  white-space: nowrap;
 }
 
 .iconWrap {
@@ -108,68 +69,70 @@
   justify-content: center;
   width: 26px;
   height: 26px;
-  transition: transform 0.35s cubic-bezier(0.34, 1.6, 0.5, 1);
+  flex-shrink: 0;
 }
 
 .icon {
-  width: 25px;
-  height: 25px;
+  width: 26px;
+  height: 26px;
   color: inherit;
 }
 
-.icon :global(.nav-fill) {
-  fill: currentColor;
-  fill-opacity: 0;
-  transition: fill-opacity 0.3s ease;
+.icon :global(.nav-tone) {
+  fill-opacity: 0.5;
 }
 
+/* подпись прячется у неактивных и «выезжает» у активной */
 .tabLabel {
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: -0.2px;
-  line-height: 1.1;
-  color: inherit;
-  white-space: nowrap;
-  transition: color 0.25s ease;
+  display: inline-block;
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+  line-height: 1;
+  color: #fff;
+  transform: translateX(-6px);
+  transition: max-width 0.5s cubic-bezier(0.3, 1.1, 0.4, 1), opacity 0.25s ease 0.05s,
+    transform 0.4s ease, margin 0.4s ease;
 }
 
-/* Активная вкладка: иконка всплывает, контур прорисовывается, деталь заливается */
 .active {
+  flex-grow: 2.35;
   color: #fff;
 }
 
-.active .iconWrap {
-  transform: translateY(-2px) scale(1.12);
-  filter: drop-shadow(0 3px 8px rgba(224, 72, 79, 0.55));
+.active::before {
+  opacity: 1;
+  transform: scale(1);
 }
 
 .active .tabLabel {
-  font-weight: 700;
+  max-width: 84px;
+  margin-left: 7px;
+  opacity: 1;
+  transform: translateX(0);
 }
 
 .active .icon {
-  color: #ff6b73;
+  animation: iconPop 0.6s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 
-.active .icon :global(.nav-fill) {
-  fill-opacity: 0.28;
+.active .icon :global(.nav-tone) {
+  fill-opacity: 0.55;
 }
 
-.active .icon :global(.nav-draw) {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 0;
-  animation: drawIn 0.7s cubic-bezier(0.4, 0.1, 0.2, 1) both;
-}
-
-@keyframes drawIn {
-  0% { stroke-dashoffset: 1; }
-  100% { stroke-dashoffset: 0; }
+@keyframes iconPop {
+  0% { transform: scale(0.5) rotate(-18deg); }
+  60% { transform: scale(1.18) rotate(6deg); }
+  100% { transform: scale(1) rotate(0); }
 }
 
 /* Бейдж количества предметов в инвентаре */
 .badge {
   position: absolute;
-  top: -5px;
+  top: -6px;
   right: -9px;
   min-width: 16px;
   height: 16px;
@@ -178,14 +141,19 @@
   align-items: center;
   justify-content: center;
   border-radius: 9999px;
-  background: #ce6565;
-  border: 1.5px solid rgba(20, 18, 19, 0.9);
+  background: #ff5a64;
+  border: 1.5px solid #1b1819;
   color: #ffffff;
   font-size: 9.5px;
   font-weight: 800;
   line-height: 1;
-  box-shadow: 0 2px 6px rgba(206, 101, 101, 0.5);
   animation: badgePop 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.active .badge {
+  background: #fff;
+  color: #d9333c;
+  border-color: #d9333c;
 }
 
 @keyframes badgePop {
@@ -193,40 +161,17 @@
   100% { transform: scale(1); }
 }
 
-/* Искры при переключении */
-.burst {
-  position: absolute;
-  top: 22px;
-  width: 0;
-  height: 0;
-  z-index: 3;
-  pointer-events: none;
-}
-
-.burst i {
-  position: absolute;
-  left: -2px;
-  top: -2px;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #ff8a91;
-  box-shadow: 0 0 6px rgba(255, 120, 128, 0.9);
-  opacity: 0;
-  animation: burstOut 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
-}
-
-@keyframes burstOut {
-  0% { opacity: 1; transform: rotate(var(--a)) translateX(6px) scale(1.2); }
-  100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(0.2); }
-}
-
-/* Если браузер не умеет blur — плотнее фон */
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .nav { background: rgba(28, 26, 27, 0.94); }
+  .nav { background: rgba(28, 25, 26, 0.95); }
+}
+
+@media (max-width: 340px) {
+  .tabInner { padding: 0 6px; }
+  .active { flex-grow: 2; }
+  .active .tabLabel { font-size: 11px; max-width: 70px; margin-left: 5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slidingTrack, .iconWrap { transition: none; }
-  .slidingPill, .dropMark, .burst i, .active .icon :global(.nav-draw) { animation: none; }
+  .tab, .tab::before, .tabLabel { transition: none; }
+  .active .icon { animation: none; }
 }

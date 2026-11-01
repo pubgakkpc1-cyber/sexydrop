@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ComponentType } from 'react'
+import type { ComponentType } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
 import { cx } from '../../lib/cx'
 import { hapticImpact } from '../../lib/telegram'
@@ -40,50 +40,8 @@ export function BottomNav() {
     { to: '/rewards', id: 'earn', label: 'Заработок', icon: NavEarnIcon },
   ]
 
-  const activeIndex = tabs.findIndex((tab) =>
-    tab.end ? location.pathname === tab.to : location.pathname.startsWith(tab.to),
-  )
-
-  // Всплеск капель при смене вкладки (ключ меняется — анимация проигрывается заново)
-  const [burst, setBurst] = useState<{ key: number; index: number } | null>(null)
-  const prevIndex = useRef(activeIndex)
-  const burstKey = useRef(0)
-  useEffect(() => {
-    if (activeIndex >= 0 && activeIndex !== prevIndex.current) {
-      burstKey.current += 1
-      setBurst({ key: burstKey.current, index: activeIndex })
-    }
-    prevIndex.current = activeIndex
-  }, [activeIndex])
-
   return (
     <nav className={styles.nav} aria-label="Основная навигация">
-      {/* Плавный скользящий стеклянный контейнер активной вкладки */}
-      {activeIndex >= 0 && (
-        <div
-          className={styles.slidingTrack}
-          style={{ transform: `translate3d(${activeIndex * 100}%, 0, 0)` }}
-          aria-hidden="true"
-        >
-          <div className={styles.slidingPill} />
-          {/* красный огонёк под активной вкладкой: «загорается» при переключении */}
-          <span key={activeIndex} className={styles.dropMark} />
-        </div>
-      )}
-
-      {burst && (
-        <div
-          key={burst.key}
-          className={styles.burst}
-          style={{ left: `calc(4px + (100% - 8px) * ${burst.index * 0.2 + 0.1})` }}
-          aria-hidden="true"
-        >
-          {Array.from({ length: 7 }, (_, i) => (
-            <i key={i} style={{ '--a': `${-150 + i * 50}deg`, '--d': `${22 + (i % 3) * 7}px` } as React.CSSProperties} />
-          ))}
-        </div>
-      )}
-
       {tabs.map((tab) => (
         <NavLink
           key={tab.to}

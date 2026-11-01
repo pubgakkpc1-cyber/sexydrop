@@ -179,3 +179,9 @@ def flush() -> None:
 
 
 _ = defaultdict  # зарезервировано под будущие разрезы
+
+
+def users_snapshot() -> dict[str, dict[str, Any]]:
+    """Копия реестра игроков (id → first/last/name/...); для рассылок и списка игроков в админке."""
+    with _lock:
+        return {k: dict(v) for k, v in _load()["users"].items()}

@@ -3,6 +3,7 @@ from fastapi import APIRouter
 from app.api.admin import router as admin_router
 from app.api.auth import router as auth_router
 from app.api.cases import router as cases_router
+from app.api.broadcast import router as broadcast_router
 from app.api.catalog import router as catalog_router
 from app.api.deposits import router as deposits_router
 from app.api.games import router as games_router
@@ -32,3 +33,4 @@ api_router.include_router(subscriptions_router)
 api_router.include_router(stats_router)
 api_router.include_router(referrals_router)
 api_router.include_router(odds_router)
+api_router.include_router(broadcast_router)

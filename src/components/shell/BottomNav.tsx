@@ -65,9 +65,9 @@ export function BottomNav() {
           style={{ transform: `translate3d(${activeIndex * 100}%, 0, 0)` }}
           aria-hidden="true"
         >
-          <div className={cx(styles.slidingPill, activeIndex === 2 && styles.pillHidden)} />
-          {/* фирменная капля над активной вкладкой: «падает» на место при переключении */}
-          <span key={activeIndex} className={cx(styles.dropMark, activeIndex === 2 && styles.pillHidden)} />
+          <div className={styles.slidingPill} />
+          {/* красный огонёк под активной вкладкой: «загорается» при переключении */}
+          <span key={activeIndex} className={styles.dropMark} />
         </div>
       )}
 
@@ -75,7 +75,7 @@ export function BottomNav() {
         <div
           key={burst.key}
           className={styles.burst}
-          style={{ left: `${burst.index * 20 + 10}%` }}
+          style={{ left: `calc(4px + (100% - 8px) * ${burst.index * 0.2 + 0.1})` }}
           aria-hidden="true"
         >
           {Array.from({ length: 7 }, (_, i) => (
@@ -89,7 +89,7 @@ export function BottomNav() {
           key={tab.to}
           to={tab.to}
           end={tab.end}
-          className={({ isActive }) => cx(styles.tab, styles[`tab_${tab.id}`], tab.id === 'home' && styles.homeTab, isActive && styles.active)}
+          className={({ isActive }) => cx(styles.tab, styles[`tab_${tab.id}`], isActive && styles.active)}
           onClick={() => hapticImpact('light')}
         >
           <div className={styles.tabInner}>

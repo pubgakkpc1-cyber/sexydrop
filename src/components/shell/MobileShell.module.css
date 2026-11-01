@@ -217,7 +217,8 @@
   overscroll-behavior: contain;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding: var(--space-4) var(--space-4) var(--space-6);
+  /* снизу — место под плавающее стеклянное меню (66px + отступы) */
+  padding: var(--space-4) var(--space-4) calc(var(--space-6) + 84px + var(--safe-bottom));
   display: flex;
   flex-direction: column;
 }

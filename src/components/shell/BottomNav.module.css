@@ -1,42 +1,75 @@
+/* Нижнее меню: плавающая полупрозрачная стеклянная «таблетка» поверх контента */
 .nav {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: calc(10px + var(--safe-bottom));
+  z-index: 50;
+  height: 66px;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  background: #131212;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.45);
-  padding-bottom: var(--safe-bottom);
-  flex-shrink: 0;
-  position: relative;
-  z-index: 50;
-  contain: layout;
-  height: calc(60px + var(--safe-bottom));
+  padding: 0 4px;
   box-sizing: border-box;
+  border-radius: 26px;
+  background: linear-gradient(180deg, rgba(60, 58, 60, 0.5) 0%, rgba(26, 24, 25, 0.5) 100%);
+  -webkit-backdrop-filter: blur(22px) saturate(170%);
+  backdrop-filter: blur(22px) saturate(170%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow:
+    0 12px 32px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25);
 }
 
-/* Плавный скользящий стеклянный контейнер активной вкладки (1:1 референс) */
+/* Скользящая «линза» активной вкладки */
 .slidingTrack {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 20%;
-  height: 60px;
+  bottom: 0;
+  left: 4px;
+  width: calc((100% - 8px) / 5);
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
   z-index: 1;
-  transition: transform 0.26s cubic-bezier(0.2, 0.9, 0.3, 1);
+  transition: transform 0.55s cubic-bezier(0.34, 1.4, 0.5, 1);
   will-change: transform;
 }
 
 .slidingPill {
-  width: calc(100% - 10px);
-  max-width: 66px;
+  width: calc(100% - 6px);
   height: 52px;
-  border-radius: 14px;
-  background: rgba(199, 105, 109, 0.12);
-  border: 1px solid rgba(199, 105, 109, 0.28);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 4px 14px rgba(0, 0, 0, 0.25);
+  animation: lensSquish 0.55s cubic-bezier(0.3, 1.2, 0.4, 1);
+}
+
+@keyframes lensSquish {
+  0% { transform: scaleX(1.35) scaleY(0.9); }
+  55% { transform: scaleX(0.96) scaleY(1.04); }
+  100% { transform: scaleX(1) scaleY(1); }
+}
+
+/* красный огонёк под активной вкладкой */
+.dropMark {
+  position: absolute;
+  bottom: 4px;
+  left: 50%;
+  width: 18px;
+  height: 3px;
+  margin-left: -9px;
+  border-radius: 3px;
+  background: var(--accent, #e0484f);
+  box-shadow: 0 0 10px rgba(224, 72, 79, 0.85);
+  animation: glowIn 0.5s cubic-bezier(0.3, 1.4, 0.5, 1);
+}
+
+@keyframes glowIn {
+  0% { transform: scaleX(0); opacity: 0; }
+  100% { transform: scaleX(1); opacity: 1; }
 }
 
 .tab {
@@ -45,17 +78,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60px;
-  color: rgba(248, 250, 252, 0.45);
+  height: 66px;
+  color: rgba(255, 255, 255, 0.55);
   text-decoration: none;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
-  transition: transform 0.12s ease;
+  transition: transform 0.15s ease, color 0.25s ease;
   padding: 0 2px;
 }
 
 .tab:active {
-  transform: scale(0.92);
+  transform: scale(0.9);
 }
 
 .tabInner {
@@ -65,7 +98,6 @@
   justify-content: center;
   gap: 3px;
   width: 100%;
-  max-width: 66px;
   height: 52px;
 }
 
@@ -74,15 +106,21 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
+  transition: transform 0.35s cubic-bezier(0.34, 1.6, 0.5, 1);
 }
 
 .icon {
-  width: 22px;
-  height: 22px;
+  width: 25px;
+  height: 25px;
   color: inherit;
-  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), color 0.2s ease;
+}
+
+.icon :global(.nav-fill) {
+  fill: currentColor;
+  fill-opacity: 0;
+  transition: fill-opacity 0.3s ease;
 }
 
 .tabLabel {
@@ -92,29 +130,47 @@
   line-height: 1.1;
   color: inherit;
   white-space: nowrap;
-  transition: color 0.2s ease, font-weight 0.2s ease;
+  transition: color 0.25s ease;
 }
 
-/* Активная вкладка */
+/* Активная вкладка: иконка всплывает, контур прорисовывается, деталь заливается */
 .active {
-  color: var(--accent);
+  color: #fff;
 }
 
-.active .icon {
-  transform: scale(1.08);
-  filter: drop-shadow(0 2px 8px rgba(199, 105, 109, 0.45));
+.active .iconWrap {
+  transform: translateY(-2px) scale(1.12);
+  filter: drop-shadow(0 3px 8px rgba(224, 72, 79, 0.55));
 }
 
 .active .tabLabel {
   font-weight: 700;
-  color: var(--accent);
+}
+
+.active .icon {
+  color: #ff6b73;
+}
+
+.active .icon :global(.nav-fill) {
+  fill-opacity: 0.28;
+}
+
+.active .icon :global(.nav-draw) {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: drawIn 0.7s cubic-bezier(0.4, 0.1, 0.2, 1) both;
+}
+
+@keyframes drawIn {
+  0% { stroke-dashoffset: 1; }
+  100% { stroke-dashoffset: 0; }
 }
 
 /* Бейдж количества предметов в инвентаре */
 .badge {
   position: absolute;
-  top: -4px;
-  right: -8px;
+  top: -5px;
+  right: -9px;
   min-width: 16px;
   height: 16px;
   padding: 0 4px;
@@ -123,7 +179,7 @@
   justify-content: center;
   border-radius: 9999px;
   background: #ce6565;
-  border: 1.5px solid #100f0f;
+  border: 1.5px solid rgba(20, 18, 19, 0.9);
   color: #ffffff;
   font-size: 9.5px;
   font-weight: 800;
@@ -137,56 +193,10 @@
   100% { transform: scale(1); }
 }
 
-/* ===== Матовый стиль ===== */
-.slidingPill {
-  background: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: none;
-}
-
-/* ===== Переключение: «жидкая» плашка, капля-маркер, всплеск, оживающие иконки ===== */
-.slidingTrack {
-  transition: transform 0.46s cubic-bezier(0.3, 1.35, 0.4, 1);
-}
-
-.slidingPill {
-  background: linear-gradient(180deg, rgba(224, 72, 79, 0.2) 0%, rgba(224, 72, 79, 0.06) 100%);
-  border: 1px solid rgba(224, 72, 79, 0.38);
-  box-shadow: 0 0 18px rgba(224, 72, 79, 0.18);
-  animation: pillStretch 0.46s cubic-bezier(0.3, 1.2, 0.4, 1);
-}
-
-@keyframes pillStretch {
-  0% { transform: scaleX(1.5) scaleY(0.86); }
-  60% { transform: scaleX(0.94) scaleY(1.05); }
-  100% { transform: scaleX(1) scaleY(1); }
-}
-
-/* капля бренда висит на верхней кромке над активной вкладкой */
-.dropMark {
-  position: absolute;
-  top: -3px;
-  left: 50%;
-  width: 10px;
-  height: 12px;
-  margin-left: -5px;
-  background: linear-gradient(180deg, #ff6b73 0%, #d9333c 100%);
-  clip-path: path('M5 0 C7.8 3.6 10 6.4 10 8.6 A5 5 0 0 1 0 8.6 C0 6.4 2.2 3.6 5 0 Z');
-  filter: drop-shadow(0 0 6px rgba(255, 90, 100, 0.9));
-  transform-origin: 50% 0;
-  animation: dropFall 0.55s cubic-bezier(0.3, 1.5, 0.5, 1);
-}
-
-@keyframes dropFall {
-  0% { transform: translateY(-20px) scale(0.5, 1.4); opacity: 0; }
-  55% { transform: translateY(2px) scale(1.15, 0.85); opacity: 1; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
-
-/* всплеск мелких капель из иконки */
+/* Искры при переключении */
 .burst {
   position: absolute;
-  top: 18px;
+  top: 22px;
   width: 0;
   height: 0;
   z-index: 3;
@@ -195,169 +205,28 @@
 
 .burst i {
   position: absolute;
-  left: -2.5px;
-  top: -2.5px;
-  width: 5px;
-  height: 5px;
-  border-radius: 50% 50% 50% 0;
-  background: #ff6b73;
-  box-shadow: 0 0 6px rgba(255, 90, 100, 0.9);
+  left: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #ff8a91;
+  box-shadow: 0 0 6px rgba(255, 120, 128, 0.9);
   opacity: 0;
-  animation: burstOut 0.55s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
+  animation: burstOut 0.6s cubic-bezier(0.1, 0.8, 0.3, 1) forwards;
 }
 
 @keyframes burstOut {
-  0% { opacity: 1; transform: rotate(var(--a)) translateX(4px) scale(1.2); }
+  0% { opacity: 1; transform: rotate(var(--a)) translateX(6px) scale(1.2); }
   100% { opacity: 0; transform: rotate(var(--a)) translateX(var(--d)) scale(0.2); }
 }
 
-.active {
-  color: #fff;
-}
-
-.active .tabLabel {
-  color: #fff;
-}
-
-.active .icon {
-  transform: none;
-  filter: drop-shadow(0 2px 8px rgba(224, 72, 79, 0.5));
-}
-
-/* у каждой иконки своя «оживающая» анимация при выборе */
-.tab_inventory.active .icon { animation: iconHop 0.55s cubic-bezier(0.3, 1.6, 0.5, 1); }
-.tab_invite.active .icon { animation: iconWiggle 0.6s ease-out; }
-.tab_home.active .icon { animation: iconHop 0.55s cubic-bezier(0.3, 1.6, 0.5, 1); }
-.tab_rating.active .icon { animation: iconTilt 0.7s ease-out; }
-.tab_earn.active .icon { animation: iconSpin 0.7s cubic-bezier(0.3, 1.2, 0.4, 1); }
-
-@keyframes iconHop {
-  0% { transform: translateY(0) scale(1); }
-  40% { transform: translateY(-7px) scale(1.18); }
-  70% { transform: translateY(1px) scale(0.95); }
-  100% { transform: translateY(0) scale(1.05); }
-}
-
-@keyframes iconWiggle {
-  0%, 100% { transform: rotate(0); }
-  25% { transform: rotate(-14deg) scale(1.12); }
-  55% { transform: rotate(10deg) scale(1.1); }
-  80% { transform: rotate(-4deg); }
-}
-
-@keyframes iconTilt {
-  0% { transform: rotate(0) scale(1); }
-  30% { transform: rotate(-18deg) scale(1.2); }
-  60% { transform: rotate(12deg) scale(1.1); }
-  100% { transform: rotate(0) scale(1.05); }
-}
-
-@keyframes iconSpin {
-  0% { transform: rotateY(0) scale(1); }
-  100% { transform: rotateY(360deg) scale(1.06); }
-}
-
-/* красные детали-«изюминки» пульсируют у активной иконки */
-.active .icon :global(.nav-accent) {
-  animation: accentPulse 1.8s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-@keyframes accentPulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.7; transform: scale(1.15); }
+/* Если браузер не умеет blur — плотнее фон */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .nav { background: rgba(28, 26, 27, 0.94); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slidingTrack { transition: none; }
-  .slidingPill, .dropMark, .burst i, .active .icon, .active .icon :global(.nav-accent) { animation: none; }
-}
-
-/* ===== Новые залитые иконки и крупная «Главная» ===== */
-.nav {
-  --nav-cut: #131212;
-  overflow: visible;
-}
-
-.icon {
-  width: 24px;
-  height: 24px;
-}
-
-.pillHidden {
-  opacity: 0;
-  animation: none;
-}
-
-/* «Главная» — приподнятая круглая кнопка бренда по центру */
-.homeTab {
-  overflow: visible;
-}
-
-.homeTab .tabInner {
-  position: relative;
-  overflow: visible;
-  justify-content: flex-end;
-  gap: 2px;
-}
-
-.homeTab .iconWrap {
-  position: absolute;
-  top: -22px;
-  left: 50%;
-  width: 58px;
-  height: 58px;
-  margin-left: -29px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 28%, #ff7b83 0%, #e0484f 45%, #a82a31 100%);
-  border: 4px solid #131212;
-  box-shadow: 0 6px 18px rgba(224, 72, 79, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.08);
-  color: #fff;
-  transition: transform 0.35s cubic-bezier(0.3, 1.5, 0.5, 1), box-shadow 0.3s ease;
-}
-
-.homeTab .icon {
-  width: 30px;
-  height: 30px;
-  color: #fff;
-}
-
-.homeTab .icon :global(.nav-accent) {
-  fill: #5a1318;
-}
-
-.homeTab .tabLabel {
-  position: relative;
-  top: -1px;
-  font-weight: 700;
-  color: rgba(255, 255, 255, 0.85);
-}
-
-.homeTab.active .iconWrap {
-  transform: scale(1.1) translateY(-2px);
-  box-shadow: 0 8px 26px rgba(224, 72, 79, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.18);
-  animation: homeBeat 2.4s ease-in-out infinite;
-}
-
-.homeTab.active .icon {
-  filter: none;
-}
-
-.homeTab:not(.active) .iconWrap {
-  background: radial-gradient(circle at 35% 28%, #5a5c63 0%, #3a3c42 55%, #2a2b30 100%);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
-}
-
-.homeTab:not(.active) .icon {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-@keyframes homeBeat {
-  0%, 100% { box-shadow: 0 8px 26px rgba(224, 72, 79, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.18); }
-  50% { box-shadow: 0 8px 34px rgba(224, 72, 79, 0.9), 0 0 0 5px rgba(224, 72, 79, 0.12); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .homeTab.active .iconWrap { animation: none; }
+  .slidingTrack, .iconWrap { transition: none; }
+  .slidingPill, .dropMark, .burst i, .active .icon :global(.nav-draw) { animation: none; }
 }

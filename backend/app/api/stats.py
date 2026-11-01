@@ -2,11 +2,16 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Literal, Union
 
-from fastapi import APIRouter, Header, HTTPException, status
+from fastapi import APIRouter, Depends, Header, HTTPException, status
 from pydantic import BaseModel, Field
 
 from app.core.security import validate_telegram_init_data
-from app.services import stats_service
+from sqlalchemy import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from app.core.db import get_session
+from app.models.user import User
+from app.services import account_service, stats_service
 
 router = APIRouter(prefix="/api", tags=["stats"])
 
@@ -57,26 +62,29 @@ def _user(init_data: str) -> dict[str, Any]:
 
 @router.post("/events", status_code=status.HTTP_204_NO_CONTENT)
 async def post_event(payload: EventRequest) -> None:
-    """Событие игрока для статистики. Личность — из подписанного initData."""
-    stats_service.record(_user(payload.init_data), payload.event.model_dump())
+    """Устарело: сервер сам ведёт учёт игр и пополнений. Принимаем и игнорируем (старые версии приложения)."""
+    return None
 
 
 @router.get("/leaderboard")
 async def leaderboard(
+    session: Annotated[AsyncSession, Depends(get_session)],
     x_telegram_init_data: Annotated[str | None, Header()] = None,
 ) -> dict[str, Any]:
     """Публичный рейтинг игроков по обороту. С initData дополнительно помечает строку игрока."""
-    my_id: int | None = None
+    my_id = None
     if x_telegram_init_data:
         try:
-            my_id = int(_user(x_telegram_init_data)["id"])
+            tg = int(_user(x_telegram_init_data)["id"])
+            my_id = (await session.execute(select(User.id).where(User.telegram_id == tg))).scalar_one_or_none()
         except HTTPException:
             my_id = None
-    return stats_service.leaderboard(my_id)
+    return await account_service.leaderboard(session, my_id)
 
 
 @router.get("/admin/stats")
 async def admin_stats(
+    session: Annotated[AsyncSession, Depends(get_session)],
     x_telegram_init_data: Annotated[str | None, Header()] = None,
 ) -> dict[str, Any]:
     """Сводная статистика проекта; только для админа (по подписанному initData)."""
@@ -86,4 +94,4 @@ async def admin_stats(
     name = str(user.get("username") or "").lower().lstrip("@")
     if name not in ADMIN_USERNAMES:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещён")
-    return stats_service.snapshot()
+    return await stats_service.snapshot(session)

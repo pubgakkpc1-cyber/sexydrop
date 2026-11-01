@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { giftById, RARITY_LABELS } from '../../data/catalog'
-import { sellItem } from '../../services/demoInventoryService'
+import { errorText, sellItemApi } from '../../services/gameApi'
 import { makeRequestId } from '../../lib/requestId'
 import { formatMinor } from '../../lib/money'
 import type { InventoryItem } from '../../store/inventory'
@@ -36,14 +36,17 @@ export function ItemActionsSheet({ item, onClose }: ItemActionsSheetProps) {
   if (!gift) return null
 
   const handleSell = () => {
-    const result = sellItem(item.uid, makeRequestId())
-    if (result.status === 'ok') {
-      setSold({ creditedMinor: result.creditedMinor })
-    } else {
-      // Предмет уже продан/недоступен (например, лист из устаревшего состояния):
-      // честное восстановление вместо ложного успеха.
-      setError('Предмет уже недоступен для продажи')
-    }
+    void sellItemApi(item.uid, makeRequestId())
+      .then((result) => {
+        if (result.status === 'ok') {
+          setSold({ creditedMinor: result.creditedMinor })
+        } else {
+          // Предмет уже продан/недоступен (например, лист из устаревшего состояния):
+          // честное восстановление вместо ложного успеха.
+          setError('Предмет уже недоступен для продажи')
+        }
+      })
+      .catch((e) => setError(errorText(e)))
   }
 
   return (

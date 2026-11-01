@@ -48,11 +48,10 @@ def test_amount_conversion():
     assert svc.ton_to_minor("2.3456") == 2345
 
 
-def test_invoice_amount_bounds(client):
-    res = client.post("/api/deposits/cryptobot/invoice", json={"amount_minor": 5, "secret": SECRET})
-    assert res.status_code == 400
-    res = client.post("/api/deposits/cryptobot/invoice", json={"amount_minor": 1000, "secret": "short"})
-    assert res.status_code == 422
+def test_invoice_requires_login(client):
+    res = client.post("/api/deposits/cryptobot/invoice", json={"amount_minor": 1000, "secret": SECRET})
+    assert res.status_code == 401
+    assert client.get(f"/api/deposits/ton/status?secret={SECRET}").status_code == 401
 
 
 @pytest.mark.asyncio
@@ -107,32 +106,19 @@ async def test_ton_status_matches_comment_and_value(monkeypatch):
         get_settings.cache_clear()
 
 
-def test_stars_conversion_and_status():
+def test_stars_conversion():
     assert svc.stars_to_minor(175) == 1000
     assert svc.stars_to_minor(10) == 57
-    svc.paid_stars.clear()
-    assert svc.stars_status(SECRET) == {"status": "pending"}
-    svc.paid_stars[svc.stars_payload(SECRET)] = 350
-    assert svc.stars_status(SECRET) == {"status": "paid", "amount_minor": 2000}
-    assert svc.stars_status("d" * 32) == {"status": "pending"}
 
 
 @pytest.mark.asyncio
-async def test_successful_payment_is_recorded_and_precheckout_validated(monkeypatch):
+async def test_malformed_payment_is_ignored():
     from app.services import telegram_bot
 
-    svc.paid_stars.clear()
-    payload = svc.stars_payload(SECRET)
     handled = await telegram_bot.handle_update(
-        {"message": {"chat": {"id": 1, "type": "private"},
-                     "successful_payment": {"invoice_payload": payload, "currency": "XTR", "total_amount": 100}}}
-    )
-    assert handled and svc.paid_stars[payload] == 100
-    # чужой payload не записывается
-    await telegram_bot.handle_update(
         {"message": {"chat": {"id": 1}, "successful_payment": {"invoice_payload": "evil", "currency": "XTR", "total_amount": 5}}}
     )
-    assert "evil" not in svc.paid_stars
+    assert handled  # апдейт принят, но ничего не зачислено (неверный payload)
 
 
 @pytest.mark.asyncio

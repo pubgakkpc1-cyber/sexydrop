@@ -18,7 +18,7 @@ import { caseById, giftById, type FreeCaseId, type Gift } from '../data/catalog'
 import { displayProbabilityBps } from '../lib/caseMath'
 import { formatMinor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
-import { claimFreeCase, openCase } from '../services/demoCaseService'
+import { claimFreeCaseApi, errorText, openCaseApi } from '../services/gameApi'
 import { hapticImpact } from '../lib/telegram'
 import { useFreeCasesStore, getMsk23ResetInfo } from '../store/freeCases'
 import { useWalletStore } from '../store/wallet'
@@ -52,6 +52,7 @@ export function CaseDetailScreen() {
   const [questModalOpen, setQuestModalOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [checkingSubs, setCheckingSubs] = useState(false)
+  const [opening, setOpening] = useState(false)
   const [subGate, setSubGate] = useState<SubChannel[] | null>(null)
 
   // Таймер для обновления кулдауна каждую секунду
@@ -97,40 +98,10 @@ export function CaseDetailScreen() {
     .filter((row): row is { gift: Gift; chance: number } => row.gift !== undefined)
     .sort((a, b) => b.gift.priceMinor - a.gift.priceMinor || b.chance - a.chance)
 
-  const claimFree = () => {
+  const claimFree = async () => {
     if (!freeCaseId) return
-    const result = claimFreeCase(freeCaseId, makeRequestId(), Date.now())
-    if (result.status === 'ok') {
-      const gift = giftById.get(result.giftId)
-      if (gift) {
-        setTargetGiftId(result.giftId)
-        setSpinResult({ gift, uid: result.uid })
-        setIsSpinning(true)
-      }
-    } else {
-      setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
-    }
-  }
-
-  const handleOpen = () => {
-    if (isSpinning || checkingSubs) return
-    setError(null)
-
-    if (isFreeCase && freeCaseId) {
-      if (onCooldown) return
-      // Бесплатные кейсы открываются только после подписки на обязательные каналы
-      setCheckingSubs(true)
-      void checkSubscriptions().then((res) => {
-        setCheckingSubs(false)
-        if (res.ok) claimFree()
-        else setSubGate(res.channels)
-      })
-    } else {
-      if (!affordable) {
-        navigate('/deposit')
-        return
-      }
-      const result = openCase(gameCase.id, makeRequestId())
+    try {
+      const result = await claimFreeCaseApi(freeCaseId, makeRequestId())
       if (result.status === 'ok') {
         const gift = giftById.get(result.giftId)
         if (gift) {
@@ -139,8 +110,50 @@ export function CaseDetailScreen() {
           setIsSpinning(true)
         }
       } else {
-        setError('Недостаточно средств')
+        setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
       }
+    } catch (e) {
+      setError(errorText(e))
+    }
+  }
+
+  const handleOpen = () => {
+    if (isSpinning || checkingSubs || opening) return
+    setError(null)
+
+    if (isFreeCase && freeCaseId) {
+      if (onCooldown) return
+      // Бесплатные кейсы открываются только после подписки на обязательные каналы
+      setCheckingSubs(true)
+      void checkSubscriptions().then(async (res) => {
+        setCheckingSubs(false)
+        if (res.ok) {
+          setOpening(true)
+          await claimFree()
+          setOpening(false)
+        } else setSubGate(res.channels)
+      })
+    } else {
+      if (!affordable) {
+        navigate('/deposit')
+        return
+      }
+      setOpening(true)
+      void openCaseApi(gameCase.id, makeRequestId())
+        .then((result) => {
+          if (result.status === 'ok') {
+            const gift = giftById.get(result.giftId)
+            if (gift) {
+              setTargetGiftId(result.giftId)
+              setSpinResult({ gift, uid: result.uid })
+              setIsSpinning(true)
+            }
+          } else {
+            setError('Недостаточно средств')
+          }
+        })
+        .catch((e) => setError(errorText(e)))
+        .finally(() => setOpening(false))
     }
   }
 

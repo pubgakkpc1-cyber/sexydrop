@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "lint": "eslint .",
+    "export:catalog": "esbuild scripts/export_server_catalog.ts --bundle --platform=node --format=esm --outfile=scripts/.export_catalog.mjs --log-level=warning && node scripts/.export_catalog.mjs && node -e \"require('fs').unlinkSync('scripts/.export_catalog.mjs')\"",
     "tg:attach": "node scripts/attach_telegram.mjs"
   },
   "dependencies": {

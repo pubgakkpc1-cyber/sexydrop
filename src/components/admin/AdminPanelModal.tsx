@@ -7,9 +7,10 @@ import { AdminGiveTab } from './AdminGiveTab'
 import { AdminPlayersTab } from './AdminPlayersTab'
 import { AdminStatsTab } from './AdminStatsTab'
 import { AdminSystemTab } from './AdminSystemTab'
+import { AdminWithdrawalsTab } from './AdminWithdrawalsTab'
 import styles from './AdminConsole.module.css'
 
-type SectionId = 'stats' | 'players' | 'chances' | 'broadcast' | 'give' | 'system'
+type SectionId = 'stats' | 'players' | 'chances' | 'broadcast' | 'give' | 'withdrawals' | 'system'
 
 interface Section {
   id: SectionId
@@ -31,6 +32,7 @@ const SECTIONS: readonly Section[] = [
   { id: 'chances', title: 'Шансы кейсов', hint: 'Впишите шанс приза, смотрите RTP и прибыль', icon: icon('M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4'), view: () => <AdminChancesTab /> },
   { id: 'broadcast', title: 'Рассылка', hint: 'Сообщение от бота всем или части игроков', icon: icon('M3 11l18-8-8 18-2-8-8-2Z'), view: () => <AdminBroadcastTab /> },
   { id: 'give', title: 'Выдача TON', hint: 'Начислить TON игроку по юзернейму', icon: icon('M12 3v18M17 7H9.5a2.5 2.5 0 0 0 0 5h5a2.5 2.5 0 0 1 0 5H7'), view: () => <AdminGiveTab /> },
+  { id: 'withdrawals', title: 'Выводы', hint: 'Заявки игроков на вывод подарков', icon: icon('M12 3v12M7 10l5 5 5-5M5 21h14'), view: () => <AdminWithdrawalsTab /> },
   { id: 'system', title: 'Система', hint: 'Бот, вебхук, способы пополнения, каналы', icon: icon('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.6 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2L10 21h4l.6-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z'), view: () => <AdminSystemTab /> },
 ]
 

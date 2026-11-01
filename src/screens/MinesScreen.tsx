@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties } from 'react'
+import { useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MINES_TILES,
@@ -7,12 +7,7 @@ import {
 } from '../lib/minesMath'
 import { formatMinor, toMinor, mulByMultiplier, type Minor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
-import {
-  cashoutMines,
-  pickMines,
-  startMines,
-  type MinesPickResult,
-} from '../services/demoMinesService'
+import { cashoutMinesApi, errorText, pickMinesApi, startMinesApi } from '../services/gameApi'
 import { useWalletStore } from '../store/wallet'
 import { MAX_BET_MINOR } from '../lib/gameConfig'
 import { Input } from '../components/ui'
@@ -69,10 +64,21 @@ export function MinesScreen() {
   const playing = round !== null && round.phase === 'playing'
   const finished = round !== null && round.phase !== 'playing'
 
-  const start = () => {
-    if (amountMinor === null || insufficient) return
+  const busy = useRef(false)
+
+  const start = async () => {
+    if (amountMinor === null || insufficient || busy.current) return
     setError(null)
-    const result = startMines(amountMinor, minesCount, makeRequestId())
+    busy.current = true
+    let result
+    try {
+      result = await startMinesApi(amountMinor, minesCount, makeRequestId())
+    } catch (e) {
+      setError(errorText(e))
+      return
+    } finally {
+      busy.current = false
+    }
     if (result.status !== 'ok') {
       setError(
         result.reason === 'insufficient_funds'
@@ -93,10 +99,19 @@ export function MinesScreen() {
     hapticImpact('light')
   }
 
-  const pick = (tileIndex: number) => {
-    if (!playing || round.picked.includes(tileIndex)) return
+  const pick = async (tileIndex: number) => {
+    if (!playing || round.picked.includes(tileIndex) || busy.current) return
     setError(null)
-    const result: MinesPickResult = pickMines(tileIndex, makeRequestId())
+    busy.current = true
+    let result
+    try {
+      result = await pickMinesApi(tileIndex, makeRequestId())
+    } catch (e) {
+      setError(errorText(e))
+      return
+    } finally {
+      busy.current = false
+    }
     if (result.status !== 'ok') {
       setError('Ход не принят — попробуйте ещё раз')
       return
@@ -126,10 +141,19 @@ export function MinesScreen() {
     })
   }
 
-  const take = () => {
-    if (!playing || round.picked.length === 0) return
+  const take = async () => {
+    if (!playing || round.picked.length === 0 || busy.current) return
     setError(null)
-    const result = cashoutMines(makeRequestId())
+    busy.current = true
+    let result
+    try {
+      result = await cashoutMinesApi(makeRequestId())
+    } catch (e) {
+      setError(errorText(e))
+      return
+    } finally {
+      busy.current = false
+    }
     if (result.status !== 'ok') {
       setError('Забрать не удалось — попробуйте ещё раз')
       return

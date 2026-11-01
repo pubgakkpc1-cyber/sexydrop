@@ -216,14 +216,33 @@ async def _answer_pre_checkout(query: dict[str, Any]) -> bool:
     return ok
 
 
-def _record_payment(payment: dict[str, Any]) -> None:
+async def _record_payment(payment: dict[str, Any]) -> None:
+    """Оплата Stars: находит заказ по payload счёта и зачисляет TON на баланс игрока (один раз)."""
     payload = str(payment.get("invoice_payload", ""))
     total = payment.get("total_amount")
-    if payload.startswith("sd-stars-") and payment.get("currency") == "XTR" and isinstance(total, int):
-        from app.services import deposit_service
+    charge = str(payment.get("telegram_payment_charge_id") or "")
+    if not (payload.startswith("sd-stars-") and payment.get("currency") == "XTR" and isinstance(total, int) and charge):
+        return
+    from sqlalchemy import select
 
-        deposit_service.paid_stars[payload] = total
-        log.info("stars payment recorded: %s stars", total)
+    from app.core.db import get_session_factory
+    from app.models.economy import DepositOrder
+    from app.services import account_service, deposit_service
+
+    try:
+        async with get_session_factory()() as session:
+            order = (
+                await session.execute(
+                    select(DepositOrder).where(DepositOrder.provider == "stars", DepositOrder.secret == payload)
+                )
+            ).scalar_one_or_none()
+            if order is None:
+                log.warning("stars payment without order: %s", payload)
+                return
+            await account_service.credit_deposit(session, order.id, deposit_service.stars_to_minor(total), charge)
+        log.info("stars payment credited: %s stars", total)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("stars payment credit failed: %s", exc)
 
 
 async def handle_update(update: dict[str, Any]) -> bool:
@@ -240,7 +259,7 @@ async def handle_update(update: dict[str, Any]) -> bool:
         return False
     payment = message.get("successful_payment")
     if isinstance(payment, dict):
-        _record_payment(payment)
+        await _record_payment(payment)
         return True
     chat = message.get("chat") or {}
     if chat.get("type") not in (None, "private"):

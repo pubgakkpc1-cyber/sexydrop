@@ -138,3 +138,28 @@ async def list_users(
             )
         )
     return items
+
+
+@router.get("/withdrawals")
+async def list_withdrawals(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    _admin_name: Annotated[str, Depends(verify_admin)],
+    status_: Annotated[str, Query(alias="status", pattern="^(pending|done|rejected)$")] = "pending",
+) -> list[dict]:
+    from app.services import account_service
+
+    return await account_service.list_withdrawals(session, status_)
+
+
+@router.post("/withdrawals/{withdrawal_id}/{action}")
+async def resolve_withdrawal(
+    withdrawal_id: str,
+    action: str,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    _admin_name: Annotated[str, Depends(verify_admin)],
+) -> dict:
+    from app.services import account_service
+
+    if action not in ("done", "reject"):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="action: done | reject")
+    return await account_service.resolve_withdrawal(session, withdrawal_id, done=action == "done")

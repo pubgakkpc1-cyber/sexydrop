@@ -8,6 +8,21 @@ import { createRequestMemo } from '../lib/requestMemo'
 import { nftPriceFor } from '../lib/crashTile'
 import { MAX_BET_MINOR } from '../lib/gameConfig'
 import { recentCrashPoints, roundInfo, scheduleAt, sharedNow, syncClock } from './crashSchedule'
+import { SERVER_MODE } from '../lib/serverMode'
+import { hydrateFromServer, removeServerItem } from '../lib/serverSync'
+import {
+  isCrashPolling,
+  knownCrashPoints,
+  lastServerBet,
+  onCrashServerState,
+  pollCrashState,
+  serverCashout,
+  serverPlaceBet,
+  serverRecent,
+  serverScheduleAt,
+  startCrashPolling,
+  stopCrashPolling,
+} from './crashServer'
 import {
   MAX_HISTORY,
   useCrashStore,
@@ -137,7 +152,7 @@ export function getAdminCrashState() {
     phase: s.phase,
     roundId: s.roundId,
     multiplier: s.multiplier,
-    currentCrashPoint: SHARED_ROUNDS && s.roundId > 0 ? roundInfo(s.roundId).crashPoint : engine.crashPoint,
+    currentCrashPoint: SERVER_MODE ? null : SHARED_ROUNDS && s.roundId > 0 ? roundInfo(s.roundId).crashPoint : engine.crashPoint,
     nextOverride: adminNextCrashPoint,
   }
 }
@@ -285,17 +300,24 @@ function burnActiveBet(bet: CrashBet | null, crash: number): CrashBet | null {
   return { ...bet, status: 'lost' }
 }
 
+function crashPointOfRound(roundId: number): number {
+  if (SERVER_MODE) return knownCrashPoints.get(roundId) ?? useCrashStore.getState().multiplier
+  return roundInfo(roundId).crashPoint
+}
+
 /** Тик общих раундов: приводит стор к состоянию расписания в текущий момент. */
 function syncTick(): void {
-  const now = sharedNow()
-  const st = scheduleAt(now)
+  const now = SERVER_MODE ? Date.now() : sharedNow()
+  const st = SERVER_MODE ? serverScheduleAt(now) : scheduleAt(now)
+  if (st === null) return
+  const history = (): number[] => (SERVER_MODE ? serverRecent() : recentCrashPoints(now, MAX_HISTORY))
   const s = useCrashStore.getState()
 
   if (s.roundId !== st.roundId) {
     // Новый раунд (или первый запуск / вкладка «просыпается»): незавершённая ставка сгорает.
     let myBet = s.myBet
     if (myBet && myBet.status === 'active' && s.roundId > 0) {
-      myBet = burnActiveBet(myBet, roundInfo(s.roundId).crashPoint)
+      myBet = burnActiveBet(myBet, crashPointOfRound(s.roundId))
     }
     let queued = s.queuedNextBet
     let nextBet: CrashBet | null = null
@@ -310,16 +332,18 @@ function syncTick(): void {
       }
       queued = null
     }
+    const queuedBefore = s.queuedNextBet
     useCrashStore.setState({
       roundId: st.roundId,
       phase: st.phase,
       multiplier: st.multiplier,
       crashPoint: st.crashPoint,
       ticksLeft: st.ticksLeft,
-      history: recentCrashPoints(now, MAX_HISTORY),
+      history: history(),
       myBet: nextBet,
       queuedNextBet: queued,
     })
+    if (SERVER_MODE && nextBet && queuedBefore) sendServerBet(nextBet, queuedBefore.requestId)
     return
   }
 
@@ -330,7 +354,7 @@ function syncTick(): void {
       multiplier: st.multiplier,
       crashPoint: st.crashPoint,
       ticksLeft: st.ticksLeft,
-      history: recentCrashPoints(now, MAX_HISTORY),
+      history: history(),
       myBet,
     })
     return
@@ -349,7 +373,7 @@ function syncTick(): void {
       multiplier: st.multiplier,
       crashPoint: st.crashPoint,
       ticksLeft: st.ticksLeft,
-      myBet: st.phase === 'crashed' ? burnActiveBet(s.myBet, roundInfo(st.roundId).crashPoint) : s.myBet,
+      myBet: st.phase === 'crashed' ? burnActiveBet(s.myBet, crashPointOfRound(st.roundId)) : s.myBet,
     })
     return
   }
@@ -370,6 +394,14 @@ export function startCrashEngine(): void {
   if (s.phase === 'betting' && s.ticksLeft <= 0) {
     useCrashStore.setState({ ticksLeft: BETTING_TICKS })
   }
+  if (SERVER_MODE) {
+    // раунды, точки краша и выплаты — на сервере; здесь только показ по его расписанию
+    registerServerListener()
+    startCrashPolling()
+    syncTick()
+    engine.timer = setInterval(syncTick, TICK_MS)
+    return
+  }
   if (SHARED_ROUNDS) {
     void syncClock()
     syncTick()
@@ -381,6 +413,7 @@ export function startCrashEngine(): void {
 
 /** Ставит цикл на паузу, сохраняя состояние раунда (ставка не теряется). */
 export function stopCrashEngine(): void {
+  if (SERVER_MODE) stopCrashPolling()
   if (engine.timer !== null) {
     clearInterval(engine.timer)
     engine.timer = null
@@ -388,7 +421,63 @@ export function stopCrashEngine(): void {
 }
 
 export function isCrashEngineRunning(): boolean {
-  return engine.timer !== null
+  return engine.timer !== null || isCrashPolling()
+}
+
+/** Серверный режим: подтягивает «мою» ставку и итог выплат из ответов сервера. */
+let serverListenerRegistered = false
+function registerServerListener(): void {
+  if (serverListenerRegistered) return
+  serverListenerRegistered = true
+  onCrashServerState(() => {
+    const bet = lastServerBet()
+    const s = useCrashStore.getState()
+    if (!bet || bet.round_id !== s.roundId) return
+    if (!s.myBet) {
+      // приложение перезапущено посреди раунда: восстанавливаем ставку с сервера
+      useCrashStore.setState({
+        myBet: {
+          kind: bet.kind,
+          valueMinor: bet.value_minor,
+          giftId: bet.gift_id ?? undefined,
+          status: bet.status,
+          autoCashout: bet.auto_cashout ?? undefined,
+          cashedMultiplier: bet.cashed_multiplier ?? undefined,
+          wonMinor: bet.status === 'won' ? bet.won_minor : undefined,
+        },
+      })
+      return
+    }
+    if (bet.status === 'won' && (s.myBet.status !== 'won' || s.myBet.wonMinor !== bet.won_minor)) {
+      useCrashStore.setState({
+        myBet: {
+          ...s.myBet,
+          status: 'won',
+          cashedMultiplier: bet.cashed_multiplier ?? s.myBet.cashedMultiplier,
+          wonMinor: bet.won_minor,
+        },
+      })
+    } else if (bet.status === 'lost' && s.myBet.status === 'active') {
+      useCrashStore.setState({ myBet: { ...s.myBet, status: 'lost' } })
+    }
+  })
+}
+
+/** Отправляет ставку на сервер; при отказе ставка снимается, подарок возвращается. */
+function sendServerBet(bet: CrashBet, requestId: string): void {
+  void serverPlaceBet(
+    bet.kind === 'gift'
+      ? { item_id: bet.uid, client_request_id: requestId, auto_cashout: bet.autoCashout }
+      : { amount_minor: bet.valueMinor, client_request_id: requestId, auto_cashout: bet.autoCashout },
+  )
+    .then(() => {
+      void pollCrashState(true)
+    })
+    .catch(() => {
+      const cur = useCrashStore.getState()
+      if (cur.myBet && cur.myBet.status === 'active') useCrashStore.setState({ myBet: null })
+      void hydrateFromServer()
+    })
 }
 
 /* --- Игровые операции (Demo Mode ONLY; серверные — TIER 7, 4.3) --- */
@@ -414,10 +503,10 @@ export function placeGramBet(
     if (wallet.getBalance() < amountMinor) {
       return { status: 'rejected', reason: 'insufficient_funds' } as const
     }
-    wallet.debit(amountMinor)
-    useCrashStore.setState({
-      myBet: { kind: 'gram', valueMinor: amountMinor, status: 'active', autoCashout },
-    })
+    if (!SERVER_MODE) wallet.debit(amountMinor)
+    const bet: CrashBet = { kind: 'gram', valueMinor: amountMinor, status: 'active', autoCashout }
+    useCrashStore.setState({ myBet: bet })
+    if (SERVER_MODE) sendServerBet(bet, clientRequestId)
     return { status: 'ok' } as const
   })
 }
@@ -445,7 +534,7 @@ export function queueNextRoundGramBet(
     if (wallet.getBalance() < amountMinor) {
       return { status: 'rejected', reason: 'insufficient_funds' } as const
     }
-    wallet.debit(amountMinor)
+    if (!SERVER_MODE) wallet.debit(amountMinor)
     useCrashStore.setState({
       queuedNextBet: {
         kind: 'gram',
@@ -481,7 +570,7 @@ export function queueNextRoundGiftBet(
     if (price > MAX_BET_MINOR) {
       return { status: 'rejected', reason: 'invalid_amount' } as const
     }
-    inventory.removeUids([uid], 'crash-bet')
+    if (!SERVER_MODE) inventory.removeUids([uid], 'crash-bet')
     useCrashStore.setState({
       queuedNextBet: {
         kind: 'gift',
@@ -502,7 +591,9 @@ export function cancelQueuedNextRoundBet(): boolean {
   const queued = s.queuedNextBet
   if (!queued) return false
 
-  if (queued.kind === 'gram') {
+  if (SERVER_MODE) {
+    // в серверном режиме запланированная ставка ещё не списана — просто убираем её
+  } else if (queued.kind === 'gram') {
     useWalletStore.getState().credit(queued.valueMinor)
   } else if (queued.kind === 'gift' && queued.giftId) {
     useInventoryStore.getState().addGifts([queued.giftId], 'crash-drop')
@@ -536,10 +627,11 @@ export function placeGiftBet(
     }
     // Предмет уходит со стола сразу (в журнал — причина 'crash-bet');
     // выигрыш в GRAM начисляется при «Забрать», при краше предмет сгорает.
-    inventory.removeUids([uid], 'crash-bet')
-    useCrashStore.setState({
-      myBet: { kind: 'gift', valueMinor: price, uid, giftId: item.giftId, status: 'active', autoCashout },
-    })
+    const bet: CrashBet = { kind: 'gift', valueMinor: price, uid, giftId: item.giftId, status: 'active', autoCashout }
+    if (SERVER_MODE) removeServerItem(uid)
+    else inventory.removeUids([uid], 'crash-bet')
+    useCrashStore.setState({ myBet: bet })
+    if (SERVER_MODE) sendServerBet(bet, clientRequestId)
     return { status: 'ok' } as const
   })
 }
@@ -559,6 +651,17 @@ function maybeAutoCashout(): void {
   if (s.phase !== 'flying' || !bet || bet.status !== 'active') return
   const target = bet.autoCashout
   if (target === undefined || s.multiplier < target) return
+  if (SERVER_MODE) {
+    // выплату по авто-выводу проводит сервер: просим его закрыть ставку и показываем итог из ответа
+    processOnce(`auto-${s.roundId}-${bet.valueMinor}`, () => {
+      useCrashStore.setState({
+        myBet: { ...bet, status: 'won', cashedMultiplier: target, wonMinor: mulByMultiplier(bet.valueMinor, target) },
+      })
+      void pollCrashState(true)
+      return { status: 'ok', wonMinor: mulByMultiplier(bet.valueMinor, target), multiplier: target } as const
+    })
+    return
+  }
   processOnce(`auto-${s.roundId}-${bet.valueMinor}`, () => cashoutAt(target))
 }
 
@@ -575,6 +678,27 @@ function cashoutAt(multiplier: number): CashoutResult {
       return { status: 'rejected', reason: 'duplicate' } as const
     }
     const wonMinor = mulByMultiplier(s.myBet.valueMinor, multiplier)
+
+    if (SERVER_MODE) {
+      // «Забрать»: показываем сразу, а итог (множитель и выплату) подтверждает сервер
+      const bet = s.myBet
+      useCrashStore.setState({ myBet: { ...bet, status: 'won', cashedMultiplier: multiplier, wonMinor } })
+      void serverCashout()
+        .then((res) => {
+          const cur = useCrashStore.getState().myBet
+          if (cur && cur.status === 'won') {
+            useCrashStore.setState({ myBet: { ...cur, cashedMultiplier: res.multiplier, wonMinor: res.won_minor } })
+          }
+          void pollCrashState(true)
+        })
+        .catch(() => {
+          // сервер не принял (раунд уже разбился) — ставка проиграна
+          const cur = useCrashStore.getState().myBet
+          if (cur && cur.status === 'won') useCrashStore.setState({ myBet: { ...cur, status: 'lost', wonMinor: undefined } })
+          void pollCrashState(true)
+        })
+      return { status: 'ok', wonMinor, multiplier } as const
+    }
 
     // Выплата: если выигрыш в точности равен цене NFT — NFT уходит в инвентарь; иначе всё идёт в TON на баланс.
     const nftPrice = nftPriceFor(wonMinor)

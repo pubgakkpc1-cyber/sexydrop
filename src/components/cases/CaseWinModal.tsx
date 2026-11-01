@@ -3,7 +3,7 @@ import { RARITY_LABELS, isTonPrize, type Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
 import { hapticNotify } from '../../lib/telegram'
-import { sellItem } from '../../services/demoInventoryService'
+import { sellItemApi } from '../../services/gameApi'
 import { SparkleIcon, TonIcon } from '../shell/icons'
 import styles from './CaseWinModal.module.css'
 
@@ -23,16 +23,19 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
   const handleSell = () => {
     if (selling || sold) return
     setSelling(true)
-    const result = sellItem(uid, makeRequestId())
-    if (result.status === 'ok') {
-      setSold(true)
-      hapticNotify('success')
-      setTimeout(() => {
-        onClose()
-      }, 900)
-    } else {
-      setSelling(false)
-    }
+    void sellItemApi(uid, makeRequestId())
+      .then((result) => {
+        if (result.status === 'ok') {
+          setSold(true)
+          hapticNotify('success')
+          setTimeout(() => {
+            onClose()
+          }, 900)
+        } else {
+          setSelling(false)
+        }
+      })
+      .catch(() => setSelling(false))
   }
 
   return (

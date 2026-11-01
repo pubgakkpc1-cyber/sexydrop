@@ -17,14 +17,14 @@ const WINDOW_MS = 10 * 60 * 1000
 const MAX_CRASH = 500
 
 /** Рост множителя за тик — те же формулы, что у локального движка. */
-function growthFor(mult: number): number {
+export function growthFor(mult: number): number {
   if (mult < 2.0) return Math.exp(Math.log(2) * (TICK_MS / 6500))
   const ratio = mult / 2.0
   const doublingMs = Math.max(1100, 6500 / Math.pow(ratio, 0.45))
   return Math.exp(Math.log(2) * (TICK_MS / doublingMs))
 }
 
-function floor2(x: number): number {
+export function floor2(x: number): number {
   return Math.floor(x * 100) / 100
 }
 

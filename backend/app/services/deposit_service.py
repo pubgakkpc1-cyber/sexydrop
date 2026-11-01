@@ -1,6 +1,6 @@
 """Реальные пополнения: @CryptoBot (Crypto Pay API) и прямые переводы TON с кошельков (TON Connect).
 
-Баланс приложения хранится на устройстве, поэтому сервер только подтверждает оплату:
+Баланс игрока ведёт сервер: он подтверждает оплату у провайдера и сам зачисляет её (account_service.credit_deposit):
 - CryptoBot: создаёт счёт (payload = секрет клиента) и отдаёт его статус только с этим секретом;
 - TON: клиент шлёт перевод на адрес проекта с комментарием, производным от секрета; сервер ищет
   входящий перевод с таким комментарием. Сам комментарий публичен в блокчейне, секрет — нет,
@@ -169,11 +169,6 @@ STARS_PER_TON = 175
 STARS_MIN = 10
 STARS_MAX = 10_000
 
-# payload счёта → сколько Stars реально оплачено (заполняется вебхуком бота).
-# Хранится в памяти процесса: после перезапуска сервера неподтверждённые оплаты теряются.
-paid_stars: dict[str, int] = {}
-
-
 def stars_to_minor(stars: int) -> int:
     return (stars * MINOR_PER_TON) // STARS_PER_TON
 
@@ -208,10 +203,3 @@ async def create_stars_invoice(stars: int, secret: str) -> dict[str, Any]:
         log.warning("createInvoiceLink error: %s", body.get("description"))
         raise DepositError(502, "Telegram отклонил счёт")
     return {"invoice_url": body["result"]}
-
-
-def stars_status(secret: str) -> dict[str, Any]:
-    stars = paid_stars.get(stars_payload(secret))
-    if stars is None:
-        return {"status": "pending"}
-    return {"status": "paid", "amount_minor": stars_to_minor(stars)}

@@ -59,7 +59,7 @@ async def demo_deposit(
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> TransactionRead:
     settings = get_settings()
-    if settings.app_env == "production":
+    if settings.app_env not in ("development", "test"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Demo deposit is disabled in production",

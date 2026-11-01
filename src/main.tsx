@@ -7,6 +7,7 @@ import { useReferralsStore } from './store/referrals'
 import { track } from './lib/telemetry'
 import { startReferralSync } from './lib/referralSync'
 import { loadCaseOdds } from './lib/caseOdds'
+import { startServerSync } from './lib/serverSync'
 import { normalizeStartRoute } from './lib/startRoute'
 import { startCrashEngine } from './services/demoCrashService'
 import './styles/global.css'
@@ -19,6 +20,8 @@ initTelegram()
 const referrer = parseReferrerId(getStartParam())
 if (referrer) useReferralsStore.getState().setReferrer(referrer, getTelegramUser()?.id?.toString())
 startReferralSync()
+// Баланс, подарки и задания — с сервера (в production исходы решает только он)
+startServerSync()
 void loadCaseOdds()
 // Открытие приложения — всегда главная, кнопка «Главная» активна
 normalizeStartRoute(isTelegramEnv())

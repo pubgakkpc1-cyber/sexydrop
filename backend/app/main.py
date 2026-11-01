@@ -3,32 +3,27 @@ from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
 from pathlib import Path
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
 from app.api import api_router
 from app.core.config import get_settings
 from app.core.db import dispose_engine
-from app.core.realtime import crash_manager
+from app.services.economy_core import GameError
 from app.services.telegram_bot import register_webhook
 
 
 @asynccontextmanager
 async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     settings = get_settings()
-    crash_task = None
     if settings.app_env != "test":
-        # Server-authoritative Crash cycle; disabled under tests, which drive
-        # the manager directly with controlled `step()` calls.
-        crash_task = crash_manager.start()
         # Бот отвечает на /start через вебхук (если задан PUBLIC_BASE_URL и BOT_TOKEN)
         asyncio.create_task(register_webhook())
     try:
         yield
     finally:
-        if crash_task is not None:
-            await crash_manager.stop()
         await dispose_engine()
 
 
@@ -49,6 +44,10 @@ def create_app() -> FastAPI:
         allow_headers=["Authorization", "Content-Type", "X-Client-Request-Id"],
     )
     application.include_router(api_router)
+
+    @application.exception_handler(GameError)
+    async def _game_error(_request: Request, exc: GameError) -> JSONResponse:
+        return JSONResponse(status_code=exc.status, content={"detail": exc.detail, "code": exc.code})
 
     dist_candidates = [
         Path("/app/dist"),

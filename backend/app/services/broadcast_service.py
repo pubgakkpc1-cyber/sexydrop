@@ -14,6 +14,8 @@ from typing import Any
 import httpx
 
 from app.core.config import get_settings
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.services import stats_service
 
 log = logging.getLogger("sexydrop.broadcast")
@@ -33,10 +35,10 @@ _state: dict[str, Any] = {"state": "idle"}
 _task: asyncio.Task[None] | None = None
 
 
-def audience_ids(audience: str) -> list[int]:
+async def audience_ids(session: AsyncSession, audience: str) -> list[int]:
     now = int(time.time())
     out: list[int] = []
-    for uid, u in stats_service.users_snapshot().items():
+    for uid, u in (await stats_service.users_snapshot(session)).items():
         if not uid.lstrip("-").isdigit():
             continue
         last, first = u.get("last", 0), u.get("first", 0)
@@ -50,8 +52,8 @@ def audience_ids(audience: str) -> list[int]:
     return out
 
 
-def audience_counts() -> dict[str, int]:
-    return {k: len(audience_ids(k)) for k in AUDIENCES}
+async def audience_counts(session: AsyncSession) -> dict[str, int]:
+    return {k: len(await audience_ids(session, k)) for k in AUDIENCES}
 
 
 def status() -> dict[str, Any]:
@@ -113,9 +115,8 @@ async def send_test(chat_id: int, text: str, args: MarkupArgs) -> tuple[bool, st
     return ok, _state.get("last_error")
 
 
-def start(audience: str, text: str, args: MarkupArgs) -> int:
+def start(audience: str, ids: list[int], text: str, args: MarkupArgs) -> int:
     global _task, _state
-    ids = audience_ids(audience)
     _state = {"state": "running", "audience": audience, "total": len(ids), "sent": 0, "failed": 0, "started": int(time.time())}
     _task = asyncio.get_running_loop().create_task(_run(ids, text, _markup(args)))
     return len(ids)

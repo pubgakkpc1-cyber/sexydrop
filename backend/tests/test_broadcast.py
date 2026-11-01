@@ -1,55 +1,57 @@
 import time
+import uuid
+from datetime import datetime, timezone
 
-import pytest
-from fastapi.testclient import TestClient
+from httpx import AsyncClient
+from sqlalchemy import update
 
 from app.api import broadcast as api
 from app.core.config import get_settings
-from app.main import create_app
+from app.core.db import get_session_factory
+from app.models.user import User
 from app.services import broadcast_service as svc
-from app.services import stats_service
+from tests.test_economy import login
 
 
-@pytest.fixture(autouse=True)
-def _fresh(monkeypatch, tmp_path):
-    monkeypatch.setenv("STATS_PATH", str(tmp_path / "stats.json"))
+async def test_audiences(client: AsyncClient, monkeypatch):
     monkeypatch.setenv("BOT_TOKEN", "123:abc")
     get_settings.cache_clear()
-    stats_service.reset_for_tests()
-    yield
-    get_settings.cache_clear()
+    fresh = await login(client)
+    stale = await login(client)
+    old = time.time() - 20 * 86400
+    async with get_session_factory()() as session:
+        await session.execute(
+            update(User)
+            .where(User.id == uuid.UUID(stale["_user"]["id"]))
+            .values(
+                created_at=datetime.fromtimestamp(old, timezone.utc),
+                updated_at=datetime.fromtimestamp(old + 86400 * 10, timezone.utc),
+            )
+        )
+        await session.commit()
+        everyone = await svc.audience_ids(session, "all")
+        assert fresh["_tg"] in everyone and stale["_tg"] in everyone
+        assert stale["_tg"] in await svc.audience_ids(session, "inactive_7d")
+        assert stale["_tg"] not in await svc.audience_ids(session, "active_7d")
+        assert fresh["_tg"] in await svc.audience_ids(session, "new_24h")
+        assert stale["_tg"] not in await svc.audience_ids(session, "new_24h")
 
 
-def _seed():
-    stats_service.record({"id": 10, "username": "a"}, {"type": "open"})
-    stats_service.record({"id": 11, "username": "b"}, {"type": "open"})
-    with stats_service._lock:  # noqa: SLF001
-        stats_service._load()["users"]["11"]["last"] = int(time.time()) - 10 * 86400  # noqa: SLF001
-        stats_service._load()["users"]["11"]["first"] = int(time.time()) - 20 * 86400  # noqa: SLF001
-
-
-def test_audiences():
-    _seed()
-    assert sorted(svc.audience_ids("all")) == [10, 11]
-    assert svc.audience_ids("active_7d") == [10]
-    assert svc.audience_ids("inactive_7d") == [11]
-    assert svc.audience_ids("new_24h") == [10]
-
-
-def test_endpoints_admin_only(monkeypatch):
-    _seed()
+async def test_endpoints_admin_only(client: AsyncClient, monkeypatch):
+    await login(client)
     user = {"id": 1, "username": "someone"}
     monkeypatch.setattr(api, "validate_telegram_init_data", lambda raw: {"user": user})
-    client = TestClient(create_app())
-    h = {"X-Telegram-Init-Data": "x"}
-    assert client.get("/api/admin/broadcast", headers=h).status_code == 403
-    assert client.get("/api/admin/broadcast").status_code == 403
-    assert client.get("/api/admin/players", headers=h).status_code == 403
+    headers = {"X-Telegram-Init-Data": "x"}
+    assert (await client.get("/api/admin/broadcast", headers=headers)).status_code == 403
+    assert (await client.get("/api/admin/broadcast")).status_code == 403
+    assert (await client.get("/api/admin/players", headers=headers)).status_code == 403
 
     user.update(username="zapixxgarant")
-    info = client.get("/api/admin/broadcast", headers=h).json()
-    assert {a["id"]: a["count"] for a in info["audiences"]}["all"] == 2
-    players = client.get("/api/admin/players", headers=h).json()
-    assert [p["id"] for p in players] == ["10", "11"]
-    bad = client.post("/api/admin/broadcast", json={"text": "hi", "audience": "zzz"}, headers=h)
+    info = (await client.get("/api/admin/broadcast", headers=headers)).json()
+    assert {a["id"]: a["count"] for a in info["audiences"]}["all"] >= 1
+    players = (await client.get("/api/admin/players", headers=headers)).json()
+    assert players and all(p["id"].isdigit() for p in players)
+    monkeypatch.setenv("BOT_TOKEN", "123:abc")
+    get_settings.cache_clear()
+    bad = await client.post("/api/admin/broadcast", json={"text": "hi", "audience": "zzz"}, headers=headers)
     assert bad.status_code == 400

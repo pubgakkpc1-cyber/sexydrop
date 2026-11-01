@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { QUESTS, useQuestsStore, type Quest } from '../store/quests'
 import { useProfileStore } from '../store/profile'
 import { useStarsBalanceStore } from '../store/starsBalance'
+import { claimQuestApi } from '../services/gameApi'
 import { starsToMinor } from '../lib/stars'
 import { formatMinor } from '../lib/money'
 import { CheckIcon, ConvertIcon, StarIcon, TonIcon } from '../components/shell/icons'
@@ -45,7 +46,6 @@ export function RewardsScreen() {
   const navigate = useNavigate()
   const stars = useStarsBalanceStore((s) => s.stars)
   const claimed = useQuestsStore((s) => s.claimed)
-  const claim = useQuestsStore((s) => s.claim)
   const progressOf = useQuestsStore((s) => s.progressOf)
   const profile = useProfileStore()
 
@@ -108,7 +108,7 @@ export function RewardsScreen() {
                     type="button"
                     className={cx(styles.qBtn, done && !isClaimed && styles.qBtnReady)}
                     disabled={!done || isClaimed}
-                    onClick={() => claim(quest.id)}
+                    onClick={() => void claimQuestApi(quest.id)}
                   >
                     {isClaimed ? 'Забрано' : done ? 'Забрать' : `${pct}%`}
                   </button>

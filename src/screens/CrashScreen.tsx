@@ -9,6 +9,7 @@ import {
   stopCrashEngine,
   TICK_MS,
 } from '../services/demoCrashService'
+import { setCrashPollFast } from '../services/crashServer'
 import {
   playCountdownTick,
   playRocketLaunch,
@@ -301,7 +302,9 @@ export function CrashScreen() {
   // в vitest-тестах останавливается для изоляции окружения; звук полёта глушится при размонтировании
   useEffect(() => {
     startCrashEngine()
+    setCrashPollFast(true)
     return () => {
+      setCrashPollFast(false)
       stopRocketFlightSound()
       if (import.meta.env.MODE === 'test') {
         stopCrashEngine()

@@ -1,4 +1,6 @@
 import { getWebApp } from './telegram'
+import { SERVER_MODE } from './serverMode'
+import { refreshFreeQuest } from '../services/gameApi'
 import { setReferralTransport } from './referral'
 import { useReferralsStore } from '../store/referrals'
 import { useFreeCasesStore } from '../store/freeCases'
@@ -31,6 +33,11 @@ async function post<T>(path: string, body: Record<string, unknown>): Promise<T |
  * +2 ★ (один раз), а друзей с Telegram Premium передаёт в задание «5 друзей» бесплатного кейса.
  */
 export async function syncReferrals(): Promise<void> {
+  if (SERVER_MODE) {
+    // бонусы за друзей и задание FREE считает сервер — забираем готовое состояние
+    await refreshFreeQuest().catch(() => undefined)
+    return
+  }
   const res = await post<MineResponse>('/api/referrals/mine', {})
   if (!res) return
   const referrals = useReferralsStore.getState()

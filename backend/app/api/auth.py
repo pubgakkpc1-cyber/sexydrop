@@ -9,7 +9,9 @@ from app.api.deps import get_current_user
 from app.core.config import get_settings
 from app.core.db import get_session
 from app.core.security import create_access_token, validate_telegram_init_data
+from app.models.economy import UserMeta
 from app.models.user import User
+from app.services.economy_core import ensure_account
 from app.schemas.auth import AuthResponse, DevAuthRequest, TelegramAuthRequest
 from app.schemas.user import UserRead
 from app.services.user_service import get_or_create_telegram_user
@@ -43,6 +45,7 @@ async def auth_telegram(
     last_name = user_info.get("last_name")
     photo_url = user_info.get("photo_url")
 
+    start_param = str((validated.get("raw_params") or {}).get("start_param") or "")
     user = await get_or_create_telegram_user(
         session,
         telegram_id=telegram_id,
@@ -50,8 +53,13 @@ async def auth_telegram(
         first_name=first_name,
         last_name=last_name,
         photo_url=photo_url,
-        referral_code=payload.referral_code,
+        referral_code=payload.referral_code or (start_param if start_param.startswith("ref-") else None),
     )
+    await ensure_account(session, user.id)
+    meta = await session.get(UserMeta, user.id)
+    if meta is not None and bool(user_info.get("is_premium")) and not meta.is_premium:
+        meta.is_premium = True
+    await session.commit()
 
     token = create_access_token(user.id, user.telegram_id)
     return AuthResponse(
@@ -67,7 +75,7 @@ async def auth_dev(
     session: Annotated[AsyncSession, Depends(get_session)],
 ) -> AuthResponse:
     settings = get_settings()
-    if settings.app_env == "production":
+    if settings.app_env not in ("development", "test"):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Dev authentication endpoint is disabled in production",

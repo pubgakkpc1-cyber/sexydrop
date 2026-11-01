@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useStarsBalanceStore } from '../store/starsBalance'
+import { SERVER_MODE } from '../lib/serverMode'
+import { setServerBalance } from '../lib/serverSync'
+import { exchangeStarsApi } from '../services/gameApi'
 import { formatMinor, toMinor, type Minor } from '../lib/money'
 import {
   STARS_MAX,
@@ -412,6 +415,8 @@ function usePendingDeposits(onPaid: (minor: Minor) => void) {
                 ? await tonPaymentStatus(p.secret)
                 : await cryptoInvoiceStatus(p.invoiceId, p.secret)
           if (res.status === 'paid') {
+            // баланс уже зачислен сервером — показываем ровно то, что он сообщил
+            if (res.balance_minor !== undefined) setServerBalance(res.balance_minor)
             if (markCredited(p.secret)) {
               onPaid(res.amount_minor)
               track({ type: 'deposit', method: p.kind, amount: res.amount_minor })
@@ -666,6 +671,15 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
         disabled={!enough || payout <= 0}
         onClick={() => {
           if (!enough || payout <= 0) return
+          if (SERVER_MODE) {
+            // звёзды списывает и TON зачисляет сервер
+            void exchangeStarsApi(stars).then((r) => {
+              if (r !== 'ok') return
+              onDone(payout)
+              setInput('')
+            })
+            return
+          }
           // сначала списываем звёзды, и только фактически списанное превращаем в TON
           const used = useStarsBalanceStore.getState().spend(stars)
           if (used !== stars) return
@@ -705,7 +719,7 @@ export function DepositScreen() {
   }, [])
 
   const finish = (minor: Minor) => {
-    credit(minor)
+    if (!SERVER_MODE) credit(minor) // в серверном режиме баланс зачисляет сервер
     setDone(`Баланс пополнен на ${formatMinor(minor)} TON`)
     window.setTimeout(() => setDone(null), 2500)
   }

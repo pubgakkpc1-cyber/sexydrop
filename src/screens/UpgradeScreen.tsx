@@ -4,7 +4,8 @@ import { giftById, gifts, type Gift } from '../data/catalog'
 import { useInventoryStore, type InventoryItem } from '../store/inventory'
 import { formatMinor, type Minor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
-import { placeUpgrade, upgradeChancePercent } from '../services/demoUpgradeService'
+import { upgradeChancePercent } from '../services/demoUpgradeService'
+import { errorText, placeUpgradeApi } from '../services/gameApi'
 import { hapticImpact, hapticNotify } from '../lib/telegram'
 import { playRouletteTick, playWinChime } from '../lib/sound'
 import { GiftPickerSheet } from '../components/inventory/GiftPickerSheet'
@@ -53,6 +54,8 @@ export function UpgradeScreen() {
   const [needleDeg, setNeedleDeg] = useState(0)
   const [needleAnimated, setNeedleAnimated] = useState(false)
   const timers = useRef<number[]>([])
+  const upgrading = useRef(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const list = timers.current
@@ -135,9 +138,19 @@ export function UpgradeScreen() {
     setTargetId(target.id)
   }
 
-  const confirm = () => {
-    if (!source || !targetId || spin) return
-    const result = placeUpgrade(source.uid, targetId, makeRequestId())
+  const confirm = async () => {
+    if (!source || !targetId || spin || upgrading.current) return
+    setError(null)
+    upgrading.current = true
+    let result
+    try {
+      result = await placeUpgradeApi(source.uid, targetId, makeRequestId())
+    } catch (e) {
+      setError(errorText(e))
+      return
+    } finally {
+      upgrading.current = false
+    }
     if (result.status !== 'ok') return
     const target = giftById.get(targetId)
     if (!target) return
@@ -300,6 +313,11 @@ export function UpgradeScreen() {
         {spinning ? 'Крутим…' : 'Апгрейдить'}
       </button>
 
+      {error && (
+        <p className={styles.note} role="alert">
+          {error}
+        </p>
+      )}
       <p className={styles.note}>
         Улучшайте свои предметы до легендарных NFT.
       </p>

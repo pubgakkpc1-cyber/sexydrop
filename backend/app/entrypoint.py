@@ -15,7 +15,7 @@ def main() -> int:
             [sys.executable, "-m", "alembic", "upgrade", "head"],
             cwd=BACKEND_ROOT,
             check=False,
-            timeout=10,
+            timeout=90,
         )
         if upgrade.returncode != 0:
             print(

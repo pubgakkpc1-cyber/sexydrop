@@ -2,11 +2,16 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Literal
 
-from pydantic import Field, field_validator
+import hashlib
+
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _BACKEND_ROOT = Path(__file__).resolve().parents[2]
 _PROJECT_ROOT = _BACKEND_ROOT.parent
+
+
+_DEFAULT_JWT_SECRET = "epic-tma-insecure-dev-secret-change-in-production"
 
 
 class Settings(BaseSettings):
@@ -56,7 +61,7 @@ class Settings(BaseSettings):
     odds_path: str = "/tmp/sexydrop_odds.json"
     # Хранить шансы в Postgres (таблица case_odds); файл остаётся запасным вариантом.
     odds_use_db: bool = True
-    jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
+    jwt_secret: str = _DEFAULT_JWT_SECRET
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400
 
@@ -66,6 +71,13 @@ class Settings(BaseSettings):
         if not value.startswith("postgresql+asyncpg://"):
             raise ValueError("DATABASE_URL must use the postgresql+asyncpg:// scheme")
         return value
+
+    @model_validator(mode="after")
+    def derive_jwt_secret(self) -> "Settings":
+        """Секрет токенов не должен быть публичным дефолтом: без JWT_SECRET он выводится из BOT_TOKEN."""
+        if self.jwt_secret == _DEFAULT_JWT_SECRET and self.bot_token:
+            self.jwt_secret = hashlib.sha256(f"sexydrop-jwt:{self.bot_token}".encode()).hexdigest()
+        return self
 
     @property
     def cors_origin_list(self) -> list[str]:

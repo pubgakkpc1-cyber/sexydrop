@@ -3,7 +3,7 @@ import type { Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
 import { queueNextRoundGiftBet } from '../../services/demoCrashService'
-import { sellItem } from '../../services/demoInventoryService'
+import { sellItemApi } from '../../services/gameApi'
 import { useInventoryStore } from '../../store/inventory'
 import { BottomSheet } from '../ui'
 import { RocketIcon, TonIcon } from '../shell/icons'
@@ -45,9 +45,12 @@ export function RocketRewardSheet({ gift, onClose }: RocketRewardSheetProps) {
       setError('Подарок уже недоступен')
       return
     }
-    const res = sellItem(uid, makeRequestId())
-    if (res.status === 'ok') onClose()
-    else setError('Подарок уже недоступен')
+    void sellItemApi(uid, makeRequestId())
+      .then((res) => {
+        if (res.status === 'ok') onClose()
+        else setError('Подарок уже недоступен')
+      })
+      .catch(() => setError('Подарок уже недоступен'))
   }
 
   return (

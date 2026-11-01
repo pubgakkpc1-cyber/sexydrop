@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { giftById } from '../data/catalog'
+import { giftById, type Gift } from '../data/catalog'
 import { useInventoryStore } from '../store/inventory'
 import { DiamondIcon, SearchIcon, ShareIcon } from '../components/shell/icons'
 import { InventoryGiftCard } from '../components/inventory/InventoryGiftCard'
 import { Button, Input } from '../components/ui'
-import { sellItem } from '../services/demoInventoryService'
+import { sellItemApi, withdrawItemApi } from '../services/gameApi'
+import { SERVER_MODE } from '../lib/serverMode'
 import { makeRequestId } from '../lib/requestId'
 import { formatMinor } from '../lib/money'
 import { openOwnerChat, OWNER_HANDLE } from '../lib/telegram'
@@ -54,13 +55,26 @@ export function InventoryScreen() {
     if (sellingUid !== null) return
     setSellingUid(uid)
     window.setTimeout(() => {
-      const res = sellItem(uid, makeRequestId())
-      setSellingUid(null)
-      if (res.status === 'ok') {
-        setSoldNote(`Продано: +${formatMinor(res.creditedMinor)} TON`)
-        window.setTimeout(() => setSoldNote(null), 2500)
-      }
+      void sellItemApi(uid, makeRequestId())
+        .then((res) => {
+          if (res.status === 'ok') {
+            setSoldNote(`Продано: +${formatMinor(res.creditedMinor)} TON`)
+            window.setTimeout(() => setSoldNote(null), 2500)
+          }
+        })
+        .catch(() => undefined)
+        .finally(() => setSellingUid(null))
     }, SELL_ANIM_MS)
+  }
+
+  // Вывод: сервер блокирует подарок и заводит заявку, затем открывается чат с менеджером
+  const handleWithdraw = (gift: Gift, uid: string) => {
+    const open = () => openOwnerChat(buildWithdrawMessage(gift, uid))
+    if (!SERVER_MODE) {
+      open()
+      return
+    }
+    void withdrawItemApi(uid).then(open).catch(() => undefined)
   }
 
   const resetFilters = () => {
@@ -155,7 +169,7 @@ export function InventoryScreen() {
               {visible.map(({ item, gift }) => (
                 <InventoryGiftCard key={item.uid} gift={gift} selling={sellingUid === item.uid}
                   onSell={() => handleSell(item.uid)}
-                  onWithdraw={() => openOwnerChat(buildWithdrawMessage(gift, item.uid))}
+                  onWithdraw={() => handleWithdraw(gift, item.uid)}
                 />
               ))}
             </div>

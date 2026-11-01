@@ -5,7 +5,8 @@ import { makeRequestId } from '../../lib/requestId'
 import { getTelegramUser, hapticNotify, hapticImpact, shareTelegramLink } from '../../lib/telegram'
 import { syncReferrals } from '../../lib/referralSync'
 import { useInventoryStore } from '../../store/inventory'
-import { sellItem } from '../../services/demoInventoryService'
+import { sellItemApi } from '../../services/gameApi'
+import { SERVER_MODE } from '../../lib/serverMode'
 import { useFreeCasesStore } from '../../store/freeCases'
 import { LockIcon, LockOpenIcon, TonIcon, UsersIcon, CheckIcon } from '../shell/icons'
 import styles from './FreeQuestModal.module.css'
@@ -67,6 +68,11 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
   /** Подарок попадает в инвентарь только после выполнения задания. */
   const grantToInventory = () => {
     if (!quest.pendingReward) return null
+    if (SERVER_MODE) {
+      // сервер сам выдал подарок, когда задание выполнено: он уже в инвентаре
+      const uid = quest.pendingReward.uid
+      return useInventoryStore.getState().items.find((i) => i.uid === uid) ?? null
+    }
     const [item] = useInventoryStore.getState().addGifts([quest.pendingReward.giftId], 'free-case')
     return item ?? null
   }
@@ -87,17 +93,20 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
       setSelling(false)
       return
     }
-    const result = sellItem(item.uid, makeRequestId())
-    if (result.status === 'ok') {
-      setSold(true)
-      hapticNotify('success')
-      clearQuestReward()
-      setTimeout(() => {
-        onClose()
-      }, 1000)
-    } else {
-      setSelling(false)
-    }
+    void sellItemApi(item.uid, makeRequestId())
+      .then((result) => {
+        if (result.status === 'ok') {
+          setSold(true)
+          hapticNotify('success')
+          clearQuestReward()
+          setTimeout(() => {
+            onClose()
+          }, 1000)
+        } else {
+          setSelling(false)
+        }
+      })
+      .catch(() => setSelling(false))
   }
 
   return (

@@ -1,3 +1,4 @@
+import { apiGet, apiPost } from './api'
 import type { Minor } from './money'
 
 /** Ответ /api/deposits/config: какие способы реальной оплаты включены на сервере. */
@@ -9,7 +10,7 @@ export interface DepositConfig {
   max_minor: Minor
 }
 
-export type PaymentStatus = { status: 'pending' | 'active' | 'expired' } | { status: 'paid'; amount_minor: Minor }
+export type PaymentStatus = { status: 'pending' | 'active' | 'expired' } | { status: 'paid'; amount_minor: Minor; balance_minor?: Minor }
 
 let cached: Promise<DepositConfig | null> | null = null
 
@@ -24,19 +25,6 @@ export function loadDepositConfig(): Promise<DepositConfig | null> {
   return cached
 }
 
-async function json<T>(res: Response): Promise<T> {
-  if (!res.ok) {
-    let detail = 'Ошибка сервера'
-    try {
-      detail = ((await res.json()) as { detail?: string }).detail ?? detail
-    } catch {
-      /* тело не JSON */
-    }
-    throw new Error(detail)
-  }
-  return (await res.json()) as T
-}
-
 /** Случайный секрет платежа: знает только это устройство, в блокчейн и в логи не попадает. */
 export function newSecret(): string {
   const bytes = new Uint8Array(18)
@@ -44,47 +32,31 @@ export function newSecret(): string {
   return Array.from(bytes, (b) => b.toString(16).padStart(2, '0')).join('')
 }
 
-export async function createCryptoInvoice(
+export function createCryptoInvoice(
   amountMinor: Minor,
   secret: string,
 ): Promise<{ invoice_id: number; pay_url: string; mini_app_url?: string }> {
-  const res = await fetch('/api/deposits/cryptobot/invoice', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ amount_minor: amountMinor, secret }),
-  })
-  return json(res)
+  return apiPost('/api/deposits/cryptobot/invoice', { amount_minor: amountMinor, secret })
 }
 
-export async function cryptoInvoiceStatus(invoiceId: number, secret: string): Promise<PaymentStatus> {
-  const res = await fetch(`/api/deposits/cryptobot/invoice/${invoiceId}?secret=${encodeURIComponent(secret)}`, {
-    cache: 'no-store',
-  })
-  return json(res)
+export function cryptoInvoiceStatus(invoiceId: number, secret: string): Promise<PaymentStatus> {
+  return apiGet(`/api/deposits/cryptobot/invoice/${invoiceId}?secret=${encodeURIComponent(secret)}`)
 }
 
-export async function createStarsInvoice(stars: number, secret: string): Promise<{ invoice_url: string }> {
-  const res = await fetch('/api/deposits/stars/invoice', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ stars, secret }),
-  })
-  return json(res)
+export function createStarsInvoice(stars: number, secret: string): Promise<{ invoice_url: string }> {
+  return apiPost('/api/deposits/stars/invoice', { stars, secret })
 }
 
-export async function starsPaymentStatus(secret: string): Promise<PaymentStatus> {
-  const res = await fetch(`/api/deposits/stars/status?secret=${encodeURIComponent(secret)}`, { cache: 'no-store' })
-  return json(res)
+export function starsPaymentStatus(secret: string): Promise<PaymentStatus> {
+  return apiGet(`/api/deposits/stars/status?secret=${encodeURIComponent(secret)}`)
 }
 
 export async function tonComment(secret: string): Promise<string> {
-  const res = await fetch(`/api/deposits/ton/comment?secret=${encodeURIComponent(secret)}`)
-  return (await json<{ comment: string }>(res)).comment
+  return (await apiGet<{ comment: string }>(`/api/deposits/ton/comment?secret=${encodeURIComponent(secret)}`)).comment
 }
 
-export async function tonPaymentStatus(secret: string): Promise<PaymentStatus> {
-  const res = await fetch(`/api/deposits/ton/status?secret=${encodeURIComponent(secret)}`, { cache: 'no-store' })
-  return json(res)
+export function tonPaymentStatus(secret: string): Promise<PaymentStatus> {
+  return apiGet(`/api/deposits/ton/status?secret=${encodeURIComponent(secret)}`)
 }
 
 /**

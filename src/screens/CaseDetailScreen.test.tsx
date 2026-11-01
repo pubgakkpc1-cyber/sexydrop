@@ -68,7 +68,7 @@ describe('CaseDetailScreen (Референс Epic Gift Bot)', () => {
     expect(screen.getByText('Возвращайтесь через')).toBeInTheDocument()
   })
 
-  it('при клике на кнопку открытия запускается прокрутка рулетки', () => {
+  it('при клике на кнопку открытия запускается прокрутка рулетки', async () => {
     render(
       <MemoryRouter initialEntries={['/case/farm']}>
         <Routes>
@@ -80,7 +80,7 @@ describe('CaseDetailScreen (Референс Epic Gift Bot)', () => {
     const openBtn = screen.getByText(/Открыть за/)
     fireEvent.click(openBtn)
 
-    // Кнопка переходит в состояние вращения
-    expect(screen.getByText('Крутим...')).toBeInTheDocument()
+    // Кнопка переходит в состояние вращения (ответ сервиса приходит асинхронно)
+    expect(await screen.findByText('Крутим...')).toBeInTheDocument()
   })
 })

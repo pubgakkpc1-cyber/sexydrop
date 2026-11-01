@@ -37,6 +37,21 @@ describe('AdminChancesTab', () => {
     expect(screen.getByRole('button', { name: 'Сохранить' })).toBeEnabled()
   })
 
+  it('приз можно убрать из кейса и вернуть', async () => {
+    render(<AdminChancesTab />)
+    await userEvent.click(screen.getByRole('button', { name: /Bronze/ }))
+    const before = chanceInputs().length
+    const [first] = chanceInputs()
+    const name = first!.getAttribute('aria-label')!.replace('Шанс ', '')
+    await userEvent.click(screen.getByRole('button', { name: `Убрать ${name}` }))
+    expect(chanceInputs().length).toBe(before)
+    expect(parseFloat(chanceInputs()[0]!.value)).toBe(0)
+    const sum = chanceInputs().reduce((s, i) => s + parseFloat(i.value), 0)
+    expect(sum).toBeGreaterThan(99.5)
+    await userEvent.click(screen.getByRole('button', { name: `Вернуть ${name}` }))
+    expect(parseFloat(chanceInputs()[0]!.value)).toBe(1)
+  })
+
   it('поиск фильтрует кейсы', async () => {
     render(<AdminChancesTab />)
     await userEvent.type(screen.getByLabelText('Поиск кейса'), 'gold')

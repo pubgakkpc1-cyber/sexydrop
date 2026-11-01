@@ -113,6 +113,15 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
     setSim(null)
   }
 
+  const active = groups.filter((g) => g.pct > 0).length
+  /** Убрать приз из кейса (шанс 0, остальные подстроятся) или вернуть его с шансом 1%. */
+  const toggle = (g: Group) => {
+    setGroups((all) => withPct(all, g.name, g.pct > 0 ? 0 : 1))
+    setDirty(true)
+    setStatus(null)
+    setSim(null)
+  }
+
   const save = async () => {
     const err = await saveCaseOdds(def.id, toWeights(def, groups))
     setStatus(err ? { ok: false, text: err } : { ok: true, text: 'Сохранено — у игроков действует со следующего запуска' })
@@ -157,11 +166,12 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
             <th>Цена</th>
             <th>Шанс, %</th>
             <th>{sim ? 'Выпало' : 'На 1000'}</th>
+            <th aria-label="Убрать из кейса" />
           </tr>
         </thead>
         <tbody>
           {groups.map((g) => (
-            <tr key={g.name}>
+            <tr key={g.name} className={g.pct > 0 ? undefined : styles.removed}>
               <td>{g.name}</td>
               <td>{formatMinor(g.priceMinor)}</td>
               <td>
@@ -176,6 +186,17 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
                 />
               </td>
               <td>{sim ? (sim.counts.get(g.name) ?? 0) : (g.pct * 10).toFixed(g.pct * 10 < 1 ? 2 : 1)}</td>
+              <td>
+                <button
+                  type="button"
+                  className={styles.rowBtn}
+                  disabled={g.pct > 0 && active <= 1}
+                  aria-label={`${g.pct > 0 ? 'Убрать' : 'Вернуть'} ${g.name}`}
+                  onClick={() => toggle(g)}
+                >
+                  {g.pct > 0 ? '✕' : 'Вернуть'}
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -269,7 +290,7 @@ export function AdminChancesTab() {
         onChange={(e) => setQuery(e.target.value)}
       />
       <p className={styles.note}>
-        Откройте кейс, впишите шанс нужным призам и нажмите «Сохранить». RTP — средний возврат игроку от
+        Откройте кейс, впишите шанс нужным призам или уберите лишние (✕) и нажмите «Сохранить». RTP — средний возврат игроку от
         цены кейса (у бесплатных показан средний выигрыш).
       </p>
       {list.map(({ def, ev }) => {

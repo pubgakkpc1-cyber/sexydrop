@@ -314,3 +314,26 @@
   background: #b83a3f;
   border-color: #b83a3f;
 }
+
+.rowBtn {
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.rowBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.removed td {
+  opacity: 0.5;
+}
+
+.removed td:last-child {
+  opacity: 1;
+}

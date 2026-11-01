@@ -185,33 +185,36 @@ def solve(v: list[int], price: int) -> list[int] | None:
 
 result: dict[str, list[list]] = {}
 report = []
-for ci, (cid, name, price, mult, k) in enumerate(CASES):
-    chosen = None
-    for skew in (1.0, 1.6, 2.2, 3.0, 4.0):
-        for extra in range(0, 3):
-            pool = pick_pool(price, mult + extra * 2, k + 5, cid, skew)
-            if cid in TON_CASES:
-                pool = sorted(set(pool) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
-            items = expand(pool, cid, ci)
-            v = [it[2] for it in items]
-            w = solve(v, price)
-            if not w:
-                continue
-            u = util(w, v, price)
-            if u >= 0.9:
-                chosen = (items, v, w)
+def build_cases(forced: dict[str, list[str]]) -> None:
+    for ci, (cid, name, price, mult, k) in enumerate(CASES):
+        chosen = None
+        for skew in (1.0, 1.6, 2.2, 3.0, 4.0):
+            for extra in range(0, 3):
+                pool = pick_pool(price, mult + extra * 2, k + 5, cid, skew)
+                pool = sorted(set(pool) | set(forced.get(cid, [])), key=lambda n: GIFTS[n][0])
+                if cid in TON_CASES:
+                    pool = sorted(set(pool) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
+                items = expand(pool, cid, ci)
+                v = [it[2] for it in items]
+                w = solve(v, price)
+                if not w:
+                    continue
+                u = util(w, v, price)
+                if u >= 0.9:
+                    chosen = (items, v, w)
+                    break
+                if chosen is None or u > util(chosen[2], chosen[1], price):
+                    chosen = (items, v, w)
+            if chosen and util(chosen[2], chosen[1], price) >= 0.9:
                 break
-            if chosen is None or u > util(chosen[2], chosen[1], price):
-                chosen = (items, v, w)
-        if chosen and util(chosen[2], chosen[1], price) >= 0.9:
-            break
-    assert chosen, f"no solution for {cid}"
-    items, v, w = chosen
-    emit(cid, items, w)
-    report.append(
-        f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
-        f"total={sum(w)}  items={len(items)}"
-    )
+        assert chosen, f"no solution for {cid}"
+        items, v, w = chosen
+        emit(cid, items, w)
+        report.append(
+            f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
+            f"total={sum(w)}  items={len(items)}"
+        )
+
 
 # --- Тематические кейсы: набор подарков задан по смыслу, цена подбирается автоматически ---
 THEMED = [
@@ -229,36 +232,68 @@ PRICE_LADDER_TON = [6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24, 25, 30, 35, 40, 
 # Цены тематических кейсов зафиксированы продуктом (catalog.ts). Если после обновления цен NFT состав
 # перестал укладываться в RTP 98%, самые дорогие подарки из пула убираются, а цена кейса остаётся прежней.
 THEMED_PRICE = {"sweet": 6000, "potion": 18000, "jewel": 12000, "meme": 7000, "party": 6000, "heroes": 14000, "street": 7000, "cute": 6000}
-themed_prices = {}
-for ti, (cid, name, names) in enumerate(THEMED):
-    pool0 = sorted((n for n in names if n in GIFTS and allowed_variants(n, cid)), key=lambda n: GIFTS[n][0])
-    best = None
-    # сначала прежняя цена (с отсечением самых дорогих призов), если не выходит — следующая ступень лестницы цен
-    for ton in [THEMED_PRICE[cid] // 1000] + [x for x in PRICE_LADDER_TON if x * 1000 > THEMED_PRICE[cid]]:
-        price = ton * 1000
-        for cap_mult in (None, 200, 120, 80, 50, 30, 20, 12, 8):
-            base = pool0 if cap_mult is None else [n for n in pool0 if GIFTS[n][0] <= cap_mult * price]
-            if len(base) < 4:
-                continue
-            pool = base
-            if cid in TON_CASES:
-                pool = sorted(set(base) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
-            items = expand(pool, cid, len(CASES) + ti)
-            v = [it[2] for it in items]
-            w = solve(v, price)
-            if w and util(w, v, price) >= 0.93:
-                best = (price, w, items, v)
+def build_themed(forced: dict[str, list[str]]) -> dict[str, int]:
+    themed_prices: dict[str, int] = {}
+    for ti, (cid, name, names) in enumerate(THEMED):
+        pool0 = sorted((n for n in set(names) | set(forced.get(cid, [])) if n in GIFTS and allowed_variants(n, cid)), key=lambda n: GIFTS[n][0])
+        best = None
+        # сначала прежняя цена (с отсечением самых дорогих призов), если не выходит — следующая ступень лестницы цен
+        for ton in [THEMED_PRICE[cid] // 1000] + [x for x in PRICE_LADDER_TON if x * 1000 > THEMED_PRICE[cid]]:
+            price = ton * 1000
+            for cap_mult in (None, 200, 120, 80, 50, 30, 20, 12, 8):
+                base = pool0 if cap_mult is None else [n for n in pool0 if GIFTS[n][0] <= cap_mult * price]
+                if len(base) < 4:
+                    continue
+                pool = base
+                if cid in TON_CASES:
+                    pool = sorted(set(base) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
+                items = expand(pool, cid, len(CASES) + ti)
+                v = [it[2] for it in items]
+                w = solve(v, price)
+                if w and util(w, v, price) >= 0.93:
+                    best = (price, w, items, v)
+                    break
+            if best:
                 break
-        if best:
-            break
-    assert best, f"no solution for themed case {cid}"
-    price, w, items, v = best
-    themed_prices[cid] = price
-    emit(cid, items, w)
-    report.append(
-        f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
-        f"total={sum(w)}  items={len(items)}"
-    )
+        assert best, f"no solution for themed case {cid}"
+        price, w, items, v = best
+        themed_prices[cid] = price
+        emit(cid, items, w)
+        report.append(
+            f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
+            f"total={sum(w)}  items={len(items)}"
+        )
+
+    return themed_prices
+
+# --- Покрытие: каждая коллекция должна участвовать хотя бы в одном кейсе ---
+NAME_OF_ID = {x["id"]: n for n, v in manifest.items() for x in v}
+FIXED_CASES = {"farm", "sweet", "gold", "silver", "bronze", "free", "free24", "classic", "romance", "holiday"}
+# (id, цена, потолок цены подарка в кейсе)
+CAP_CASES = [(c[0], c[2], c[2] * c[3]) for c in CASES if c[0] not in FIXED_CASES and c[0] not in SPECIAL_BACKDROP]
+CAP_CASES += [(cid, THEMED_PRICE[cid], THEMED_PRICE[cid] * 60) for cid, _, _ in THEMED if cid not in FIXED_CASES]
+forced: dict[str, list[str]] = {}
+for _round in range(8):
+    result.clear()
+    report.clear()
+    build_cases(forced)
+    themed_prices = build_themed(forced)
+    covered = {NAME_OF_ID[vid] for cid, rows in result.items() if cid not in FIXED_CASES for vid, _ in rows if vid in NAME_OF_ID}
+    missing = sorted((n for n in manifest if n not in covered), key=lambda n: -GIFTS[n][0])
+    if not missing:
+        break
+    load = {cid: len(forced.get(cid, [])) for cid, _, _ in CAP_CASES}
+    for n in missing:
+        g = GIFTS[n][0]
+        fits = [cid for cid, _, cap in CAP_CASES if cap >= g and allowed_variants(n, cid)]
+        if not fits:  # дороже любого потолка — в самый дорогой кейс
+            fits = [max(CAP_CASES, key=lambda c: c[2])[0]]
+        target = min(fits, key=lambda cid: (load[cid], cid))
+        forced.setdefault(target, []).append(n)
+        load[target] += 1
+assert not missing, f"не удалось покрыть коллекции: {missing}"
+print("покрытие: все", len(manifest), "коллекций задействованы; добавлено в кейсы:", {k: len(v) for k, v in forced.items()})
+
 
 (ROOT / "scripts/themed_cases.json").write_text(json.dumps(themed_prices, indent=1), encoding="utf-8")
 

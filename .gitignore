@@ -33,3 +33,4 @@ scripts/*.py
 !scripts/generate_bot_avatars.py
 !scripts/make_brand_icon.py
 !scripts/refresh_nft_prices.py
+!scripts/apply_case_odds.py

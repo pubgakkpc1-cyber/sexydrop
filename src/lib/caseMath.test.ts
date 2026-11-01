@@ -155,6 +155,8 @@ describe('catalog: cases — инвариант EV и RTP', () => {
 
   it('доля топ-предмета не превышает 45%, кроме дешёвого Farm (структурное ограничение)', () => {
     for (const gameCase of paidCases) {
+      // шансы, утверждённые владельцем, солвер-ограничение доли не касается
+      if (isFixed(gameCase.id)) continue
       const total = gameCase.entries.reduce((sum, entry) => sum + entry.weight, 0)
       const topShare = Math.max(...gameCase.entries.map((entry) => entry.weight)) / total
       if (gameCase.id === 'farm') {

@@ -22,12 +22,12 @@ beforeEach(resetAll)
 
 describe('demoCaseService: openCase', () => {
   it('списывает цену кейса и начисляет предмет из его содержимого', () => {
-    const elite = caseById.get('elite')
-    if (!elite) throw new Error('no elite case')
-    // Elite стоит 300 TON — пополняем демо-баланс до достаточного
+    const elite = caseById.get('vip')
+    if (!elite) throw new Error('no vip case')
+    // VIP стоит 120 TON — пополняем демо-баланс до достаточного; в конце списка — NFT, а не TON-приз
     useWalletStore.getState().credit(250_000, 'demo')
 
-    const result = openCase('elite', 'req-1', rngLast)
+    const result = openCase('vip', 'req-1', rngLast)
     if (result.status !== 'ok') throw new Error('expected ok')
 
     expect(result.giftId).toBe(elite.entries[elite.entries.length - 1]?.itemId)

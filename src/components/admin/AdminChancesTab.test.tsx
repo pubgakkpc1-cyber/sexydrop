@@ -8,12 +8,12 @@ function chanceInputs(): HTMLInputElement[] {
 }
 
 describe('AdminChancesTab', () => {
-  it('показывает кейсы с RTP не выше 98% и раскрывает таблицу шансов', async () => {
+  it('показывает кейсы с RTP не выше 100% и раскрывает таблицу шансов', async () => {
     render(<AdminChancesTab />)
     const bronze = screen.getByRole('button', { name: /Bronze/ })
     const rtp = Number(/RTP ([\d.]+)%/.exec(bronze.textContent ?? '')?.[1])
     expect(rtp).toBeGreaterThan(90)
-    expect(rtp).toBeLessThanOrEqual(98)
+    expect(rtp).toBeLessThanOrEqual(100)
 
     await userEvent.click(bronze)
     // шансы раскрытого кейса в сумме дают 100%

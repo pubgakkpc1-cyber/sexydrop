@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { cases, giftById, isTonPrize, type CaseDefinition } from '../../data/catalog'
-import { defaultEntries, saveCaseOdds } from '../../lib/caseOdds'
+import { allItemIds, saveCaseOdds } from '../../lib/caseOdds'
 import { pickWeighted } from '../../lib/caseMath'
 import { formatMinor } from '../../lib/money'
 import styles from './AdminPanel.module.css'
@@ -31,16 +31,16 @@ function groupsOf(def: CaseDefinition): Group[] {
   const current = new Map(def.entries.map((e) => [e.itemId, e.weight]))
   const total = def.entries.reduce((s, e) => s + e.weight, 0)
   const byName = new Map<string, Group>()
-  for (const e of defaultEntries(def.id)) {
-    const info = itemInfo(e.itemId)
+  for (const itemId of allItemIds(def.id)) {
+    const info = itemInfo(itemId)
     if (!info) continue
-    const pct = ((current.get(e.itemId) ?? 0) / total) * 100
+    const pct = ((current.get(itemId) ?? 0) / total) * 100
     const prev = byName.get(info.name)
     if (prev) {
-      prev.itemIds.push(e.itemId)
+      prev.itemIds.push(itemId)
       prev.pct += pct
     } else {
-      byName.set(info.name, { ...info, itemIds: [e.itemId], pct })
+      byName.set(info.name, { ...info, itemIds: [itemId], pct })
     }
   }
   return [...byName.values()].sort((a, b) => b.priceMinor - a.priceMinor)

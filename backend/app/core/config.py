@@ -54,6 +54,8 @@ class Settings(BaseSettings):
     referrals_path: str = "/tmp/sexydrop_referrals.json"
     # Шансы кейсов от админа (JSON). Без постоянного тома сбрасывается при деплое.
     odds_path: str = "/tmp/sexydrop_odds.json"
+    # Хранить шансы в Postgres (таблица case_odds); файл остаётся запасным вариантом.
+    odds_use_db: bool = True
     jwt_secret: str = "epic-tma-insecure-dev-secret-change-in-production"
     jwt_ttl_seconds: int = 86400 * 7
     telegram_auth_max_age_seconds: int = 86400

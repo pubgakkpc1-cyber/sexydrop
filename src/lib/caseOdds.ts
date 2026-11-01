@@ -1,5 +1,12 @@
+import { caseWeights } from '../data/caseWeights.generated'
 import { cases, type CaseEntry } from '../data/catalog'
 import { getWebApp } from './telegram'
+
+/** Все призы кейса, включая убранные из утверждённых шансов (чтобы админ мог вернуть их). */
+export function allItemIds(caseId: string): readonly string[] {
+  const ids = (caseWeights[caseId] ?? []).map(([id]) => id)
+  return ids.length > 0 ? ids : defaultEntries(caseId).map((e) => e.itemId)
+}
 
 /** Дефолтные шансы из каталога — снимок до применения переопределений админа. */
 const DEFAULT_ENTRIES = new Map<string, readonly CaseEntry[]>(cases.map((c) => [c.id, c.entries]))
@@ -12,10 +19,11 @@ export function defaultEntries(caseId: string): readonly CaseEntry[] {
 export function setCaseWeights(caseId: string, weights: Readonly<Record<string, number>> | null): void {
   const def = cases.find((c) => c.id === caseId)
   if (!def) return
-  const base = defaultEntries(caseId)
   const next = weights
-    ? base.map((e) => ({ itemId: e.itemId, weight: weights[e.itemId] ?? 0 })).filter((e) => e.weight > 0)
-    : base
+    ? allItemIds(caseId)
+        .map((itemId) => ({ itemId, weight: weights[itemId] ?? 0 }))
+        .filter((e) => e.weight > 0)
+    : defaultEntries(caseId)
   if (next.length === 0) return
   ;(def as { entries: readonly CaseEntry[] }).entries = next
 }

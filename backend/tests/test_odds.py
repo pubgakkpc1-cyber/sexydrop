@@ -10,6 +10,7 @@ from app.services import odds_service as svc
 @pytest.fixture(autouse=True)
 def _fresh(monkeypatch, tmp_path):
     monkeypatch.setenv("ODDS_PATH", str(tmp_path / "odds.json"))
+    monkeypatch.setenv("ODDS_USE_DB", "false")
     get_settings.cache_clear()
     svc.reset_for_tests()
     yield

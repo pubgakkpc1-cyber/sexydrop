@@ -9,6 +9,7 @@ import {
   RARITY_LABELS,
 } from '../data/catalog'
 import { caseWeights } from '../data/caseWeights.generated'
+import { fixedCaseWeights } from '../data/caseOddsFixed'
 import {
   displayProbabilityBps,
   expectedValueMinor,
@@ -17,6 +18,8 @@ import {
 } from './caseMath'
 
 const RTP_BPS = 9_800
+/** Кейсы с утверждёнными владельцем шансами: инварианты солвера к ним не применяются, казна не должна быть в минусе (RTP ≤ 100%). */
+const isFixed = (id: string) => id in fixedCaseWeights
 
 /** Взвешенные позиции кейса с ценами подарков. */
 function priced(caseId: string) {
@@ -138,12 +141,13 @@ describe('catalog: cases — инвариант EV и RTP', () => {
 
   it('EV каждого кейса не превышает price * RTP (0.98) — гарантия казны', () => {
     for (const gameCase of paidCases) {
-      expect(isWithinRtp(priced(gameCase.id), gameCase.priceMinor, RTP_BPS)).toBe(true)
+      const limit = isFixed(gameCase.id) ? 10_000 : RTP_BPS
+      expect(isWithinRtp(priced(gameCase.id), gameCase.priceMinor, limit)).toBe(true)
     }
   })
 
   it('EV использует RTP не хуже чем на 90% — кейсы не «пустые»', () => {
-    for (const gameCase of paidCases) {
+    for (const gameCase of paidCases.filter((c) => !isFixed(c.id))) {
       const utilization = rtpUtilizationBps(priced(gameCase.id), gameCase.priceMinor, RTP_BPS)
       expect(utilization).toBeGreaterThanOrEqual(9_000)
     }
@@ -166,6 +170,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
     for (const gameCase of freeCases) {
       expect(gameCase.priceMinor).toBe(0)
       expect(gameCase.freeCooldownMs).toBeGreaterThan(0)
+      if (isFixed(gameCase.id)) continue
       const entries = priced(gameCase.id)
       const targetMinor = gameCase.id === 'free24' ? 500 : 8_000
       expect(isWithinRtp(entries, targetMinor, RTP_BPS)).toBe(true)
@@ -175,7 +180,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
 
   it('веса каталога совпадают с выдачей EV-солвера (ручной массив — только кэш формулы)', () => {
     for (const gameCase of cases) {
-      const generated = caseWeights[gameCase.id]
+      const generated = fixedCaseWeights[gameCase.id] ?? caseWeights[gameCase.id]
       expect(generated).toBeTruthy()
       expect(gameCase.entries.map((e) => [e.itemId, e.weight])).toEqual(generated)
     }

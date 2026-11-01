@@ -1,5 +1,6 @@
 import type { Minor } from '../lib/money'
 import { caseWeights } from './caseWeights.generated'
+import { fixedCaseWeights } from './caseOddsFixed'
 
 export type Rarity = 'common' | 'rare' | 'epic' | 'legendary'
 
@@ -515,7 +516,7 @@ function caseDefinition(
   freeCooldownMs: number | null,
   glow: string,
 ): CaseDefinition {
-  const weights = caseWeights[id]
+  const weights = fixedCaseWeights[id] ?? caseWeights[id]
   if (!weights || weights.length === 0) {
     throw new Error(`No solver weights for case: ${id}`)
   }

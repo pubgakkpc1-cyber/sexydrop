@@ -38,6 +38,7 @@ def _check_case(case_id: str) -> None:
 @router.get("/odds")
 async def get_odds() -> dict[str, dict[str, int]]:
     """Шансы, выставленные админом (веса призов по кейсам). Пусто — действуют дефолтные."""
+    await odds_service.ensure_loaded()
     return odds_service.get_all()
 
 
@@ -49,8 +50,9 @@ async def put_odds(
 ) -> dict[str, bool]:
     _require_admin(x_telegram_init_data)
     _check_case(case_id)
+    await odds_service.ensure_loaded()
     try:
-        odds_service.set_case(case_id, body.weights)
+        await odds_service.set_case(case_id, body.weights)
     except ValueError as exc:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(exc)) from exc
     return {"ok": True}
@@ -63,5 +65,6 @@ async def delete_odds(
 ) -> dict[str, bool]:
     _require_admin(x_telegram_init_data)
     _check_case(case_id)
-    odds_service.reset_case(case_id)
+    await odds_service.ensure_loaded()
+    await odds_service.reset_case(case_id)
     return {"ok": True}

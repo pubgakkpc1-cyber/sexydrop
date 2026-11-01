@@ -35,8 +35,8 @@ export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }:
         </span>
       )}
       <div className={styles.art}>
-        <img
-          className={/_\d\.png$/.test(gift.image) ? styles.imageFull : styles.imageContain}
+        <img loading="lazy" decoding="async"
+          className={/_\d\.webp$/.test(gift.image) ? styles.imageFull : styles.imageContain}
           src={gift.image}
           alt=""
         />

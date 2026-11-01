@@ -8,14 +8,14 @@ interface SplashScreenProps {
   onFinish: () => void
 }
 
-const DURATION_MS = 2400
+const DURATION_MS = 1100
 const WORDMARK = 'SEXY DROP'.split('')
 /** Подарки вылетают из точки удара в свои места (dx/dy в px от центра, поворот). */
 const FAN = [
-  { src: '/gifts/heart_locket_1.png', x: -108, y: -150, r: -14 },
-  { src: '/gifts/plush_pepe_1.png', x: 108, y: -168, r: 12 },
-  { src: '/gifts/mini_oscar_1.png', x: -112, y: -22, r: 10 },
-  { src: '/gifts/ion_gem_1.png', x: 112, y: -10, r: -10 },
+  { src: '/gifts/heart_locket_1.webp', x: -108, y: -150, r: -14 },
+  { src: '/gifts/plush_pepe_1.webp', x: 108, y: -168, r: 12 },
+  { src: '/gifts/mini_oscar_1.webp', x: -112, y: -22, r: 10 },
+  { src: '/gifts/ion_gem_1.webp', x: 112, y: -10, r: -10 },
 ] as const
 const SPARKS = Array.from({ length: 16 }, (_, i) => ({
   a: (i / 16) * 360 + (i % 2) * 8,
@@ -46,7 +46,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
         setIsExiting(true)
         setTimeout(() => {
           onFinish()
-        }, 400)
+        }, 250)
       }
     }, 30)
 

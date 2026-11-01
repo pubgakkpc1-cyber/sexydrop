@@ -113,7 +113,7 @@ export function MobileShell() {
 
           <div className={styles.qrCard}>
             <div className={styles.qrWrap}>
-              <img src="/tg-qr.svg" alt="QR-код для Telegram" className={styles.qrImage} />
+              <img loading="lazy" decoding="async" src="/tg-qr.svg" alt="QR-код для Telegram" className={styles.qrImage} />
             </div>
             <div className={styles.qrInfo}>
               <strong>Играйте на телефоне</strong>

@@ -57,8 +57,8 @@ export function RocketRewardSheet({ gift, onClose }: RocketRewardSheetProps) {
     <BottomSheet open onClose={onClose} title="Награда Ракеты!">
       <div className={styles.body}>
         <span className={styles.art} data-rarity={gift.rarity}>
-          <img
-            className={/_\d\.png$/.test(gift.image) ? styles.imageFull : styles.imageContain}
+          <img loading="lazy" decoding="async"
+            className={/_\d\.webp$/.test(gift.image) ? styles.imageFull : styles.imageContain}
             src={gift.image}
             alt=""
           />

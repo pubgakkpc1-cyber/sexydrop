@@ -77,7 +77,7 @@ export function UpgradeScreen() {
     const byName = new Map<string, Gift>()
     for (const gift of gifts) {
       // только актуальные NFT-подарки с реальными ценами (старые подарки каталога не показываем)
-      if (!/-\d$/.test(gift.id) || !gift.image.endsWith('.png')) continue
+      if (!/-\d$/.test(gift.id) || !gift.image.endsWith('.webp')) continue
       if (!gift.available || gift.priceMinor <= 0) continue
       if (!byName.has(gift.name)) byName.set(gift.name, gift)
     }
@@ -88,7 +88,7 @@ export function UpgradeScreen() {
   const allVariants = useMemo(
     () =>
       gifts
-        .filter((g) => g.available && g.priceMinor > 0 && /-\d$/.test(g.id) && g.image.endsWith('.png'))
+        .filter((g) => g.available && g.priceMinor > 0 && /-\d$/.test(g.id) && g.image.endsWith('.webp'))
         .sort((x, y) => x.priceMinor - y.priceMinor || x.id.localeCompare(y.id)),
     [],
   )
@@ -219,7 +219,7 @@ export function UpgradeScreen() {
             <span className={styles.slotLabel}>Ваш предмет</span>
             {sourceGift ? (
               <>
-                <img className={styles.slotImage} src={sourceGift.image} alt="" />
+                <img loading="lazy" decoding="async" className={styles.slotImage} src={sourceGift.image} alt="" />
                 <span className={styles.slotName}>{sourceGift.name}</span>
                 <span className={styles.slotPrice}><GramAmount minor={sourceGift.priceMinor} /></span>
               </>
@@ -274,7 +274,7 @@ export function UpgradeScreen() {
             <span className={styles.slotLabel}>Цель</span>
             {targetGift ? (
               <>
-                <img className={styles.slotImage} src={targetGift.image} alt="" />
+                <img loading="lazy" decoding="async" className={styles.slotImage} src={targetGift.image} alt="" />
                 <span className={styles.slotName}>{targetGift.name}</span>
                 <span className={styles.slotPrice}><GramAmount minor={targetGift.priceMinor} /></span>
               </>
@@ -341,7 +341,7 @@ export function UpgradeScreen() {
       <BottomSheet open={outcome !== null} onClose={() => setOutcome(null)} title="Результат">
         {outcome && (
           <div className={styles.resultWrap}>
-            <img
+            <img loading="lazy" decoding="async"
               className={cx(styles.resultImage, !outcome.won && styles.resultLost)}
               src={shownGift(outcome.targetGiftId)?.image}
               alt=""

@@ -1,26 +1,26 @@
-import { useState } from 'react'
+import { Suspense, lazy, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { MobileShell } from './components/shell/MobileShell'
 import { SplashScreen } from './components/shell/SplashScreen'
-import DevUiScreen from './screens/DevUiScreen'
-import { CaseDetailScreen } from './screens/CaseDetailScreen'
-import { CrashScreen } from './screens/CrashScreen'
-import { DepositScreen } from './screens/DepositScreen'
-import { CraftScreen } from './screens/CraftScreen'
-import { DiceScreen } from './screens/DiceScreen'
-import { GamesScreen } from './screens/GamesScreen'
+const DevUiScreen = lazy(() => import('./screens/DevUiScreen'))
+const CaseDetailScreen = lazy(() => import('./screens/CaseDetailScreen').then((m) => ({ default: m.CaseDetailScreen })))
+const CrashScreen = lazy(() => import('./screens/CrashScreen').then((m) => ({ default: m.CrashScreen })))
+const DepositScreen = lazy(() => import('./screens/DepositScreen').then((m) => ({ default: m.DepositScreen })))
+const CraftScreen = lazy(() => import('./screens/CraftScreen').then((m) => ({ default: m.CraftScreen })))
+const DiceScreen = lazy(() => import('./screens/DiceScreen').then((m) => ({ default: m.DiceScreen })))
+const GamesScreen = lazy(() => import('./screens/GamesScreen').then((m) => ({ default: m.GamesScreen })))
 import { HomeScreen } from './screens/HomeScreen'
-import { InventoryScreen } from './screens/InventoryScreen'
-import { InviteScreen } from './screens/InviteScreen'
-import { MinesScreen } from './screens/MinesScreen'
-import { PlinkoScreen } from './screens/PlinkoScreen'
-import { SpinsScreen } from './screens/SpinsScreen'
-import { RatingScreen } from './screens/RatingScreen'
-import { RewardsScreen } from './screens/RewardsScreen'
-import { PvpScreen } from './screens/PvpScreen'
-import { JackpotScreen } from './screens/JackpotScreen'
-import { TvtScreen } from './screens/TvtScreen'
-import { UpgradeScreen } from './screens/UpgradeScreen'
+const InventoryScreen = lazy(() => import('./screens/InventoryScreen').then((m) => ({ default: m.InventoryScreen })))
+const InviteScreen = lazy(() => import('./screens/InviteScreen').then((m) => ({ default: m.InviteScreen })))
+const MinesScreen = lazy(() => import('./screens/MinesScreen').then((m) => ({ default: m.MinesScreen })))
+const PlinkoScreen = lazy(() => import('./screens/PlinkoScreen').then((m) => ({ default: m.PlinkoScreen })))
+const SpinsScreen = lazy(() => import('./screens/SpinsScreen').then((m) => ({ default: m.SpinsScreen })))
+const RatingScreen = lazy(() => import('./screens/RatingScreen').then((m) => ({ default: m.RatingScreen })))
+const RewardsScreen = lazy(() => import('./screens/RewardsScreen').then((m) => ({ default: m.RewardsScreen })))
+const PvpScreen = lazy(() => import('./screens/PvpScreen').then((m) => ({ default: m.PvpScreen })))
+const JackpotScreen = lazy(() => import('./screens/JackpotScreen').then((m) => ({ default: m.JackpotScreen })))
+const TvtScreen = lazy(() => import('./screens/TvtScreen').then((m) => ({ default: m.TvtScreen })))
+const UpgradeScreen = lazy(() => import('./screens/UpgradeScreen').then((m) => ({ default: m.UpgradeScreen })))
 import { FEATURES } from './lib/features'
 
 function App() {
@@ -30,6 +30,7 @@ function App() {
     <>
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       <HashRouter>
+        <Suspense fallback={null}>
         <Routes>
         <Route element={<MobileShell />}>
           <Route index element={<HomeScreen />} />
@@ -54,6 +55,7 @@ function App() {
           <Route path="*" element={<HomeScreen />} />
         </Route>
       </Routes>
+        </Suspense>
     </HashRouter>
     </>
   )

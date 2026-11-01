@@ -23,7 +23,7 @@ export function GiftCard({ gift, action, onClick, className }: GiftCardProps) {
   const content = (
     <>
       <span className={styles.art}>
-        <img className={styles.image} src={gift.image} alt="" />
+        <img loading="lazy" decoding="async" className={styles.image} src={gift.image} alt="" />
       </span>
       <span className={styles.name}>{gift.name}</span>
       <span className={styles.footer}>

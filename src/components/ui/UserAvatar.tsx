@@ -29,7 +29,7 @@ export function UserAvatar({ size = 36, className }: UserAvatarProps) {
       aria-label="Аватар профиля"
     >
       {photoUrl && !imgError ? (
-        <img
+        <img loading="lazy" decoding="async"
           src={photoUrl}
           alt="Аватар профиля"
           className={styles.avatarImg}

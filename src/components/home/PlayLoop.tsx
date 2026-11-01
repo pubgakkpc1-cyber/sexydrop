@@ -2,12 +2,12 @@ import styles from './PlayLoop.module.css'
 
 /** Реальные NFT из каталога — лента крутится, как рулетка кейса. */
 const STRIP = [
-  '/gifts/plush_pepe_1.png',
-  '/gifts/heart_locket_1.png',
-  '/gifts/mini_oscar_1.png',
-  '/gifts/ion_gem_1.png',
-  '/gifts/astral_shard_1.png',
-  '/gifts/snoop_dogg_1.png',
+  '/gifts/plush_pepe_1.webp',
+  '/gifts/heart_locket_1.webp',
+  '/gifts/mini_oscar_1.webp',
+  '/gifts/ion_gem_1.webp',
+  '/gifts/astral_shard_1.webp',
+  '/gifts/snoop_dogg_1.webp',
 ] as const
 
 /**
@@ -22,7 +22,7 @@ export function PlayLoop() {
       <div className={styles.viewport}>
         <div className={styles.strip}>
           {cards.map((src, i) => (
-            <img key={`${src}-${i}`} src={src} alt="" className={styles.card} />
+            <img loading="lazy" decoding="async" key={`${src}-${i}`} src={src} alt="" className={styles.card} />
           ))}
         </div>
         <span className={styles.markerTop} />

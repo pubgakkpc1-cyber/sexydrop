@@ -64,7 +64,7 @@ export function ItemActionsSheet({ item, onClose }: ItemActionsSheetProps) {
       ) : (
         <div className={styles.body}>
           <span className={styles.art} data-rarity={gift.rarity}>
-            <img className={styles.image} src={gift.image} alt="" />
+            <img loading="lazy" decoding="async" className={styles.image} src={gift.image} alt="" />
           </span>
           <strong className={styles.name}>{gift.name}</strong>
           <span className={styles.meta}>

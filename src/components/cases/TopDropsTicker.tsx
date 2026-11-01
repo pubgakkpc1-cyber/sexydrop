@@ -48,7 +48,7 @@ export function TopDropsTicker({ caseDefinition }: TopDropsTickerProps) {
         {gift && currentDrop && (
           <div key={gift.id} className={styles.dropItem}>
             {currentDrop.isHit && <span className={styles.hitBadge}>ХИТ</span>}
-            <img className={styles.dropImage} src={gift.image} alt="" />
+            <img loading="lazy" decoding="async" className={styles.dropImage} src={gift.image} alt="" />
             <span className={styles.dropName}>{gift.name}</span>
             <span className={styles.dropPrice}>
               <TonIcon style={{ width: '11px', height: '11px', display: 'inline', verticalAlign: '-1px', marginRight: '2px' }} />

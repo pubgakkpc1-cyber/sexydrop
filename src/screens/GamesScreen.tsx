@@ -65,7 +65,7 @@ export function GamesScreen() {
           <span className={styles.bannerNeedle}>
             <span className={styles.bannerNeedleTip} />
           </span>
-          <img className={styles.bannerRingArt} src={giftById.get('plush_pepe-1')?.image} alt="" />
+          <img loading="lazy" decoding="async" className={styles.bannerRingArt} src={giftById.get('plush_pepe-1')?.image} alt="" />
           <span className={styles.bannerRingPill}>24%</span>
         </span>
       </button>
@@ -142,7 +142,7 @@ export function GamesScreen() {
           <span className={styles.giftsGrid} aria-hidden>
             {SPINS_ART_IDS.map((id) => (
               <span key={id} className={styles.giftDot}>
-                <img src={giftById.get(id)?.image} alt="" />
+                <img loading="lazy" decoding="async" src={giftById.get(id)?.image} alt="" />
               </span>
             ))}
           </span>
@@ -188,7 +188,7 @@ export function GamesScreen() {
       >
         <span className={styles.craftArts} aria-hidden>
           {CRAFT_ART_IDS.map((id) => (
-            <img key={id} src={giftById.get(id)?.image} alt="" />
+            <img loading="lazy" decoding="async" key={id} src={giftById.get(id)?.image} alt="" />
           ))}
         </span>
         <span className={styles.bannerInfo}>

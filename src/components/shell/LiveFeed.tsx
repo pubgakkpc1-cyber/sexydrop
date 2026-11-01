@@ -43,7 +43,7 @@ export function LiveFeed() {
             <img
               src={drop.gift.image}
               alt=""
-              className={/_\d\.png$/.test(drop.gift.image) ? styles.imgFull : styles.imgContain}
+              className={/_\d\.webp$/.test(drop.gift.image) ? styles.imgFull : styles.imgContain}
               loading="lazy"
             />
           </div>

@@ -30,6 +30,14 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    // vendor в отдельный чанк: он кэшируется между релизами, а экраны грузятся по мере открытия
+    rollupOptions: {
+      output: {
+        manualChunks: { react: ['react', 'react-dom', 'react-router-dom'] },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

@@ -16,7 +16,7 @@ export function ResultModal({ giftId, onClose }: ResultModalProps) {
     <Modal open onClose={onClose} title="Ваш подарок">
       <div className={styles.body}>
         <span className={styles.rarityRing} data-rarity={gift.rarity}>
-          <img className={styles.image} src={gift.image} alt={gift.name} />
+          <img decoding="async" className={styles.image} src={gift.image} alt={gift.name} />
         </span>
         <strong className={styles.name}>{gift.name}</strong>
         <span className={styles.meta}>

@@ -62,7 +62,8 @@ export function nftGift(
   return {
     id,
     name,
-    image,
+    // картинки подарков хранятся в WebP (в ~30 раз легче PNG): в каталоге остаются прежние имена .png
+    image: image.replace(/\.png$/, '.webp'),
     priceMinor,
     rarity,
     priceSource: 'catalog-config',
@@ -113,7 +114,7 @@ function tonPrize(minor: Minor): Gift {
     id: `ton_${minor}`,
     name: `${ton} TON`,
     // единый значок TON (синий камень с белой искрой) — без подписей на картинке
-    image: '/gifts/ton_gem.png',
+    image: '/gifts/ton_gem.webp',
     priceMinor: minor,
     rarity: minor >= 25000 ? 'legendary' : minor >= 5000 ? 'epic' : minor >= 2000 ? 'rare' : 'common',
     priceSource: 'catalog-config',
@@ -129,7 +130,7 @@ function regularGift(id: string, name: string, priceMinor: Minor, file: string):
   return {
     id,
     name,
-    image: `/gifts/png/${file}.png`,
+    image: `/gifts/png/${file}.webp`,
     priceMinor,
     rarity: priceMinor >= 500 ? 'rare' : 'common',
     priceSource: 'catalog-config',
@@ -968,7 +969,7 @@ function caseDefinition(
   return {
     id,
     name,
-    image: `/cases/${id}.png`,
+    image: `/cases/${id}.webp`,
     priceMinor,
     freeCooldownMs,
     isNew,

@@ -269,7 +269,7 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
                   aria-pressed={item.uid === selectedUid}
                   onClick={() => setSelectedUid(item.uid)}
                 >
-                  <img className={styles.image} src={gift.image} alt="" />
+                  <img loading="lazy" decoding="async" className={styles.image} src={gift.image} alt="" />
                   <span className={styles.name}>{gift.name}</span>
                   <span className={styles.meta}>
                     <span className={styles.rarity}>{RARITY_LABELS[gift.rarity]}</span>

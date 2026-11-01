@@ -2,7 +2,7 @@ import { gifts, type Gift } from '../data/catalog'
 
 /** NFT-виды (PNG с реальным фоном), по возрастанию цены. */
 const POOL: readonly Gift[] = gifts
-  .filter((g) => /-\d$/.test(g.id) && g.image.endsWith('.png'))
+  .filter((g) => /-\d$/.test(g.id) && g.image.endsWith('.webp'))
   .sort((a, b) => a.priceMinor - b.priceMinor)
 
 const BY_PRICE = new Map<number, Gift[]>()

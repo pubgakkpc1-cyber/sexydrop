@@ -118,18 +118,18 @@ function formatTonMaxOneDecimal(minor: number): string {
 
 /** Мелкие модельки NFT (без фонов) левитируют по всей арене и время от времени сменяются на другие (чистый CSS-transform). */
 const FLOAT_POOL = [
-  'gift_87.png',
-  'gift_04.png',
-  'gift_103.png',
-  'blue_diamond_gem.png',
-  'teddy_bear.png',
-  'gift_82.png',
-  'gift_78.png',
-  'gift_92.png',
-  'gift_02.png',
-  'gift_93.png',
-  'gift_26.png',
-  'pink_heart_box.png',
+  'gift_87.webp',
+  'gift_04.webp',
+  'gift_103.webp',
+  'blue_diamond_gem.webp',
+  'teddy_bear.webp',
+  'gift_82.webp',
+  'gift_78.webp',
+  'gift_92.webp',
+  'gift_02.webp',
+  'gift_93.webp',
+  'gift_26.webp',
+  'pink_heart_box.webp',
 ] as const
 const FLOATERS = [
   { x: 8, y: 12, size: 30, swapMs: 5000, start: 0, dx: 120, dy: 48, dur: 3.6 },
@@ -157,7 +157,7 @@ function Floater({ f }: { f: (typeof FLOATERS)[number] }) {
         } as React.CSSProperties
       }
     >
-      <img
+      <img loading="lazy" decoding="async"
         key={idx}
         src={`/gifts/png/${FLOAT_POOL[idx % FLOAT_POOL.length]}`}
         alt=""
@@ -754,7 +754,7 @@ export function CrashScreen() {
               >
                 <div className={styles.playerLeft}>
                   <div className={styles.playerAvatarBox}>
-                    <img
+                    <img loading="lazy" decoding="async"
                       src={row.avatar}
                       alt={row.name}
                       className={styles.playerAvatar}
@@ -825,7 +825,7 @@ export function CrashScreen() {
                     data-rarity={displayGift?.rarity}
                   >
                     {displayGift ? (
-                      <img
+                      <img loading="lazy" decoding="async"
                         key={displayGift.id}
                         src={displayGift.image}
                         alt=""
@@ -838,7 +838,7 @@ export function CrashScreen() {
                           const el = e.currentTarget
                           if (!el.dataset.fallback) {
                             el.dataset.fallback = '1'
-                            el.src = el.src.replace('.svg', '.png')
+                            el.src = el.src.replace('.svg', '.webp')
                           }
                         }}
                       />

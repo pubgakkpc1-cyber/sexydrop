@@ -100,8 +100,8 @@ export function GiftPickerSheet({
                   onClick={() => setSelectedUid(item.uid)}
                 >
                   {item.uid === selectedUid && <span className={styles.check} aria-hidden>✓</span>}
-                  <img
-                    className={cx(styles.image, /_\d\.png$/.test(gift.image) ? styles.imageFull : styles.imageContain)}
+                  <img loading="lazy" decoding="async"
+                    className={cx(styles.image, /_\d\.webp$/.test(gift.image) ? styles.imageFull : styles.imageContain)}
                     src={gift.image}
                     alt=""
                   />

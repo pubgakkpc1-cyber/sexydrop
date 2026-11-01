@@ -33,7 +33,7 @@ export function CasesGrid() {
                     НОВОЕ
                   </span>
                 )}
-                <img className={styles.image} src={gameCase.image} alt="" />
+                <img loading="lazy" decoding="async" className={styles.image} src={gameCase.image} alt="" />
               </span>
               <span className={styles.bar}>
                 <span className={styles.name}>{gameCase.name}</span>

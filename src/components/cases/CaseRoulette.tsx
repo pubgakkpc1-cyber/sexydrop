@@ -226,7 +226,7 @@ export function CaseRoulette({
                 className={`${styles.tile} ${isWinner ? styles.tileWinning : ''}`}
                 data-rarity={gift.rarity}
               >
-                <img className={styles.tileImage} src={gift.image} alt={gift.name} />
+                <img decoding="async" className={styles.tileImage} src={gift.image} alt={gift.name} />
                 <span className={styles.tileName}>{gift.name}</span>
               </div>
             )

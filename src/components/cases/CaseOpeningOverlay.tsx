@@ -64,7 +64,7 @@ export function CaseOpeningOverlay({ caseDefinition, result, onClose }: CaseOpen
   return (
     <div className={styles.backdrop} role="dialog" aria-modal="true" aria-label="Открытие кейса">
       <div className={styles.caseImageWrap}>
-        <img className={styles.caseImage} src={caseDefinition.image} alt="" />
+        <img decoding="async" className={styles.caseImage} src={caseDefinition.image} alt="" />
       </div>
 
       <div className={styles.roulette}>
@@ -85,7 +85,7 @@ export function CaseOpeningOverlay({ caseDefinition, result, onClose }: CaseOpen
               const gift = giftById.get(giftId)
               if (!gift) return null
               return (
-                <img
+                <img decoding="async"
                   key={index}
                   className={styles.tile}
                   src={gift.image}
@@ -117,7 +117,7 @@ function ResultView({
   }, [])
   return (
     <div className={styles.result}>
-      <img className={styles.resultImage} src={gift.image} alt="" />
+      <img decoding="async" className={styles.resultImage} src={gift.image} alt="" />
       <strong className={styles.resultName}>{gift.name}</strong>
       <GramAmount minor={gift.priceMinor} size="md" className={styles.resultPrice} />
       <p className={styles.resultNote}>Подарок зачислен в инвентарь</p>

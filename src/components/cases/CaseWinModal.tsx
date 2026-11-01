@@ -60,7 +60,7 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
             />
           ))}
           <div className={styles.imageWrap} data-rarity={gift.rarity}>
-            <img className={styles.giftImage} src={gift.image} alt={gift.name} />
+            <img decoding="async" className={styles.giftImage} src={gift.image} alt={gift.name} />
             <span className={styles.shine} aria-hidden />
           </div>
         </div>

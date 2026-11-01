@@ -147,7 +147,7 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
         {/* Карточка выигранного подарка */}
         <div className={styles.giftPreviewCard}>
           <div className={styles.giftImageWrap}>
-            <img className={styles.giftImage} src={gift.image} alt={gift.name} />
+            <img loading="lazy" decoding="async" className={styles.giftImage} src={gift.image} alt={gift.name} />
           </div>
           <div className={styles.giftMeta}>
             <strong className={styles.giftName}>{gift.name}</strong>

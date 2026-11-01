@@ -90,7 +90,7 @@ export function CraftScreen() {
           <div className={styles.candidates} aria-label="Возможные результаты">
             {candidates.slice(0, 4).map((candidate) => (
               <span key={candidate.giftId} className={styles.candidate}>
-                <img
+                <img loading="lazy" decoding="async"
                   className={styles.candidateImage}
                   src={giftById.get(candidate.giftId)?.image}
                   alt=""
@@ -140,7 +140,7 @@ export function CraftScreen() {
               aria-pressed={selected.has(item.uid)}
               onClick={() => toggle(item.uid)}
             >
-              <img className={styles.cellImage} src={gift.image} alt="" />
+              <img loading="lazy" decoding="async" className={styles.cellImage} src={gift.image} alt="" />
               <span className={styles.cellName}>{gift.name}</span>
               <span className={styles.cellPrice}>{formatMinor(gift.priceMinor)}</span>
             </button>
@@ -165,7 +165,7 @@ export function CraftScreen() {
       <BottomSheet open={outcome !== null} onClose={() => setOutcome(null)} title="Результат">
         {outcome && (
           <div className={styles.resultWrap}>
-            <img
+            <img loading="lazy" decoding="async"
               className={cx(styles.resultImage, !outcome.won && styles.resultLost)}
               src={giftById.get(outcome.targetGiftId)?.image}
               alt=""

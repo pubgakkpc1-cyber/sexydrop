@@ -64,7 +64,7 @@ describe('catalog: gifts', () => {
   it('имеет уникальные id, локальные изображения и корректные метаданные', () => {
     expect(new Set(gifts.map((gift) => gift.id)).size).toBe(gifts.length)
     for (const gift of gifts) {
-      expect(gift.image).toMatch(/^\/gifts\/.+\.(svg|png)$/)
+      expect(gift.image).toMatch(/^\/gifts\/.+\.(svg|png|webp)$/)
       expect(gift.priceMinor).toBeGreaterThan(0)
       expect(RARITY_LABELS[gift.rarity]).toBeTruthy()
       expect(typeof gift.serialNumber === 'number' || gift.serialNumber === null).toBe(true)
@@ -202,7 +202,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
   it('у кейсов уникальные id и локальные изображения', () => {
     expect(new Set(cases.map((c) => c.id)).size).toBe(cases.length)
     for (const gameCase of cases) {
-      expect(gameCase.image).toMatch(/^\/cases\/.+\.(svg|png)$/)
+      expect(gameCase.image).toMatch(/^\/cases\/.+\.(svg|png|webp)$/)
     }
   })
 

@@ -9,7 +9,7 @@
       "backdrop": "Platinum",
       "symbol": "Ring",
       "image": "/gifts/plush_pepe_1.png",
-      "price_ton": 7070.0
+      "price_ton": 18360.0
     },
     {
       "idx": 2,
@@ -20,7 +20,7 @@
       "backdrop": "Black",
       "symbol": "Champagne",
       "image": "/gifts/plush_pepe_2.png",
-      "price_ton": 7070.0
+      "price_ton": 19265.76
     },
     {
       "idx": 3,
@@ -31,7 +31,7 @@
       "backdrop": "Electric Purple",
       "symbol": "Doberman",
       "image": "/gifts/plush_pepe_3.png",
-      "price_ton": 7070.0
+      "price_ton": 26066.1
     },
     {
       "idx": 4,
@@ -42,7 +42,7 @@
       "backdrop": "Jade Green",
       "symbol": "Cunning Fox",
       "image": "/gifts/plush_pepe_4.png",
-      "price_ton": 7070.0
+      "price_ton": 7140.0
     },
     {
       "idx": 5,
@@ -53,7 +53,7 @@
       "backdrop": "Cobalt Blue",
       "symbol": "Gold",
       "image": "/gifts/plush_pepe_5.png",
-      "price_ton": 7070.0
+      "price_ton": 7956.0
     },
     {
       "idx": 6,
@@ -64,7 +64,7 @@
       "backdrop": "Neon Blue",
       "symbol": "Oxen of Fire",
       "image": "/gifts/plush_pepe_6.png",
-      "price_ton": 7070.0
+      "price_ton": 8160.02
     }
   ],
   "Heart Locket": [
@@ -77,7 +77,7 @@
       "backdrop": "Lemongrass",
       "symbol": "Like",
       "image": "/gifts/heart_locket_1.png",
-      "price_ton": 1458.44
+      "price_ton": 1472.88
     },
     {
       "idx": 2,
@@ -88,7 +88,7 @@
       "backdrop": "Electric Indigo",
       "symbol": "Anchor",
       "image": "/gifts/heart_locket_2.png",
-      "price_ton": 1458.44
+      "price_ton": 3058.98
     },
     {
       "idx": 3,
@@ -99,7 +99,7 @@
       "backdrop": "Neon Blue",
       "symbol": "Melon",
       "image": "/gifts/heart_locket_3.png",
-      "price_ton": 1458.44
+      "price_ton": 1472.89
     },
     {
       "idx": 4,
@@ -110,7 +110,7 @@
       "backdrop": "Rifle Green",
       "symbol": "Sunflower",
       "image": "/gifts/heart_locket_4.png",
-      "price_ton": 1458.44
+      "price_ton": 1472.9
     },
     {
       "idx": 5,
@@ -121,7 +121,7 @@
       "backdrop": "Rifle Green",
       "symbol": "Spring Chick",
       "image": "/gifts/heart_locket_5.png",
-      "price_ton": 1458.44
+      "price_ton": 1734.0
     },
     {
       "idx": 6,
@@ -132,7 +132,7 @@
       "backdrop": "Khaki Green",
       "symbol": "Cow Skull",
       "image": "/gifts/heart_locket_6.png",
-      "price_ton": 1458.44
+      "price_ton": 1812.54
     }
   ],
   "Resistance Dog": [
@@ -145,7 +145,7 @@
       "backdrop": "Midnight Blue",
       "symbol": "Paper Lantern",
       "image": "/gifts/resistance_dog_1.png",
-      "price_ton": 656.5
+      "price_ton": 2397.0
     },
     {
       "idx": 2,
@@ -156,7 +156,7 @@
       "backdrop": "Steel Grey",
       "symbol": "Lion of Babylon",
       "image": "/gifts/resistance_dog_2.png",
-      "price_ton": 656.5
+      "price_ton": 2397.01
     },
     {
       "idx": 3,
@@ -167,7 +167,7 @@
       "backdrop": "Satin Gold",
       "symbol": "Shinto Shrine",
       "image": "/gifts/resistance_dog_3.png",
-      "price_ton": 656.5
+      "price_ton": 2397.02
     },
     {
       "idx": 4,
@@ -178,7 +178,7 @@
       "backdrop": "Azure Blue",
       "symbol": "White Deer",
       "image": "/gifts/resistance_dog_4.png",
-      "price_ton": 656.5
+      "price_ton": 479.43
     },
     {
       "idx": 5,
@@ -189,7 +189,7 @@
       "backdrop": "Steel Grey",
       "symbol": "Alkonost",
       "image": "/gifts/resistance_dog_5.png",
-      "price_ton": 656.5
+      "price_ton": 712.98
     },
     {
       "idx": 6,
@@ -200,7 +200,7 @@
       "backdrop": "Sky Blue",
       "symbol": "Evil Dragon",
       "image": "/gifts/resistance_dog_6.png",
-      "price_ton": 656.5
+      "price_ton": 714.01
     }
   ],
   "Durov's Cap": [
@@ -213,7 +213,7 @@
       "backdrop": "Black",
       "symbol": "Eagle",
       "image": "/gifts/durovs_cap_1.png",
-      "price_ton": 474.7
+      "price_ton": 2038.98
     },
     {
       "idx": 2,
@@ -224,7 +224,7 @@
       "backdrop": "Electric Indigo",
       "symbol": "Apple",
       "image": "/gifts/durovs_cap_2.png",
-      "price_ton": 474.7
+      "price_ton": 714.0
     },
     {
       "idx": 3,
@@ -235,7 +235,7 @@
       "backdrop": "Electric Indigo",
       "symbol": "Cursor",
       "image": "/gifts/durovs_cap_3.png",
-      "price_ton": 474.7
+      "price_ton": 1426.98
     },
     {
       "idx": 4,
@@ -246,7 +246,7 @@
       "backdrop": "Satin Gold",
       "symbol": "Birthday Cake",
       "image": "/gifts/durovs_cap_4.png",
-      "price_ton": 474.7
+      "price_ton": 479.4
     },
     {
       "idx": 5,
@@ -257,7 +257,7 @@
       "backdrop": "Persimmon",
       "symbol": "Octopus",
       "image": "/gifts/durovs_cap_5.png",
-      "price_ton": 474.7
+      "price_ton": 479.41
     },
     {
       "idx": 6,
@@ -268,7 +268,7 @@
       "backdrop": "Caramel",
       "symbol": "Golden Scarab",
       "image": "/gifts/durovs_cap_6.png",
-      "price_ton": 474.7
+      "price_ton": 479.42
     }
   ],
   "Scared Cat": [
@@ -281,7 +281,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Voodoo Doll",
       "image": "/gifts/scared_cat_1.png",
-      "price_ton": 301.99
+      "price_ton": 1524.9
     },
     {
       "idx": 2,
@@ -292,7 +292,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Scarecrow",
       "image": "/gifts/scared_cat_2.png",
-      "price_ton": 301.99
+      "price_ton": 1524.91
     },
     {
       "idx": 3,
@@ -303,7 +303,7 @@
       "backdrop": "Sapphire",
       "symbol": "Moon",
       "image": "/gifts/scared_cat_3.png",
-      "price_ton": 301.99
+      "price_ton": 448.8
     },
     {
       "idx": 4,
@@ -314,7 +314,7 @@
       "backdrop": "Moonstone",
       "symbol": "Moon Eagle",
       "image": "/gifts/scared_cat_4.png",
-      "price_ton": 301.99
+      "price_ton": 304.98
     },
     {
       "idx": 5,
@@ -325,7 +325,7 @@
       "backdrop": "Caramel",
       "symbol": "Potion",
       "image": "/gifts/scared_cat_5.png",
-      "price_ton": 301.99
+      "price_ton": 306.0
     },
     {
       "idx": 6,
@@ -336,7 +336,7 @@
       "backdrop": "Jade Green",
       "symbol": "Coffin",
       "image": "/gifts/scared_cat_6.png",
-      "price_ton": 301.99
+      "price_ton": 306.01
     }
   ],
   "Precious Peach": [
@@ -349,7 +349,7 @@
       "backdrop": "Black",
       "symbol": "Gold",
       "image": "/gifts/precious_peach_1.png",
-      "price_ton": 297.95
+      "price_ton": 510.0
     },
     {
       "idx": 2,
@@ -360,7 +360,7 @@
       "backdrop": "Black",
       "symbol": "Stilettos",
       "image": "/gifts/precious_peach_2.png",
-      "price_ton": 297.95
+      "price_ton": 1504.5
     },
     {
       "idx": 3,
@@ -371,7 +371,7 @@
       "backdrop": "Cyberpunk",
       "symbol": "Kitty Cat",
       "image": "/gifts/precious_peach_3.png",
-      "price_ton": 297.95
+      "price_ton": 300.9
     },
     {
       "idx": 4,
@@ -382,7 +382,7 @@
       "backdrop": "Lemongrass",
       "symbol": "Cactus",
       "image": "/gifts/precious_peach_4.png",
-      "price_ton": 297.95
+      "price_ton": 300.91
     },
     {
       "idx": 5,
@@ -393,7 +393,7 @@
       "backdrop": "Neon Blue",
       "symbol": "Totem Bear",
       "image": "/gifts/precious_peach_5.png",
-      "price_ton": 297.95
+      "price_ton": 300.92
     },
     {
       "idx": 6,
@@ -404,7 +404,7 @@
       "backdrop": "Sapphire",
       "symbol": "Moon Cross",
       "image": "/gifts/precious_peach_6.png",
-      "price_ton": 297.95
+      "price_ton": 316.2
     }
   ],
   "Heroic Helmet": [
@@ -417,7 +417,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Imperial Lion",
       "image": "/gifts/heroic_helmet_1.png",
-      "price_ton": 200.99
+      "price_ton": 1014.9
     },
     {
       "idx": 2,
@@ -428,7 +428,7 @@
       "backdrop": "Battleship Grey",
       "symbol": "Double Axe",
       "image": "/gifts/heroic_helmet_2.png",
-      "price_ton": 200.99
+      "price_ton": 918.0
     },
     {
       "idx": 3,
@@ -439,7 +439,7 @@
       "backdrop": "Black",
       "symbol": "Paw Print",
       "image": "/gifts/heroic_helmet_3.png",
-      "price_ton": 200.99
+      "price_ton": 452.88
     },
     {
       "idx": 4,
@@ -450,7 +450,7 @@
       "backdrop": "Camo Green",
       "symbol": "Fireman Hat",
       "image": "/gifts/heroic_helmet_4.png",
-      "price_ton": 200.99
+      "price_ton": 202.98
     },
     {
       "idx": 5,
@@ -461,7 +461,7 @@
       "backdrop": "Hunter Green",
       "symbol": "Star",
       "image": "/gifts/heroic_helmet_5.png",
-      "price_ton": 200.99
+      "price_ton": 255.0
     },
     {
       "idx": 6,
@@ -472,7 +472,7 @@
       "backdrop": "Mustard",
       "symbol": "Sumerian Bird",
       "image": "/gifts/heroic_helmet_6.png",
-      "price_ton": 200.99
+      "price_ton": 255.01
     }
   ],
   "Loot Bag": [
@@ -485,7 +485,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Heater Shield",
       "image": "/gifts/loot_bag_1.png",
-      "price_ton": 151.5
+      "price_ton": 428.4
     },
     {
       "idx": 2,
@@ -496,7 +496,7 @@
       "backdrop": "Black",
       "symbol": "Takoyaki",
       "image": "/gifts/loot_bag_2.png",
-      "price_ton": 151.5
+      "price_ton": 765.0
     },
     {
       "idx": 3,
@@ -507,7 +507,7 @@
       "backdrop": "Platinum",
       "symbol": "Calm Wolf",
       "image": "/gifts/loot_bag_3.png",
-      "price_ton": 151.5
+      "price_ton": 372.3
     },
     {
       "idx": 4,
@@ -518,7 +518,7 @@
       "backdrop": "Indigo Dye",
       "symbol": "Sun Lion",
       "image": "/gifts/loot_bag_4.png",
-      "price_ton": 151.5
+      "price_ton": 153.01
     },
     {
       "idx": 5,
@@ -529,7 +529,7 @@
       "backdrop": "Midnight Blue",
       "symbol": "Watermelon",
       "image": "/gifts/loot_bag_5.png",
-      "price_ton": 151.5
+      "price_ton": 153.02
     },
     {
       "idx": 6,
@@ -540,7 +540,7 @@
       "backdrop": "Emerald",
       "symbol": "Trickster Fox",
       "image": "/gifts/loot_bag_6.png",
-      "price_ton": 151.5
+      "price_ton": 153.03
     }
   ],
   "Mighty Arm": [
@@ -553,7 +553,7 @@
       "backdrop": "Rifle Green",
       "symbol": "Fenrir",
       "image": "/gifts/mighty_arm_1.png",
-      "price_ton": 151.5
+      "price_ton": 260.1
     },
     {
       "idx": 2,
@@ -564,7 +564,7 @@
       "backdrop": "Black",
       "symbol": "Coin Purse",
       "image": "/gifts/mighty_arm_2.png",
-      "price_ton": 151.5
+      "price_ton": 765.01
     },
     {
       "idx": 3,
@@ -575,7 +575,7 @@
       "backdrop": "Amber",
       "symbol": "Greek Helmet",
       "image": "/gifts/mighty_arm_3.png",
-      "price_ton": 151.5
+      "price_ton": 765.02
     },
     {
       "idx": 4,
@@ -586,7 +586,7 @@
       "backdrop": "Mint Green",
       "symbol": "La Corona",
       "image": "/gifts/mighty_arm_4.png",
-      "price_ton": 151.5
+      "price_ton": 153.04
     },
     {
       "idx": 5,
@@ -597,7 +597,7 @@
       "backdrop": "Cobalt Blue",
       "symbol": "War Tiger",
       "image": "/gifts/mighty_arm_5.png",
-      "price_ton": 151.5
+      "price_ton": 162.18
     },
     {
       "idx": 6,
@@ -608,7 +608,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Wepwawet",
       "image": "/gifts/mighty_arm_6.png",
-      "price_ton": 151.5
+      "price_ton": 163.2
     }
   ],
   "Astral Shard": [
@@ -621,7 +621,7 @@
       "backdrop": "Black",
       "symbol": "Mountain Lion",
       "image": "/gifts/astral_shard_1.png",
-      "price_ton": 148.47
+      "price_ton": 679.32
     },
     {
       "idx": 2,
@@ -632,7 +632,7 @@
       "backdrop": "Desert Sand",
       "symbol": "Celtic Wolf",
       "image": "/gifts/astral_shard_2.png",
-      "price_ton": 148.47
+      "price_ton": 749.7
     },
     {
       "idx": 3,
@@ -643,7 +643,7 @@
       "backdrop": "Pacific Cyan",
       "symbol": "Anchor",
       "image": "/gifts/astral_shard_3.png",
-      "price_ton": 148.47
+      "price_ton": 244.8
     },
     {
       "idx": 4,
@@ -654,7 +654,7 @@
       "backdrop": "Mystic Pearl",
       "symbol": "Gold",
       "image": "/gifts/astral_shard_4.png",
-      "price_ton": 148.47
+      "price_ton": 149.94
     },
     {
       "idx": 5,
@@ -665,7 +665,7 @@
       "backdrop": "Amber",
       "symbol": "Money Bag",
       "image": "/gifts/astral_shard_5.png",
-      "price_ton": 148.47
+      "price_ton": 150.96
     },
     {
       "idx": 6,
@@ -676,7 +676,7 @@
       "backdrop": "Shamrock Green",
       "symbol": "Shark Knife",
       "image": "/gifts/astral_shard_6.png",
-      "price_ton": 148.47
+      "price_ton": 151.98
     }
   ],
   "Westside Sign": [
@@ -689,7 +689,7 @@
       "backdrop": "Satin Gold",
       "symbol": "Mushroom",
       "image": "/gifts/westside_sign_1.png",
-      "price_ton": 129.28
+      "price_ton": 652.8
     },
     {
       "idx": 2,
@@ -700,7 +700,7 @@
       "backdrop": "Tomato",
       "symbol": "Kitsune Mask",
       "image": "/gifts/westside_sign_2.png",
-      "price_ton": 129.28
+      "price_ton": 130.56
     },
     {
       "idx": 3,
@@ -711,7 +711,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Snoop Leaf",
       "image": "/gifts/westside_sign_3.png",
-      "price_ton": 129.28
+      "price_ton": 652.81
     },
     {
       "idx": 4,
@@ -722,7 +722,7 @@
       "backdrop": "Orange",
       "symbol": "Mayan Moth",
       "image": "/gifts/westside_sign_4.png",
-      "price_ton": 129.28
+      "price_ton": 130.57
     },
     {
       "idx": 5,
@@ -733,7 +733,7 @@
       "backdrop": "Midnight Blue",
       "symbol": "Flipper",
       "image": "/gifts/westside_sign_5.png",
-      "price_ton": 129.28
+      "price_ton": 146.88
     },
     {
       "idx": 6,
@@ -744,7 +744,7 @@
       "backdrop": "Turquoise",
       "symbol": "Crown",
       "image": "/gifts/westside_sign_6.png",
-      "price_ton": 129.28
+      "price_ton": 146.89
     }
   ],
   "Mini Oscar": [
@@ -757,7 +757,7 @@
       "backdrop": "Purple",
       "symbol": "Alarm",
       "image": "/gifts/mini_oscar_1.png",
-      "price_ton": 80.8
+      "price_ton": 535.5
     },
     {
       "idx": 2,
@@ -768,7 +768,7 @@
       "backdrop": "Grape",
       "symbol": "Trickster Fox",
       "image": "/gifts/mini_oscar_2.png",
-      "price_ton": 80.8
+      "price_ton": 535.51
     },
     {
       "idx": 3,
@@ -779,7 +779,7 @@
       "backdrop": "Platinum",
       "symbol": "Jörmungandr",
       "image": "/gifts/mini_oscar_3.png",
-      "price_ton": 80.8
+      "price_ton": 535.52
     },
     {
       "idx": 4,
@@ -790,7 +790,7 @@
       "backdrop": "Neon Blue",
       "symbol": "Unicorn",
       "image": "/gifts/mini_oscar_4.png",
-      "price_ton": 80.8
+      "price_ton": 535.53
     },
     {
       "idx": 5,
@@ -801,7 +801,7 @@
       "backdrop": "French Blue",
       "symbol": "Viking Shield",
       "image": "/gifts/mini_oscar_5.png",
-      "price_ton": 80.8
+      "price_ton": 107.11
     },
     {
       "idx": 6,
@@ -812,7 +812,7 @@
       "backdrop": "Pistachio",
       "symbol": "Bubbles",
       "image": "/gifts/mini_oscar_6.png",
-      "price_ton": 80.8
+      "price_ton": 535.54
     }
   ],
   "Ion Gem": [
@@ -825,7 +825,7 @@
       "backdrop": "Black",
       "symbol": "Love Letter",
       "image": "/gifts/ion_gem_1.png",
-      "price_ton": 85.85
+      "price_ton": 433.5
     },
     {
       "idx": 2,
@@ -836,7 +836,7 @@
       "backdrop": "Black",
       "symbol": "Mustang",
       "image": "/gifts/ion_gem_2.png",
-      "price_ton": 85.85
+      "price_ton": 433.51
     },
     {
       "idx": 3,
@@ -847,7 +847,7 @@
       "backdrop": "Black",
       "symbol": "Shinto Shrine",
       "image": "/gifts/ion_gem_3.png",
-      "price_ton": 85.85
+      "price_ton": 433.52
     },
     {
       "idx": 4,
@@ -858,7 +858,7 @@
       "backdrop": "Grape",
       "symbol": "Anchor",
       "image": "/gifts/ion_gem_4.png",
-      "price_ton": 85.85
+      "price_ton": 86.71
     },
     {
       "idx": 5,
@@ -869,7 +869,7 @@
       "backdrop": "Navy Blue",
       "symbol": "Ancient Urn",
       "image": "/gifts/ion_gem_5.png",
-      "price_ton": 85.85
+      "price_ton": 89.76
     },
     {
       "idx": 6,
@@ -880,7 +880,7 @@
       "backdrop": "Cyberpunk",
       "symbol": "Genie Lamp",
       "image": "/gifts/ion_gem_6.png",
-      "price_ton": 85.85
+      "price_ton": 90.78
     }
   ],
   "Low Rider": [
@@ -893,7 +893,7 @@
       "backdrop": "Lavender",
       "symbol": "Gem",
       "image": "/gifts/low_rider_1.png",
-      "price_ton": 70.7
+      "price_ton": 191.76
     },
     {
       "idx": 2,
@@ -904,7 +904,7 @@
       "backdrop": "Burgundy",
       "symbol": "Pumpkin Coach",
       "image": "/gifts/low_rider_2.png",
-      "price_ton": 70.7
+      "price_ton": 244.81
     },
     {
       "idx": 3,
@@ -915,7 +915,7 @@
       "backdrop": "Neon Blue",
       "symbol": "Watermelon",
       "image": "/gifts/low_rider_3.png",
-      "price_ton": 70.7
+      "price_ton": 357.0
     },
     {
       "idx": 4,
@@ -926,7 +926,7 @@
       "backdrop": "Grape",
       "symbol": "Panty",
       "image": "/gifts/low_rider_4.png",
-      "price_ton": 70.7
+      "price_ton": 71.41
     },
     {
       "idx": 5,
@@ -937,7 +937,7 @@
       "backdrop": "Old Gold",
       "symbol": "Coffee Bean",
       "image": "/gifts/low_rider_5.png",
-      "price_ton": 70.7
+      "price_ton": 74.47
     },
     {
       "idx": 6,
@@ -948,7 +948,7 @@
       "backdrop": "Emerald",
       "symbol": "Bunny",
       "image": "/gifts/low_rider_6.png",
-      "price_ton": 70.7
+      "price_ton": 74.48
     }
   ],
   "Magic Potion": [
@@ -961,7 +961,7 @@
       "backdrop": "Sky Blue",
       "symbol": "Spooky Cat",
       "image": "/gifts/magic_potion_1.png",
-      "price_ton": 75.75
+      "price_ton": 101.0
     },
     {
       "idx": 2,
@@ -972,7 +972,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Lollipop",
       "image": "/gifts/magic_potion_2.png",
-      "price_ton": 75.75
+      "price_ton": 76.5
     },
     {
       "idx": 3,
@@ -983,7 +983,7 @@
       "backdrop": "Black",
       "symbol": "Half Moon",
       "image": "/gifts/magic_potion_3.png",
-      "price_ton": 75.75
+      "price_ton": 117.3
     },
     {
       "idx": 4,
@@ -994,7 +994,7 @@
       "backdrop": "Pacific Green",
       "symbol": "Grim Reaper",
       "image": "/gifts/magic_potion_4.png",
-      "price_ton": 75.75
+      "price_ton": 76.51
     },
     {
       "idx": 5,
@@ -1005,7 +1005,7 @@
       "backdrop": "Persimmon",
       "symbol": "Okami Wolf",
       "image": "/gifts/magic_potion_5.png",
-      "price_ton": 75.75
+      "price_ton": 86.73
     },
     {
       "idx": 6,
@@ -1016,7 +1016,7 @@
       "backdrop": "English Violet",
       "symbol": "Polar Bear",
       "image": "/gifts/magic_potion_6.png",
-      "price_ton": 75.75
+      "price_ton": 91.8
     }
   ],
   "Swiss Watch": [
@@ -1029,7 +1029,7 @@
       "backdrop": "Steel Grey",
       "symbol": "Sprout",
       "image": "/gifts/swiss_watch_1.png",
-      "price_ton": 65.65
+      "price_ton": 331.5
     },
     {
       "idx": 2,
@@ -1040,7 +1040,7 @@
       "backdrop": "Black",
       "symbol": "Champagne",
       "image": "/gifts/swiss_watch_2.png",
-      "price_ton": 65.65
+      "price_ton": 331.51
     },
     {
       "idx": 3,
@@ -1051,7 +1051,7 @@
       "backdrop": "Black",
       "symbol": "Hand of God",
       "image": "/gifts/swiss_watch_3.png",
-      "price_ton": 65.65
+      "price_ton": 331.52
     },
     {
       "idx": 4,
@@ -1062,7 +1062,7 @@
       "backdrop": "Grape",
       "symbol": "Moon Eagle",
       "image": "/gifts/swiss_watch_4.png",
-      "price_ton": 65.65
+      "price_ton": 66.3
     },
     {
       "idx": 5,
@@ -1073,7 +1073,7 @@
       "backdrop": "Chocolate",
       "symbol": "Koala",
       "image": "/gifts/swiss_watch_5.png",
-      "price_ton": 65.65
+      "price_ton": 73.45
     },
     {
       "idx": 6,
@@ -1084,7 +1084,7 @@
       "backdrop": "Emerald",
       "symbol": "Mannaz Rune",
       "image": "/gifts/swiss_watch_6.png",
-      "price_ton": 65.65
+      "price_ton": 74.49
     }
   ],
   "Kissed Frog": [
@@ -1097,7 +1097,7 @@
       "backdrop": "Lavender",
       "symbol": "Gingerbread",
       "image": "/gifts/kissed_frog_1.png",
-      "price_ton": 62.62
+      "price_ton": 321.3
     },
     {
       "idx": 2,
@@ -1108,7 +1108,7 @@
       "backdrop": "Black",
       "symbol": "Dessert",
       "image": "/gifts/kissed_frog_2.png",
-      "price_ton": 62.62
+      "price_ton": 321.31
     },
     {
       "idx": 3,
@@ -1119,7 +1119,7 @@
       "backdrop": "Pacific Cyan",
       "symbol": "Ice Pop",
       "image": "/gifts/kissed_frog_3.png",
-      "price_ton": 62.62
+      "price_ton": 321.32
     },
     {
       "idx": 4,
@@ -1130,7 +1130,7 @@
       "backdrop": "Grape",
       "symbol": "Flirty Message",
       "image": "/gifts/kissed_frog_4.png",
-      "price_ton": 62.62
+      "price_ton": 142.8
     },
     {
       "idx": 5,
@@ -1141,7 +1141,7 @@
       "backdrop": "Persimmon",
       "symbol": "Grim Reaper",
       "image": "/gifts/kissed_frog_5.png",
-      "price_ton": 62.62
+      "price_ton": 64.26
     },
     {
       "idx": 6,
@@ -1152,7 +1152,7 @@
       "backdrop": "Coral Red",
       "symbol": "Ring",
       "image": "/gifts/kissed_frog_6.png",
-      "price_ton": 62.62
+      "price_ton": 64.27
     }
   ],
   "Sharp Tongue": [
@@ -1165,7 +1165,7 @@
       "backdrop": "Amber",
       "symbol": "Gamepad",
       "image": "/gifts/sharp_tongue_1.png",
-      "price_ton": 55.55
+      "price_ton": 280.5
     },
     {
       "idx": 2,
@@ -1176,7 +1176,7 @@
       "backdrop": "Black",
       "symbol": "Treats",
       "image": "/gifts/sharp_tongue_2.png",
-      "price_ton": 55.55
+      "price_ton": 280.51
     },
     {
       "idx": 3,
@@ -1187,7 +1187,7 @@
       "backdrop": "Cyberpunk",
       "symbol": "Cauldron",
       "image": "/gifts/sharp_tongue_3.png",
-      "price_ton": 55.55
+      "price_ton": 280.52
     },
     {
       "idx": 4,
@@ -1198,7 +1198,7 @@
       "backdrop": "Coral Red",
       "symbol": "Crystal Ball",
       "image": "/gifts/sharp_tongue_4.png",
-      "price_ton": 55.55
+      "price_ton": 56.11
     },
     {
       "idx": 5,
@@ -1209,7 +1209,7 @@
       "backdrop": "Coral Red",
       "symbol": "Skull",
       "image": "/gifts/sharp_tongue_5.png",
-      "price_ton": 55.55
+      "price_ton": 56.12
     },
     {
       "idx": 6,
@@ -1220,7 +1220,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Rhino Warrior",
       "image": "/gifts/sharp_tongue_6.png",
-      "price_ton": 55.55
+      "price_ton": 60.18
     }
   ],
   "Voodoo Doll": [
@@ -1233,7 +1233,7 @@
       "backdrop": "Ivory White",
       "symbol": "Tribal Shield",
       "image": "/gifts/voodoo_doll_1.png",
-      "price_ton": 43.43
+      "price_ton": 219.31
     },
     {
       "idx": 2,
@@ -1244,7 +1244,7 @@
       "backdrop": "Cappuccino",
       "symbol": "Magic Wand",
       "image": "/gifts/voodoo_doll_2.png",
-      "price_ton": 43.43
+      "price_ton": 54.06
     },
     {
       "idx": 3,
@@ -1255,7 +1255,7 @@
       "backdrop": "Black",
       "symbol": "Clubs",
       "image": "/gifts/voodoo_doll_3.png",
-      "price_ton": 43.43
+      "price_ton": 86.74
     },
     {
       "idx": 4,
@@ -1266,7 +1266,7 @@
       "backdrop": "Rosewood",
       "symbol": "Magic Wand",
       "image": "/gifts/voodoo_doll_4.png",
-      "price_ton": 43.43
+      "price_ton": 43.87
     },
     {
       "idx": 5,
@@ -1277,7 +1277,7 @@
       "backdrop": "Cobalt Blue",
       "symbol": "Sumerian Bird",
       "image": "/gifts/voodoo_doll_5.png",
-      "price_ton": 43.43
+      "price_ton": 58.14
     },
     {
       "idx": 6,
@@ -1288,7 +1288,7 @@
       "backdrop": "Shamrock Green",
       "symbol": "Gold",
       "image": "/gifts/voodoo_doll_6.png",
-      "price_ton": 43.43
+      "price_ton": 44.91
     }
   ],
   "Vintage Cigar": [
@@ -1301,7 +1301,7 @@
       "backdrop": "Black",
       "symbol": "Sun Mountain",
       "image": "/gifts/vintage_cigar_1.png",
-      "price_ton": 46.46
+      "price_ton": 202.99
     },
     {
       "idx": 2,
@@ -1312,7 +1312,7 @@
       "backdrop": "Black",
       "symbol": "Genie Lamp",
       "image": "/gifts/vintage_cigar_2.png",
-      "price_ton": 46.46
+      "price_ton": 84.66
     },
     {
       "idx": 3,
@@ -1323,7 +1323,7 @@
       "backdrop": "Black",
       "symbol": "Mountain Lion",
       "image": "/gifts/vintage_cigar_3.png",
-      "price_ton": 46.46
+      "price_ton": 89.77
     },
     {
       "idx": 4,
@@ -1334,7 +1334,7 @@
       "backdrop": "Purple",
       "symbol": "Celtic Wolf",
       "image": "/gifts/vintage_cigar_4.png",
-      "price_ton": 46.46
+      "price_ton": 46.93
     },
     {
       "idx": 5,
@@ -1345,7 +1345,7 @@
       "backdrop": "Chocolate",
       "symbol": "Totem Bear",
       "image": "/gifts/vintage_cigar_5.png",
-      "price_ton": 46.46
+      "price_ton": 51.04
     },
     {
       "idx": 6,
@@ -1356,7 +1356,7 @@
       "backdrop": "Burgundy",
       "symbol": "Scorpion",
       "image": "/gifts/vintage_cigar_6.png",
-      "price_ton": 46.46
+      "price_ton": 51.05
     }
   ],
   "Signet Ring": [
@@ -1369,7 +1369,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Police Badge",
       "image": "/gifts/signet_ring_1.png",
-      "price_ton": 38.38
+      "price_ton": 193.8
     },
     {
       "idx": 2,
@@ -1380,7 +1380,7 @@
       "backdrop": "Black",
       "symbol": "Okami Wolf",
       "image": "/gifts/signet_ring_2.png",
-      "price_ton": 38.38
+      "price_ton": 101.01
     },
     {
       "idx": 3,
@@ -1391,7 +1391,7 @@
       "backdrop": "Grape",
       "symbol": "Calm Wolf",
       "image": "/gifts/signet_ring_3.png",
-      "price_ton": 38.38
+      "price_ton": 193.81
     },
     {
       "idx": 4,
@@ -1402,7 +1402,7 @@
       "backdrop": "Carrot Juice",
       "symbol": "Cone",
       "image": "/gifts/signet_ring_4.png",
-      "price_ton": 38.38
+      "price_ton": 38.77
     },
     {
       "idx": 5,
@@ -1413,7 +1413,7 @@
       "backdrop": "Aquamarine",
       "symbol": "Calm Wolf",
       "image": "/gifts/signet_ring_5.png",
-      "price_ton": 38.38
+      "price_ton": 38.78
     },
     {
       "idx": 6,
@@ -1424,7 +1424,7 @@
       "backdrop": "Silver Blue",
       "symbol": "Inguz Rune",
       "image": "/gifts/signet_ring_6.png",
-      "price_ton": 38.38
+      "price_ton": 43.86
     }
   ],
   "Toy Bear": [
@@ -1437,7 +1437,7 @@
       "backdrop": "Black",
       "symbol": "Baby Bottle",
       "image": "/gifts/toy_bear_1.png",
-      "price_ton": 37.37
+      "price_ton": 62.22
     },
     {
       "idx": 2,
@@ -1448,7 +1448,7 @@
       "backdrop": "Pistachio",
       "symbol": "Candle",
       "image": "/gifts/toy_bear_2.png",
-      "price_ton": 37.37
+      "price_ton": 48.98
     },
     {
       "idx": 3,
@@ -1459,7 +1459,7 @@
       "backdrop": "Fandango",
       "symbol": "Butterfly",
       "image": "/gifts/toy_bear_3.png",
-      "price_ton": 37.37
+      "price_ton": 188.7
     },
     {
       "idx": 4,
@@ -1470,7 +1470,7 @@
       "backdrop": "Indigo Dye",
       "symbol": "Kitsune",
       "image": "/gifts/toy_bear_4.png",
-      "price_ton": 37.37
+      "price_ton": 37.78
     },
     {
       "idx": 5,
@@ -1481,7 +1481,7 @@
       "backdrop": "Hunter Green",
       "symbol": "Garden Pot",
       "image": "/gifts/toy_bear_5.png",
-      "price_ton": 37.37
+      "price_ton": 39.83
     },
     {
       "idx": 6,
@@ -1492,7 +1492,7 @@
       "backdrop": "Mint Green",
       "symbol": "Lovestruck",
       "image": "/gifts/toy_bear_6.png",
-      "price_ton": 37.37
+      "price_ton": 40.85
     }
   ],
   "Khabib's Papakha": [
@@ -1505,7 +1505,7 @@
       "backdrop": "Black",
       "symbol": "Nordic Wolf",
       "image": "/gifts/khabibs_papakha_1.png",
-      "price_ton": 27.27
+      "price_ton": 137.7
     },
     {
       "idx": 2,
@@ -1516,7 +1516,7 @@
       "backdrop": "Persimmon",
       "symbol": "Dragonfly",
       "image": "/gifts/khabibs_papakha_2.png",
-      "price_ton": 27.27
+      "price_ton": 137.71
     },
     {
       "idx": 3,
@@ -1527,7 +1527,7 @@
       "backdrop": "Black",
       "symbol": "Phoenix",
       "image": "/gifts/khabibs_papakha_3.png",
-      "price_ton": 27.27
+      "price_ton": 137.72
     },
     {
       "idx": 4,
@@ -1538,7 +1538,7 @@
       "backdrop": "Tactical Pine",
       "symbol": "Flashlight",
       "image": "/gifts/khabibs_papakha_4.png",
-      "price_ton": 27.27
+      "price_ton": 27.55
     },
     {
       "idx": 5,
@@ -1549,7 +1549,7 @@
       "backdrop": "Light Olive",
       "symbol": "Top Hat",
       "image": "/gifts/khabibs_papakha_5.png",
-      "price_ton": 27.27
+      "price_ton": 27.56
     },
     {
       "idx": 6,
@@ -1560,7 +1560,7 @@
       "backdrop": "Gunship Green",
       "symbol": "Pencil",
       "image": "/gifts/khabibs_papakha_6.png",
-      "price_ton": 27.27
+      "price_ton": 29.62
     }
   ],
   "Mad Pumpkin": [
@@ -1573,7 +1573,7 @@
       "backdrop": "Black",
       "symbol": "Ghost",
       "image": "/gifts/mad_pumpkin_1.png",
-      "price_ton": 21.21
+      "price_ton": 86.72
     },
     {
       "idx": 2,
@@ -1584,7 +1584,7 @@
       "backdrop": "Black",
       "symbol": "Nice Ghost",
       "image": "/gifts/mad_pumpkin_2.png",
-      "price_ton": 21.21
+      "price_ton": 51.01
     },
     {
       "idx": 3,
@@ -1595,7 +1595,7 @@
       "backdrop": "Black",
       "symbol": "Flying Witch",
       "image": "/gifts/mad_pumpkin_3.png",
-      "price_ton": 21.21
+      "price_ton": 51.02
     },
     {
       "idx": 4,
@@ -1606,7 +1606,7 @@
       "backdrop": "Steel Grey",
       "symbol": "Jaws",
       "image": "/gifts/mad_pumpkin_4.png",
-      "price_ton": 21.21
+      "price_ton": 21.45
     },
     {
       "idx": 5,
@@ -1617,7 +1617,7 @@
       "backdrop": "Mint Green",
       "symbol": "Poison Drop",
       "image": "/gifts/mad_pumpkin_5.png",
-      "price_ton": 21.21
+      "price_ton": 23.46
     },
     {
       "idx": 6,
@@ -1628,7 +1628,7 @@
       "backdrop": "Pacific Cyan",
       "symbol": "Autumn Leaves",
       "image": "/gifts/mad_pumpkin_6.png",
-      "price_ton": 21.21
+      "price_ton": 24.48
     }
   ],
   "Trapped Heart": [
@@ -1641,7 +1641,7 @@
       "backdrop": "Black",
       "symbol": "Black Widow",
       "image": "/gifts/trapped_heart_1.png",
-      "price_ton": 18.18
+      "price_ton": 91.81
     },
     {
       "idx": 2,
@@ -1652,7 +1652,7 @@
       "backdrop": "Black",
       "symbol": "Ghost",
       "image": "/gifts/trapped_heart_2.png",
-      "price_ton": 18.18
+      "price_ton": 91.82
     },
     {
       "idx": 3,
@@ -1663,7 +1663,7 @@
       "backdrop": "Black",
       "symbol": "Flying Witch",
       "image": "/gifts/trapped_heart_3.png",
-      "price_ton": 18.18
+      "price_ton": 66.31
     },
     {
       "idx": 4,
@@ -1674,7 +1674,7 @@
       "backdrop": "Cappuccino",
       "symbol": "Guitar",
       "image": "/gifts/trapped_heart_4.png",
-      "price_ton": 18.18
+      "price_ton": 18.37
     },
     {
       "idx": 5,
@@ -1685,7 +1685,7 @@
       "backdrop": "Orange",
       "symbol": "Ladybug",
       "image": "/gifts/trapped_heart_5.png",
-      "price_ton": 18.18
+      "price_ton": 18.38
     },
     {
       "idx": 6,
@@ -1696,7 +1696,7 @@
       "backdrop": "Chestnut",
       "symbol": "Poison Drop",
       "image": "/gifts/trapped_heart_6.png",
-      "price_ton": 18.18
+      "price_ton": 18.39
     }
   ],
   "Snoop Cigar": [
@@ -1709,7 +1709,7 @@
       "backdrop": "Indigo Dye",
       "symbol": "Cash",
       "image": "/gifts/snoop_cigar_1.png",
-      "price_ton": 19.19
+      "price_ton": 30.65
     },
     {
       "idx": 2,
@@ -1720,7 +1720,7 @@
       "backdrop": "Black",
       "symbol": "Full Moon",
       "image": "/gifts/snoop_cigar_2.png",
-      "price_ton": 19.19
+      "price_ton": 44.9
     },
     {
       "idx": 3,
@@ -1731,7 +1731,7 @@
       "backdrop": "Caramel",
       "symbol": "War Tiger",
       "image": "/gifts/snoop_cigar_3.png",
-      "price_ton": 19.19
+      "price_ton": 21.46
     },
     {
       "idx": 4,
@@ -1742,7 +1742,7 @@
       "backdrop": "Silver Blue",
       "symbol": "Porrige",
       "image": "/gifts/snoop_cigar_4.png",
-      "price_ton": 19.19
+      "price_ton": 19.4
     },
     {
       "idx": 5,
@@ -1753,7 +1753,7 @@
       "backdrop": "Feldgrau",
       "symbol": "Toy Bucket",
       "image": "/gifts/snoop_cigar_5.png",
-      "price_ton": 19.19
+      "price_ton": 19.41
     },
     {
       "idx": 6,
@@ -1764,7 +1764,7 @@
       "backdrop": "Navy Blue",
       "symbol": "Cheese",
       "image": "/gifts/snoop_cigar_6.png",
-      "price_ton": 19.19
+      "price_ton": 19.42
     }
   ],
   "Love Potion": [
@@ -1777,7 +1777,7 @@
       "backdrop": "Electric Purple",
       "symbol": "Love Cherry",
       "image": "/gifts/love_potion_1.png",
-      "price_ton": 16.16
+      "price_ton": 81.61
     },
     {
       "idx": 2,
@@ -1788,7 +1788,7 @@
       "backdrop": "Black",
       "symbol": "Jewel",
       "image": "/gifts/love_potion_2.png",
-      "price_ton": 16.16
+      "price_ton": 71.4
     },
     {
       "idx": 3,
@@ -1799,7 +1799,7 @@
       "backdrop": "Fandango",
       "symbol": "Wine Toast",
       "image": "/gifts/love_potion_3.png",
-      "price_ton": 16.16
+      "price_ton": 81.62
     },
     {
       "idx": 4,
@@ -1810,7 +1810,7 @@
       "backdrop": "Lemongrass",
       "symbol": "Lotus Flower",
       "image": "/gifts/love_potion_4.png",
-      "price_ton": 16.16
+      "price_ton": 16.33
     },
     {
       "idx": 5,
@@ -1821,7 +1821,7 @@
       "backdrop": "Sky Blue",
       "symbol": "Mustache",
       "image": "/gifts/love_potion_5.png",
-      "price_ton": 16.16
+      "price_ton": 16.34
     },
     {
       "idx": 6,
@@ -1832,7 +1832,7 @@
       "backdrop": "Light Olive",
       "symbol": "Origami",
       "image": "/gifts/love_potion_6.png",
-      "price_ton": 16.16
+      "price_ton": 17.4
     }
   ],
   "Crystal Ball": [
@@ -1845,7 +1845,7 @@
       "backdrop": "Amber",
       "symbol": "Potion",
       "image": "/gifts/crystal_ball_1.png",
-      "price_ton": 15.15
+      "price_ton": 35.73
     },
     {
       "idx": 2,
@@ -1856,7 +1856,7 @@
       "backdrop": "Black",
       "symbol": "Mushroom",
       "image": "/gifts/crystal_ball_2.png",
-      "price_ton": 15.15
+      "price_ton": 39.78
     },
     {
       "idx": 3,
@@ -1867,7 +1867,7 @@
       "backdrop": "Black",
       "symbol": "Candle",
       "image": "/gifts/crystal_ball_3.png",
-      "price_ton": 15.15
+      "price_ton": 39.79
     },
     {
       "idx": 4,
@@ -1878,7 +1878,7 @@
       "backdrop": "Coral Red",
       "symbol": "Baphomet",
       "image": "/gifts/crystal_ball_4.png",
-      "price_ton": 15.15
+      "price_ton": 15.31
     },
     {
       "idx": 5,
@@ -1889,7 +1889,7 @@
       "backdrop": "Rosewood",
       "symbol": "Spooky Cat",
       "image": "/gifts/crystal_ball_5.png",
-      "price_ton": 15.15
+      "price_ton": 15.32
     },
     {
       "idx": 6,
@@ -1900,7 +1900,7 @@
       "backdrop": "Hunter Green",
       "symbol": "Grim Reaper",
       "image": "/gifts/crystal_ball_6.png",
-      "price_ton": 15.15
+      "price_ton": 30.61
     }
   ],
   "Jingle Bell": [
@@ -1913,7 +1913,7 @@
       "backdrop": "Amber",
       "symbol": "Jingle Bell",
       "image": "/gifts/jingle_bell_1.png",
-      "price_ton": 12.12
+      "price_ton": 20.42
     },
     {
       "idx": 2,
@@ -1924,7 +1924,7 @@
       "backdrop": "Fandango",
       "symbol": "Ice Skates",
       "image": "/gifts/jingle_bell_2.png",
-      "price_ton": 12.12
+      "price_ton": 14.29
     },
     {
       "idx": 3,
@@ -1935,7 +1935,7 @@
       "backdrop": "Black",
       "symbol": "Bowtie",
       "image": "/gifts/jingle_bell_3.png",
-      "price_ton": 12.12
+      "price_ton": 61.2
     },
     {
       "idx": 4,
@@ -1946,7 +1946,7 @@
       "backdrop": "Chocolate",
       "symbol": "Sakura",
       "image": "/gifts/jingle_bell_4.png",
-      "price_ton": 12.12
+      "price_ton": 12.25
     },
     {
       "idx": 5,
@@ -1957,7 +1957,7 @@
       "backdrop": "Jade Green",
       "symbol": "Ornament",
       "image": "/gifts/jingle_bell_5.png",
-      "price_ton": 12.12
+      "price_ton": 12.26
     },
     {
       "idx": 6,
@@ -1968,7 +1968,7 @@
       "backdrop": "Electric Indigo",
       "symbol": "Stocking",
       "image": "/gifts/jingle_bell_6.png",
-      "price_ton": 12.12
+      "price_ton": 12.27
     }
   ],
   "Witch Hat": [
@@ -1981,7 +1981,7 @@
       "backdrop": "Black",
       "symbol": "Illuminati",
       "image": "/gifts/witch_hat_1.png",
-      "price_ton": 10.1
+      "price_ton": 22.5
     },
     {
       "idx": 2,
@@ -1992,7 +1992,7 @@
       "backdrop": "Black",
       "symbol": "Bloody Axe",
       "image": "/gifts/witch_hat_2.png",
-      "price_ton": 10.1
+      "price_ton": 33.68
     },
     {
       "idx": 3,
@@ -2003,7 +2003,7 @@
       "backdrop": "Black",
       "symbol": "Crow",
       "image": "/gifts/witch_hat_3.png",
-      "price_ton": 10.1
+      "price_ton": 51.06
     },
     {
       "idx": 4,
@@ -2014,7 +2014,7 @@
       "backdrop": "Battleship Grey",
       "symbol": "Sumerian Bird",
       "image": "/gifts/witch_hat_4.png",
-      "price_ton": 10.1
+      "price_ton": 10.46
     },
     {
       "idx": 5,
@@ -2025,7 +2025,7 @@
       "backdrop": "Shamrock Green",
       "symbol": "Grenade",
       "image": "/gifts/witch_hat_5.png",
-      "price_ton": 10.1
+      "price_ton": 10.47
     },
     {
       "idx": 6,
@@ -2036,7 +2036,7 @@
       "backdrop": "Cobalt Blue",
       "symbol": "Crystal Ball",
       "image": "/gifts/witch_hat_6.png",
-      "price_ton": 10.1
+      "price_ton": 10.48
     }
   ],
   "Fine Pen": [
@@ -2049,7 +2049,7 @@
       "backdrop": "Black",
       "symbol": "Jörmungandr",
       "image": "/gifts/fine_pen_1.png",
-      "price_ton": 9.09
+      "price_ton": 14.28
     },
     {
       "idx": 2,
@@ -2060,7 +2060,7 @@
       "backdrop": "Indigo Dye",
       "symbol": "Hersir",
       "image": "/gifts/fine_pen_2.png",
-      "price_ton": 9.09
+      "price_ton": 13.26
     },
     {
       "idx": 3,
@@ -2071,7 +2071,7 @@
       "backdrop": "Fire Engine",
       "symbol": "Bull of Heaven",
       "image": "/gifts/fine_pen_3.png",
-      "price_ton": 9.09
+      "price_ton": 25.51
     },
     {
       "idx": 4,
@@ -2082,7 +2082,7 @@
       "backdrop": "Orange",
       "symbol": "Leaf",
       "image": "/gifts/fine_pen_4.png",
-      "price_ton": 9.09
+      "price_ton": 9.25
     },
     {
       "idx": 5,
@@ -2093,7 +2093,7 @@
       "backdrop": "Sky Blue",
       "symbol": "Silver Ibis",
       "image": "/gifts/fine_pen_5.png",
-      "price_ton": 9.09
+      "price_ton": 10.35
     },
     {
       "idx": 6,
@@ -2104,7 +2104,7 @@
       "backdrop": "Emerald",
       "symbol": "Wise Raven",
       "image": "/gifts/fine_pen_6.png",
-      "price_ton": 9.09
+      "price_ton": 25.52
     }
   ],
   "Jolly Chimp": [
@@ -2117,7 +2117,7 @@
       "backdrop": "Black",
       "symbol": "Seahorse",
       "image": "/gifts/jolly_chimp_1.png",
-      "price_ton": 8.08
+      "price_ton": 17.38
     },
     {
       "idx": 2,
@@ -2128,7 +2128,7 @@
       "backdrop": "Black",
       "symbol": "Bottlenose",
       "image": "/gifts/jolly_chimp_2.png",
-      "price_ton": 8.08
+      "price_ton": 17.39
     },
     {
       "idx": 3,
@@ -2139,7 +2139,7 @@
       "backdrop": "Deep Cyan",
       "symbol": "Bandana",
       "image": "/gifts/jolly_chimp_3.png",
-      "price_ton": 8.08
+      "price_ton": 29.61
     },
     {
       "idx": 4,
@@ -2150,7 +2150,7 @@
       "backdrop": "Mint Green",
       "symbol": "Battle Axe",
       "image": "/gifts/jolly_chimp_4.png",
-      "price_ton": 8.08
+      "price_ton": 8.21
     },
     {
       "idx": 5,
@@ -2161,7 +2161,7 @@
       "backdrop": "Moonstone",
       "symbol": "Earflap Hat",
       "image": "/gifts/jolly_chimp_5.png",
-      "price_ton": 8.08
+      "price_ton": 9.28
     },
     {
       "idx": 6,
@@ -2172,7 +2172,7 @@
       "backdrop": "Gunship Green",
       "symbol": "Corn",
       "image": "/gifts/jolly_chimp_6.png",
-      "price_ton": 8.08
+      "price_ton": 9.29
     }
   ],
   "Surge Board": [
@@ -2185,7 +2185,7 @@
       "backdrop": "Purple",
       "symbol": "Basketball",
       "image": "/gifts/surge_board_1.png",
-      "price_ton": 8.08
+      "price_ton": 40.83
     },
     {
       "idx": 2,
@@ -2196,7 +2196,7 @@
       "backdrop": "Mystic Pearl",
       "symbol": "UFO",
       "image": "/gifts/surge_board_2.png",
-      "price_ton": 8.08
+      "price_ton": 22.49
     },
     {
       "idx": 3,
@@ -2207,7 +2207,7 @@
       "backdrop": "Silver Blue",
       "symbol": "Shell",
       "image": "/gifts/surge_board_3.png",
-      "price_ton": 8.08
+      "price_ton": 40.84
     },
     {
       "idx": 4,
@@ -2218,7 +2218,7 @@
       "backdrop": "English Violet",
       "symbol": "Sharp Sword",
       "image": "/gifts/surge_board_4.png",
-      "price_ton": 8.08
+      "price_ton": 12.37
     },
     {
       "idx": 5,
@@ -2229,7 +2229,7 @@
       "backdrop": "Sapphire",
       "symbol": "Lightning",
       "image": "/gifts/surge_board_5.png",
-      "price_ton": 8.08
+      "price_ton": 9.35
     },
     {
       "idx": 6,
@@ -2240,7 +2240,7 @@
       "backdrop": "Azure Blue",
       "symbol": "Rose",
       "image": "/gifts/surge_board_6.png",
-      "price_ton": 8.08
+      "price_ton": 8.38
     }
   ],
   "Input Key": [
@@ -2253,7 +2253,7 @@
       "backdrop": "Indigo Dye",
       "symbol": "PC Mouse",
       "image": "/gifts/input_key_1.png",
-      "price_ton": 8.08
+      "price_ton": 12.24
     },
     {
       "idx": 2,
@@ -2264,7 +2264,7 @@
       "backdrop": "Black",
       "symbol": "Magic Wand",
       "image": "/gifts/input_key_2.png",
-      "price_ton": 8.08
+      "price_ton": 18.36
     },
     {
       "idx": 3,
@@ -2275,7 +2275,7 @@
       "backdrop": "Black",
       "symbol": "Sauron",
       "image": "/gifts/input_key_3.png",
-      "price_ton": 8.08
+      "price_ton": 21.42
     },
     {
       "idx": 4,
@@ -2286,7 +2286,7 @@
       "backdrop": "Battleship Grey",
       "symbol": "Cap",
       "image": "/gifts/input_key_4.png",
-      "price_ton": 8.08
+      "price_ton": 8.18
     },
     {
       "idx": 5,
@@ -2297,7 +2297,7 @@
       "backdrop": "Malachite",
       "symbol": "Grenade",
       "image": "/gifts/input_key_5.png",
-      "price_ton": 8.08
+      "price_ton": 8.19
     },
     {
       "idx": 6,
@@ -2308,7 +2308,7 @@
       "backdrop": "Hunter Green",
       "symbol": "Takoyaki",
       "image": "/gifts/input_key_6.png",
-      "price_ton": 8.08
+      "price_ton": 8.2
     }
   ],
   "Snoop Dogg": [
@@ -2321,7 +2321,7 @@
       "backdrop": "Black",
       "symbol": "Shell",
       "image": "/gifts/snoop_dogg_1.png",
-      "price_ton": 6.06
+      "price_ton": 7.84
     },
     {
       "idx": 2,
@@ -2332,7 +2332,7 @@
       "backdrop": "Electric Purple",
       "symbol": "Doberman",
       "image": "/gifts/snoop_dogg_2.png",
-      "price_ton": 6.06
+      "price_ton": 7.85
     },
     {
       "idx": 3,
@@ -2343,7 +2343,7 @@
       "backdrop": "Carmine",
       "symbol": "Viper",
       "image": "/gifts/snoop_dogg_3.png",
-      "price_ton": 6.06
+      "price_ton": 21.47
     },
     {
       "idx": 4,
@@ -2354,7 +2354,7 @@
       "backdrop": "Hunter Green",
       "symbol": "213",
       "image": "/gifts/snoop_dogg_4.png",
-      "price_ton": 6.06
+      "price_ton": 6.89
     },
     {
       "idx": 5,
@@ -2365,7 +2365,7 @@
       "backdrop": "Cappuccino",
       "symbol": "Melon",
       "image": "/gifts/snoop_dogg_5.png",
-      "price_ton": 6.06
+      "price_ton": 6.9
     },
     {
       "idx": 6,
@@ -2376,7 +2376,7 @@
       "backdrop": "Moonstone",
       "symbol": "Toilet",
       "image": "/gifts/snoop_dogg_6.png",
-      "price_ton": 6.06
+      "price_ton": 6.91
     }
   ],
   "Spring Basket": [
@@ -2389,7 +2389,7 @@
       "backdrop": "Gunmetal",
       "symbol": "Seahorse",
       "image": "/gifts/spring_basket_1.png",
-      "price_ton": 7.07
+      "price_ton": 35.81
     },
     {
       "idx": 2,
@@ -2400,7 +2400,7 @@
       "backdrop": "Mint Green",
       "symbol": "Cap",
       "image": "/gifts/spring_basket_2.png",
-      "price_ton": 7.07
+      "price_ton": 35.82
     },
     {
       "idx": 3,
@@ -2411,7 +2411,7 @@
       "backdrop": "Cappuccino",
       "symbol": "Toilet",
       "image": "/gifts/spring_basket_3.png",
-      "price_ton": 7.07
+      "price_ton": 10.45
     },
     {
       "idx": 4,
@@ -2422,7 +2422,7 @@
       "backdrop": "Desert Sand",
       "symbol": "Conical Hat",
       "image": "/gifts/spring_basket_4.png",
-      "price_ton": 7.07
+      "price_ton": 7.86
     },
     {
       "idx": 5,
@@ -2433,7 +2433,7 @@
       "backdrop": "Rifle Green",
       "symbol": "Sauron",
       "image": "/gifts/spring_basket_5.png",
-      "price_ton": 7.07
+      "price_ton": 7.87
     },
     {
       "idx": 6,
@@ -2444,7 +2444,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Mannaz Rune",
       "image": "/gifts/spring_basket_6.png",
-      "price_ton": 7.07
+      "price_ton": 7.88
     }
   ],
   "Liberty Figure": [
@@ -2457,7 +2457,7 @@
       "backdrop": "Black",
       "symbol": "Full Moon",
       "image": "/gifts/liberty_figure_1.png",
-      "price_ton": 6.06
+      "price_ton": 14.3
     },
     {
       "idx": 2,
@@ -2468,7 +2468,7 @@
       "backdrop": "Black",
       "symbol": "Kudu Totem",
       "image": "/gifts/liberty_figure_2.png",
-      "price_ton": 6.06
+      "price_ton": 14.31
     },
     {
       "idx": 3,
@@ -2479,7 +2479,7 @@
       "backdrop": "Pine Green",
       "symbol": "Trickster Fox",
       "image": "/gifts/liberty_figure_3.png",
-      "price_ton": 6.06
+      "price_ton": 30.62
     },
     {
       "idx": 4,
@@ -2490,7 +2490,7 @@
       "backdrop": "Coral Red",
       "symbol": "Double Axe",
       "image": "/gifts/liberty_figure_4.png",
-      "price_ton": 6.06
+      "price_ton": 6.62
     },
     {
       "idx": 5,
@@ -2501,7 +2501,7 @@
       "backdrop": "Cappuccino",
       "symbol": "Morgenstern",
       "image": "/gifts/liberty_figure_5.png",
-      "price_ton": 6.06
+      "price_ton": 6.63
     },
     {
       "idx": 6,
@@ -2512,7 +2512,7 @@
       "backdrop": "Old Gold",
       "symbol": "Baseball Cap",
       "image": "/gifts/liberty_figure_6.png",
-      "price_ton": 6.06
+      "price_ton": 6.64
     }
   ],
   "Clover Pin": [
@@ -2525,7 +2525,7 @@
       "backdrop": "Lavender",
       "symbol": "Fleur-de-lis",
       "image": "/gifts/clover_pin_1.png",
-      "price_ton": 6.06
+      "price_ton": 9.19
     },
     {
       "idx": 2,
@@ -2536,7 +2536,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Star Crown",
       "image": "/gifts/clover_pin_2.png",
-      "price_ton": 6.06
+      "price_ton": 15.3
     },
     {
       "idx": 3,
@@ -2547,7 +2547,7 @@
       "backdrop": "Black",
       "symbol": "Pegasus",
       "image": "/gifts/clover_pin_3.png",
-      "price_ton": 6.06
+      "price_ton": 9.2
     },
     {
       "idx": 4,
@@ -2558,7 +2558,7 @@
       "backdrop": "Rifle Green",
       "symbol": "Magic Hat",
       "image": "/gifts/clover_pin_4.png",
-      "price_ton": 6.06
+      "price_ton": 6.18
     },
     {
       "idx": 5,
@@ -2569,7 +2569,7 @@
       "backdrop": "Celtic Blue",
       "symbol": "Cow Skull",
       "image": "/gifts/clover_pin_5.png",
-      "price_ton": 6.06
+      "price_ton": 7.31
     },
     {
       "idx": 6,
@@ -2580,7 +2580,7 @@
       "backdrop": "Ranger Green",
       "symbol": "Wolf Rage",
       "image": "/gifts/clover_pin_6.png",
-      "price_ton": 6.06
+      "price_ton": 7.32
     }
   ],
   "Party Sparkler": [
@@ -2593,7 +2593,7 @@
       "backdrop": "Raspberry",
       "symbol": "Gingerbread",
       "image": "/gifts/party_sparkler_1.png",
-      "price_ton": 6.06
+      "price_ton": 15.39
     },
     {
       "idx": 2,
@@ -2604,7 +2604,7 @@
       "backdrop": "Black",
       "symbol": "Sakura",
       "image": "/gifts/party_sparkler_2.png",
-      "price_ton": 6.06
+      "price_ton": 14.33
     },
     {
       "idx": 3,
@@ -2615,7 +2615,7 @@
       "backdrop": "Black",
       "symbol": "Brain",
       "image": "/gifts/party_sparkler_3.png",
-      "price_ton": 6.06
+      "price_ton": 14.34
     },
     {
       "idx": 4,
@@ -2626,7 +2626,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Love Letter",
       "image": "/gifts/party_sparkler_4.png",
-      "price_ton": 6.06
+      "price_ton": 8.22
     },
     {
       "idx": 5,
@@ -2637,7 +2637,7 @@
       "backdrop": "English Violet",
       "symbol": "Stocking",
       "image": "/gifts/party_sparkler_5.png",
-      "price_ton": 6.06
+      "price_ton": 6.82
     },
     {
       "idx": 6,
@@ -2648,7 +2648,7 @@
       "backdrop": "Pacific Green",
       "symbol": "Gamepad",
       "image": "/gifts/party_sparkler_6.png",
-      "price_ton": 6.06
+      "price_ton": 6.83
     }
   ],
   "Victory Medal": [
@@ -2661,7 +2661,7 @@
       "backdrop": "Gunship Green",
       "symbol": "Tree of Life",
       "image": "/gifts/victory_medal_1.png",
-      "price_ton": 6.06
+      "price_ton": 30.66
     },
     {
       "idx": 2,
@@ -2672,7 +2672,7 @@
       "backdrop": "Ranger Green",
       "symbol": "Ribeye Steak",
       "image": "/gifts/victory_medal_2.png",
-      "price_ton": 6.06
+      "price_ton": 30.67
     },
     {
       "idx": 3,
@@ -2683,7 +2683,7 @@
       "backdrop": "Tomato",
       "symbol": "Arabian Horse",
       "image": "/gifts/victory_medal_3.png",
-      "price_ton": 6.06
+      "price_ton": 30.68
     },
     {
       "idx": 4,
@@ -2694,7 +2694,7 @@
       "backdrop": "Desert Sand",
       "symbol": "Like",
       "image": "/gifts/victory_medal_4.png",
-      "price_ton": 6.06
+      "price_ton": 7.15
     },
     {
       "idx": 5,
@@ -2705,7 +2705,7 @@
       "backdrop": "Turquoise",
       "symbol": "Leprechaun",
       "image": "/gifts/victory_medal_5.png",
-      "price_ton": 6.06
+      "price_ton": 7.16
     },
     {
       "idx": 6,
@@ -2716,7 +2716,7 @@
       "backdrop": "French Violet",
       "symbol": "Rooster",
       "image": "/gifts/victory_medal_6.png",
-      "price_ton": 6.06
+      "price_ton": 7.17
     }
   ],
   "Timeless Book": [
@@ -2729,7 +2729,7 @@
       "backdrop": "Ivory White",
       "symbol": "Cicada",
       "image": "/gifts/timeless_book_1.png",
-      "price_ton": 5.05
+      "price_ton": 25.56
     },
     {
       "idx": 2,
@@ -2740,7 +2740,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Fried Egg",
       "image": "/gifts/timeless_book_2.png",
-      "price_ton": 5.05
+      "price_ton": 25.57
     },
     {
       "idx": 3,
@@ -2751,7 +2751,7 @@
       "backdrop": "Rosewood",
       "symbol": "Axe",
       "image": "/gifts/timeless_book_3.png",
-      "price_ton": 5.05
+      "price_ton": 25.58
     },
     {
       "idx": 4,
@@ -2762,7 +2762,7 @@
       "backdrop": "Light Olive",
       "symbol": "Twin Koi",
       "image": "/gifts/timeless_book_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.8
     },
     {
       "idx": 5,
@@ -2773,7 +2773,7 @@
       "backdrop": "Jade Green",
       "symbol": "Pirate Hat",
       "image": "/gifts/timeless_book_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.81
     },
     {
       "idx": 6,
@@ -2784,7 +2784,7 @@
       "backdrop": "Camo Green",
       "symbol": "Grape",
       "image": "/gifts/timeless_book_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.82
     }
   ],
   "Pet Snake": [
@@ -2797,7 +2797,7 @@
       "backdrop": "Battleship Grey",
       "symbol": "Crusader Cross",
       "image": "/gifts/pet_snake_1.png",
-      "price_ton": 5.05
+      "price_ton": 8.23
     },
     {
       "idx": 2,
@@ -2808,7 +2808,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Griffon",
       "image": "/gifts/pet_snake_2.png",
-      "price_ton": 5.05
+      "price_ton": 10.38
     },
     {
       "idx": 3,
@@ -2819,7 +2819,7 @@
       "backdrop": "Amber",
       "symbol": "Pirate Hat",
       "image": "/gifts/pet_snake_3.png",
-      "price_ton": 5.05
+      "price_ton": 9.32
     },
     {
       "idx": 4,
@@ -2830,7 +2830,7 @@
       "backdrop": "Mystic Pearl",
       "symbol": "Easter Bunny",
       "image": "/gifts/pet_snake_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.62
     },
     {
       "idx": 5,
@@ -2841,7 +2841,7 @@
       "backdrop": "Aquamarine",
       "symbol": "Khinkali",
       "image": "/gifts/pet_snake_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.63
     },
     {
       "idx": 6,
@@ -2852,7 +2852,7 @@
       "backdrop": "Sky Blue",
       "symbol": "Cookie",
       "image": "/gifts/pet_snake_6.png",
-      "price_ton": 5.05
+      "price_ton": 9.33
     }
   ],
   "Whip Cupcake": [
@@ -2865,7 +2865,7 @@
       "backdrop": "Coral Red",
       "symbol": "Kite",
       "image": "/gifts/whip_cupcake_1.png",
-      "price_ton": 5.05
+      "price_ton": 5.89
     },
     {
       "idx": 2,
@@ -2876,7 +2876,7 @@
       "backdrop": "Navy Blue",
       "symbol": "Hourglass",
       "image": "/gifts/whip_cupcake_2.png",
-      "price_ton": 5.05
+      "price_ton": 7.91
     },
     {
       "idx": 3,
@@ -2887,7 +2887,7 @@
       "backdrop": "Black",
       "symbol": "Baphomet",
       "image": "/gifts/whip_cupcake_3.png",
-      "price_ton": 5.05
+      "price_ton": 14.46
     },
     {
       "idx": 4,
@@ -2898,7 +2898,7 @@
       "backdrop": "Moonstone",
       "symbol": "Cactus Bloom",
       "image": "/gifts/whip_cupcake_4.png",
-      "price_ton": 5.05
+      "price_ton": 7.92
     },
     {
       "idx": 5,
@@ -2909,7 +2909,7 @@
       "backdrop": "Deep Cyan",
       "symbol": "Angelic Heart",
       "image": "/gifts/whip_cupcake_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.9
     },
     {
       "idx": 6,
@@ -2920,7 +2920,7 @@
       "backdrop": "Deep Cyan",
       "symbol": "Basketball",
       "image": "/gifts/whip_cupcake_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.91
     }
   ],
   "Ice Cream": [
@@ -2933,7 +2933,7 @@
       "backdrop": "Mustard",
       "symbol": "Imperial Lion",
       "image": "/gifts/ice_cream_1.png",
-      "price_ton": 5.05
+      "price_ton": 7.55
     },
     {
       "idx": 2,
@@ -2944,7 +2944,7 @@
       "backdrop": "Black",
       "symbol": "Piggy Bank",
       "image": "/gifts/ice_cream_2.png",
-      "price_ton": 5.05
+      "price_ton": 13.27
     },
     {
       "idx": 3,
@@ -2955,7 +2955,7 @@
       "backdrop": "Black",
       "symbol": "Grape",
       "image": "/gifts/ice_cream_3.png",
-      "price_ton": 5.05
+      "price_ton": 13.28
     },
     {
       "idx": 4,
@@ -2966,7 +2966,7 @@
       "backdrop": "Old Gold",
       "symbol": "Cherry",
       "image": "/gifts/ice_cream_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.31
     },
     {
       "idx": 5,
@@ -2977,7 +2977,7 @@
       "backdrop": "Feldgrau",
       "symbol": "Jewel",
       "image": "/gifts/ice_cream_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.32
     },
     {
       "idx": 6,
@@ -2988,7 +2988,7 @@
       "backdrop": "Emerald",
       "symbol": "Shooting Star",
       "image": "/gifts/ice_cream_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.33
     }
   ],
   "Lol Pop": [
@@ -3001,7 +3001,7 @@
       "backdrop": "Chestnut",
       "symbol": "Wontons",
       "image": "/gifts/lol_pop_1.png",
-      "price_ton": 5.05
+      "price_ton": 5.45
     },
     {
       "idx": 2,
@@ -3012,7 +3012,7 @@
       "backdrop": "Black",
       "symbol": "Thief",
       "image": "/gifts/lol_pop_2.png",
-      "price_ton": 5.05
+      "price_ton": 9.3
     },
     {
       "idx": 3,
@@ -3023,7 +3023,7 @@
       "backdrop": "Black",
       "symbol": "Rocket",
       "image": "/gifts/lol_pop_3.png",
-      "price_ton": 5.05
+      "price_ton": 9.31
     },
     {
       "idx": 4,
@@ -3034,7 +3034,7 @@
       "backdrop": "Sapphire",
       "symbol": "Sleepy Unicorn",
       "image": "/gifts/lol_pop_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.46
     },
     {
       "idx": 5,
@@ -3045,7 +3045,7 @@
       "backdrop": "Pistachio",
       "symbol": "Holy Grail",
       "image": "/gifts/lol_pop_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.47
     },
     {
       "idx": 6,
@@ -3056,7 +3056,7 @@
       "backdrop": "Electric Indigo",
       "symbol": "Moon Cross",
       "image": "/gifts/lol_pop_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.48
     }
   ],
   "Pool Float": [
@@ -3069,7 +3069,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Tribal Shield",
       "image": "/gifts/pool_float_1.png",
-      "price_ton": 5.05
+      "price_ton": 25.54
     },
     {
       "idx": 2,
@@ -3080,7 +3080,7 @@
       "backdrop": "Black",
       "symbol": "Dagger",
       "image": "/gifts/pool_float_2.png",
-      "price_ton": 5.05
+      "price_ton": 9.34
     },
     {
       "idx": 3,
@@ -3091,7 +3091,7 @@
       "backdrop": "Pine Green",
       "symbol": "Scarab",
       "image": "/gifts/pool_float_3.png",
-      "price_ton": 5.05
+      "price_ton": 25.55
     },
     {
       "idx": 4,
@@ -3102,7 +3102,7 @@
       "backdrop": "Steel Grey",
       "symbol": "French Fries",
       "image": "/gifts/pool_float_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.64
     },
     {
       "idx": 5,
@@ -3113,7 +3113,7 @@
       "backdrop": "Coral Red",
       "symbol": "Tooth",
       "image": "/gifts/pool_float_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.65
     },
     {
       "idx": 6,
@@ -3124,7 +3124,7 @@
       "backdrop": "Desert Sand",
       "symbol": "Bunny",
       "image": "/gifts/pool_float_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.66
     }
   ],
   "Big Year": [
@@ -3137,7 +3137,7 @@
       "backdrop": "Onyx Black",
       "symbol": "Baby Bottle",
       "image": "/gifts/big_year_1.png",
-      "price_ton": 5.05
+      "price_ton": 17.34
     },
     {
       "idx": 2,
@@ -3148,7 +3148,7 @@
       "backdrop": "Black",
       "symbol": "Hazelnut",
       "image": "/gifts/big_year_2.png",
-      "price_ton": 5.05
+      "price_ton": 17.35
     },
     {
       "idx": 3,
@@ -3159,7 +3159,7 @@
       "backdrop": "Black",
       "symbol": "Lily",
       "image": "/gifts/big_year_3.png",
-      "price_ton": 5.05
+      "price_ton": 17.36
     },
     {
       "idx": 4,
@@ -3170,7 +3170,7 @@
       "backdrop": "Navy Blue",
       "symbol": "Sun Lion",
       "image": "/gifts/big_year_4.png",
-      "price_ton": 5.05
+      "price_ton": 7.24
     },
     {
       "idx": 5,
@@ -3181,7 +3181,7 @@
       "backdrop": "Steel Grey",
       "symbol": "Smartphone",
       "image": "/gifts/big_year_5.png",
-      "price_ton": 5.05
+      "price_ton": 16.32
     },
     {
       "idx": 6,
@@ -3192,7 +3192,7 @@
       "backdrop": "Roman Silver",
       "symbol": "Sun Lion",
       "image": "/gifts/big_year_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.1
     }
   ],
   "Xmas Stocking": [
@@ -3205,7 +3205,7 @@
       "backdrop": "Black",
       "symbol": "Eggplant",
       "image": "/gifts/xmas_stocking_1.png",
-      "price_ton": 5.05
+      "price_ton": 25.59
     },
     {
       "idx": 2,
@@ -3216,7 +3216,7 @@
       "backdrop": "Black",
       "symbol": "Sun Lion",
       "image": "/gifts/xmas_stocking_2.png",
-      "price_ton": 5.05
+      "price_ton": 22.51
     },
     {
       "idx": 3,
@@ -3227,7 +3227,7 @@
       "backdrop": "Ivory White",
       "symbol": "Stocking",
       "image": "/gifts/xmas_stocking_3.png",
-      "price_ton": 5.05
+      "price_ton": 25.6
     },
     {
       "idx": 4,
@@ -3238,7 +3238,7 @@
       "backdrop": "Gunship Green",
       "symbol": "Piranha",
       "image": "/gifts/xmas_stocking_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.92
     },
     {
       "idx": 5,
@@ -3249,7 +3249,7 @@
       "backdrop": "Moonstone",
       "symbol": "Candle",
       "image": "/gifts/xmas_stocking_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.93
     },
     {
       "idx": 6,
@@ -3260,7 +3260,7 @@
       "backdrop": "Burnt Sienna",
       "symbol": "Gold",
       "image": "/gifts/xmas_stocking_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.94
     }
   ],
   "Chill Flame": [
@@ -3273,7 +3273,7 @@
       "backdrop": "Black",
       "symbol": "Ring",
       "image": "/gifts/chill_flame_1.png",
-      "price_ton": 5.05
+      "price_ton": 10.31
     },
     {
       "idx": 2,
@@ -3284,7 +3284,7 @@
       "backdrop": "Raspberry",
       "symbol": "Twin Koi",
       "image": "/gifts/chill_flame_2.png",
-      "price_ton": 5.05
+      "price_ton": 25.5
     },
     {
       "idx": 3,
@@ -3295,7 +3295,7 @@
       "backdrop": "Black",
       "symbol": "Star",
       "image": "/gifts/chill_flame_3.png",
-      "price_ton": 5.05
+      "price_ton": 10.32
     },
     {
       "idx": 4,
@@ -3306,7 +3306,7 @@
       "backdrop": "Pine Green",
       "symbol": "Rhino Warrior",
       "image": "/gifts/chill_flame_4.png",
-      "price_ton": 5.05
+      "price_ton": 5.17
     },
     {
       "idx": 5,
@@ -3317,7 +3317,7 @@
       "backdrop": "Pure Gold",
       "symbol": "Watching Sun",
       "image": "/gifts/chill_flame_5.png",
-      "price_ton": 5.05
+      "price_ton": 5.18
     },
     {
       "idx": 6,
@@ -3328,7 +3328,5039 @@
       "backdrop": "Ivory White",
       "symbol": "Toilet",
       "image": "/gifts/chill_flame_6.png",
-      "price_ton": 5.05
+      "price_ton": 5.19
+    }
+  ],
+  "Algorithm Cup": [
+    {
+      "idx": 1,
+      "id": "algorithm_cup-1",
+      "fragment_id": "algorithmcup-74",
+      "serial": 74,
+      "model": "Silver",
+      "backdrop": "Gunmetal",
+      "symbol": "Telescope",
+      "image": "/gifts/algorithm_cup_1.png",
+      "price_ton": 3519.0
+    },
+    {
+      "idx": 2,
+      "id": "algorithm_cup-2",
+      "fragment_id": "algorithmcup-39",
+      "serial": 39,
+      "model": "Silver",
+      "backdrop": "Pure Gold",
+      "symbol": "Mafdet",
+      "image": "/gifts/algorithm_cup_2.png",
+      "price_ton": 6120.0
+    },
+    {
+      "idx": 3,
+      "id": "algorithm_cup-3",
+      "fragment_id": "algorithmcup-94",
+      "serial": 94,
+      "model": "Silver",
+      "backdrop": "Onyx Black",
+      "symbol": "Light Bulb",
+      "image": "/gifts/algorithm_cup_3.png",
+      "price_ton": 8160.0
+    },
+    {
+      "idx": 4,
+      "id": "algorithm_cup-4",
+      "fragment_id": "algorithmcup-41",
+      "serial": 41,
+      "model": "Silver",
+      "backdrop": "Black",
+      "symbol": "Double Axe",
+      "image": "/gifts/algorithm_cup_4.png",
+      "price_ton": 8160.01
+    },
+    {
+      "idx": 5,
+      "id": "algorithm_cup-5",
+      "fragment_id": "algorithmcup-69",
+      "serial": 69,
+      "model": "Silver",
+      "backdrop": "Silver Blue",
+      "symbol": "Firebird",
+      "image": "/gifts/algorithm_cup_5.png",
+      "price_ton": 10200.0
+    },
+    {
+      "idx": 6,
+      "id": "algorithm_cup-6",
+      "fragment_id": "algorithmcup-9",
+      "serial": 9,
+      "model": "Gold",
+      "backdrop": "Amber",
+      "symbol": "Mustang",
+      "image": "/gifts/algorithm_cup_6.png",
+      "price_ton": 12240.0
+    }
+  ],
+  "Intelligence Cup": [
+    {
+      "idx": 1,
+      "id": "intelligence_cup-1",
+      "fragment_id": "intelligencecup-105",
+      "serial": 105,
+      "model": "Silver",
+      "backdrop": "Gunmetal",
+      "symbol": "Kudu Totem",
+      "image": "/gifts/intelligence_cup_1.png",
+      "price_ton": 3160.98
+    },
+    {
+      "idx": 2,
+      "id": "intelligence_cup-2",
+      "fragment_id": "intelligencecup-129",
+      "serial": 129,
+      "model": "Bronze",
+      "backdrop": "Black",
+      "symbol": "Steampunk Hat",
+      "image": "/gifts/intelligence_cup_2.png",
+      "price_ton": 4080.0
+    },
+    {
+      "idx": 3,
+      "id": "intelligence_cup-3",
+      "fragment_id": "intelligencecup-39",
+      "serial": 39,
+      "model": "Silver",
+      "backdrop": "Roman Silver",
+      "symbol": "Rain Drop",
+      "image": "/gifts/intelligence_cup_3.png",
+      "price_ton": 4080.01
+    },
+    {
+      "idx": 4,
+      "id": "intelligence_cup-4",
+      "fragment_id": "intelligencecup-77",
+      "serial": 77,
+      "model": "Silver",
+      "backdrop": "Ivory White",
+      "symbol": "Magic Wand",
+      "image": "/gifts/intelligence_cup_4.png",
+      "price_ton": 5610.0
+    },
+    {
+      "idx": 5,
+      "id": "intelligence_cup-5",
+      "fragment_id": "intelligencecup-20",
+      "serial": 20,
+      "model": "Gold",
+      "backdrop": "Gunmetal",
+      "symbol": "Heraldic Lily",
+      "image": "/gifts/intelligence_cup_5.png",
+      "price_ton": 15804.9
+    },
+    {
+      "idx": 6,
+      "id": "intelligence_cup-6",
+      "fragment_id": "intelligencecup-7",
+      "serial": 7,
+      "model": "Gold",
+      "backdrop": "Onyx Black",
+      "symbol": "Star",
+      "image": "/gifts/intelligence_cup_6.png",
+      "price_ton": 15804.91
+    }
+  ],
+  "Durov's Glasses": [
+    {
+      "idx": 1,
+      "id": "durovs_glasses-1",
+      "fragment_id": "durovsglasses-2508",
+      "serial": 2508,
+      "model": "Crystal Sight",
+      "backdrop": "Mint Green",
+      "symbol": "Jewel",
+      "image": "/gifts/durovs_glasses_1.png",
+      "price_ton": 153.0
+    },
+    {
+      "idx": 2,
+      "id": "durovs_glasses-2",
+      "fragment_id": "durovsglasses-2509",
+      "serial": 2509,
+      "model": "Inuit",
+      "backdrop": "Shamrock Green",
+      "symbol": "Bicorne",
+      "image": "/gifts/durovs_glasses_2.png",
+      "price_ton": 173.4
+    },
+    {
+      "idx": 3,
+      "id": "durovs_glasses-3",
+      "fragment_id": "durovsglasses-632",
+      "serial": 632,
+      "model": "Stardust",
+      "backdrop": "Gunship Green",
+      "symbol": "Tricorne",
+      "image": "/gifts/durovs_glasses_3.png",
+      "price_ton": 204.0
+    },
+    {
+      "idx": 4,
+      "id": "durovs_glasses-4",
+      "fragment_id": "durovsglasses-922",
+      "serial": 922,
+      "model": "Crystal Sight",
+      "backdrop": "French Violet",
+      "symbol": "Yin-Yang",
+      "image": "/gifts/durovs_glasses_4.png",
+      "price_ton": 219.3
+    },
+    {
+      "idx": 5,
+      "id": "durovs_glasses-5",
+      "fragment_id": "durovsglasses-1526",
+      "serial": 1526,
+      "model": "Lovestruck",
+      "backdrop": "Marine Blue",
+      "symbol": "Origami",
+      "image": "/gifts/durovs_glasses_5.png",
+      "price_ton": 234.6
+    },
+    {
+      "idx": 6,
+      "id": "durovs_glasses-6",
+      "fragment_id": "durovsglasses-2750",
+      "serial": 2750,
+      "model": "Kaleidoscope",
+      "backdrop": "French Violet",
+      "symbol": "Watermelon",
+      "image": "/gifts/durovs_glasses_6.png",
+      "price_ton": 234.61
+    }
+  ],
+  "Nail Bracelet": [
+    {
+      "idx": 1,
+      "id": "nail_bracelet-1",
+      "fragment_id": "nailbracelet-1929",
+      "serial": 1929,
+      "model": "Shadow",
+      "backdrop": "Shamrock Green",
+      "symbol": "Chili",
+      "image": "/gifts/nail_bracelet_1.png",
+      "price_ton": 151.99
+    },
+    {
+      "idx": 2,
+      "id": "nail_bracelet-2",
+      "fragment_id": "nailbracelet-4559",
+      "serial": 4559,
+      "model": "Red Fang",
+      "backdrop": "Malachite",
+      "symbol": "Anubis",
+      "image": "/gifts/nail_bracelet_2.png",
+      "price_ton": 152.0
+    },
+    {
+      "idx": 3,
+      "id": "nail_bracelet-3",
+      "fragment_id": "nailbracelet-1449",
+      "serial": 1449,
+      "model": "Ultramarine",
+      "backdrop": "English Violet",
+      "symbol": "Magic Vial",
+      "image": "/gifts/nail_bracelet_3.png",
+      "price_ton": 153.05
+    },
+    {
+      "idx": 4,
+      "id": "nail_bracelet-4",
+      "fragment_id": "nailbracelet-454",
+      "serial": 454,
+      "model": "Jade Serpent",
+      "backdrop": "Strawberry",
+      "symbol": "Two Katanas",
+      "image": "/gifts/nail_bracelet_4.png",
+      "price_ton": 153.06
+    },
+    {
+      "idx": 5,
+      "id": "nail_bracelet-5",
+      "fragment_id": "nailbracelet-519",
+      "serial": 519,
+      "model": "Shadow",
+      "backdrop": "Ranger Green",
+      "symbol": "Ice Pop",
+      "image": "/gifts/nail_bracelet_5.png",
+      "price_ton": 153.07
+    },
+    {
+      "idx": 6,
+      "id": "nail_bracelet-6",
+      "fragment_id": "nailbracelet-975",
+      "serial": 975,
+      "model": "Pure Amber",
+      "backdrop": "Sapphire",
+      "symbol": "Scarab",
+      "image": "/gifts/nail_bracelet_6.png",
+      "price_ton": 153.08
+    }
+  ],
+  "Perfume Bottle": [
+    {
+      "idx": 1,
+      "id": "perfume_bottle-1",
+      "fragment_id": "perfumebottle-2577",
+      "serial": 2577,
+      "model": "Ebony Rose",
+      "backdrop": "Desert Sand",
+      "symbol": "Rain Drop",
+      "image": "/gifts/perfume_bottle_1.png",
+      "price_ton": 110.16
+    },
+    {
+      "idx": 2,
+      "id": "perfume_bottle-2",
+      "fragment_id": "perfumebottle-1209",
+      "serial": 1209,
+      "model": "Grape Splash",
+      "backdrop": "Cappuccino",
+      "symbol": "Lily",
+      "image": "/gifts/perfume_bottle_2.png",
+      "price_ton": 111.18
+    },
+    {
+      "idx": 3,
+      "id": "perfume_bottle-3",
+      "fragment_id": "perfumebottle-1344",
+      "serial": 1344,
+      "model": "Blush Petal",
+      "backdrop": "Indigo Dye",
+      "symbol": "Kitty Cat",
+      "image": "/gifts/perfume_bottle_3.png",
+      "price_ton": 113.22
+    },
+    {
+      "idx": 4,
+      "id": "perfume_bottle-4",
+      "fragment_id": "perfumebottle-368",
+      "serial": 368,
+      "model": "Solar Eclipse",
+      "backdrop": "Electric Indigo",
+      "symbol": "Axe",
+      "image": "/gifts/perfume_bottle_4.png",
+      "price_ton": 127.5
+    },
+    {
+      "idx": 5,
+      "id": "perfume_bottle-5",
+      "fragment_id": "perfumebottle-2991",
+      "serial": 2991,
+      "model": "Luminous",
+      "backdrop": "Fandango",
+      "symbol": "Cicada",
+      "image": "/gifts/perfume_bottle_5.png",
+      "price_ton": 142.81
+    },
+    {
+      "idx": 6,
+      "id": "perfume_bottle-6",
+      "fragment_id": "perfumebottle-3132",
+      "serial": 3132,
+      "model": "№5 L’eau",
+      "backdrop": "Satin Gold",
+      "symbol": "Stilettos",
+      "image": "/gifts/perfume_bottle_6.png",
+      "price_ton": 142.82
+    }
+  ],
+  "Artisan Brick": [
+    {
+      "idx": 1,
+      "id": "artisan_brick-1",
+      "fragment_id": "artisanbrick-5426",
+      "serial": 5426,
+      "model": "Chocolate",
+      "backdrop": "Hunter Green",
+      "symbol": "Leaf",
+      "image": "/gifts/artisan_brick_1.png",
+      "price_ton": 86.7
+    },
+    {
+      "idx": 2,
+      "id": "artisan_brick-2",
+      "fragment_id": "artisanbrick-2601",
+      "serial": 2601,
+      "model": "Concrete",
+      "backdrop": "Silver Blue",
+      "symbol": "Aztec Totem",
+      "image": "/gifts/artisan_brick_2.png",
+      "price_ton": 100.98
+    },
+    {
+      "idx": 3,
+      "id": "artisan_brick-3",
+      "fragment_id": "artisanbrick-2916",
+      "serial": 2916,
+      "model": "Sandstone",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Flower Sun",
+      "image": "/gifts/artisan_brick_3.png",
+      "price_ton": 100.99
+    },
+    {
+      "idx": 4,
+      "id": "artisan_brick-4",
+      "fragment_id": "artisanbrick-2504",
+      "serial": 2504,
+      "model": "Harlequin",
+      "backdrop": "Orange",
+      "symbol": "Corn",
+      "image": "/gifts/artisan_brick_4.png",
+      "price_ton": 102.0
+    },
+    {
+      "idx": 5,
+      "id": "artisan_brick-5",
+      "fragment_id": "artisanbrick-3342",
+      "serial": 3342,
+      "model": "Retro Player",
+      "backdrop": "Chestnut",
+      "symbol": "Bamboo",
+      "image": "/gifts/artisan_brick_5.png",
+      "price_ton": 106.08
+    },
+    {
+      "idx": 6,
+      "id": "artisan_brick-6",
+      "fragment_id": "artisanbrick-768",
+      "serial": 768,
+      "model": "Retro Player",
+      "backdrop": "Sky Blue",
+      "symbol": "Gem",
+      "image": "/gifts/artisan_brick_6.png",
+      "price_ton": 107.1
+    }
+  ],
+  "Gem Signet": [
+    {
+      "idx": 1,
+      "id": "gem_signet-1",
+      "fragment_id": "gemsignet-3789",
+      "serial": 3789,
+      "model": "Moonstone",
+      "backdrop": "Carrot Juice",
+      "symbol": "Sea Dragon",
+      "image": "/gifts/gem_signet_1.png",
+      "price_ton": 73.44
+    },
+    {
+      "idx": 2,
+      "id": "gem_signet-2",
+      "fragment_id": "gemsignet-5651",
+      "serial": 5651,
+      "model": "Malibu Pink",
+      "backdrop": "Cappuccino",
+      "symbol": "Jewel",
+      "image": "/gifts/gem_signet_2.png",
+      "price_ton": 74.46
+    },
+    {
+      "idx": 3,
+      "id": "gem_signet-3",
+      "fragment_id": "gemsignet-1260",
+      "serial": 1260,
+      "model": "Fleur de Mer",
+      "backdrop": "Ivory White",
+      "symbol": "Illuminati",
+      "image": "/gifts/gem_signet_3.png",
+      "price_ton": 75.48
+    },
+    {
+      "idx": 4,
+      "id": "gem_signet-4",
+      "fragment_id": "gemsignet-4843",
+      "serial": 4843,
+      "model": "Nuclear Core",
+      "backdrop": "Sapphire",
+      "symbol": "Apple",
+      "image": "/gifts/gem_signet_4.png",
+      "price_ton": 78.54
+    },
+    {
+      "idx": 5,
+      "id": "gem_signet-5",
+      "fragment_id": "gemsignet-2816",
+      "serial": 2816,
+      "model": "Moonstone",
+      "backdrop": "Celtic Blue",
+      "symbol": "Car",
+      "image": "/gifts/gem_signet_5.png",
+      "price_ton": 80.58
+    },
+    {
+      "idx": 6,
+      "id": "gem_signet-6",
+      "fragment_id": "gemsignet-1137",
+      "serial": 1137,
+      "model": "Old Bronze",
+      "backdrop": "Marine Blue",
+      "symbol": "Coin Purse",
+      "image": "/gifts/gem_signet_6.png",
+      "price_ton": 81.6
+    }
+  ],
+  "Bonded Ring": [
+    {
+      "idx": 1,
+      "id": "bonded_ring-1",
+      "fragment_id": "bondedring-3968",
+      "serial": 3968,
+      "model": "Soap Bubbles",
+      "backdrop": "Azure Blue",
+      "symbol": "Grape",
+      "image": "/gifts/bonded_ring_1.png",
+      "price_ton": 47.94
+    },
+    {
+      "idx": 2,
+      "id": "bonded_ring-2",
+      "fragment_id": "bondedring-3823",
+      "serial": 3823,
+      "model": "Astro Silver",
+      "backdrop": "English Violet",
+      "symbol": "Doghouse",
+      "image": "/gifts/bonded_ring_2.png",
+      "price_ton": 49.98
+    },
+    {
+      "idx": 3,
+      "id": "bonded_ring-3",
+      "fragment_id": "bondedring-5451",
+      "serial": 5451,
+      "model": "Hot Wheel",
+      "backdrop": "Shamrock Green",
+      "symbol": "Rooster",
+      "image": "/gifts/bonded_ring_3.png",
+      "price_ton": 49.99
+    },
+    {
+      "idx": 4,
+      "id": "bonded_ring-4",
+      "fragment_id": "bondedring-974",
+      "serial": 974,
+      "model": "Duo Vision",
+      "backdrop": "Strawberry",
+      "symbol": "Bottle",
+      "image": "/gifts/bonded_ring_4.png",
+      "price_ton": 50.0
+    },
+    {
+      "idx": 5,
+      "id": "bonded_ring-5",
+      "fragment_id": "bondedring-1304",
+      "serial": 1304,
+      "model": "Bloody Mary",
+      "backdrop": "Turquoise",
+      "symbol": "Porrige",
+      "image": "/gifts/bonded_ring_5.png",
+      "price_ton": 51.0
+    },
+    {
+      "idx": 6,
+      "id": "bonded_ring-6",
+      "fragment_id": "bondedring-6090",
+      "serial": 6090,
+      "model": "Zebra",
+      "backdrop": "Moonstone",
+      "symbol": "Bobby Helmet",
+      "image": "/gifts/bonded_ring_6.png",
+      "price_ton": 56.1
+    }
+  ],
+  "Neko Helmet": [
+    {
+      "idx": 1,
+      "id": "neko_helmet-1",
+      "fragment_id": "nekohelmet-6581",
+      "serial": 6581,
+      "model": "Techno",
+      "backdrop": "Pistachio",
+      "symbol": "Gift",
+      "image": "/gifts/neko_helmet_1.png",
+      "price_ton": 45.92
+    },
+    {
+      "idx": 2,
+      "id": "neko_helmet-2",
+      "fragment_id": "nekohelmet-403",
+      "serial": 403,
+      "model": "Lightspeed",
+      "backdrop": "Shamrock Green",
+      "symbol": "Belladonna",
+      "image": "/gifts/neko_helmet_2.png",
+      "price_ton": 48.97
+    },
+    {
+      "idx": 3,
+      "id": "neko_helmet-3",
+      "fragment_id": "nekohelmet-13544",
+      "serial": 13544,
+      "model": "Twister",
+      "backdrop": "Mint Green",
+      "symbol": "Rose",
+      "image": "/gifts/neko_helmet_3.png",
+      "price_ton": 50.01
+    },
+    {
+      "idx": 4,
+      "id": "neko_helmet-4",
+      "fragment_id": "nekohelmet-5273",
+      "serial": 5273,
+      "model": "Twister",
+      "backdrop": "Turquoise",
+      "symbol": "Pith Helmet",
+      "image": "/gifts/neko_helmet_4.png",
+      "price_ton": 50.02
+    },
+    {
+      "idx": 5,
+      "id": "neko_helmet-5",
+      "fragment_id": "nekohelmet-3413",
+      "serial": 3413,
+      "model": "Copper Alloy",
+      "backdrop": "Satin Gold",
+      "symbol": "Cicada",
+      "image": "/gifts/neko_helmet_5.png",
+      "price_ton": 51.03
+    },
+    {
+      "idx": 6,
+      "id": "neko_helmet-6",
+      "fragment_id": "nekohelmet-14756",
+      "serial": 14756,
+      "model": "Steampunk",
+      "backdrop": "Ivory White",
+      "symbol": "Candle",
+      "image": "/gifts/neko_helmet_6.png",
+      "price_ton": 53.04
+    }
+  ],
+  "Genie Lamp": [
+    {
+      "idx": 1,
+      "id": "genie_lamp-1",
+      "fragment_id": "genielamp-1935",
+      "serial": 1935,
+      "model": "Bronze Dust",
+      "backdrop": "Khaki Green",
+      "symbol": "Car",
+      "image": "/gifts/genie_lamp_1.png",
+      "price_ton": 40.82
+    },
+    {
+      "idx": 2,
+      "id": "genie_lamp-2",
+      "fragment_id": "genielamp-4025",
+      "serial": 4025,
+      "model": "Bronze Dust",
+      "backdrop": "Emerald",
+      "symbol": "Golden Scarab",
+      "image": "/gifts/genie_lamp_2.png",
+      "price_ton": 41.83
+    },
+    {
+      "idx": 3,
+      "id": "genie_lamp-3",
+      "fragment_id": "genielamp-5003",
+      "serial": 5003,
+      "model": "Lime Art",
+      "backdrop": "Orange",
+      "symbol": "Ring",
+      "image": "/gifts/genie_lamp_3.png",
+      "price_ton": 44.88
+    },
+    {
+      "idx": 4,
+      "id": "genie_lamp-4",
+      "fragment_id": "genielamp-6512",
+      "serial": 6512,
+      "model": "Blueprint",
+      "backdrop": "Purple",
+      "symbol": "Inca Sun",
+      "image": "/gifts/genie_lamp_4.png",
+      "price_ton": 44.89
+    },
+    {
+      "idx": 5,
+      "id": "genie_lamp-5",
+      "fragment_id": "genielamp-2811",
+      "serial": 2811,
+      "model": "Bronze Dust",
+      "backdrop": "Pure Gold",
+      "symbol": "Spanner",
+      "image": "/gifts/genie_lamp_5.png",
+      "price_ton": 45.91
+    },
+    {
+      "idx": 6,
+      "id": "genie_lamp-6",
+      "fragment_id": "genielamp-2002",
+      "serial": 2002,
+      "model": "Red Sketch",
+      "backdrop": "Emerald",
+      "symbol": "Lily",
+      "image": "/gifts/genie_lamp_6.png",
+      "price_ton": 46.92
+    }
+  ],
+  "Diamond Ring": [
+    {
+      "idx": 1,
+      "id": "diamond_ring_nft-1",
+      "fragment_id": "diamondring-26470",
+      "serial": 26470,
+      "model": "Arabian Night",
+      "backdrop": "Pine Green",
+      "symbol": "Chili",
+      "image": "/gifts/diamond_ring_nft_1.png",
+      "price_ton": 37.74
+    },
+    {
+      "idx": 2,
+      "id": "diamond_ring_nft-2",
+      "fragment_id": "diamondring-27167",
+      "serial": 27167,
+      "model": "Dragon Eyes",
+      "backdrop": "Neon Blue",
+      "symbol": "Morgenstern",
+      "image": "/gifts/diamond_ring_nft_2.png",
+      "price_ton": 37.75
+    },
+    {
+      "idx": 3,
+      "id": "diamond_ring_nft-3",
+      "fragment_id": "diamondring-9703",
+      "serial": 9703,
+      "model": "Arabian Night",
+      "backdrop": "Aquamarine",
+      "symbol": "Gem",
+      "image": "/gifts/diamond_ring_nft_3.png",
+      "price_ton": 37.76
+    },
+    {
+      "idx": 4,
+      "id": "diamond_ring_nft-4",
+      "fragment_id": "diamondring-11172",
+      "serial": 11172,
+      "model": "Black Velvet",
+      "backdrop": "Sky Blue",
+      "symbol": "Crystal",
+      "image": "/gifts/diamond_ring_nft_4.png",
+      "price_ton": 39.8
+    },
+    {
+      "idx": 5,
+      "id": "diamond_ring_nft-5",
+      "fragment_id": "diamondring-1163",
+      "serial": 1163,
+      "model": "Bronze Heart",
+      "backdrop": "Lemongrass",
+      "symbol": "Bull of Heaven",
+      "image": "/gifts/diamond_ring_nft_5.png",
+      "price_ton": 39.81
+    },
+    {
+      "idx": 6,
+      "id": "diamond_ring_nft-6",
+      "fragment_id": "diamondring-15980",
+      "serial": 15980,
+      "model": "Hot Pink",
+      "backdrop": "Coral Red",
+      "symbol": "Sea Horse",
+      "image": "/gifts/diamond_ring_nft_6.png",
+      "price_ton": 39.82
+    }
+  ],
+  "Electric Skull": [
+    {
+      "idx": 1,
+      "id": "electric_skull-1",
+      "fragment_id": "electricskull-1225",
+      "serial": 1225,
+      "model": "Corpse Mint",
+      "backdrop": "Rosewood",
+      "symbol": "Bamboo",
+      "image": "/gifts/electric_skull_1.png",
+      "price_ton": 35.74
+    },
+    {
+      "idx": 2,
+      "id": "electric_skull-2",
+      "fragment_id": "electricskull-6619",
+      "serial": 6619,
+      "model": "Frost Wraith",
+      "backdrop": "Dark Lilac",
+      "symbol": "Illuminati",
+      "image": "/gifts/electric_skull_2.png",
+      "price_ton": 36.72
+    },
+    {
+      "idx": 3,
+      "id": "electric_skull-3",
+      "fragment_id": "electricskull-2578",
+      "serial": 2578,
+      "model": "Red Death",
+      "backdrop": "Coral Red",
+      "symbol": "Inca Sun",
+      "image": "/gifts/electric_skull_3.png",
+      "price_ton": 40.8
+    },
+    {
+      "idx": 4,
+      "id": "electric_skull-4",
+      "fragment_id": "electricskull-8452",
+      "serial": 8452,
+      "model": "Deadman",
+      "backdrop": "Jade Green",
+      "symbol": "Witch’s Hat",
+      "image": "/gifts/electric_skull_4.png",
+      "price_ton": 41.82
+    },
+    {
+      "idx": 5,
+      "id": "electric_skull-5",
+      "fragment_id": "electricskull-3418",
+      "serial": 3418,
+      "model": "Solar Stone",
+      "backdrop": "Neon Blue",
+      "symbol": "French Fries",
+      "image": "/gifts/electric_skull_5.png",
+      "price_ton": 45.9
+    },
+    {
+      "idx": 6,
+      "id": "electric_skull-6",
+      "fragment_id": "electricskull-3548",
+      "serial": 3548,
+      "model": "Cactus",
+      "backdrop": "Sky Blue",
+      "symbol": "Tsunami",
+      "image": "/gifts/electric_skull_6.png",
+      "price_ton": 48.96
+    }
+  ],
+  "Eternal Rose": [
+    {
+      "idx": 1,
+      "id": "eternal_rose-1",
+      "fragment_id": "eternalrose-6198",
+      "serial": 6198,
+      "model": "Aurora Veil",
+      "backdrop": "Aquamarine",
+      "symbol": "Cupcake",
+      "image": "/gifts/eternal_rose_1.png",
+      "price_ton": 33.67
+    },
+    {
+      "idx": 2,
+      "id": "eternal_rose-2",
+      "fragment_id": "eternalrose-15750",
+      "serial": 15750,
+      "model": "Aurora Veil",
+      "backdrop": "Mint Green",
+      "symbol": "Genie Lamp",
+      "image": "/gifts/eternal_rose_2.png",
+      "price_ton": 35.75
+    },
+    {
+      "idx": 3,
+      "id": "eternal_rose-3",
+      "fragment_id": "eternalrose-6901",
+      "serial": 6901,
+      "model": "Halftone",
+      "backdrop": "Khaki Green",
+      "symbol": "Plum",
+      "image": "/gifts/eternal_rose_3.png",
+      "price_ton": 35.76
+    },
+    {
+      "idx": 4,
+      "id": "eternal_rose-4",
+      "fragment_id": "eternalrose-21524",
+      "serial": 21524,
+      "model": "Atlantis",
+      "backdrop": "Khaki Green",
+      "symbol": "Broken Heart",
+      "image": "/gifts/eternal_rose_4.png",
+      "price_ton": 37.77
+    },
+    {
+      "idx": 5,
+      "id": "eternal_rose-5",
+      "fragment_id": "eternalrose-3390",
+      "serial": 3390,
+      "model": "Midnight Glow",
+      "backdrop": "Battleship Grey",
+      "symbol": "Champagne",
+      "image": "/gifts/eternal_rose_5.png",
+      "price_ton": 38.76
+    },
+    {
+      "idx": 6,
+      "id": "eternal_rose-6",
+      "fragment_id": "eternalrose-13339",
+      "serial": 13339,
+      "model": "Fallout",
+      "backdrop": "Raspberry",
+      "symbol": "Strawberry",
+      "image": "/gifts/eternal_rose_6.png",
+      "price_ton": 40.81
+    }
+  ],
+  "Rare Bird": [
+    {
+      "idx": 1,
+      "id": "rare_bird-1",
+      "fragment_id": "rarebird-5868",
+      "serial": 5868,
+      "model": "Noble Puffin",
+      "backdrop": "Navy Blue",
+      "symbol": "War Bonnet",
+      "image": "/gifts/rare_bird_1.png",
+      "price_ton": 30.63
+    },
+    {
+      "idx": 2,
+      "id": "rare_bird-2",
+      "fragment_id": "rarebird-12115",
+      "serial": 12115,
+      "model": "Noble Puffin",
+      "backdrop": "Lemongrass",
+      "symbol": "Pumpkin Coach",
+      "image": "/gifts/rare_bird_2.png",
+      "price_ton": 30.64
+    },
+    {
+      "idx": 3,
+      "id": "rare_bird-3",
+      "fragment_id": "rarebird-12717",
+      "serial": 12717,
+      "model": "Bat King",
+      "backdrop": "Azure Blue",
+      "symbol": "Strawberry",
+      "image": "/gifts/rare_bird_3.png",
+      "price_ton": 35.77
+    },
+    {
+      "idx": 4,
+      "id": "rare_bird-4",
+      "fragment_id": "rarebird-8009",
+      "serial": 8009,
+      "model": "Hippogriff",
+      "backdrop": "Ranger Green",
+      "symbol": "Watermelon",
+      "image": "/gifts/rare_bird_4.png",
+      "price_ton": 35.78
+    },
+    {
+      "idx": 5,
+      "id": "rare_bird-5",
+      "fragment_id": "rarebird-9483",
+      "serial": 9483,
+      "model": "Noble Puffin",
+      "backdrop": "Cappuccino",
+      "symbol": "Wreath",
+      "image": "/gifts/rare_bird_5.png",
+      "price_ton": 35.79
+    },
+    {
+      "idx": 6,
+      "id": "rare_bird-6",
+      "fragment_id": "rarebird-9919",
+      "serial": 9919,
+      "model": "Noble Puffin",
+      "backdrop": "Pistachio",
+      "symbol": "Birthday Cake",
+      "image": "/gifts/rare_bird_6.png",
+      "price_ton": 35.8
+    }
+  ],
+  "Bling Binky": [
+    {
+      "idx": 1,
+      "id": "bling_binky-1",
+      "fragment_id": "blingbinky-8374",
+      "serial": 8374,
+      "model": "Cubic",
+      "backdrop": "Seal Brown",
+      "symbol": "Hersir",
+      "image": "/gifts/bling_binky_1.png",
+      "price_ton": 29.58
+    },
+    {
+      "idx": 2,
+      "id": "bling_binky-2",
+      "fragment_id": "blingbinky-704",
+      "serial": 704,
+      "model": "Irish Kiss",
+      "backdrop": "Electric Purple",
+      "symbol": "Earflap Hat",
+      "image": "/gifts/bling_binky_2.png",
+      "price_ton": 30.6
+    },
+    {
+      "idx": 3,
+      "id": "bling_binky-3",
+      "fragment_id": "blingbinky-3942",
+      "serial": 3942,
+      "model": "Soccer",
+      "backdrop": "Strawberry",
+      "symbol": "Palette",
+      "image": "/gifts/bling_binky_3.png",
+      "price_ton": 33.66
+    },
+    {
+      "idx": 4,
+      "id": "bling_binky-4",
+      "fragment_id": "blingbinky-1414",
+      "serial": 1414,
+      "model": "Rancho",
+      "backdrop": "Jade Green",
+      "symbol": "Elf Hat",
+      "image": "/gifts/bling_binky_4.png",
+      "price_ton": 35.7
+    },
+    {
+      "idx": 5,
+      "id": "bling_binky-5",
+      "fragment_id": "blingbinky-363",
+      "serial": 363,
+      "model": "Marmalade",
+      "backdrop": "Hunter Green",
+      "symbol": "Chest",
+      "image": "/gifts/bling_binky_5.png",
+      "price_ton": 35.71
+    },
+    {
+      "idx": 6,
+      "id": "bling_binky-6",
+      "fragment_id": "blingbinky-6419",
+      "serial": 6419,
+      "model": "Shellfish",
+      "backdrop": "Pacific Green",
+      "symbol": "Moon Cross",
+      "image": "/gifts/bling_binky_6.png",
+      "price_ton": 35.72
+    }
+  ],
+  "Cupid Charm": [
+    {
+      "idx": 1,
+      "id": "cupid_charm-1",
+      "fragment_id": "cupidcharm-13980",
+      "serial": 13980,
+      "model": "Gift Wrap",
+      "backdrop": "Copper",
+      "symbol": "Hazelnut",
+      "image": "/gifts/cupid_charm_1.png",
+      "price_ton": 27.54
+    },
+    {
+      "idx": 2,
+      "id": "cupid_charm-2",
+      "fragment_id": "cupidcharm-1623",
+      "serial": 1623,
+      "model": "Bubbles",
+      "backdrop": "Dark Green",
+      "symbol": "Neko Mask",
+      "image": "/gifts/cupid_charm_2.png",
+      "price_ton": 28.56
+    },
+    {
+      "idx": 3,
+      "id": "cupid_charm-3",
+      "fragment_id": "cupidcharm-12478",
+      "serial": 12478,
+      "model": "Azure Gem",
+      "backdrop": "Orange",
+      "symbol": "Rhino Warrior",
+      "image": "/gifts/cupid_charm_3.png",
+      "price_ton": 28.57
+    },
+    {
+      "idx": 4,
+      "id": "cupid_charm-4",
+      "fragment_id": "cupidcharm-14325",
+      "serial": 14325,
+      "model": "Cursed Room",
+      "backdrop": "Copper",
+      "symbol": "Fishing Hook",
+      "image": "/gifts/cupid_charm_4.png",
+      "price_ton": 28.58
+    },
+    {
+      "idx": 5,
+      "id": "cupid_charm-5",
+      "fragment_id": "cupidcharm-11324",
+      "serial": 11324,
+      "model": "Vault",
+      "backdrop": "Platinum",
+      "symbol": "Teddy Bear",
+      "image": "/gifts/cupid_charm_5.png",
+      "price_ton": 29.59
+    },
+    {
+      "idx": 6,
+      "id": "cupid_charm-6",
+      "fragment_id": "cupidcharm-16281",
+      "serial": 16281,
+      "model": "Snow Queen",
+      "backdrop": "Satin Gold",
+      "symbol": "Rainbow",
+      "image": "/gifts/cupid_charm_6.png",
+      "price_ton": 29.6
+    }
+  ],
+  "Sky Stilettos": [
+    {
+      "idx": 1,
+      "id": "sky_stilettos-1",
+      "fragment_id": "skystilettos-36114",
+      "serial": 36114,
+      "model": "Companion",
+      "backdrop": "Seal Brown",
+      "symbol": "Twin Koi",
+      "image": "/gifts/sky_stilettos_1.png",
+      "price_ton": 20.43
+    },
+    {
+      "idx": 2,
+      "id": "sky_stilettos-2",
+      "fragment_id": "skystilettos-18517",
+      "serial": 18517,
+      "model": "Companion",
+      "backdrop": "Deep Cyan",
+      "symbol": "Heart Shades",
+      "image": "/gifts/sky_stilettos_2.png",
+      "price_ton": 20.44
+    },
+    {
+      "idx": 3,
+      "id": "sky_stilettos-3",
+      "fragment_id": "skystilettos-38143",
+      "serial": 38143,
+      "model": "Fergie",
+      "backdrop": "Gunship Green",
+      "symbol": "Lovely Bra",
+      "image": "/gifts/sky_stilettos_3.png",
+      "price_ton": 20.45
+    },
+    {
+      "idx": 4,
+      "id": "sky_stilettos-4",
+      "fragment_id": "skystilettos-29064",
+      "serial": 29064,
+      "model": "Cowgirl",
+      "backdrop": "Sapphire",
+      "symbol": "Bobby Helmet",
+      "image": "/gifts/sky_stilettos_4.png",
+      "price_ton": 22.46
+    },
+    {
+      "idx": 5,
+      "id": "sky_stilettos-5",
+      "fragment_id": "skystilettos-30906",
+      "serial": 30906,
+      "model": "Jester",
+      "backdrop": "Cyberpunk",
+      "symbol": "Calendula",
+      "image": "/gifts/sky_stilettos_5.png",
+      "price_ton": 22.47
+    },
+    {
+      "idx": 6,
+      "id": "sky_stilettos-6",
+      "fragment_id": "skystilettos-43686",
+      "serial": 43686,
+      "model": "Eooxy",
+      "backdrop": "Rifle Green",
+      "symbol": "Flipper",
+      "image": "/gifts/sky_stilettos_6.png",
+      "price_ton": 22.48
+    }
+  ],
+  "UFC Strike": [
+    {
+      "idx": 1,
+      "id": "ufc_strike-1",
+      "fragment_id": "ufcstrike-57952",
+      "serial": 57952,
+      "model": "A. Pereira",
+      "backdrop": "Dark Lilac",
+      "symbol": "Pereira",
+      "image": "/gifts/ufc_strike_1.png",
+      "price_ton": 19.43
+    },
+    {
+      "idx": 2,
+      "id": "ufc_strike-2",
+      "fragment_id": "ufcstrike-34219",
+      "serial": 34219,
+      "model": "UFC 30 Red",
+      "backdrop": "Azure Blue",
+      "symbol": "Strong Arm",
+      "image": "/gifts/ufc_strike_2.png",
+      "price_ton": 19.44
+    },
+    {
+      "idx": 3,
+      "id": "ufc_strike-3",
+      "fragment_id": "ufcstrike-35195",
+      "serial": 35195,
+      "model": "A. Pereira",
+      "backdrop": "Platinum",
+      "symbol": "O’Malley",
+      "image": "/gifts/ufc_strike_3.png",
+      "price_ton": 19.45
+    },
+    {
+      "idx": 4,
+      "id": "ufc_strike-4",
+      "fragment_id": "ufcstrike-36974",
+      "serial": 36974,
+      "model": "A. Pereira",
+      "backdrop": "French Violet",
+      "symbol": "Mouthguard",
+      "image": "/gifts/ufc_strike_4.png",
+      "price_ton": 19.46
+    },
+    {
+      "idx": 5,
+      "id": "ufc_strike-5",
+      "fragment_id": "ufcstrike-51876",
+      "serial": 51876,
+      "model": "M. Dvalishvili",
+      "backdrop": "Purple",
+      "symbol": "Pereira",
+      "image": "/gifts/ufc_strike_5.png",
+      "price_ton": 19.47
+    },
+    {
+      "idx": 6,
+      "id": "ufc_strike-6",
+      "fragment_id": "ufcstrike-56880",
+      "serial": 56880,
+      "model": "M. Dvalishvili",
+      "backdrop": "Shamrock Green",
+      "symbol": "Topuria",
+      "image": "/gifts/ufc_strike_6.png",
+      "price_ton": 19.48
+    }
+  ],
+  "Ionic Dryer": [
+    {
+      "idx": 1,
+      "id": "ionic_dryer-1",
+      "fragment_id": "ionicdryer-402",
+      "serial": 402,
+      "model": "Rad-Dry 9000",
+      "backdrop": "Desert Sand",
+      "symbol": "Muffin",
+      "image": "/gifts/ionic_dryer_1.png",
+      "price_ton": 17.37
+    },
+    {
+      "idx": 2,
+      "id": "ionic_dryer-2",
+      "fragment_id": "ionicdryer-20282",
+      "serial": 20282,
+      "model": "Dried Flowers",
+      "backdrop": "Turquoise",
+      "symbol": "Heartbeat",
+      "image": "/gifts/ionic_dryer_2.png",
+      "price_ton": 19.38
+    },
+    {
+      "idx": 3,
+      "id": "ionic_dryer-3",
+      "fragment_id": "ionicdryer-2371",
+      "serial": 2371,
+      "model": "Dry Wood",
+      "backdrop": "Grape",
+      "symbol": "Neptune",
+      "image": "/gifts/ionic_dryer_3.png",
+      "price_ton": 20.4
+    },
+    {
+      "idx": 4,
+      "id": "ionic_dryer-4",
+      "fragment_id": "ionicdryer-3629",
+      "serial": 3629,
+      "model": "Dry Wood",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Gem",
+      "image": "/gifts/ionic_dryer_4.png",
+      "price_ton": 20.41
+    },
+    {
+      "idx": 5,
+      "id": "ionic_dryer-5",
+      "fragment_id": "ionicdryer-13148",
+      "serial": 13148,
+      "model": "Rad-Dry 9000",
+      "backdrop": "Fandango",
+      "symbol": "Bougainvillea",
+      "image": "/gifts/ionic_dryer_5.png",
+      "price_ton": 21.43
+    },
+    {
+      "idx": 6,
+      "id": "ionic_dryer-6",
+      "fragment_id": "ionicdryer-8717",
+      "serial": 8717,
+      "model": "Tiger Wave",
+      "backdrop": "Seal Brown",
+      "symbol": "Wontons",
+      "image": "/gifts/ionic_dryer_6.png",
+      "price_ton": 21.44
+    }
+  ],
+  "Lucky Locket": [
+    {
+      "idx": 1,
+      "id": "lucky_locket-1",
+      "fragment_id": "luckylocket-4067",
+      "serial": 4067,
+      "model": "Snapshot",
+      "backdrop": "Copper",
+      "symbol": "Doghouse",
+      "image": "/gifts/lucky_locket_1.png",
+      "price_ton": 17.41
+    },
+    {
+      "idx": 2,
+      "id": "lucky_locket-2",
+      "fragment_id": "luckylocket-8890",
+      "serial": 8890,
+      "model": "Aether",
+      "backdrop": "Tactical Pine",
+      "symbol": "Bunny",
+      "image": "/gifts/lucky_locket_2.png",
+      "price_ton": 19.39
+    },
+    {
+      "idx": 3,
+      "id": "lucky_locket-3",
+      "fragment_id": "luckylocket-6712",
+      "serial": 6712,
+      "model": "Creepy Clown",
+      "backdrop": "Purple",
+      "symbol": "Heart Glasses",
+      "image": "/gifts/lucky_locket_3.png",
+      "price_ton": 22.44
+    },
+    {
+      "idx": 4,
+      "id": "lucky_locket-4",
+      "fragment_id": "luckylocket-8428",
+      "serial": 8428,
+      "model": "Zeus",
+      "backdrop": "Azure Blue",
+      "symbol": "Orchid",
+      "image": "/gifts/lucky_locket_4.png",
+      "price_ton": 22.45
+    },
+    {
+      "idx": 5,
+      "id": "lucky_locket-5",
+      "fragment_id": "luckylocket-11693",
+      "serial": 11693,
+      "model": "Oceanus",
+      "backdrop": "Old Gold",
+      "symbol": "Eikthyrnir",
+      "image": "/gifts/lucky_locket_5.png",
+      "price_ton": 25.53
+    },
+    {
+      "idx": 6,
+      "id": "lucky_locket-6",
+      "fragment_id": "luckylocket-21902",
+      "serial": 21902,
+      "model": "DOGE",
+      "backdrop": "Desert Sand",
+      "symbol": "Sweets Box",
+      "image": "/gifts/lucky_locket_6.png",
+      "price_ton": 26.52
+    }
+  ],
+  "Flying Broom": [
+    {
+      "idx": 1,
+      "id": "flying_broom-1",
+      "fragment_id": "flyingbroom-8684",
+      "serial": 8684,
+      "model": "Dusk Duster",
+      "backdrop": "Chestnut",
+      "symbol": "Sauron",
+      "image": "/gifts/flying_broom_1.png",
+      "price_ton": 15.33
+    },
+    {
+      "idx": 2,
+      "id": "flying_broom-2",
+      "fragment_id": "flyingbroom-10455",
+      "serial": 10455,
+      "model": "Pop Art",
+      "backdrop": "Rosewood",
+      "symbol": "Half Moon",
+      "image": "/gifts/flying_broom_2.png",
+      "price_ton": 15.34
+    },
+    {
+      "idx": 3,
+      "id": "flying_broom-3",
+      "fragment_id": "flyingbroom-10009",
+      "serial": 10009,
+      "model": "Zig-Zag",
+      "backdrop": "Moonstone",
+      "symbol": "Coffin",
+      "image": "/gifts/flying_broom_3.png",
+      "price_ton": 15.35
+    },
+    {
+      "idx": 4,
+      "id": "flying_broom-4",
+      "fragment_id": "flyingbroom-15891",
+      "serial": 15891,
+      "model": "Finish Line",
+      "backdrop": "Navy Blue",
+      "symbol": "Crow",
+      "image": "/gifts/flying_broom_4.png",
+      "price_ton": 15.36
+    },
+    {
+      "idx": 5,
+      "id": "flying_broom-5",
+      "fragment_id": "flyingbroom-20760",
+      "serial": 20760,
+      "model": "Visionary",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Bloody Axe",
+      "image": "/gifts/flying_broom_5.png",
+      "price_ton": 15.37
+    },
+    {
+      "idx": 6,
+      "id": "flying_broom-6",
+      "fragment_id": "flyingbroom-20774",
+      "serial": 20774,
+      "model": "Scribbler",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Eyeball",
+      "image": "/gifts/flying_broom_6.png",
+      "price_ton": 15.38
+    }
+  ],
+  "Skull Flower": [
+    {
+      "idx": 1,
+      "id": "skull_flower-1",
+      "fragment_id": "skullflower-8902",
+      "serial": 8902,
+      "model": "Technicolor",
+      "backdrop": "Light Olive",
+      "symbol": "Flying Witch",
+      "image": "/gifts/skull_flower_1.png",
+      "price_ton": 14.35
+    },
+    {
+      "idx": 2,
+      "id": "skull_flower-2",
+      "fragment_id": "skullflower-10076",
+      "serial": 10076,
+      "model": "Azalea",
+      "backdrop": "Light Olive",
+      "symbol": "Piggy Bank",
+      "image": "/gifts/skull_flower_2.png",
+      "price_ton": 15.4
+    },
+    {
+      "idx": 3,
+      "id": "skull_flower-3",
+      "fragment_id": "skullflower-1012",
+      "serial": 1012,
+      "model": "Pamplona",
+      "backdrop": "Indigo Dye",
+      "symbol": "Melon",
+      "image": "/gifts/skull_flower_3.png",
+      "price_ton": 15.41
+    },
+    {
+      "idx": 4,
+      "id": "skull_flower-4",
+      "fragment_id": "skullflower-17356",
+      "serial": 17356,
+      "model": "Carnation",
+      "backdrop": "Emerald",
+      "symbol": "Lovely Rose",
+      "image": "/gifts/skull_flower_4.png",
+      "price_ton": 15.42
+    },
+    {
+      "idx": 5,
+      "id": "skull_flower-5",
+      "fragment_id": "skullflower-20114",
+      "serial": 20114,
+      "model": "Marigold",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Night Bats",
+      "image": "/gifts/skull_flower_5.png",
+      "price_ton": 15.43
+    },
+    {
+      "idx": 6,
+      "id": "skull_flower-6",
+      "fragment_id": "skullflower-20153",
+      "serial": 20153,
+      "model": "Sunset",
+      "backdrop": "Silver Blue",
+      "symbol": "Nice Ghost",
+      "image": "/gifts/skull_flower_6.png",
+      "price_ton": 15.44
+    }
+  ],
+  "Sleigh Bell": [
+    {
+      "idx": 1,
+      "id": "sleigh_bell-1",
+      "fragment_id": "sleighbell-10550",
+      "serial": 10550,
+      "model": "Bronze",
+      "backdrop": "French Violet",
+      "symbol": "Oak Leaf",
+      "image": "/gifts/sleigh_bell_1.png",
+      "price_ton": 14.36
+    },
+    {
+      "idx": 2,
+      "id": "sleigh_bell-2",
+      "fragment_id": "sleighbell-11712",
+      "serial": 11712,
+      "model": "Faint Pearl",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Tricorne",
+      "image": "/gifts/sleigh_bell_2.png",
+      "price_ton": 14.37
+    },
+    {
+      "idx": 3,
+      "id": "sleigh_bell-3",
+      "fragment_id": "sleighbell-12853",
+      "serial": 12853,
+      "model": "Fairycore",
+      "backdrop": "Roman Silver",
+      "symbol": "Magic Hat",
+      "image": "/gifts/sleigh_bell_3.png",
+      "price_ton": 14.38
+    },
+    {
+      "idx": 4,
+      "id": "sleigh_bell-4",
+      "fragment_id": "sleighbell-15770",
+      "serial": 15770,
+      "model": "Truffle",
+      "backdrop": "Raspberry",
+      "symbol": "Astronaut",
+      "image": "/gifts/sleigh_bell_4.png",
+      "price_ton": 14.39
+    },
+    {
+      "idx": 5,
+      "id": "sleigh_bell-5",
+      "fragment_id": "sleighbell-17069",
+      "serial": 17069,
+      "model": "Piranha Plant",
+      "backdrop": "Pine Green",
+      "symbol": "Phoenix",
+      "image": "/gifts/sleigh_bell_5.png",
+      "price_ton": 14.4
+    },
+    {
+      "idx": 6,
+      "id": "sleigh_bell-6",
+      "fragment_id": "sleighbell-18821",
+      "serial": 18821,
+      "model": "Dark Orb",
+      "backdrop": "Pacific Green",
+      "symbol": "Crown",
+      "image": "/gifts/sleigh_bell_6.png",
+      "price_ton": 14.41
+    }
+  ],
+  "Love Candle": [
+    {
+      "idx": 1,
+      "id": "love_candle-1",
+      "fragment_id": "lovecandle-9868",
+      "serial": 9868,
+      "model": "Gentle Wind",
+      "backdrop": "Strawberry",
+      "symbol": "Ladybug",
+      "image": "/gifts/love_candle_1.png",
+      "price_ton": 13.29
+    },
+    {
+      "idx": 2,
+      "id": "love_candle-2",
+      "fragment_id": "lovecandle-12334",
+      "serial": 12334,
+      "model": "Gentle Wind",
+      "backdrop": "French Blue",
+      "symbol": "Butterfly",
+      "image": "/gifts/love_candle_2.png",
+      "price_ton": 13.3
+    },
+    {
+      "idx": 3,
+      "id": "love_candle-3",
+      "fragment_id": "lovecandle-17136",
+      "serial": 17136,
+      "model": "White Wax",
+      "backdrop": "Mystic Pearl",
+      "symbol": "Loveberry",
+      "image": "/gifts/love_candle_3.png",
+      "price_ton": 13.31
+    },
+    {
+      "idx": 4,
+      "id": "love_candle-4",
+      "fragment_id": "lovecandle-20933",
+      "serial": 20933,
+      "model": "Surprise",
+      "backdrop": "Cappuccino",
+      "symbol": "Pencil",
+      "image": "/gifts/love_candle_4.png",
+      "price_ton": 13.32
+    },
+    {
+      "idx": 5,
+      "id": "love_candle-5",
+      "fragment_id": "lovecandle-7900",
+      "serial": 7900,
+      "model": "Dreamscape",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Clover",
+      "image": "/gifts/love_candle_5.png",
+      "price_ton": 13.33
+    },
+    {
+      "idx": 6,
+      "id": "love_candle-6",
+      "fragment_id": "lovecandle-16482",
+      "serial": 16482,
+      "model": "Silver Temple",
+      "backdrop": "Orange",
+      "symbol": "Crab",
+      "image": "/gifts/love_candle_6.png",
+      "price_ton": 14.32
+    }
+  ],
+  "Record Player": [
+    {
+      "idx": 1,
+      "id": "record_player-1",
+      "fragment_id": "recordplayer-34811",
+      "serial": 34811,
+      "model": "Passion Funk",
+      "backdrop": "Carrot Juice",
+      "symbol": "Wepwawet",
+      "image": "/gifts/record_player_1.png",
+      "price_ton": 13.34
+    },
+    {
+      "idx": 2,
+      "id": "record_player-2",
+      "fragment_id": "recordplayer-14839",
+      "serial": 14839,
+      "model": "Acid Jazz",
+      "backdrop": "Chestnut",
+      "symbol": "Sea Horse",
+      "image": "/gifts/record_player_2.png",
+      "price_ton": 13.35
+    },
+    {
+      "idx": 3,
+      "id": "record_player-3",
+      "fragment_id": "recordplayer-30676",
+      "serial": 30676,
+      "model": "Lemonight",
+      "backdrop": "Azure Blue",
+      "symbol": "Planet",
+      "image": "/gifts/record_player_3.png",
+      "price_ton": 13.36
+    },
+    {
+      "idx": 4,
+      "id": "record_player-4",
+      "fragment_id": "recordplayer-35031",
+      "serial": 35031,
+      "model": "Acid Jazz",
+      "backdrop": "Rifle Green",
+      "symbol": "Clubs",
+      "image": "/gifts/record_player_4.png",
+      "price_ton": 13.37
+    },
+    {
+      "idx": 5,
+      "id": "record_player-5",
+      "fragment_id": "recordplayer-10226",
+      "serial": 10226,
+      "model": "Pink Records",
+      "backdrop": "Burnt Sienna",
+      "symbol": "Inguz Rune",
+      "image": "/gifts/record_player_5.png",
+      "price_ton": 13.38
+    },
+    {
+      "idx": 6,
+      "id": "record_player-6",
+      "fragment_id": "recordplayer-4133",
+      "serial": 4133,
+      "model": "Vanilla Sky",
+      "backdrop": "Pacific Green",
+      "symbol": "Holy Grail",
+      "image": "/gifts/record_player_6.png",
+      "price_ton": 13.39
+    }
+  ],
+  "Valentine Box": [
+    {
+      "idx": 1,
+      "id": "valentine_box-1",
+      "fragment_id": "valentinebox-31686",
+      "serial": 31686,
+      "model": "Fuse Box",
+      "backdrop": "Cappuccino",
+      "symbol": "La Corona",
+      "image": "/gifts/valentine_box_1.png",
+      "price_ton": 13.43
+    },
+    {
+      "idx": 2,
+      "id": "valentine_box-2",
+      "fragment_id": "valentinebox-15003",
+      "serial": 15003,
+      "model": "Vibrant",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Twin Peaks",
+      "image": "/gifts/valentine_box_2.png",
+      "price_ton": 14.43
+    },
+    {
+      "idx": 3,
+      "id": "valentine_box-3",
+      "fragment_id": "valentinebox-17832",
+      "serial": 17832,
+      "model": "Christmas",
+      "backdrop": "Turquoise",
+      "symbol": "Puzzle",
+      "image": "/gifts/valentine_box_3.png",
+      "price_ton": 14.44
+    },
+    {
+      "idx": 4,
+      "id": "valentine_box-4",
+      "fragment_id": "valentinebox-19096",
+      "serial": 19096,
+      "model": "Nikola Tesla",
+      "backdrop": "Turquoise",
+      "symbol": "Cupid’s Arrow",
+      "image": "/gifts/valentine_box_4.png",
+      "price_ton": 14.45
+    },
+    {
+      "idx": 5,
+      "id": "valentine_box-5",
+      "fragment_id": "valentinebox-35328",
+      "serial": 35328,
+      "model": "Outline",
+      "backdrop": "Grape",
+      "symbol": "Lovely Bra",
+      "image": "/gifts/valentine_box_5.png",
+      "price_ton": 15.45
+    },
+    {
+      "idx": 6,
+      "id": "valentine_box-6",
+      "fragment_id": "valentinebox-35262",
+      "serial": 35262,
+      "model": "Choco Mint",
+      "backdrop": "Lemongrass",
+      "symbol": "Banana",
+      "image": "/gifts/valentine_box_6.png",
+      "price_ton": 15.46
+    }
+  ],
+  "Sakura Flower": [
+    {
+      "idx": 1,
+      "id": "sakura_flower-1",
+      "fragment_id": "sakuraflower-33800",
+      "serial": 33800,
+      "model": "Floraven",
+      "backdrop": "Pacific Green",
+      "symbol": "Legionary",
+      "image": "/gifts/sakura_flower_1.png",
+      "price_ton": 12.31
+    },
+    {
+      "idx": 2,
+      "id": "sakura_flower-2",
+      "fragment_id": "sakuraflower-43427",
+      "serial": 43427,
+      "model": "Nectarium",
+      "backdrop": "Battleship Grey",
+      "symbol": "Dessert",
+      "image": "/gifts/sakura_flower_2.png",
+      "price_ton": 12.32
+    },
+    {
+      "idx": 3,
+      "id": "sakura_flower-3",
+      "fragment_id": "sakuraflower-19954",
+      "serial": 19954,
+      "model": "Oxalis",
+      "backdrop": "Copper",
+      "symbol": "Cocktail",
+      "image": "/gifts/sakura_flower_3.png",
+      "price_ton": 12.33
+    },
+    {
+      "idx": 4,
+      "id": "sakura_flower-4",
+      "fragment_id": "sakuraflower-60148",
+      "serial": 60148,
+      "model": "Seraphina",
+      "backdrop": "Indigo Dye",
+      "symbol": "Moai Head",
+      "image": "/gifts/sakura_flower_4.png",
+      "price_ton": 12.34
+    },
+    {
+      "idx": 5,
+      "id": "sakura_flower-5",
+      "fragment_id": "sakuraflower-76648",
+      "serial": 76648,
+      "model": "Eclipsia",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Spider Web",
+      "image": "/gifts/sakura_flower_5.png",
+      "price_ton": 12.35
+    },
+    {
+      "idx": 6,
+      "id": "sakura_flower-6",
+      "fragment_id": "sakuraflower-87792",
+      "serial": 87792,
+      "model": "Oxalis",
+      "backdrop": "Dark Green",
+      "symbol": "Magic Wand",
+      "image": "/gifts/sakura_flower_6.png",
+      "price_ton": 12.36
+    }
+  ],
+  "Top Hat": [
+    {
+      "idx": 1,
+      "id": "top_hat-1",
+      "fragment_id": "tophat-20131",
+      "serial": 20131,
+      "model": "Limoncello",
+      "backdrop": "Cyberpunk",
+      "symbol": "Ramen",
+      "image": "/gifts/top_hat_1.png",
+      "price_ton": 12.38
+    },
+    {
+      "idx": 2,
+      "id": "top_hat-2",
+      "fragment_id": "tophat-29225",
+      "serial": 29225,
+      "model": "Limoncello",
+      "backdrop": "Aquamarine",
+      "symbol": "High Heels",
+      "image": "/gifts/top_hat_2.png",
+      "price_ton": 12.39
+    },
+    {
+      "idx": 3,
+      "id": "top_hat-3",
+      "fragment_id": "tophat-15520",
+      "serial": 15520,
+      "model": "Graphite",
+      "backdrop": "Sky Blue",
+      "symbol": "Ring",
+      "image": "/gifts/top_hat_3.png",
+      "price_ton": 13.4
+    },
+    {
+      "idx": 4,
+      "id": "top_hat-4",
+      "fragment_id": "tophat-27512",
+      "serial": 27512,
+      "model": "Low Rider",
+      "backdrop": "Silver Blue",
+      "symbol": "Shooting Star",
+      "image": "/gifts/top_hat_4.png",
+      "price_ton": 13.41
+    },
+    {
+      "idx": 5,
+      "id": "top_hat-5",
+      "fragment_id": "tophat-28333",
+      "serial": 28333,
+      "model": "Crosswalk",
+      "backdrop": "Emerald",
+      "symbol": "Lion King",
+      "image": "/gifts/top_hat_5.png",
+      "price_ton": 13.42
+    },
+    {
+      "idx": 6,
+      "id": "top_hat-6",
+      "fragment_id": "tophat-20639",
+      "serial": 20639,
+      "model": "Charlie",
+      "backdrop": "Electric Purple",
+      "symbol": "Watching Sun",
+      "image": "/gifts/top_hat_6.png",
+      "price_ton": 14.42
+    }
+  ],
+  "Hanging Star": [
+    {
+      "idx": 1,
+      "id": "hanging_star-1",
+      "fragment_id": "hangingstar-30195",
+      "serial": 30195,
+      "model": "Fusion",
+      "backdrop": "Platinum",
+      "symbol": "New Year’s Eve",
+      "image": "/gifts/hanging_star_1.png",
+      "price_ton": 11.22
+    },
+    {
+      "idx": 2,
+      "id": "hanging_star-2",
+      "fragment_id": "hangingstar-30205",
+      "serial": 30205,
+      "model": "Fusion",
+      "backdrop": "Coral Red",
+      "symbol": "Dessert",
+      "image": "/gifts/hanging_star_2.png",
+      "price_ton": 11.23
+    },
+    {
+      "idx": 3,
+      "id": "hanging_star-3",
+      "fragment_id": "hangingstar-12266",
+      "serial": 12266,
+      "model": "Gray Sage",
+      "backdrop": "Navy Blue",
+      "symbol": "Cupcake",
+      "image": "/gifts/hanging_star_3.png",
+      "price_ton": 11.24
+    },
+    {
+      "idx": 4,
+      "id": "hanging_star-4",
+      "fragment_id": "hangingstar-13409",
+      "serial": 13409,
+      "model": "Spotty",
+      "backdrop": "Mint Green",
+      "symbol": "Christmas Tree",
+      "image": "/gifts/hanging_star_4.png",
+      "price_ton": 11.25
+    },
+    {
+      "idx": 5,
+      "id": "hanging_star-5",
+      "fragment_id": "hangingstar-15676",
+      "serial": 15676,
+      "model": "Venice",
+      "backdrop": "Khaki Green",
+      "symbol": "Ice Pop",
+      "image": "/gifts/hanging_star_5.png",
+      "price_ton": 11.26
+    },
+    {
+      "idx": 6,
+      "id": "hanging_star-6",
+      "fragment_id": "hangingstar-21792",
+      "serial": 21792,
+      "model": "Lilac Split",
+      "backdrop": "Khaki Green",
+      "symbol": "Koala",
+      "image": "/gifts/hanging_star_6.png",
+      "price_ton": 11.27
+    }
+  ],
+  "Joyful Bundle": [
+    {
+      "idx": 1,
+      "id": "joyful_bundle-1",
+      "fragment_id": "joyfulbundle-52381",
+      "serial": 52381,
+      "model": "Lovesick",
+      "backdrop": "Persimmon",
+      "symbol": "Nemes",
+      "image": "/gifts/joyful_bundle_1.png",
+      "price_ton": 11.3
+    },
+    {
+      "idx": 2,
+      "id": "joyful_bundle-2",
+      "fragment_id": "joyfulbundle-37815",
+      "serial": 37815,
+      "model": "Pool Party",
+      "backdrop": "Marine Blue",
+      "symbol": "Unicorn Head",
+      "image": "/gifts/joyful_bundle_2.png",
+      "price_ton": 11.31
+    },
+    {
+      "idx": 3,
+      "id": "joyful_bundle-3",
+      "fragment_id": "joyfulbundle-70692",
+      "serial": 70692,
+      "model": "The Big Bang",
+      "backdrop": "Gunmetal",
+      "symbol": "Thunderbird",
+      "image": "/gifts/joyful_bundle_3.png",
+      "price_ton": 11.32
+    },
+    {
+      "idx": 4,
+      "id": "joyful_bundle-4",
+      "fragment_id": "joyfulbundle-2882",
+      "serial": 2882,
+      "model": "Ninja Turtles",
+      "backdrop": "Celtic Blue",
+      "symbol": "Sakura",
+      "image": "/gifts/joyful_bundle_4.png",
+      "price_ton": 12.28
+    },
+    {
+      "idx": 5,
+      "id": "joyful_bundle-5",
+      "fragment_id": "joyfulbundle-46768",
+      "serial": 46768,
+      "model": "Antarctica",
+      "backdrop": "Feldgrau",
+      "symbol": "Bike Helmet",
+      "image": "/gifts/joyful_bundle_5.png",
+      "price_ton": 12.29
+    },
+    {
+      "idx": 6,
+      "id": "joyful_bundle-6",
+      "fragment_id": "joyfulbundle-49048",
+      "serial": 49048,
+      "model": "Ladypug",
+      "backdrop": "Seal Brown",
+      "symbol": "Scarab",
+      "image": "/gifts/joyful_bundle_6.png",
+      "price_ton": 12.3
+    }
+  ],
+  "Berry Box": [
+    {
+      "idx": 1,
+      "id": "berry_box-1",
+      "fragment_id": "berrybox-29950",
+      "serial": 29950,
+      "model": "Harlequin",
+      "backdrop": "Lemongrass",
+      "symbol": "Diamond",
+      "image": "/gifts/berry_box_1.png",
+      "price_ton": 10.2
+    },
+    {
+      "idx": 2,
+      "id": "berry_box-2",
+      "fragment_id": "berrybox-43980",
+      "serial": 43980,
+      "model": "Spring",
+      "backdrop": "Copper",
+      "symbol": "Fluffy Wolf",
+      "image": "/gifts/berry_box_2.png",
+      "price_ton": 10.21
+    },
+    {
+      "idx": 3,
+      "id": "berry_box-3",
+      "fragment_id": "berrybox-15534",
+      "serial": 15534,
+      "model": "Spring",
+      "backdrop": "Emerald",
+      "symbol": "Car",
+      "image": "/gifts/berry_box_3.png",
+      "price_ton": 10.22
+    },
+    {
+      "idx": 4,
+      "id": "berry_box-4",
+      "fragment_id": "berrybox-26808",
+      "serial": 26808,
+      "model": "Spring",
+      "backdrop": "Azure Blue",
+      "symbol": "Rain Drop",
+      "image": "/gifts/berry_box_4.png",
+      "price_ton": 10.23
+    },
+    {
+      "idx": 5,
+      "id": "berry_box-5",
+      "fragment_id": "berrybox-27127",
+      "serial": 27127,
+      "model": "Spring",
+      "backdrop": "Navy Blue",
+      "symbol": "Scorpion",
+      "image": "/gifts/berry_box_5.png",
+      "price_ton": 10.24
+    },
+    {
+      "idx": 6,
+      "id": "berry_box-6",
+      "fragment_id": "berrybox-27261",
+      "serial": 27261,
+      "model": "Spring",
+      "backdrop": "Aquamarine",
+      "symbol": "Drug",
+      "image": "/gifts/berry_box_6.png",
+      "price_ton": 10.25
+    }
+  ],
+  "Snow Mittens": [
+    {
+      "idx": 1,
+      "id": "snow_mittens-1",
+      "fragment_id": "snowmittens-20208",
+      "serial": 20208,
+      "model": "Brown Suede",
+      "backdrop": "Pure Gold",
+      "symbol": "Cupcake",
+      "image": "/gifts/snow_mittens_1.png",
+      "price_ton": 10.39
+    },
+    {
+      "idx": 2,
+      "id": "snow_mittens-2",
+      "fragment_id": "snowmittens-30356",
+      "serial": 30356,
+      "model": "Sencha",
+      "backdrop": "Persimmon",
+      "symbol": "Chest",
+      "image": "/gifts/snow_mittens_2.png",
+      "price_ton": 10.4
+    },
+    {
+      "idx": 3,
+      "id": "snow_mittens-3",
+      "fragment_id": "snowmittens-13067",
+      "serial": 13067,
+      "model": "Mauvelous",
+      "backdrop": "Coral Red",
+      "symbol": "Christmas Tree",
+      "image": "/gifts/snow_mittens_3.png",
+      "price_ton": 10.41
+    },
+    {
+      "idx": 4,
+      "id": "snow_mittens-4",
+      "fragment_id": "snowmittens-16513",
+      "serial": 16513,
+      "model": "Orchid",
+      "backdrop": "Malachite",
+      "symbol": "Rudolph",
+      "image": "/gifts/snow_mittens_4.png",
+      "price_ton": 10.42
+    },
+    {
+      "idx": 5,
+      "id": "snow_mittens-5",
+      "fragment_id": "snowmittens-16729",
+      "serial": 16729,
+      "model": "Cute Bunnies",
+      "backdrop": "Shamrock Green",
+      "symbol": "Gingerbread",
+      "image": "/gifts/snow_mittens_5.png",
+      "price_ton": 10.43
+    },
+    {
+      "idx": 6,
+      "id": "snow_mittens-6",
+      "fragment_id": "snowmittens-19027",
+      "serial": 19027,
+      "model": "Orchid",
+      "backdrop": "Turquoise",
+      "symbol": "Moose Head",
+      "image": "/gifts/snow_mittens_6.png",
+      "price_ton": 10.44
+    }
+  ],
+  "Bunny Muffin": [
+    {
+      "idx": 1,
+      "id": "bunny_muffin-1",
+      "fragment_id": "bunnymuffin-577",
+      "serial": 577,
+      "model": "Space Drive",
+      "backdrop": "Lemongrass",
+      "symbol": "Dessert",
+      "image": "/gifts/bunny_muffin_1.png",
+      "price_ton": 9.18
+    },
+    {
+      "idx": 2,
+      "id": "bunny_muffin-2",
+      "fragment_id": "bunnymuffin-14228",
+      "serial": 14228,
+      "model": "Young Chili",
+      "backdrop": "Neon Blue",
+      "symbol": "Bubbles",
+      "image": "/gifts/bunny_muffin_2.png",
+      "price_ton": 10.26
+    },
+    {
+      "idx": 3,
+      "id": "bunny_muffin-3",
+      "fragment_id": "bunnymuffin-14309",
+      "serial": 14309,
+      "model": "Young Chili",
+      "backdrop": "Shamrock Green",
+      "symbol": "Flirty Message",
+      "image": "/gifts/bunny_muffin_3.png",
+      "price_ton": 10.27
+    },
+    {
+      "idx": 4,
+      "id": "bunny_muffin-4",
+      "fragment_id": "bunnymuffin-35812",
+      "serial": 35812,
+      "model": "Orange Bliss",
+      "backdrop": "Satin Gold",
+      "symbol": "Cherry",
+      "image": "/gifts/bunny_muffin_4.png",
+      "price_ton": 10.28
+    },
+    {
+      "idx": 5,
+      "id": "bunny_muffin-5",
+      "fragment_id": "bunnymuffin-14354",
+      "serial": 14354,
+      "model": "Сhamomile",
+      "backdrop": "Indigo Dye",
+      "symbol": "Aubergine",
+      "image": "/gifts/bunny_muffin_5.png",
+      "price_ton": 10.29
+    },
+    {
+      "idx": 6,
+      "id": "bunny_muffin-6",
+      "fragment_id": "bunnymuffin-14404",
+      "serial": 14404,
+      "model": "Lava Cake",
+      "backdrop": "Caramel",
+      "symbol": "Celtic Cross",
+      "image": "/gifts/bunny_muffin_6.png",
+      "price_ton": 10.3
+    }
+  ],
+  "Evil Eye": [
+    {
+      "idx": 1,
+      "id": "evil_eye-1",
+      "fragment_id": "evileye-43197",
+      "serial": 43197,
+      "model": "Solar Flare",
+      "backdrop": "Neon Blue",
+      "symbol": "Black Widow",
+      "image": "/gifts/evil_eye_1.png",
+      "price_ton": 9.21
+    },
+    {
+      "idx": 2,
+      "id": "evil_eye-2",
+      "fragment_id": "evileye-21837",
+      "serial": 21837,
+      "model": "Direct Current",
+      "backdrop": "Mint Green",
+      "symbol": "Leaf",
+      "image": "/gifts/evil_eye_2.png",
+      "price_ton": 9.22
+    },
+    {
+      "idx": 3,
+      "id": "evil_eye-3",
+      "fragment_id": "evileye-33563",
+      "serial": 33563,
+      "model": "Starlight",
+      "backdrop": "Lemongrass",
+      "symbol": "Half Moon",
+      "image": "/gifts/evil_eye_3.png",
+      "price_ton": 9.23
+    },
+    {
+      "idx": 4,
+      "id": "evil_eye-4",
+      "fragment_id": "evileye-40263",
+      "serial": 40263,
+      "model": "Do Not Disturb",
+      "backdrop": "Light Olive",
+      "symbol": "Palette",
+      "image": "/gifts/evil_eye_4.png",
+      "price_ton": 9.24
+    },
+    {
+      "idx": 5,
+      "id": "evil_eye-5",
+      "fragment_id": "evileye-59475",
+      "serial": 59475,
+      "model": "Baltic Amber",
+      "backdrop": "Sky Blue",
+      "symbol": "Spanner",
+      "image": "/gifts/evil_eye_5.png",
+      "price_ton": 10.33
+    },
+    {
+      "idx": 6,
+      "id": "evil_eye-6",
+      "fragment_id": "evileye-16493",
+      "serial": 16493,
+      "model": "Direct Current",
+      "backdrop": "English Violet",
+      "symbol": "Eggplant",
+      "image": "/gifts/evil_eye_6.png",
+      "price_ton": 10.34
+    }
+  ],
+  "Jelly Bunny": [
+    {
+      "idx": 1,
+      "id": "jelly_bunny-1",
+      "fragment_id": "jellybunny-36868",
+      "serial": 36868,
+      "model": "Smelly",
+      "backdrop": "Electric Purple",
+      "symbol": "Pineapple",
+      "image": "/gifts/jelly_bunny_1.png",
+      "price_ton": 9.26
+    },
+    {
+      "idx": 2,
+      "id": "jelly_bunny-2",
+      "fragment_id": "jellybunny-6060",
+      "serial": 6060,
+      "model": "Mutated",
+      "backdrop": "Khaki Green",
+      "symbol": "Leaf",
+      "image": "/gifts/jelly_bunny_2.png",
+      "price_ton": 9.27
+    },
+    {
+      "idx": 3,
+      "id": "jelly_bunny-3",
+      "fragment_id": "jellybunny-11745",
+      "serial": 11745,
+      "model": "Commando",
+      "backdrop": "English Violet",
+      "symbol": "Plume",
+      "image": "/gifts/jelly_bunny_3.png",
+      "price_ton": 10.36
+    },
+    {
+      "idx": 4,
+      "id": "jelly_bunny-4",
+      "fragment_id": "jellybunny-31594",
+      "serial": 31594,
+      "model": "Stiches",
+      "backdrop": "Coral Red",
+      "symbol": "Rain Drop",
+      "image": "/gifts/jelly_bunny_4.png",
+      "price_ton": 10.37
+    },
+    {
+      "idx": 5,
+      "id": "jelly_bunny-5",
+      "fragment_id": "jellybunny-102616",
+      "serial": 102616,
+      "model": "Meat Jelly",
+      "backdrop": "Light Olive",
+      "symbol": "Birthday Cake",
+      "image": "/gifts/jelly_bunny_5.png",
+      "price_ton": 11.28
+    },
+    {
+      "idx": 6,
+      "id": "jelly_bunny-6",
+      "fragment_id": "jellybunny-102978",
+      "serial": 102978,
+      "model": "Dad Joke",
+      "backdrop": "Pine Green",
+      "symbol": "Love Letter",
+      "image": "/gifts/jelly_bunny_6.png",
+      "price_ton": 11.29
+    }
+  ],
+  "Snow Globe": [
+    {
+      "idx": 1,
+      "id": "snow_globe-1",
+      "fragment_id": "snowglobe-7020",
+      "serial": 7020,
+      "model": "Sea Whisper",
+      "backdrop": "Persimmon",
+      "symbol": "Pirate Hat",
+      "image": "/gifts/snow_globe_1.png",
+      "price_ton": 8.28
+    },
+    {
+      "idx": 2,
+      "id": "snow_globe-2",
+      "fragment_id": "snowglobe-17524",
+      "serial": 17524,
+      "model": "Lost Color",
+      "backdrop": "Gunship Green",
+      "symbol": "Jingle Bell",
+      "image": "/gifts/snow_globe_2.png",
+      "price_ton": 8.29
+    },
+    {
+      "idx": 3,
+      "id": "snow_globe-3",
+      "fragment_id": "snowglobe-33973",
+      "serial": 33973,
+      "model": "Green Villa",
+      "backdrop": "Orange",
+      "symbol": "Chest",
+      "image": "/gifts/snow_globe_3.png",
+      "price_ton": 8.3
+    },
+    {
+      "idx": 4,
+      "id": "snow_globe-4",
+      "fragment_id": "snowglobe-35131",
+      "serial": 35131,
+      "model": "Lost Color",
+      "backdrop": "Mint Green",
+      "symbol": "Kite",
+      "image": "/gifts/snow_globe_4.png",
+      "price_ton": 8.31
+    },
+    {
+      "idx": 5,
+      "id": "snow_globe-5",
+      "fragment_id": "snowglobe-3578",
+      "serial": 3578,
+      "model": "Bronze Temple",
+      "backdrop": "Tomato",
+      "symbol": "Ornament",
+      "image": "/gifts/snow_globe_5.png",
+      "price_ton": 8.32
+    },
+    {
+      "idx": 6,
+      "id": "snow_globe-6",
+      "fragment_id": "snowglobe-42149",
+      "serial": 42149,
+      "model": "Lost Color",
+      "backdrop": "Mexican Pink",
+      "symbol": "Santa Hat",
+      "image": "/gifts/snow_globe_6.png",
+      "price_ton": 8.33
+    }
+  ],
+  "Bow Tie": [
+    {
+      "idx": 1,
+      "id": "bow_tie-1",
+      "fragment_id": "bowtie-15505",
+      "serial": 15505,
+      "model": "The Serpent",
+      "backdrop": "Sky Blue",
+      "symbol": "Hersir",
+      "image": "/gifts/bow_tie_1.png",
+      "price_ton": 7.25
+    },
+    {
+      "idx": 2,
+      "id": "bow_tie-2",
+      "fragment_id": "bowtie-5514",
+      "serial": 5514,
+      "model": "Ladybug",
+      "backdrop": "Satin Gold",
+      "symbol": "Money Bag",
+      "image": "/gifts/bow_tie_2.png",
+      "price_ton": 7.26
+    },
+    {
+      "idx": 3,
+      "id": "bow_tie-3",
+      "fragment_id": "bowtie-32870",
+      "serial": 32870,
+      "model": "Bordeaux",
+      "backdrop": "Battleship Grey",
+      "symbol": "Avocado",
+      "image": "/gifts/bow_tie_3.png",
+      "price_ton": 7.27
+    },
+    {
+      "idx": 4,
+      "id": "bow_tie-4",
+      "fragment_id": "bowtie-13336",
+      "serial": 13336,
+      "model": "Mistletoe",
+      "backdrop": "Lavender",
+      "symbol": "Paw",
+      "image": "/gifts/bow_tie_4.png",
+      "price_ton": 7.28
+    },
+    {
+      "idx": 5,
+      "id": "bow_tie-5",
+      "fragment_id": "bowtie-14362",
+      "serial": 14362,
+      "model": "Modern Art",
+      "backdrop": "Silver Blue",
+      "symbol": "Iron Helmet",
+      "image": "/gifts/bow_tie_5.png",
+      "price_ton": 7.29
+    },
+    {
+      "idx": 6,
+      "id": "bow_tie-6",
+      "fragment_id": "bowtie-10725",
+      "serial": 10725,
+      "model": "Irish Knot",
+      "backdrop": "Tomato",
+      "symbol": "Hazelnut",
+      "image": "/gifts/bow_tie_6.png",
+      "price_ton": 7.3
+    }
+  ],
+  "Desk Calendar": [
+    {
+      "idx": 1,
+      "id": "desk_calendar-1",
+      "fragment_id": "deskcalendar-31063",
+      "serial": 31063,
+      "model": "Magic Flow",
+      "backdrop": "Amber",
+      "symbol": "Key",
+      "image": "/gifts/desk_calendar_1.png",
+      "price_ton": 7.33
+    },
+    {
+      "idx": 2,
+      "id": "desk_calendar-2",
+      "fragment_id": "deskcalendar-335912",
+      "serial": 335912,
+      "model": "Toy Calendar",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Bread",
+      "image": "/gifts/desk_calendar_2.png",
+      "price_ton": 7.34
+    },
+    {
+      "idx": 3,
+      "id": "desk_calendar-3",
+      "fragment_id": "deskcalendar-299259",
+      "serial": 299259,
+      "model": "April",
+      "backdrop": "Purple",
+      "symbol": "Leaf",
+      "image": "/gifts/desk_calendar_3.png",
+      "price_ton": 7.35
+    },
+    {
+      "idx": 4,
+      "id": "desk_calendar-4",
+      "fragment_id": "deskcalendar-298388",
+      "serial": 298388,
+      "model": "Party Time",
+      "backdrop": "Platinum",
+      "symbol": "Rhino Warrior",
+      "image": "/gifts/desk_calendar_4.png",
+      "price_ton": 7.36
+    },
+    {
+      "idx": 5,
+      "id": "desk_calendar-5",
+      "fragment_id": "deskcalendar-307160",
+      "serial": 307160,
+      "model": "Golden Touch",
+      "backdrop": "Ivory White",
+      "symbol": "Pyramid",
+      "image": "/gifts/desk_calendar_5.png",
+      "price_ton": 7.37
+    },
+    {
+      "idx": 6,
+      "id": "desk_calendar-6",
+      "fragment_id": "deskcalendar-123638",
+      "serial": 123638,
+      "model": "Groundhog Day",
+      "backdrop": "Persimmon",
+      "symbol": "Apple",
+      "image": "/gifts/desk_calendar_6.png",
+      "price_ton": 7.38
+    }
+  ],
+  "Eternal Candle": [
+    {
+      "idx": 1,
+      "id": "eternal_candle-1",
+      "fragment_id": "eternalcandle-16114",
+      "serial": 16114,
+      "model": "Hot Emerald",
+      "backdrop": "Lavender",
+      "symbol": "Gold",
+      "image": "/gifts/eternal_candle_1.png",
+      "price_ton": 7.39
+    },
+    {
+      "idx": 2,
+      "id": "eternal_candle-2",
+      "fragment_id": "eternalcandle-23466",
+      "serial": 23466,
+      "model": "Bronze Rose",
+      "backdrop": "Persimmon",
+      "symbol": "Eggplant",
+      "image": "/gifts/eternal_candle_2.png",
+      "price_ton": 7.4
+    },
+    {
+      "idx": 3,
+      "id": "eternal_candle-3",
+      "fragment_id": "eternalcandle-30142",
+      "serial": 30142,
+      "model": "Gold Stars",
+      "backdrop": "Chocolate",
+      "symbol": "Gamepad",
+      "image": "/gifts/eternal_candle_3.png",
+      "price_ton": 7.41
+    },
+    {
+      "idx": 4,
+      "id": "eternal_candle-4",
+      "fragment_id": "eternalcandle-7240",
+      "serial": 7240,
+      "model": "Gradient Wax",
+      "backdrop": "Chestnut",
+      "symbol": "Black Widow",
+      "image": "/gifts/eternal_candle_4.png",
+      "price_ton": 7.42
+    },
+    {
+      "idx": 5,
+      "id": "eternal_candle-5",
+      "fragment_id": "eternalcandle-13312",
+      "serial": 13312,
+      "model": "Coastal Cove",
+      "backdrop": "Battleship Grey",
+      "symbol": "Rain Drop",
+      "image": "/gifts/eternal_candle_5.png",
+      "price_ton": 7.43
+    },
+    {
+      "idx": 6,
+      "id": "eternal_candle-6",
+      "fragment_id": "eternalcandle-15363",
+      "serial": 15363,
+      "model": "Thick Honey",
+      "backdrop": "Mint Green",
+      "symbol": "Moon",
+      "image": "/gifts/eternal_candle_6.png",
+      "price_ton": 7.44
+    }
+  ],
+  "Faith Amulet": [
+    {
+      "idx": 1,
+      "id": "faith_amulet-1",
+      "fragment_id": "faithamulet-27689",
+      "serial": 27689,
+      "model": "Starlace",
+      "backdrop": "Deep Cyan",
+      "symbol": "Moose Head",
+      "image": "/gifts/faith_amulet_1.png",
+      "price_ton": 7.45
+    },
+    {
+      "idx": 2,
+      "id": "faith_amulet-2",
+      "fragment_id": "faithamulet-138609",
+      "serial": 138609,
+      "model": "Constellation",
+      "backdrop": "French Blue",
+      "symbol": "Pearl",
+      "image": "/gifts/faith_amulet_2.png",
+      "price_ton": 7.46
+    },
+    {
+      "idx": 3,
+      "id": "faith_amulet-3",
+      "fragment_id": "faithamulet-140946",
+      "serial": 140946,
+      "model": "Serenity",
+      "backdrop": "Desert Sand",
+      "symbol": "Ice Pop",
+      "image": "/gifts/faith_amulet_3.png",
+      "price_ton": 7.47
+    },
+    {
+      "idx": 4,
+      "id": "faith_amulet-4",
+      "fragment_id": "faithamulet-140950",
+      "serial": 140950,
+      "model": "Constellation",
+      "backdrop": "Emerald",
+      "symbol": "Paper Lantern",
+      "image": "/gifts/faith_amulet_4.png",
+      "price_ton": 7.48
+    },
+    {
+      "idx": 5,
+      "id": "faith_amulet-5",
+      "fragment_id": "faithamulet-44391",
+      "serial": 44391,
+      "model": "Constellation",
+      "backdrop": "Dark Green",
+      "symbol": "Ball",
+      "image": "/gifts/faith_amulet_5.png",
+      "price_ton": 7.49
+    },
+    {
+      "idx": 6,
+      "id": "faith_amulet-6",
+      "fragment_id": "faithamulet-72049",
+      "serial": 72049,
+      "model": "Emerald",
+      "backdrop": "Neon Blue",
+      "symbol": "Maple Leaf",
+      "image": "/gifts/faith_amulet_6.png",
+      "price_ton": 7.5
+    }
+  ],
+  "Hex Pot": [
+    {
+      "idx": 1,
+      "id": "hex_pot-1",
+      "fragment_id": "hexpot-14971",
+      "serial": 14971,
+      "model": "Malibu",
+      "backdrop": "Emerald",
+      "symbol": "Night Bats",
+      "image": "/gifts/hex_pot_1.png",
+      "price_ton": 7.51
+    },
+    {
+      "idx": 2,
+      "id": "hex_pot-2",
+      "fragment_id": "hexpot-19993",
+      "serial": 19993,
+      "model": "Amethyst",
+      "backdrop": "Ivory White",
+      "symbol": "Unicorn",
+      "image": "/gifts/hex_pot_2.png",
+      "price_ton": 7.52
+    },
+    {
+      "idx": 3,
+      "id": "hex_pot-3",
+      "fragment_id": "hexpot-26044",
+      "serial": 26044,
+      "model": "Melon Brew",
+      "backdrop": "Mystic Pearl",
+      "symbol": "Treats",
+      "image": "/gifts/hex_pot_3.png",
+      "price_ton": 7.53
+    },
+    {
+      "idx": 4,
+      "id": "hex_pot-4",
+      "fragment_id": "hexpot-5946",
+      "serial": 5946,
+      "model": "Gummy Worm",
+      "backdrop": "Lavender",
+      "symbol": "Skull",
+      "image": "/gifts/hex_pot_4.png",
+      "price_ton": 7.54
+    },
+    {
+      "idx": 5,
+      "id": "hex_pot-5",
+      "fragment_id": "hexpot-26873",
+      "serial": 26873,
+      "model": "Rainbow Pearl",
+      "backdrop": "Pacific Green",
+      "symbol": "Skull",
+      "image": "/gifts/hex_pot_5.png",
+      "price_ton": 8.16
+    },
+    {
+      "idx": 6,
+      "id": "hex_pot-6",
+      "fragment_id": "hexpot-3832",
+      "serial": 3832,
+      "model": "Skygold",
+      "backdrop": "Raspberry",
+      "symbol": "Ball",
+      "image": "/gifts/hex_pot_6.png",
+      "price_ton": 8.17
+    }
+  ],
+  "Light Sword": [
+    {
+      "idx": 1,
+      "id": "light_sword-1",
+      "fragment_id": "lightsword-28548",
+      "serial": 28548,
+      "model": "Jet Fuel",
+      "backdrop": "Malachite",
+      "symbol": "Gingerbread",
+      "image": "/gifts/light_sword_1.png",
+      "price_ton": 7.57
+    },
+    {
+      "idx": 2,
+      "id": "light_sword-2",
+      "fragment_id": "lightsword-116569",
+      "serial": 116569,
+      "model": "Toy Blade",
+      "backdrop": "Burgundy",
+      "symbol": "Paper Lantern",
+      "image": "/gifts/light_sword_2.png",
+      "price_ton": 7.58
+    },
+    {
+      "idx": 3,
+      "id": "light_sword-3",
+      "fragment_id": "lightsword-20205",
+      "serial": 20205,
+      "model": "Lotus Saber",
+      "backdrop": "Dark Green",
+      "symbol": "Brain",
+      "image": "/gifts/light_sword_3.png",
+      "price_ton": 7.59
+    },
+    {
+      "idx": 4,
+      "id": "light_sword-4",
+      "fragment_id": "lightsword-36855",
+      "serial": 36855,
+      "model": "Stick",
+      "backdrop": "Moonstone",
+      "symbol": "Wagasa",
+      "image": "/gifts/light_sword_4.png",
+      "price_ton": 7.6
+    },
+    {
+      "idx": 5,
+      "id": "light_sword-5",
+      "fragment_id": "lightsword-47347",
+      "serial": 47347,
+      "model": "Stick",
+      "backdrop": "Celtic Blue",
+      "symbol": "Burger",
+      "image": "/gifts/light_sword_5.png",
+      "price_ton": 7.61
+    },
+    {
+      "idx": 6,
+      "id": "light_sword-6",
+      "fragment_id": "lightsword-50418",
+      "serial": 50418,
+      "model": "Stick",
+      "backdrop": "Indigo Dye",
+      "symbol": "Fish",
+      "image": "/gifts/light_sword_6.png",
+      "price_ton": 7.62
+    }
+  ],
+  "Lush Bouquet": [
+    {
+      "idx": 1,
+      "id": "lush_bouquet-1",
+      "fragment_id": "lushbouquet-90579",
+      "serial": 90579,
+      "model": "Cabbage",
+      "backdrop": "Platinum",
+      "symbol": "Press Hat",
+      "image": "/gifts/lush_bouquet_1.png",
+      "price_ton": 7.63
+    },
+    {
+      "idx": 2,
+      "id": "lush_bouquet-2",
+      "fragment_id": "lushbouquet-93014",
+      "serial": 93014,
+      "model": "Mushrooms",
+      "backdrop": "Purple",
+      "symbol": "Broken Heart",
+      "image": "/gifts/lush_bouquet_2.png",
+      "price_ton": 7.64
+    },
+    {
+      "idx": 3,
+      "id": "lush_bouquet-3",
+      "fragment_id": "lushbouquet-14540",
+      "serial": 14540,
+      "model": "Cabbage",
+      "backdrop": "Satin Gold",
+      "symbol": "Lily Bloom",
+      "image": "/gifts/lush_bouquet_3.png",
+      "price_ton": 7.65
+    },
+    {
+      "idx": 4,
+      "id": "lush_bouquet-4",
+      "fragment_id": "lushbouquet-22680",
+      "serial": 22680,
+      "model": "Yarn Balls",
+      "backdrop": "Marine Blue",
+      "symbol": "Flower",
+      "image": "/gifts/lush_bouquet_4.png",
+      "price_ton": 7.66
+    },
+    {
+      "idx": 5,
+      "id": "lush_bouquet-5",
+      "fragment_id": "lushbouquet-37866",
+      "serial": 37866,
+      "model": "Carrots",
+      "backdrop": "Amber",
+      "symbol": "Geisha Fan",
+      "image": "/gifts/lush_bouquet_5.png",
+      "price_ton": 7.67
+    },
+    {
+      "idx": 6,
+      "id": "lush_bouquet-6",
+      "fragment_id": "lushbouquet-43253",
+      "serial": 43253,
+      "model": "Mushrooms",
+      "backdrop": "Pacific Green",
+      "symbol": "Battle Axe",
+      "image": "/gifts/lush_bouquet_6.png",
+      "price_ton": 7.68
+    }
+  ],
+  "Moon Pendant": [
+    {
+      "idx": 1,
+      "id": "moon_pendant-1",
+      "fragment_id": "moonpendant-72826",
+      "serial": 72826,
+      "model": "Emerald",
+      "backdrop": "Caramel",
+      "symbol": "Origami",
+      "image": "/gifts/moon_pendant_1.png",
+      "price_ton": 7.69
+    },
+    {
+      "idx": 2,
+      "id": "moon_pendant-2",
+      "fragment_id": "moonpendant-86729",
+      "serial": 86729,
+      "model": "Sea Jewel",
+      "backdrop": "Camo Green",
+      "symbol": "Octopus",
+      "image": "/gifts/moon_pendant_2.png",
+      "price_ton": 7.7
+    },
+    {
+      "idx": 3,
+      "id": "moon_pendant-3",
+      "fragment_id": "moonpendant-59594",
+      "serial": 59594,
+      "model": "Royal Purple",
+      "backdrop": "Chocolate",
+      "symbol": "Sakura Flower",
+      "image": "/gifts/moon_pendant_3.png",
+      "price_ton": 7.71
+    },
+    {
+      "idx": 4,
+      "id": "moon_pendant-4",
+      "fragment_id": "moonpendant-43770",
+      "serial": 43770,
+      "model": "Copper Alloy",
+      "backdrop": "Pistachio",
+      "symbol": "Sunflower",
+      "image": "/gifts/moon_pendant_4.png",
+      "price_ton": 7.72
+    },
+    {
+      "idx": 5,
+      "id": "moon_pendant-5",
+      "fragment_id": "moonpendant-58475",
+      "serial": 58475,
+      "model": "Copper Alloy",
+      "backdrop": "Orange",
+      "symbol": "Phoenix",
+      "image": "/gifts/moon_pendant_5.png",
+      "price_ton": 7.73
+    },
+    {
+      "idx": 6,
+      "id": "moon_pendant-6",
+      "fragment_id": "moonpendant-63806",
+      "serial": 63806,
+      "model": "Copper Alloy",
+      "backdrop": "Feldgrau",
+      "symbol": "Flower",
+      "image": "/gifts/moon_pendant_6.png",
+      "price_ton": 7.74
+    }
+  ],
+  "Santa Hat": [
+    {
+      "idx": 1,
+      "id": "santa_hat-1",
+      "fragment_id": "santahat-8982",
+      "serial": 8982,
+      "model": "Cold Slushy",
+      "backdrop": "Caramel",
+      "symbol": "Ornament",
+      "image": "/gifts/santa_hat_1.png",
+      "price_ton": 7.82
+    },
+    {
+      "idx": 2,
+      "id": "santa_hat-2",
+      "fragment_id": "santahat-9732",
+      "serial": 9732,
+      "model": "Cold Vapor",
+      "backdrop": "Carrot Juice",
+      "symbol": "Book",
+      "image": "/gifts/santa_hat_2.png",
+      "price_ton": 7.83
+    },
+    {
+      "idx": 3,
+      "id": "santa_hat-3",
+      "fragment_id": "santahat-22475",
+      "serial": 22475,
+      "model": "Minted Rose",
+      "backdrop": "Pine Green",
+      "symbol": "Snowflake",
+      "image": "/gifts/santa_hat_3.png",
+      "price_ton": 8.24
+    },
+    {
+      "idx": 4,
+      "id": "santa_hat-4",
+      "fragment_id": "santahat-19152",
+      "serial": 19152,
+      "model": "Dreamy",
+      "backdrop": "Copper",
+      "symbol": "Trophy",
+      "image": "/gifts/santa_hat_4.png",
+      "price_ton": 8.25
+    },
+    {
+      "idx": 5,
+      "id": "santa_hat-5",
+      "fragment_id": "santahat-39140",
+      "serial": 39140,
+      "model": "Lemon Sorbet",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Flashlight",
+      "image": "/gifts/santa_hat_5.png",
+      "price_ton": 8.26
+    },
+    {
+      "idx": 6,
+      "id": "santa_hat-6",
+      "fragment_id": "santahat-36623",
+      "serial": 36623,
+      "model": "Evergreen",
+      "backdrop": "Dark Lilac",
+      "symbol": "Bell Pepper",
+      "image": "/gifts/santa_hat_6.png",
+      "price_ton": 8.27
+    }
+  ],
+  "Spy Agaric": [
+    {
+      "idx": 1,
+      "id": "spy_agaric-1",
+      "fragment_id": "spyagaric-34579",
+      "serial": 34579,
+      "model": "Herbalist",
+      "backdrop": "Neon Blue",
+      "symbol": "Happy Smile",
+      "image": "/gifts/spy_agaric_1.png",
+      "price_ton": 7.89
+    },
+    {
+      "idx": 2,
+      "id": "spy_agaric-2",
+      "fragment_id": "spyagaric-33886",
+      "serial": 33886,
+      "model": "Hypnotoad",
+      "backdrop": "Sky Blue",
+      "symbol": "Baphomet",
+      "image": "/gifts/spy_agaric_2.png",
+      "price_ton": 7.9
+    },
+    {
+      "idx": 3,
+      "id": "spy_agaric-3",
+      "fragment_id": "spyagaric-32163",
+      "serial": 32163,
+      "model": "Monoshroom",
+      "backdrop": "Satin Gold",
+      "symbol": "Scarecrow",
+      "image": "/gifts/spy_agaric_3.png",
+      "price_ton": 8.34
+    },
+    {
+      "idx": 4,
+      "id": "spy_agaric-4",
+      "fragment_id": "spyagaric-69745",
+      "serial": 69745,
+      "model": "Lava Lamp",
+      "backdrop": "Purple",
+      "symbol": "Tribal Shield",
+      "image": "/gifts/spy_agaric_4.png",
+      "price_ton": 8.35
+    },
+    {
+      "idx": 5,
+      "id": "spy_agaric-5",
+      "fragment_id": "spyagaric-47852",
+      "serial": 47852,
+      "model": "Sunburst",
+      "backdrop": "Neon Blue",
+      "symbol": "Watermelon",
+      "image": "/gifts/spy_agaric_5.png",
+      "price_ton": 8.36
+    },
+    {
+      "idx": 6,
+      "id": "spy_agaric-6",
+      "fragment_id": "spyagaric-33661",
+      "serial": 33661,
+      "model": "Mysctic",
+      "backdrop": "Ivory White",
+      "symbol": "Sauron",
+      "image": "/gifts/spy_agaric_6.png",
+      "price_ton": 8.37
+    }
+  ],
+  "B-Day Candle": [
+    {
+      "idx": 1,
+      "id": "b_day_candle-1",
+      "fragment_id": "bdaycandle-158980",
+      "serial": 158980,
+      "model": "Spring Meadow",
+      "backdrop": "Coral Red",
+      "symbol": "Lion King",
+      "image": "/gifts/b_day_candle_1.png",
+      "price_ton": 6.12
+    },
+    {
+      "idx": 2,
+      "id": "b_day_candle-2",
+      "fragment_id": "bdaycandle-16418",
+      "serial": 16418,
+      "model": "Lolipop",
+      "backdrop": "Sky Blue",
+      "symbol": "Pickaxe",
+      "image": "/gifts/b_day_candle_2.png",
+      "price_ton": 6.13
+    },
+    {
+      "idx": 3,
+      "id": "b_day_candle-3",
+      "fragment_id": "bdaycandle-47355",
+      "serial": 47355,
+      "model": "Wicked",
+      "backdrop": "Satin Gold",
+      "symbol": "Alarm",
+      "image": "/gifts/b_day_candle_3.png",
+      "price_ton": 6.14
+    },
+    {
+      "idx": 4,
+      "id": "b_day_candle-4",
+      "fragment_id": "bdaycandle-159906",
+      "serial": 159906,
+      "model": "Best Wishes",
+      "backdrop": "Carrot Juice",
+      "symbol": "Blood Drop",
+      "image": "/gifts/b_day_candle_4.png",
+      "price_ton": 6.15
+    },
+    {
+      "idx": 5,
+      "id": "b_day_candle-5",
+      "fragment_id": "bdaycandle-224065",
+      "serial": 224065,
+      "model": "Candy Message",
+      "backdrop": "Raspberry",
+      "symbol": "Piggy Bank",
+      "image": "/gifts/b_day_candle_5.png",
+      "price_ton": 6.16
+    },
+    {
+      "idx": 6,
+      "id": "b_day_candle-6",
+      "fragment_id": "bdaycandle-239408",
+      "serial": 239408,
+      "model": "Silver Year",
+      "backdrop": "Grape",
+      "symbol": "Cat Mask",
+      "image": "/gifts/b_day_candle_6.png",
+      "price_ton": 6.17
+    }
+  ],
+  "Cookie Heart": [
+    {
+      "idx": 1,
+      "id": "cookie_heart-1",
+      "fragment_id": "cookieheart-195371",
+      "serial": 195371,
+      "model": "Elven Bakery",
+      "backdrop": "Satin Gold",
+      "symbol": "Broken Heart",
+      "image": "/gifts/cookie_heart_1.png",
+      "price_ton": 6.19
+    },
+    {
+      "idx": 2,
+      "id": "cookie_heart-2",
+      "fragment_id": "cookieheart-12509",
+      "serial": 12509,
+      "model": "The Star",
+      "backdrop": "Jade Green",
+      "symbol": "Stocking",
+      "image": "/gifts/cookie_heart_2.png",
+      "price_ton": 6.2
+    },
+    {
+      "idx": 3,
+      "id": "cookie_heart-3",
+      "fragment_id": "cookieheart-32929",
+      "serial": 32929,
+      "model": "The Star",
+      "backdrop": "Lemongrass",
+      "symbol": "Nordic Wolf",
+      "image": "/gifts/cookie_heart_3.png",
+      "price_ton": 6.21
+    },
+    {
+      "idx": 4,
+      "id": "cookie_heart-4",
+      "fragment_id": "cookieheart-12619",
+      "serial": 12619,
+      "model": "Red Apple",
+      "backdrop": "Light Olive",
+      "symbol": "Oak Leaf",
+      "image": "/gifts/cookie_heart_4.png",
+      "price_ton": 6.22
+    },
+    {
+      "idx": 5,
+      "id": "cookie_heart-5",
+      "fragment_id": "cookieheart-21436",
+      "serial": 21436,
+      "model": "Cheesecake",
+      "backdrop": "Shamrock Green",
+      "symbol": "Shooting Star",
+      "image": "/gifts/cookie_heart_5.png",
+      "price_ton": 6.23
+    },
+    {
+      "idx": 6,
+      "id": "cookie_heart-6",
+      "fragment_id": "cookieheart-33076",
+      "serial": 33076,
+      "model": "Cheesecake",
+      "backdrop": "Strawberry",
+      "symbol": "Lovebirds",
+      "image": "/gifts/cookie_heart_6.png",
+      "price_ton": 6.24
+    }
+  ],
+  "Ginger Cookie": [
+    {
+      "idx": 1,
+      "id": "ginger_cookie-1",
+      "fragment_id": "gingercookie-27424",
+      "serial": 27424,
+      "model": "Marzipan",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Pickaxe",
+      "image": "/gifts/ginger_cookie_1.png",
+      "price_ton": 6.29
+    },
+    {
+      "idx": 2,
+      "id": "ginger_cookie-2",
+      "fragment_id": "gingercookie-51574",
+      "serial": 51574,
+      "model": "Toffee",
+      "backdrop": "Aquamarine",
+      "symbol": "Snow Angel",
+      "image": "/gifts/ginger_cookie_2.png",
+      "price_ton": 6.3
+    },
+    {
+      "idx": 3,
+      "id": "ginger_cookie-3",
+      "fragment_id": "gingercookie-52370",
+      "serial": 52370,
+      "model": "Mint Fringe",
+      "backdrop": "Cappuccino",
+      "symbol": "Jingle Bell",
+      "image": "/gifts/ginger_cookie_3.png",
+      "price_ton": 6.31
+    },
+    {
+      "idx": 4,
+      "id": "ginger_cookie-4",
+      "fragment_id": "gingercookie-53960",
+      "serial": 53960,
+      "model": "Amaretto",
+      "backdrop": "Coral Red",
+      "symbol": "Ice Pop",
+      "image": "/gifts/ginger_cookie_4.png",
+      "price_ton": 6.32
+    },
+    {
+      "idx": 5,
+      "id": "ginger_cookie-5",
+      "fragment_id": "gingercookie-119903",
+      "serial": 119903,
+      "model": "Marzipan",
+      "backdrop": "Platinum",
+      "symbol": "Owl",
+      "image": "/gifts/ginger_cookie_5.png",
+      "price_ton": 6.33
+    },
+    {
+      "idx": 6,
+      "id": "ginger_cookie-6",
+      "fragment_id": "gingercookie-126791",
+      "serial": 126791,
+      "model": "Santa Claus",
+      "backdrop": "Khaki Green",
+      "symbol": "Stocking",
+      "image": "/gifts/ginger_cookie_6.png",
+      "price_ton": 6.34
+    }
+  ],
+  "Holiday Drink": [
+    {
+      "idx": 1,
+      "id": "holiday_drink-1",
+      "fragment_id": "holidaydrink-393",
+      "serial": 393,
+      "model": "Mango Blast",
+      "backdrop": "Cyberpunk",
+      "symbol": "Kudu Totem",
+      "image": "/gifts/holiday_drink_1.png",
+      "price_ton": 6.38
+    },
+    {
+      "idx": 2,
+      "id": "holiday_drink-2",
+      "fragment_id": "holidaydrink-75876",
+      "serial": 75876,
+      "model": "Marigold",
+      "backdrop": "Pine Green",
+      "symbol": "Beetle",
+      "image": "/gifts/holiday_drink_2.png",
+      "price_ton": 6.39
+    },
+    {
+      "idx": 3,
+      "id": "holiday_drink-3",
+      "fragment_id": "holidaydrink-85677",
+      "serial": 85677,
+      "model": "Banana Split",
+      "backdrop": "Roman Silver",
+      "symbol": "Fedora",
+      "image": "/gifts/holiday_drink_3.png",
+      "price_ton": 6.4
+    },
+    {
+      "idx": 4,
+      "id": "holiday_drink-4",
+      "fragment_id": "holidaydrink-76727",
+      "serial": 76727,
+      "model": "Citrus",
+      "backdrop": "Rosewood",
+      "symbol": "Gift Box",
+      "image": "/gifts/holiday_drink_4.png",
+      "price_ton": 6.41
+    },
+    {
+      "idx": 5,
+      "id": "holiday_drink-5",
+      "fragment_id": "holidaydrink-11245",
+      "serial": 11245,
+      "model": "Matcha",
+      "backdrop": "Steel Grey",
+      "symbol": "Chest",
+      "image": "/gifts/holiday_drink_5.png",
+      "price_ton": 6.42
+    },
+    {
+      "idx": 6,
+      "id": "holiday_drink-6",
+      "fragment_id": "holidaydrink-11289",
+      "serial": 11289,
+      "model": "Ginger Joker",
+      "backdrop": "Sapphire",
+      "symbol": "Ornament",
+      "image": "/gifts/holiday_drink_6.png",
+      "price_ton": 6.43
+    }
+  ],
+  "Homemade Cake": [
+    {
+      "idx": 1,
+      "id": "homemade_cake-1",
+      "fragment_id": "homemadecake-85945",
+      "serial": 85945,
+      "model": "Caramel Joy",
+      "backdrop": "Chocolate",
+      "symbol": "Fenrir",
+      "image": "/gifts/homemade_cake_1.png",
+      "price_ton": 6.44
+    },
+    {
+      "idx": 2,
+      "id": "homemade_cake-2",
+      "fragment_id": "homemadecake-88864",
+      "serial": 88864,
+      "model": "Vanilla Sky",
+      "backdrop": "Khaki Green",
+      "symbol": "Hedgehog",
+      "image": "/gifts/homemade_cake_2.png",
+      "price_ton": 6.45
+    },
+    {
+      "idx": 3,
+      "id": "homemade_cake-3",
+      "fragment_id": "homemadecake-103220",
+      "serial": 103220,
+      "model": "Caramel Joy",
+      "backdrop": "Pure Gold",
+      "symbol": "Polar Bear",
+      "image": "/gifts/homemade_cake_3.png",
+      "price_ton": 6.46
+    },
+    {
+      "idx": 4,
+      "id": "homemade_cake-4",
+      "fragment_id": "homemadecake-79380",
+      "serial": 79380,
+      "model": "Velvet Cocoa",
+      "backdrop": "Sky Blue",
+      "symbol": "Diamond",
+      "image": "/gifts/homemade_cake_4.png",
+      "price_ton": 6.47
+    },
+    {
+      "idx": 5,
+      "id": "homemade_cake-5",
+      "fragment_id": "homemadecake-123289",
+      "serial": 123289,
+      "model": "Toffee",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Bee",
+      "image": "/gifts/homemade_cake_5.png",
+      "price_ton": 6.48
+    },
+    {
+      "idx": 6,
+      "id": "homemade_cake-6",
+      "fragment_id": "homemadecake-56473",
+      "serial": 56473,
+      "model": "Pink Whirl",
+      "backdrop": "Roman Silver",
+      "symbol": "Musical Note",
+      "image": "/gifts/homemade_cake_6.png",
+      "price_ton": 6.49
+    }
+  ],
+  "Hypno Lollipop": [
+    {
+      "idx": 1,
+      "id": "hypno_lollipop-1",
+      "fragment_id": "hypnolollipop-50817",
+      "serial": 50817,
+      "model": "Beach Ball",
+      "backdrop": "Khaki Green",
+      "symbol": "Plum",
+      "image": "/gifts/hypno_lollipop_1.png",
+      "price_ton": 6.5
+    },
+    {
+      "idx": 2,
+      "id": "hypno_lollipop-2",
+      "fragment_id": "hypnolollipop-52438",
+      "serial": 52438,
+      "model": "Grand Slam",
+      "backdrop": "Carrot Juice",
+      "symbol": "Pencil",
+      "image": "/gifts/hypno_lollipop_2.png",
+      "price_ton": 6.51
+    },
+    {
+      "idx": 3,
+      "id": "hypno_lollipop-3",
+      "fragment_id": "hypnolollipop-52579",
+      "serial": 52579,
+      "model": "Grand Slam",
+      "backdrop": "Purple",
+      "symbol": "Owl",
+      "image": "/gifts/hypno_lollipop_3.png",
+      "price_ton": 6.52
+    },
+    {
+      "idx": 4,
+      "id": "hypno_lollipop-4",
+      "fragment_id": "hypnolollipop-52620",
+      "serial": 52620,
+      "model": "Beach Ball",
+      "backdrop": "Azure Blue",
+      "symbol": "Moon Eagle",
+      "image": "/gifts/hypno_lollipop_4.png",
+      "price_ton": 6.53
+    },
+    {
+      "idx": 5,
+      "id": "hypno_lollipop-5",
+      "fragment_id": "hypnolollipop-28665",
+      "serial": 28665,
+      "model": "Marksman",
+      "backdrop": "Light Olive",
+      "symbol": "Eagle",
+      "image": "/gifts/hypno_lollipop_5.png",
+      "price_ton": 6.54
+    },
+    {
+      "idx": 6,
+      "id": "hypno_lollipop-6",
+      "fragment_id": "hypnolollipop-25919",
+      "serial": 25919,
+      "model": "Nightfall",
+      "backdrop": "Copper",
+      "symbol": "Mushroom",
+      "image": "/gifts/hypno_lollipop_6.png",
+      "price_ton": 6.55
+    }
+  ],
+  "Jack-in-the-Box": [
+    {
+      "idx": 1,
+      "id": "jack_in_the_box-1",
+      "fragment_id": "jackinthebox-27239",
+      "serial": 27239,
+      "model": "Unicorn",
+      "backdrop": "Copper",
+      "symbol": "Winged Helmet",
+      "image": "/gifts/jack_in_the_box_1.png",
+      "price_ton": 6.56
+    },
+    {
+      "idx": 2,
+      "id": "jack_in_the_box-2",
+      "fragment_id": "jackinthebox-90179",
+      "serial": 90179,
+      "model": "Unicorn",
+      "backdrop": "Pistachio",
+      "symbol": "Anubis",
+      "image": "/gifts/jack_in_the_box_2.png",
+      "price_ton": 6.57
+    },
+    {
+      "idx": 3,
+      "id": "jack_in_the_box-3",
+      "fragment_id": "jackinthebox-12898",
+      "serial": 12898,
+      "model": "Teddy Bear",
+      "backdrop": "Mustard",
+      "symbol": "Lemon",
+      "image": "/gifts/jack_in_the_box_3.png",
+      "price_ton": 6.58
+    },
+    {
+      "idx": 4,
+      "id": "jack_in_the_box-4",
+      "fragment_id": "jackinthebox-24413",
+      "serial": 24413,
+      "model": "Bouquet",
+      "backdrop": "Platinum",
+      "symbol": "Twin Peaks",
+      "image": "/gifts/jack_in_the_box_4.png",
+      "price_ton": 6.59
+    },
+    {
+      "idx": 5,
+      "id": "jack_in_the_box-5",
+      "fragment_id": "jackinthebox-2267",
+      "serial": 2267,
+      "model": "Bombox",
+      "backdrop": "Roman Silver",
+      "symbol": "Hazelnut",
+      "image": "/gifts/jack_in_the_box_5.png",
+      "price_ton": 6.6
+    },
+    {
+      "idx": 6,
+      "id": "jack_in_the_box-6",
+      "fragment_id": "jackinthebox-90432",
+      "serial": 90432,
+      "model": "Dentures",
+      "backdrop": "Orange",
+      "symbol": "Jumbo Pencil",
+      "image": "/gifts/jack_in_the_box_6.png",
+      "price_ton": 6.61
+    }
+  ],
+  "Money Pot": [
+    {
+      "idx": 1,
+      "id": "money_pot-1",
+      "fragment_id": "moneypot-39350",
+      "serial": 39350,
+      "model": "Scavenger",
+      "backdrop": "Burnt Sienna",
+      "symbol": "French Fries",
+      "image": "/gifts/money_pot_1.png",
+      "price_ton": 6.65
+    },
+    {
+      "idx": 2,
+      "id": "money_pot-2",
+      "fragment_id": "moneypot-2652",
+      "serial": 2652,
+      "model": "Doctor Jones",
+      "backdrop": "Roman Silver",
+      "symbol": "Flower Cross",
+      "image": "/gifts/money_pot_2.png",
+      "price_ton": 6.66
+    },
+    {
+      "idx": 3,
+      "id": "money_pot-3",
+      "fragment_id": "moneypot-10049",
+      "serial": 10049,
+      "model": "Metal Soul",
+      "backdrop": "Turquoise",
+      "symbol": "Hedgehog",
+      "image": "/gifts/money_pot_3.png",
+      "price_ton": 6.67
+    },
+    {
+      "idx": 4,
+      "id": "money_pot-4",
+      "fragment_id": "moneypot-70758",
+      "serial": 70758,
+      "model": "Witch Brew",
+      "backdrop": "Raspberry",
+      "symbol": "Leprechaun",
+      "image": "/gifts/money_pot_4.png",
+      "price_ton": 6.68
+    },
+    {
+      "idx": 5,
+      "id": "money_pot-5",
+      "fragment_id": "moneypot-11840",
+      "serial": 11840,
+      "model": "Snowballs",
+      "backdrop": "Strawberry",
+      "symbol": "Dragonfly",
+      "image": "/gifts/money_pot_5.png",
+      "price_ton": 6.69
+    },
+    {
+      "idx": 6,
+      "id": "money_pot-6",
+      "fragment_id": "moneypot-12824",
+      "serial": 12824,
+      "model": "Fungi Soup",
+      "backdrop": "Malachite",
+      "symbol": "Visor",
+      "image": "/gifts/money_pot_6.png",
+      "price_ton": 6.7
+    }
+  ],
+  "Mousse Cake": [
+    {
+      "idx": 1,
+      "id": "mousse_cake-1",
+      "fragment_id": "moussecake-5736",
+      "serial": 5736,
+      "model": "Sky Peacock",
+      "backdrop": "Cyberpunk",
+      "symbol": "Double Bed",
+      "image": "/gifts/mousse_cake_1.png",
+      "price_ton": 6.76
+    },
+    {
+      "idx": 2,
+      "id": "mousse_cake-2",
+      "fragment_id": "moussecake-63953",
+      "serial": 63953,
+      "model": "Sky Peacock",
+      "backdrop": "Emerald",
+      "symbol": "Cute Bear",
+      "image": "/gifts/mousse_cake_2.png",
+      "price_ton": 6.77
+    },
+    {
+      "idx": 3,
+      "id": "mousse_cake-3",
+      "fragment_id": "moussecake-170800",
+      "serial": 170800,
+      "model": "Pony Princess",
+      "backdrop": "Burnt Sienna",
+      "symbol": "Flytrap",
+      "image": "/gifts/mousse_cake_3.png",
+      "price_ton": 6.78
+    },
+    {
+      "idx": 4,
+      "id": "mousse_cake-4",
+      "fragment_id": "moussecake-102247",
+      "serial": 102247,
+      "model": "Harvest",
+      "backdrop": "Malachite",
+      "symbol": "Eggplant",
+      "image": "/gifts/mousse_cake_4.png",
+      "price_ton": 6.79
+    },
+    {
+      "idx": 5,
+      "id": "mousse_cake-5",
+      "fragment_id": "moussecake-102742",
+      "serial": 102742,
+      "model": "Harvest",
+      "backdrop": "Moonstone",
+      "symbol": "Oculus",
+      "image": "/gifts/mousse_cake_5.png",
+      "price_ton": 6.8
+    },
+    {
+      "idx": 6,
+      "id": "mousse_cake-6",
+      "fragment_id": "moussecake-103137",
+      "serial": 103137,
+      "model": "Harvest",
+      "backdrop": "Persimmon",
+      "symbol": "Puzzle",
+      "image": "/gifts/mousse_cake_6.png",
+      "price_ton": 6.81
+    }
+  ],
+  "Pretty Posy": [
+    {
+      "idx": 1,
+      "id": "pretty_posy-1",
+      "fragment_id": "prettyposy-35621",
+      "serial": 35621,
+      "model": "Tangerine",
+      "backdrop": "Caramel",
+      "symbol": "Straw Hat",
+      "image": "/gifts/pretty_posy_1.png",
+      "price_ton": 6.84
+    },
+    {
+      "idx": 2,
+      "id": "pretty_posy-2",
+      "fragment_id": "prettyposy-131382",
+      "serial": 131382,
+      "model": "Art Therapy",
+      "backdrop": "Pistachio",
+      "symbol": "Elephant",
+      "image": "/gifts/pretty_posy_2.png",
+      "price_ton": 6.85
+    },
+    {
+      "idx": 3,
+      "id": "pretty_posy-3",
+      "fragment_id": "prettyposy-56625",
+      "serial": 56625,
+      "model": "Viva Italia",
+      "backdrop": "Shamrock Green",
+      "symbol": "Flower",
+      "image": "/gifts/pretty_posy_3.png",
+      "price_ton": 6.86
+    },
+    {
+      "idx": 4,
+      "id": "pretty_posy-4",
+      "fragment_id": "prettyposy-46983",
+      "serial": 46983,
+      "model": "Provence",
+      "backdrop": "Malachite",
+      "symbol": "Blood Drop",
+      "image": "/gifts/pretty_posy_4.png",
+      "price_ton": 7.75
+    },
+    {
+      "idx": 5,
+      "id": "pretty_posy-5",
+      "fragment_id": "prettyposy-47452",
+      "serial": 47452,
+      "model": "Boom Bloom",
+      "backdrop": "Ranger Green",
+      "symbol": "Lemon",
+      "image": "/gifts/pretty_posy_5.png",
+      "price_ton": 7.76
+    },
+    {
+      "idx": 6,
+      "id": "pretty_posy-6",
+      "fragment_id": "prettyposy-42260",
+      "serial": 42260,
+      "model": "Snake Den",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Cute Bear",
+      "image": "/gifts/pretty_posy_6.png",
+      "price_ton": 7.77
+    }
+  ],
+  "Restless Jar": [
+    {
+      "idx": 1,
+      "id": "restless_jar-1",
+      "fragment_id": "restlessjar-18539",
+      "serial": 18539,
+      "model": "Aquarium",
+      "backdrop": "Purple",
+      "symbol": "Love Letter",
+      "image": "/gifts/restless_jar_1.png",
+      "price_ton": 6.87
+    },
+    {
+      "idx": 2,
+      "id": "restless_jar-2",
+      "fragment_id": "restlessjar-9934",
+      "serial": 9934,
+      "model": "Miniland",
+      "backdrop": "Gunship Green",
+      "symbol": "Coffee Bean",
+      "image": "/gifts/restless_jar_2.png",
+      "price_ton": 6.88
+    },
+    {
+      "idx": 3,
+      "id": "restless_jar-3",
+      "fragment_id": "restlessjar-12032",
+      "serial": 12032,
+      "model": "Mocktail",
+      "backdrop": "Silver Blue",
+      "symbol": "Genie Lamp",
+      "image": "/gifts/restless_jar_3.png",
+      "price_ton": 7.78
+    },
+    {
+      "idx": 4,
+      "id": "restless_jar-4",
+      "fragment_id": "restlessjar-9819",
+      "serial": 9819,
+      "model": "Uranium",
+      "backdrop": "Turquoise",
+      "symbol": "Rose",
+      "image": "/gifts/restless_jar_4.png",
+      "price_ton": 7.79
+    },
+    {
+      "idx": 5,
+      "id": "restless_jar-5",
+      "fragment_id": "restlessjar-11697",
+      "serial": 11697,
+      "model": "Honey Bees",
+      "backdrop": "Navy Blue",
+      "symbol": "Sparks",
+      "image": "/gifts/restless_jar_5.png",
+      "price_ton": 7.8
+    },
+    {
+      "idx": 6,
+      "id": "restless_jar-6",
+      "fragment_id": "restlessjar-97368",
+      "serial": 97368,
+      "model": "Tornado",
+      "backdrop": "Grape",
+      "symbol": "Cupid’s Bow",
+      "image": "/gifts/restless_jar_6.png",
+      "price_ton": 7.81
+    }
+  ],
+  "Spiced Wine": [
+    {
+      "idx": 1,
+      "id": "spiced_wine-1",
+      "fragment_id": "spicedwine-18442",
+      "serial": 18442,
+      "model": "Golden Goblet",
+      "backdrop": "Coral Red",
+      "symbol": "Totem Bear",
+      "image": "/gifts/spiced_wine_1.png",
+      "price_ton": 6.92
+    },
+    {
+      "idx": 2,
+      "id": "spiced_wine-2",
+      "fragment_id": "spicedwine-75536",
+      "serial": 75536,
+      "model": "Dusky Draft",
+      "backdrop": "Sapphire",
+      "symbol": "Ladybug",
+      "image": "/gifts/spiced_wine_2.png",
+      "price_ton": 6.93
+    },
+    {
+      "idx": 3,
+      "id": "spiced_wine-3",
+      "fragment_id": "spicedwine-82056",
+      "serial": 82056,
+      "model": "Persimmon",
+      "backdrop": "Amber",
+      "symbol": "Potion",
+      "image": "/gifts/spiced_wine_3.png",
+      "price_ton": 6.94
+    },
+    {
+      "idx": 4,
+      "id": "spiced_wine-4",
+      "fragment_id": "spicedwine-10392",
+      "serial": 10392,
+      "model": "Pink Orange",
+      "backdrop": "Caramel",
+      "symbol": "Sea Horse",
+      "image": "/gifts/spiced_wine_4.png",
+      "price_ton": 6.95
+    },
+    {
+      "idx": 5,
+      "id": "spiced_wine-5",
+      "fragment_id": "spicedwine-65154",
+      "serial": 65154,
+      "model": "Aries Rum",
+      "backdrop": "Satin Gold",
+      "symbol": "Octopus",
+      "image": "/gifts/spiced_wine_5.png",
+      "price_ton": 6.96
+    },
+    {
+      "idx": 6,
+      "id": "spiced_wine-6",
+      "fragment_id": "spicedwine-108545",
+      "serial": 108545,
+      "model": "Aquarium",
+      "backdrop": "Electric Purple",
+      "symbol": "Rain Drop",
+      "image": "/gifts/spiced_wine_6.png",
+      "price_ton": 6.97
+    }
+  ],
+  "Star Notepad": [
+    {
+      "idx": 1,
+      "id": "star_notepad-1",
+      "fragment_id": "starnotepad-20023",
+      "serial": 20023,
+      "model": "Cyprus",
+      "backdrop": "Mystic Pearl",
+      "symbol": "Blood Drop",
+      "image": "/gifts/star_notepad_1.png",
+      "price_ton": 5.73
+    },
+    {
+      "idx": 2,
+      "id": "star_notepad-2",
+      "fragment_id": "starnotepad-11953",
+      "serial": 11953,
+      "model": "Paper Plane",
+      "backdrop": "Caramel",
+      "symbol": "Kitsune Mask",
+      "image": "/gifts/star_notepad_2.png",
+      "price_ton": 6.98
+    },
+    {
+      "idx": 3,
+      "id": "star_notepad-3",
+      "fragment_id": "starnotepad-31875",
+      "serial": 31875,
+      "model": "Watermelon",
+      "backdrop": "Orange",
+      "symbol": "Shell",
+      "image": "/gifts/star_notepad_3.png",
+      "price_ton": 6.99
+    },
+    {
+      "idx": 4,
+      "id": "star_notepad-4",
+      "fragment_id": "starnotepad-40887",
+      "serial": 40887,
+      "model": "Indigo",
+      "backdrop": "Satin Gold",
+      "symbol": "War Tiger",
+      "image": "/gifts/star_notepad_4.png",
+      "price_ton": 7.0
+    },
+    {
+      "idx": 5,
+      "id": "star_notepad-5",
+      "fragment_id": "starnotepad-40824",
+      "serial": 40824,
+      "model": "Tiger",
+      "backdrop": "Malachite",
+      "symbol": "Hamburger",
+      "image": "/gifts/star_notepad_5.png",
+      "price_ton": 7.01
+    },
+    {
+      "idx": 6,
+      "id": "star_notepad-6",
+      "fragment_id": "starnotepad-4625",
+      "serial": 4625,
+      "model": "Coyote",
+      "backdrop": "Azure Blue",
+      "symbol": "Ghost",
+      "image": "/gifts/star_notepad_6.png",
+      "price_ton": 7.02
+    }
+  ],
+  "Stellar Rocket": [
+    {
+      "idx": 1,
+      "id": "stellar_rocket-1",
+      "fragment_id": "stellarrocket-52321",
+      "serial": 52321,
+      "model": "Knowledge",
+      "backdrop": "Desert Sand",
+      "symbol": "Pear",
+      "image": "/gifts/stellar_rocket_1.png",
+      "price_ton": 7.03
+    },
+    {
+      "idx": 2,
+      "id": "stellar_rocket-2",
+      "fragment_id": "stellarrocket-10196",
+      "serial": 10196,
+      "model": "Fireworks",
+      "backdrop": "Ranger Green",
+      "symbol": "Ribeye Steak",
+      "image": "/gifts/stellar_rocket_2.png",
+      "price_ton": 7.04
+    },
+    {
+      "idx": 3,
+      "id": "stellar_rocket-3",
+      "fragment_id": "stellarrocket-11387",
+      "serial": 11387,
+      "model": "Fireworks",
+      "backdrop": "Seal Brown",
+      "symbol": "Telescope",
+      "image": "/gifts/stellar_rocket_3.png",
+      "price_ton": 7.05
+    },
+    {
+      "idx": 4,
+      "id": "stellar_rocket-4",
+      "fragment_id": "stellarrocket-129822",
+      "serial": 129822,
+      "model": "Fireworks",
+      "backdrop": "Caramel",
+      "symbol": "Academic Cap",
+      "image": "/gifts/stellar_rocket_4.png",
+      "price_ton": 7.06
+    },
+    {
+      "idx": 5,
+      "id": "stellar_rocket-5",
+      "fragment_id": "stellarrocket-132090",
+      "serial": 132090,
+      "model": "Popsicle",
+      "backdrop": "Camo Green",
+      "symbol": "Cowboy Hat",
+      "image": "/gifts/stellar_rocket_5.png",
+      "price_ton": 7.07
+    },
+    {
+      "idx": 6,
+      "id": "stellar_rocket-6",
+      "fragment_id": "stellarrocket-13710",
+      "serial": 13710,
+      "model": "Fireworks",
+      "backdrop": "Copper",
+      "symbol": "Beetle",
+      "image": "/gifts/stellar_rocket_6.png",
+      "price_ton": 7.08
+    }
+  ],
+  "Swag Bag": [
+    {
+      "idx": 1,
+      "id": "swag_bag-1",
+      "fragment_id": "swagbag-142692",
+      "serial": 142692,
+      "model": "Spicy Onion",
+      "backdrop": "Jade Green",
+      "symbol": "Pyramid",
+      "image": "/gifts/swag_bag_1.png",
+      "price_ton": 7.09
+    },
+    {
+      "idx": 2,
+      "id": "swag_bag-2",
+      "fragment_id": "swagbag-207683",
+      "serial": 207683,
+      "model": "Spicy Onion",
+      "backdrop": "Malachite",
+      "symbol": "Pumpkin Coach",
+      "image": "/gifts/swag_bag_2.png",
+      "price_ton": 7.1
+    },
+    {
+      "idx": 3,
+      "id": "swag_bag-3",
+      "fragment_id": "swagbag-110170",
+      "serial": 110170,
+      "model": "Spicy Onion",
+      "backdrop": "Copper",
+      "symbol": "Cat Mask",
+      "image": "/gifts/swag_bag_3.png",
+      "price_ton": 7.11
+    },
+    {
+      "idx": 4,
+      "id": "swag_bag-4",
+      "fragment_id": "swagbag-114311",
+      "serial": 114311,
+      "model": "Spicy Onion",
+      "backdrop": "Camo Green",
+      "symbol": "Omusubi",
+      "image": "/gifts/swag_bag_4.png",
+      "price_ton": 7.12
+    },
+    {
+      "idx": 5,
+      "id": "swag_bag-5",
+      "fragment_id": "swagbag-142328",
+      "serial": 142328,
+      "model": "Crook To Cook",
+      "backdrop": "Persimmon",
+      "symbol": "Full Moon",
+      "image": "/gifts/swag_bag_5.png",
+      "price_ton": 7.13
+    },
+    {
+      "idx": 6,
+      "id": "swag_bag-6",
+      "fragment_id": "swagbag-149013",
+      "serial": 149013,
+      "model": "Crook To Cook",
+      "backdrop": "Light Olive",
+      "symbol": "Cute Paw",
+      "image": "/gifts/swag_bag_6.png",
+      "price_ton": 7.14
+    }
+  ],
+  "Winter Wreath": [
+    {
+      "idx": 1,
+      "id": "winter_wreath-1",
+      "fragment_id": "winterwreath-76811",
+      "serial": 76811,
+      "model": "Hearth",
+      "backdrop": "Lavender",
+      "symbol": "Dessert",
+      "image": "/gifts/winter_wreath_1.png",
+      "price_ton": 7.18
+    },
+    {
+      "idx": 2,
+      "id": "winter_wreath-2",
+      "fragment_id": "winterwreath-4105",
+      "serial": 4105,
+      "model": "Dragee",
+      "backdrop": "Satin Gold",
+      "symbol": "Ornament",
+      "image": "/gifts/winter_wreath_2.png",
+      "price_ton": 7.19
+    },
+    {
+      "idx": 3,
+      "id": "winter_wreath-3",
+      "fragment_id": "winterwreath-43316",
+      "serial": 43316,
+      "model": "Barbie Core",
+      "backdrop": "Malachite",
+      "symbol": "Gift Box",
+      "image": "/gifts/winter_wreath_3.png",
+      "price_ton": 7.2
+    },
+    {
+      "idx": 4,
+      "id": "winter_wreath-4",
+      "fragment_id": "winterwreath-29781",
+      "serial": 29781,
+      "model": "Lemon Cake",
+      "backdrop": "Deep Cyan",
+      "symbol": "Anchor",
+      "image": "/gifts/winter_wreath_4.png",
+      "price_ton": 7.21
+    },
+    {
+      "idx": 5,
+      "id": "winter_wreath-5",
+      "fragment_id": "winterwreath-11408",
+      "serial": 11408,
+      "model": "Harmony",
+      "backdrop": "Platinum",
+      "symbol": "Mistletoe",
+      "image": "/gifts/winter_wreath_5.png",
+      "price_ton": 7.22
+    },
+    {
+      "idx": 6,
+      "id": "winter_wreath-6",
+      "fragment_id": "winterwreath-11712",
+      "serial": 11712,
+      "model": "Cold Night",
+      "backdrop": "Mint Green",
+      "symbol": "Hamburger",
+      "image": "/gifts/winter_wreath_6.png",
+      "price_ton": 7.23
+    }
+  ],
+  "Candy Cane": [
+    {
+      "idx": 1,
+      "id": "candy_cane-1",
+      "fragment_id": "candycane-190614",
+      "serial": 190614,
+      "model": "Silver Frost",
+      "backdrop": "Old Gold",
+      "symbol": "Stocking",
+      "image": "/gifts/candy_cane_1.png",
+      "price_ton": 5.11
+    },
+    {
+      "idx": 2,
+      "id": "candy_cane-2",
+      "fragment_id": "candycane-223528",
+      "serial": 223528,
+      "model": "Lime Twist",
+      "backdrop": "Grape",
+      "symbol": "Champagne",
+      "image": "/gifts/candy_cane_2.png",
+      "price_ton": 5.12
+    },
+    {
+      "idx": 3,
+      "id": "candy_cane-3",
+      "fragment_id": "candycane-73701",
+      "serial": 73701,
+      "model": "Lime Twist",
+      "backdrop": "Platinum",
+      "symbol": "Champagne",
+      "image": "/gifts/candy_cane_3.png",
+      "price_ton": 5.13
+    },
+    {
+      "idx": 4,
+      "id": "candy_cane-4",
+      "fragment_id": "candycane-171315",
+      "serial": 171315,
+      "model": "Joker",
+      "backdrop": "Lemongrass",
+      "symbol": "Gingerbread",
+      "image": "/gifts/candy_cane_4.png",
+      "price_ton": 5.14
+    },
+    {
+      "idx": 5,
+      "id": "candy_cane-5",
+      "fragment_id": "candycane-5277",
+      "serial": 5277,
+      "model": "Pink Mango",
+      "backdrop": "Platinum",
+      "symbol": "Candle",
+      "image": "/gifts/candy_cane_5.png",
+      "price_ton": 5.15
+    },
+    {
+      "idx": 6,
+      "id": "candy_cane-6",
+      "fragment_id": "candycane-226766",
+      "serial": 226766,
+      "model": "Golden Jelly",
+      "backdrop": "Hunter Green",
+      "symbol": "Fireworks",
+      "image": "/gifts/candy_cane_6.png",
+      "price_ton": 5.16
+    }
+  ],
+  "Easter Egg": [
+    {
+      "idx": 1,
+      "id": "easter_egg-1",
+      "fragment_id": "easteregg-93436",
+      "serial": 93436,
+      "model": "Stained Glass",
+      "backdrop": "Orange",
+      "symbol": "Bonsai",
+      "image": "/gifts/easter_egg_1.png",
+      "price_ton": 5.2
+    },
+    {
+      "idx": 2,
+      "id": "easter_egg-2",
+      "fragment_id": "easteregg-12518",
+      "serial": 12518,
+      "model": "Matryoshka",
+      "backdrop": "Cobalt Blue",
+      "symbol": "Fenrir",
+      "image": "/gifts/easter_egg_2.png",
+      "price_ton": 5.21
+    },
+    {
+      "idx": 3,
+      "id": "easter_egg-3",
+      "fragment_id": "easteregg-83174",
+      "serial": 83174,
+      "model": "Meadow",
+      "backdrop": "Mint Green",
+      "symbol": "Straw Hat",
+      "image": "/gifts/easter_egg_3.png",
+      "price_ton": 5.22
+    },
+    {
+      "idx": 4,
+      "id": "easter_egg-4",
+      "fragment_id": "easteregg-55842",
+      "serial": 55842,
+      "model": "Egghead",
+      "backdrop": "Pacific Green",
+      "symbol": "Bamboo",
+      "image": "/gifts/easter_egg_4.png",
+      "price_ton": 6.25
+    },
+    {
+      "idx": 5,
+      "id": "easter_egg-5",
+      "fragment_id": "easteregg-5934",
+      "serial": 5934,
+      "model": "Ice Cream",
+      "backdrop": "Light Olive",
+      "symbol": "Evil Dragon",
+      "image": "/gifts/easter_egg_5.png",
+      "price_ton": 6.26
+    },
+    {
+      "idx": 6,
+      "id": "easter_egg-6",
+      "fragment_id": "easteregg-632",
+      "serial": 632,
+      "model": "Ice Cream",
+      "backdrop": "Electric Purple",
+      "symbol": "Rain Drop",
+      "image": "/gifts/easter_egg_6.png",
+      "price_ton": 6.27
+    }
+  ],
+  "Fresh Socks": [
+    {
+      "idx": 1,
+      "id": "fresh_socks-1",
+      "fragment_id": "freshsocks-135496",
+      "serial": 135496,
+      "model": "Gingerbread",
+      "backdrop": "Cyberpunk",
+      "symbol": "Heater Shield",
+      "image": "/gifts/fresh_socks_1.png",
+      "price_ton": 5.23
+    },
+    {
+      "idx": 2,
+      "id": "fresh_socks-2",
+      "fragment_id": "freshsocks-135653",
+      "serial": 135653,
+      "model": "Ambition",
+      "backdrop": "Moonstone",
+      "symbol": "Mountain Goat",
+      "image": "/gifts/fresh_socks_2.png",
+      "price_ton": 5.24
+    },
+    {
+      "idx": 3,
+      "id": "fresh_socks-3",
+      "fragment_id": "freshsocks-137304",
+      "serial": 137304,
+      "model": "Intellect",
+      "backdrop": "Tomato",
+      "symbol": "Doberman",
+      "image": "/gifts/fresh_socks_3.png",
+      "price_ton": 5.25
+    },
+    {
+      "idx": 4,
+      "id": "fresh_socks-4",
+      "fragment_id": "freshsocks-28915",
+      "serial": 28915,
+      "model": "Peg Leg",
+      "backdrop": "Jade Green",
+      "symbol": "Coin Purse",
+      "image": "/gifts/fresh_socks_4.png",
+      "price_ton": 5.26
+    },
+    {
+      "idx": 5,
+      "id": "fresh_socks-5",
+      "fragment_id": "freshsocks-127380",
+      "serial": 127380,
+      "model": "Peg Leg",
+      "backdrop": "French Blue",
+      "symbol": "Sword Fight",
+      "image": "/gifts/fresh_socks_5.png",
+      "price_ton": 5.27
+    },
+    {
+      "idx": 6,
+      "id": "fresh_socks-6",
+      "fragment_id": "freshsocks-121662",
+      "serial": 121662,
+      "model": "Gingerbread",
+      "backdrop": "Rifle Green",
+      "symbol": "Romantic Cake",
+      "image": "/gifts/fresh_socks_6.png",
+      "price_ton": 6.28
+    }
+  ],
+  "Happy Brownie": [
+    {
+      "idx": 1,
+      "id": "happy_brownie-1",
+      "fragment_id": "happybrownie-131907",
+      "serial": 131907,
+      "model": "Alien",
+      "backdrop": "Burnt Sienna",
+      "symbol": "Takoyaki",
+      "image": "/gifts/happy_brownie_1.png",
+      "price_ton": 5.28
+    },
+    {
+      "idx": 2,
+      "id": "happy_brownie-2",
+      "fragment_id": "happybrownie-20040",
+      "serial": 20040,
+      "model": "Cactus",
+      "backdrop": "Copper",
+      "symbol": "Star",
+      "image": "/gifts/happy_brownie_2.png",
+      "price_ton": 5.29
+    },
+    {
+      "idx": 3,
+      "id": "happy_brownie-3",
+      "fragment_id": "happybrownie-61104",
+      "serial": 61104,
+      "model": "Cactus",
+      "backdrop": "Light Olive",
+      "symbol": "Telescope",
+      "image": "/gifts/happy_brownie_3.png",
+      "price_ton": 5.3
+    },
+    {
+      "idx": 4,
+      "id": "happy_brownie-4",
+      "fragment_id": "happybrownie-221392",
+      "serial": 221392,
+      "model": "Alien",
+      "backdrop": "Khaki Green",
+      "symbol": "Smartphone",
+      "image": "/gifts/happy_brownie_4.png",
+      "price_ton": 6.35
+    },
+    {
+      "idx": 5,
+      "id": "happy_brownie-5",
+      "fragment_id": "happybrownie-12748",
+      "serial": 12748,
+      "model": "Rattlesnake",
+      "backdrop": "Chocolate",
+      "symbol": "Lemon",
+      "image": "/gifts/happy_brownie_5.png",
+      "price_ton": 6.36
+    },
+    {
+      "idx": 6,
+      "id": "happy_brownie-6",
+      "fragment_id": "happybrownie-185400",
+      "serial": 185400,
+      "model": "Toilet Bot",
+      "backdrop": "Light Olive",
+      "symbol": "Sea Jelly",
+      "image": "/gifts/happy_brownie_6.png",
+      "price_ton": 6.37
+    }
+  ],
+  "Instant Ramen": [
+    {
+      "idx": 1,
+      "id": "instant_ramen-1",
+      "fragment_id": "instantramen-253411",
+      "serial": 253411,
+      "model": "Bacon",
+      "backdrop": "Deep Cyan",
+      "symbol": "Pawn",
+      "image": "/gifts/instant_ramen_1.png",
+      "price_ton": 5.34
+    },
+    {
+      "idx": 2,
+      "id": "instant_ramen-2",
+      "fragment_id": "instantramen-317124",
+      "serial": 317124,
+      "model": "Ratatouille",
+      "backdrop": "Ranger Green",
+      "symbol": "Baby Bottle",
+      "image": "/gifts/instant_ramen_2.png",
+      "price_ton": 5.35
+    },
+    {
+      "idx": 3,
+      "id": "instant_ramen-3",
+      "fragment_id": "instantramen-255365",
+      "serial": 255365,
+      "model": "Slurp-Slurp",
+      "backdrop": "Pacific Cyan",
+      "symbol": "Plume",
+      "image": "/gifts/instant_ramen_3.png",
+      "price_ton": 5.36
+    },
+    {
+      "idx": 4,
+      "id": "instant_ramen-4",
+      "fragment_id": "instantramen-283287",
+      "serial": 283287,
+      "model": "Sandbox",
+      "backdrop": "Shamrock Green",
+      "symbol": "Sparks",
+      "image": "/gifts/instant_ramen_4.png",
+      "price_ton": 5.37
+    },
+    {
+      "idx": 5,
+      "id": "instant_ramen-5",
+      "fragment_id": "instantramen-239397",
+      "serial": 239397,
+      "model": "Ratatouille",
+      "backdrop": "Silver Blue",
+      "symbol": "Rain Drop",
+      "image": "/gifts/instant_ramen_5.png",
+      "price_ton": 5.38
+    },
+    {
+      "idx": 6,
+      "id": "instant_ramen-6",
+      "fragment_id": "instantramen-96826",
+      "serial": 96826,
+      "model": "Squid Wok",
+      "backdrop": "Moonstone",
+      "symbol": "The Eye",
+      "image": "/gifts/instant_ramen_6.png",
+      "price_ton": 5.39
+    }
+  ],
+  "Jester Hat": [
+    {
+      "idx": 1,
+      "id": "jester_hat-1",
+      "fragment_id": "jesterhat-132513",
+      "serial": 132513,
+      "model": "Party Time",
+      "backdrop": "Orange",
+      "symbol": "Maple Leaf",
+      "image": "/gifts/jester_hat_1.png",
+      "price_ton": 7.56
+    },
+    {
+      "idx": 2,
+      "id": "jester_hat-2",
+      "fragment_id": "jesterhat-35552",
+      "serial": 35552,
+      "model": "So Cute!",
+      "backdrop": "Orange",
+      "symbol": "Oxen of Fire",
+      "image": "/gifts/jester_hat_2.png",
+      "price_ton": 5.4
+    },
+    {
+      "idx": 3,
+      "id": "jester_hat-3",
+      "fragment_id": "jesterhat-107822",
+      "serial": 107822,
+      "model": "Xmas Prank",
+      "backdrop": "Cyberpunk",
+      "symbol": "Birthday Cake",
+      "image": "/gifts/jester_hat_3.png",
+      "price_ton": 5.41
+    },
+    {
+      "idx": 4,
+      "id": "jester_hat-4",
+      "fragment_id": "jesterhat-137747",
+      "serial": 137747,
+      "model": "Twinkle Boom",
+      "backdrop": "Chestnut",
+      "symbol": "Book",
+      "image": "/gifts/jester_hat_4.png",
+      "price_ton": 5.42
+    },
+    {
+      "idx": 5,
+      "id": "jester_hat-5",
+      "fragment_id": "jesterhat-14557",
+      "serial": 14557,
+      "model": "Forest Stream",
+      "backdrop": "Strawberry",
+      "symbol": "The Eye",
+      "image": "/gifts/jester_hat_5.png",
+      "price_ton": 5.43
+    },
+    {
+      "idx": 6,
+      "id": "jester_hat-6",
+      "fragment_id": "jesterhat-22442",
+      "serial": 22442,
+      "model": "Trick Tones",
+      "backdrop": "Indigo Dye",
+      "symbol": "Skull",
+      "image": "/gifts/jester_hat_6.png",
+      "price_ton": 5.44
+    }
+  ],
+  "Lunar Snake": [
+    {
+      "idx": 1,
+      "id": "lunar_snake-1",
+      "fragment_id": "lunarsnake-48836",
+      "serial": 48836,
+      "model": "Crimson Jade",
+      "backdrop": "Carrot Juice",
+      "symbol": "Ice Skates",
+      "image": "/gifts/lunar_snake_1.png",
+      "price_ton": 5.49
+    },
+    {
+      "idx": 2,
+      "id": "lunar_snake-2",
+      "fragment_id": "lunarsnake-7234",
+      "serial": 7234,
+      "model": "Polarized",
+      "backdrop": "Aquamarine",
+      "symbol": "Mistletoe",
+      "image": "/gifts/lunar_snake_2.png",
+      "price_ton": 5.5
+    },
+    {
+      "idx": 3,
+      "id": "lunar_snake-3",
+      "fragment_id": "lunarsnake-60395",
+      "serial": 60395,
+      "model": "Purple Laser",
+      "backdrop": "Caramel",
+      "symbol": "Bowtie",
+      "image": "/gifts/lunar_snake_3.png",
+      "price_ton": 5.51
+    },
+    {
+      "idx": 4,
+      "id": "lunar_snake-4",
+      "fragment_id": "lunarsnake-25009",
+      "serial": 25009,
+      "model": "Frost Fangs",
+      "backdrop": "Copper",
+      "symbol": "Stocking",
+      "image": "/gifts/lunar_snake_4.png",
+      "price_ton": 5.52
+    },
+    {
+      "idx": 5,
+      "id": "lunar_snake-5",
+      "fragment_id": "lunarsnake-174781",
+      "serial": 174781,
+      "model": "Glowbra",
+      "backdrop": "Neon Blue",
+      "symbol": "Crystal Ball",
+      "image": "/gifts/lunar_snake_5.png",
+      "price_ton": 5.53
+    },
+    {
+      "idx": 6,
+      "id": "lunar_snake-6",
+      "fragment_id": "lunarsnake-74227",
+      "serial": 74227,
+      "model": "Super Hot",
+      "backdrop": "Caramel",
+      "symbol": "Pegasus",
+      "image": "/gifts/lunar_snake_6.png",
+      "price_ton": 5.54
+    }
+  ],
+  "Mirage Lamp": [
+    {
+      "idx": 1,
+      "id": "mirage_lamp-1",
+      "fragment_id": "miragelamp-11163",
+      "serial": 11163,
+      "model": "Split Aura",
+      "backdrop": "Camo Green",
+      "symbol": "Turtle",
+      "image": "/gifts/mirage_lamp_1.png",
+      "price_ton": 5.55
+    },
+    {
+      "idx": 2,
+      "id": "mirage_lamp-2",
+      "fragment_id": "miragelamp-20355",
+      "serial": 20355,
+      "model": "Moonlit Flower",
+      "backdrop": "Emerald",
+      "symbol": "Mountain Goat",
+      "image": "/gifts/mirage_lamp_2.png",
+      "price_ton": 5.56
+    },
+    {
+      "idx": 3,
+      "id": "mirage_lamp-3",
+      "fragment_id": "miragelamp-20364",
+      "serial": 20364,
+      "model": "Mosaic",
+      "backdrop": "Battleship Grey",
+      "symbol": "Trophy",
+      "image": "/gifts/mirage_lamp_3.png",
+      "price_ton": 5.57
+    },
+    {
+      "idx": 4,
+      "id": "mirage_lamp-4",
+      "fragment_id": "miragelamp-20478",
+      "serial": 20478,
+      "model": "Mosaic",
+      "backdrop": "Silver Blue",
+      "symbol": "Lion Head",
+      "image": "/gifts/mirage_lamp_4.png",
+      "price_ton": 5.58
+    },
+    {
+      "idx": 5,
+      "id": "mirage_lamp-5",
+      "fragment_id": "miragelamp-23120",
+      "serial": 23120,
+      "model": "Verdant Gold",
+      "backdrop": "Steel Grey",
+      "symbol": "Bunny",
+      "image": "/gifts/mirage_lamp_5.png",
+      "price_ton": 5.59
+    },
+    {
+      "idx": 6,
+      "id": "mirage_lamp-6",
+      "fragment_id": "miragelamp-31643",
+      "serial": 31643,
+      "model": "Green Canopy",
+      "backdrop": "Light Olive",
+      "symbol": "Gear",
+      "image": "/gifts/mirage_lamp_6.png",
+      "price_ton": 5.6
+    }
+  ],
+  "Mood Pack": [
+    {
+      "idx": 1,
+      "id": "mood_pack-1",
+      "fragment_id": "moodpack-84869",
+      "serial": 84869,
+      "model": "Star Pupil",
+      "backdrop": "Lemongrass",
+      "symbol": "Morgenstern",
+      "image": "/gifts/mood_pack_1.png",
+      "price_ton": 5.61
+    },
+    {
+      "idx": 2,
+      "id": "mood_pack-2",
+      "fragment_id": "moodpack-112749",
+      "serial": 112749,
+      "model": "Retro Wave",
+      "backdrop": "Neon Blue",
+      "symbol": "Robin Hood",
+      "image": "/gifts/mood_pack_2.png",
+      "price_ton": 6.71
+    },
+    {
+      "idx": 3,
+      "id": "mood_pack-3",
+      "fragment_id": "moodpack-174946",
+      "serial": 174946,
+      "model": "Croc Sack",
+      "backdrop": "Mystic Pearl",
+      "symbol": "Chili Pepper",
+      "image": "/gifts/mood_pack_3.png",
+      "price_ton": 6.72
+    },
+    {
+      "idx": 4,
+      "id": "mood_pack-4",
+      "fragment_id": "moodpack-16154",
+      "serial": 16154,
+      "model": "Star Pupil",
+      "backdrop": "Cyberpunk",
+      "symbol": "Cactus",
+      "image": "/gifts/mood_pack_4.png",
+      "price_ton": 6.73
+    },
+    {
+      "idx": 5,
+      "id": "mood_pack-5",
+      "fragment_id": "moodpack-19364",
+      "serial": 19364,
+      "model": "Street Art",
+      "backdrop": "Aquamarine",
+      "symbol": "Eikthyrnir",
+      "image": "/gifts/mood_pack_5.png",
+      "price_ton": 6.74
+    },
+    {
+      "idx": 6,
+      "id": "mood_pack-6",
+      "fragment_id": "moodpack-16222",
+      "serial": 16222,
+      "model": "Street Art",
+      "backdrop": "Caramel",
+      "symbol": "Visor",
+      "image": "/gifts/mood_pack_6.png",
+      "price_ton": 6.75
+    }
+  ],
+  "Snake Box": [
+    {
+      "idx": 1,
+      "id": "snake_box-1",
+      "fragment_id": "snakebox-131175",
+      "serial": 131175,
+      "model": "Cotton Candy",
+      "backdrop": "Shamrock Green",
+      "symbol": "Tooth",
+      "image": "/gifts/snake_box_1.png",
+      "price_ton": 5.67
+    },
+    {
+      "idx": 2,
+      "id": "snake_box-2",
+      "fragment_id": "snakebox-163618",
+      "serial": 163618,
+      "model": "Fuchsia",
+      "backdrop": "Celtic Blue",
+      "symbol": "Tooth",
+      "image": "/gifts/snake_box_2.png",
+      "price_ton": 5.68
+    },
+    {
+      "idx": 3,
+      "id": "snake_box-3",
+      "fragment_id": "snakebox-163677",
+      "serial": 163677,
+      "model": "Holly Jolly",
+      "backdrop": "Cappuccino",
+      "symbol": "Pizza Slice",
+      "image": "/gifts/snake_box_3.png",
+      "price_ton": 5.69
+    },
+    {
+      "idx": 4,
+      "id": "snake_box-4",
+      "fragment_id": "snakebox-28554",
+      "serial": 28554,
+      "model": "Secret Santa",
+      "backdrop": "Jade Green",
+      "symbol": "Wreath",
+      "image": "/gifts/snake_box_4.png",
+      "price_ton": 5.7
+    },
+    {
+      "idx": 5,
+      "id": "snake_box-5",
+      "fragment_id": "snakebox-175486",
+      "serial": 175486,
+      "model": "Meadow",
+      "backdrop": "Light Olive",
+      "symbol": "Turkey",
+      "image": "/gifts/snake_box_5.png",
+      "price_ton": 5.71
+    },
+    {
+      "idx": 6,
+      "id": "snake_box-6",
+      "fragment_id": "snakebox-32170",
+      "serial": 32170,
+      "model": "Bluebell",
+      "backdrop": "Strawberry",
+      "symbol": "Hazelnut",
+      "image": "/gifts/snake_box_6.png",
+      "price_ton": 5.72
+    }
+  ],
+  "Tama Gadget": [
+    {
+      "idx": 1,
+      "id": "tama_gadget-1",
+      "fragment_id": "tamagadget-70287",
+      "serial": 70287,
+      "model": "Ocean",
+      "backdrop": "Deep Cyan",
+      "symbol": "Legionary",
+      "image": "/gifts/tama_gadget_1.png",
+      "price_ton": 5.74
+    },
+    {
+      "idx": 2,
+      "id": "tama_gadget-2",
+      "fragment_id": "tamagadget-10816",
+      "serial": 10816,
+      "model": "Peach",
+      "backdrop": "Indigo Dye",
+      "symbol": "Wontons",
+      "image": "/gifts/tama_gadget_2.png",
+      "price_ton": 5.75
+    },
+    {
+      "idx": 3,
+      "id": "tama_gadget-3",
+      "fragment_id": "tamagadget-23708",
+      "serial": 23708,
+      "model": "Verdant",
+      "backdrop": "Sapphire",
+      "symbol": "Seahorse",
+      "image": "/gifts/tama_gadget_3.png",
+      "price_ton": 5.76
+    },
+    {
+      "idx": 4,
+      "id": "tama_gadget-4",
+      "fragment_id": "tamagadget-24584",
+      "serial": 24584,
+      "model": "Malachite",
+      "backdrop": "Tomato",
+      "symbol": "Red Deer",
+      "image": "/gifts/tama_gadget_4.png",
+      "price_ton": 5.77
+    },
+    {
+      "idx": 5,
+      "id": "tama_gadget-5",
+      "fragment_id": "tamagadget-2617",
+      "serial": 2617,
+      "model": "Ocean",
+      "backdrop": "Pacific Green",
+      "symbol": "Acorn",
+      "image": "/gifts/tama_gadget_5.png",
+      "price_ton": 5.78
+    },
+    {
+      "idx": 6,
+      "id": "tama_gadget-6",
+      "fragment_id": "tamagadget-70653",
+      "serial": 70653,
+      "model": "Winter",
+      "backdrop": "Pine Green",
+      "symbol": "Beret",
+      "image": "/gifts/tama_gadget_6.png",
+      "price_ton": 5.79
+    }
+  ],
+  "Vice Cream": [
+    {
+      "idx": 1,
+      "id": "vice_cream-1",
+      "fragment_id": "vicecream-116773",
+      "serial": 116773,
+      "model": "Dreamland",
+      "backdrop": "Khaki Green",
+      "symbol": "Monstera",
+      "image": "/gifts/vice_cream_1.png",
+      "price_ton": 5.83
+    },
+    {
+      "idx": 2,
+      "id": "vice_cream-2",
+      "fragment_id": "vicecream-117037",
+      "serial": 117037,
+      "model": "Taiyaki",
+      "backdrop": "Dark Green",
+      "symbol": "Acorn",
+      "image": "/gifts/vice_cream_2.png",
+      "price_ton": 5.84
+    },
+    {
+      "idx": 3,
+      "id": "vice_cream-3",
+      "fragment_id": "vicecream-265394",
+      "serial": 265394,
+      "model": "Pine Cone",
+      "backdrop": "Moonstone",
+      "symbol": "Wolf Rage",
+      "image": "/gifts/vice_cream_3.png",
+      "price_ton": 5.85
+    },
+    {
+      "idx": 4,
+      "id": "vice_cream-4",
+      "fragment_id": "vicecream-118059",
+      "serial": 118059,
+      "model": "Classic",
+      "backdrop": "Grape",
+      "symbol": "Magic Wand",
+      "image": "/gifts/vice_cream_4.png",
+      "price_ton": 5.86
+    },
+    {
+      "idx": 5,
+      "id": "vice_cream-5",
+      "fragment_id": "vicecream-430372",
+      "serial": 430372,
+      "model": "Classic",
+      "backdrop": "French Violet",
+      "symbol": "Steampunk Hat",
+      "image": "/gifts/vice_cream_5.png",
+      "price_ton": 5.87
+    },
+    {
+      "idx": 6,
+      "id": "vice_cream-6",
+      "fragment_id": "vicecream-307728",
+      "serial": 307728,
+      "model": "Pine Cone",
+      "backdrop": "Chocolate",
+      "symbol": "Shell",
+      "image": "/gifts/vice_cream_6.png",
+      "price_ton": 5.88
     }
   ]
 }

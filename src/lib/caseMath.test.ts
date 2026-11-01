@@ -100,11 +100,11 @@ describe('catalog: cases — инвариант EV и RTP', () => {
         bronze: 2000,
         silver: 2500,
         gold: 3000,
-        farm: 6000,
+        farm: 6500,
         classic: 150,
         romance: 150,
         holiday: 250,
-        sweet: 6000,
+        sweet: 6500,
         party: 6000,
         cute: 6000,
         street: 7000,
@@ -206,7 +206,7 @@ describe('catalog: cases — инвариант EV и RTP', () => {
 
   it('caseById находит кейсы', () => {
     expect(caseById.get('elite')?.name).toBe('Elite')
-    expect(caseById.get('farm')?.priceMinor).toBe(6000) // 6 TON
+    expect(caseById.get('farm')?.priceMinor).toBe(6500) // 6.5 TON
     expect(caseById.get('free')?.freeCooldownMs).toBe(3_600_000)
     expect(caseById.get('free24')?.freeCooldownMs).toBe(86_400_000)
   })

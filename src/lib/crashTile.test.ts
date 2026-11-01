@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { giftById } from '../data/catalog'
+import { giftById, gifts } from '../data/catalog'
 import { nftPriceFor, tileGiftFor } from './crashTile'
 import { MULT_TIER_STYLE, multTier } from './multTier'
 
@@ -21,7 +21,11 @@ describe('tileGiftFor (плитка ставки Ракеты)', () => {
 
   it('nftPriceFor совпадает с тем, что платит сервис', () => {
     expect(nftPriceFor(snoop)).toBe(snoop)
-    expect(nftPriceFor(snoop + 450)).toBeUndefined()
+    // цена, которой нет ни у одного NFT (цены видов теперь плотные — ищем свободную)
+    const taken = new Set(gifts.map((g) => g.priceMinor))
+    let free = snoop + 450
+    while (taken.has(free)) free += 1
+    expect(nftPriceFor(free)).toBeUndefined()
   })
 
   it('если цена совпала с поставленным NFT — берётся именно он', () => {

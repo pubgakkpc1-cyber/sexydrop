@@ -41,14 +41,14 @@ describe('demoCaseService: openCase', () => {
     const first = openCase('farm', 'req-dup', rngFirst)
     const second = openCase('farm', 'req-dup', rngFirst)
     expect(second).toEqual(first)
-    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 6_000)
+    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 6_500)
     expect(useInventoryStore.getState().items).toHaveLength(1)
   })
 
   it('разные client_request_id — независимые операции', () => {
     openCase('farm', 'req-a', rngFirst)
     openCase('farm', 'req-b', rngFirst)
-    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 12_000)
+    expect(useWalletStore.getState().getBalance('demo')).toBe(100_000 - 13_000)
     expect(useInventoryStore.getState().items).toHaveLength(2)
   })
 

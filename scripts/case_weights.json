@@ -2,374 +2,694 @@
  "farm": [
   [
    "ton_500",
-   36
+   37
   ],
   [
    "ton_2000",
-   18
+   11
   ],
   [
    "ton_5000",
-   6
-  ],
-  [
-   "pool_float-6",
-   2
-  ],
-  [
-   "pool_float-3",
-   2
-  ],
-  [
-   "pool_float-4",
-   2
-  ],
-  [
-   "whip_cupcake-6",
-   2
-  ],
-  [
-   "whip_cupcake-1",
-   2
-  ],
-  [
-   "whip_cupcake-2",
-   2
-  ],
-  [
-   "chill_flame-4",
-   2
-  ],
-  [
-   "chill_flame-5",
-   2
-  ],
-  [
-   "chill_flame-6",
-   2
-  ],
-  [
-   "timeless_book-3",
-   3
-  ],
-  [
-   "timeless_book-4",
-   3
-  ],
-  [
-   "timeless_book-5",
-   3
-  ],
-  [
-   "party_sparkler-6",
-   6
-  ],
-  [
-   "party_sparkler-1",
-   6
-  ],
-  [
-   "party_sparkler-4",
-   6
-  ],
-  [
-   "liberty_figure-3",
    5
   ],
   [
-   "liberty_figure-4",
+   "candy_cane-4",
    5
   ],
   [
-   "liberty_figure-5",
+   "candy_cane-5",
    5
   ],
   [
-   "jolly_chimp-4",
+   "candy_cane-6",
    5
   ],
   [
-   "jolly_chimp-5",
-   5
-  ],
-  [
-   "jolly_chimp-6",
-   5
-  ],
-  [
-   "fine_pen-2",
+   "jester_hat-5",
    4
   ],
   [
-   "fine_pen-3",
+   "jester_hat-6",
    4
   ],
   [
-   "fine_pen-4",
+   "hypno_lollipop-1",
    4
   ],
   [
-   "jingle_bell-2",
+   "hypno_lollipop-2",
    4
   ],
   [
-   "jingle_bell-4",
+   "hypno_lollipop-6",
    4
   ],
   [
-   "jingle_bell-5",
+   "spiced_wine-1",
    4
   ],
   [
-   "love_potion-4",
+   "spiced_wine-2",
+   4
+  ],
+  [
+   "spiced_wine-3",
    3
   ],
   [
-   "love_potion-5",
+   "faith_amulet-2",
    3
   ],
   [
-   "love_potion-6",
+   "faith_amulet-3",
    3
   ],
   [
-   "mad_pumpkin-5",
+   "faith_amulet-4",
+   3
+  ],
+  [
+   "jester_hat-1",
+   3
+  ],
+  [
+   "input_key-5",
+   3
+  ],
+  [
+   "input_key-6",
+   3
+  ],
+  [
+   "santa_hat-3",
+   3
+  ],
+  [
+   "santa_hat-4",
+   3
+  ],
+  [
+   "santa_hat-5",
+   3
+  ],
+  [
+   "berry_box-4",
+   2
+  ],
+  [
+   "berry_box-5",
+   2
+  ],
+  [
+   "berry_box-6",
+   2
+  ],
+  [
+   "spring_basket-3",
+   2
+  ],
+  [
+   "witch_hat-4",
+   2
+  ],
+  [
+   "witch_hat-5",
+   2
+  ],
+  [
+   "witch_hat-6",
+   2
+  ],
+  [
+   "input_key-1",
+   2
+  ],
+  [
+   "sleigh_bell-1",
+   2
+  ],
+  [
+   "sleigh_bell-2",
+   2
+  ],
+  [
+   "sleigh_bell-6",
+   2
+  ],
+  [
+   "spring_basket-1",
    1
   ],
   [
-   "mad_pumpkin-6",
-   1
-  ],
-  [
-   "mad_pumpkin-4",
+   "spring_basket-2",
    1
   ]
  ],
  "autumn": [
   [
-   "timeless_book-3",
-   93
+   "candy_cane-2",
+   41
   ],
   [
-   "timeless_book-4",
-   93
+   "candy_cane-3",
+   41
   ],
   [
-   "timeless_book-5",
-   93
+   "candy_cane-4",
+   41
   ],
   [
-   "ice_cream-5",
-   93
+   "jester_hat-3",
+   38
   ],
   [
-   "ice_cream-6",
-   93
+   "jester_hat-4",
+   38
   ],
   [
-   "ice_cream-1",
-   93
+   "jester_hat-5",
+   38
   ],
   [
-   "pool_float-6",
-   93
+   "hypno_lollipop-4",
+   29
   ],
   [
-   "pool_float-3",
-   93
+   "hypno_lollipop-5",
+   29
   ],
   [
-   "pool_float-4",
-   93
+   "hypno_lollipop-6",
+   29
   ],
   [
-   "chill_flame-2",
-   93
+   "liberty_figure-4",
+   28
   ],
   [
-   "chill_flame-4",
-   93
+   "liberty_figure-5",
+   28
   ],
   [
-   "chill_flame-5",
-   93
+   "restless_jar-1",
+   27
   ],
   [
-   "clover_pin-4",
-   79
+   "restless_jar-2",
+   27
   ],
   [
-   "clover_pin-5",
-   79
+   "stellar_rocket-1",
+   26
   ],
   [
-   "clover_pin-6",
-   79
+   "stellar_rocket-5",
+   25
   ],
   [
-   "spring_basket-1",
-   69
+   "stellar_rocket-6",
+   25
   ],
   [
-   "spring_basket-2",
-   69
+   "restless_jar-6",
+   21
   ],
   [
-   "spring_basket-3",
-   69
+   "spy_agaric-1",
+   22
   ],
   [
-   "surge_board-2",
-   62
+   "spy_agaric-2",
+   22
   ],
   [
-   "surge_board-3",
-   62
+   "spy_agaric-3",
+   20
   ],
   [
-   "surge_board-4",
-   62
+   "jelly_bunny-2",
+   17
   ],
   [
-   "witch_hat-6",
-   50
+   "jelly_bunny-3",
+   14
   ],
   [
-   "witch_hat-4",
-   50
+   "jelly_bunny-4",
+   14
   ],
   [
-   "witch_hat-5",
-   50
+   "crystal_ball-4",
+   8
+  ],
+  [
+   "skull_flower-4",
+   8
+  ],
+  [
+   "skull_flower-5",
+   8
+  ],
+  [
+   "skull_flower-6",
+   8
+  ],
+  [
+   "love_potion-4",
+   7
+  ],
+  [
+   "love_potion-5",
+   7
+  ],
+  [
+   "ionic_dryer-1",
+   7
   ],
   [
    "love_potion-6",
-   33
+   7
   ],
   [
-   "love_potion-1",
-   33
+   "ionic_dryer-5",
+   5
   ],
   [
-   "love_potion-3",
-   33
+   "ionic_dryer-6",
+   5
   ],
   [
-   "mad_pumpkin-5",
-   26
+   "crystal_ball-6",
+   3
   ],
   [
-   "mad_pumpkin-6",
-   26
+   "liberty_figure-3",
+   3
   ],
   [
-   "mad_pumpkin-4",
-   26
-  ],
-  [
-   "toy_bear-3",
-   15
-  ],
-  [
-   "toy_bear-4",
-   15
-  ],
-  [
-   "toy_bear-5",
-   15
-  ],
-  [
-   "vintage_cigar-4",
-   1
-  ],
-  [
-   "vintage_cigar-5",
-   1
-  ],
-  [
-   "vintage_cigar-6",
+   "crystal_ball-1",
    1
   ]
  ],
  "movie": [
   [
    "ton_1000",
+   49
+  ],
+  [
+   "ton_5000",
+   18
+  ],
+  [
+   "candy_cane-1",
+   19
+  ],
+  [
+   "candy_cane-5",
+   19
+  ],
+  [
+   "candy_cane-6",
+   19
+  ],
+  [
+   "ice_cream-4",
+   18
+  ],
+  [
+   "ice_cream-5",
+   18
+  ],
+  [
+   "ice_cream-6",
+   18
+  ],
+  [
+   "jester_hat-2",
+   18
+  ],
+  [
+   "jester_hat-6",
+   18
+  ],
+  [
+   "mood_pack-1",
+   18
+  ],
+  [
+   "mood_pack-2",
+   15
+  ],
+  [
+   "mood_pack-3",
+   16
+  ],
+  [
+   "swag_bag-2",
+   15
+  ],
+  [
+   "swag_bag-3",
+   15
+  ],
+  [
+   "swag_bag-4",
+   15
+  ],
+  [
+   "jester_hat-1",
+   15
+  ],
+  [
+   "light_sword-3",
+   15
+  ],
+  [
+   "light_sword-4",
+   15
+  ],
+  [
+   "light_sword-5",
+   15
+  ],
+  [
+   "ton_10000",
+   13
+  ],
+  [
+   "snow_mittens-1",
+   12
+  ],
+  [
+   "snow_mittens-2",
+   12
+  ],
+  [
+   "snow_mittens-6",
+   12
+  ],
+  [
+   "jingle_bell-6",
+   11
+  ],
+  [
+   "record_player-1",
+   11
+  ],
+  [
+   "record_player-2",
+   11
+  ],
+  [
+   "record_player-3",
+   11
+  ],
+  [
+   "jingle_bell-2",
+   10
+  ],
+  [
+   "flying_broom-2",
+   10
+  ],
+  [
+   "flying_broom-3",
+   10
+  ],
+  [
+   "flying_broom-4",
+   10
+  ],
+  [
+   "trapped_heart-4",
+   9
+  ],
+  [
+   "trapped_heart-5",
+   9
+  ],
+  [
+   "trapped_heart-6",
+   9
+  ],
+  [
+   "jingle_bell-1",
+   8
+  ],
+  [
+   "eternal_rose-4",
+   6
+  ],
+  [
+   "eternal_rose-5",
+   6
+  ],
+  [
+   "eternal_rose-6",
+   1
+  ]
+ ],
+ "telegram": [
+  [
+   "candy_cane-4",
+   11
+  ],
+  [
+   "candy_cane-5",
+   11
+  ],
+  [
+   "candy_cane-6",
+   11
+  ],
+  [
+   "jester_hat-5",
+   9
+  ],
+  [
+   "jester_hat-6",
+   9
+  ],
+  [
+   "hypno_lollipop-1",
+   6
+  ],
+  [
+   "hypno_lollipop-2",
+   6
+  ],
+  [
+   "hypno_lollipop-6",
+   5
+  ],
+  [
+   "stellar_rocket-1",
+   5
+  ],
+  [
+   "stellar_rocket-2",
+   4
+  ],
+  [
+   "stellar_rocket-3",
+   4
+  ],
+  [
+   "faith_amulet-2",
+   4
+  ],
+  [
+   "faith_amulet-3",
+   4
+  ],
+  [
+   "faith_amulet-4",
+   4
+  ],
+  [
+   "jester_hat-1",
+   4
+  ],
+  [
+   "input_key-5",
+   3
+  ],
+  [
+   "input_key-6",
+   3
+  ],
+  [
+   "santa_hat-3",
+   3
+  ],
+  [
+   "santa_hat-4",
+   3
+  ],
+  [
+   "santa_hat-5",
+   3
+  ],
+  [
+   "berry_box-4",
+   2
+  ],
+  [
+   "berry_box-5",
+   2
+  ],
+  [
+   "berry_box-6",
+   2
+  ],
+  [
+   "spring_basket-3",
+   1
+  ],
+  [
+   "witch_hat-4",
+   1
+  ],
+  [
+   "witch_hat-5",
+   1
+  ],
+  [
+   "witch_hat-6",
+   1
+  ],
+  [
+   "input_key-1",
+   1
+  ],
+  [
+   "valentine_box-1",
+   1
+  ],
+  [
+   "valentine_box-2",
+   1
+  ],
+  [
+   "valentine_box-6",
+   1
+  ],
+  [
+   "spring_basket-1",
+   1
+  ],
+  [
+   "spring_basket-2",
+   1
+  ],
+  [
+   "electric_skull-3",
+   1
+  ],
+  [
+   "electric_skull-4",
+   1
+  ],
+  [
+   "electric_skull-5",
+   1
+  ],
+  [
+   "gem_signet-4",
+   1
+  ],
+  [
+   "gem_signet-5",
+   1
+  ],
+  [
+   "gem_signet-6",
+   1
+  ]
+ ],
+ "magic": [
+  [
+   "ton_1000",
    30
   ],
   [
    "ton_5000",
-   6
-  ],
-  [
-   "ice_cream-1",
-   2
-  ],
-  [
-   "ice_cream-4",
-   2
-  ],
-  [
-   "ice_cream-5",
-   2
-  ],
-  [
-   "timeless_book-1",
-   2
-  ],
-  [
-   "timeless_book-3",
-   2
-  ],
-  [
-   "timeless_book-4",
-   2
-  ],
-  [
-   "big_year-4",
-   2
-  ],
-  [
-   "big_year-5",
-   2
-  ],
-  [
-   "big_year-6",
-   2
-  ],
-  [
-   "party_sparkler-6",
-   2
-  ],
-  [
-   "party_sparkler-1",
-   2
-  ],
-  [
-   "party_sparkler-4",
-   2
-  ],
-  [
-   "snoop_dogg-5",
-   2
-  ],
-  [
-   "snoop_dogg-6",
-   2
-  ],
-  [
-   "snoop_dogg-2",
-   2
-  ],
-  [
-   "jolly_chimp-4",
    1
   ],
   [
-   "jolly_chimp-5",
+   "candy_cane-1",
    1
   ],
   [
-   "jolly_chimp-6",
+   "candy_cane-2",
+   1
+  ],
+  [
+   "candy_cane-3",
+   1
+  ],
+  [
+   "jester_hat-2",
+   1
+  ],
+  [
+   "jester_hat-3",
+   1
+  ],
+  [
+   "jester_hat-4",
+   1
+  ],
+  [
+   "hypno_lollipop-3",
+   1
+  ],
+  [
+   "hypno_lollipop-4",
+   1
+  ],
+  [
+   "hypno_lollipop-5",
+   1
+  ],
+  [
+   "stellar_rocket-4",
+   1
+  ],
+  [
+   "stellar_rocket-5",
+   1
+  ],
+  [
+   "stellar_rocket-6",
+   1
+  ],
+  [
+   "faith_amulet-1",
+   1
+  ],
+  [
+   "faith_amulet-5",
+   1
+  ],
+  [
+   "faith_amulet-6",
+   1
+  ],
+  [
+   "santa_hat-1",
+   1
+  ],
+  [
+   "santa_hat-2",
+   1
+  ],
+  [
+   "spring_basket-5",
+   1
+  ],
+  [
+   "spring_basket-6",
    1
   ],
   [
@@ -381,572 +701,260 @@
    1
   ],
   [
+   "santa_hat-6",
+   1
+  ],
+  [
+   "ton_10000",
+   4
+  ],
+  [
+   "berry_box-2",
+   2
+  ],
+  [
+   "berry_box-3",
+   2
+  ],
+  [
+   "berry_box-4",
+   2
+  ],
+  [
+   "witch_hat-4",
+   2
+  ],
+  [
+   "witch_hat-5",
+   1
+  ],
+  [
+   "witch_hat-6",
+   1
+  ],
+  [
    "input_key-1",
    1
   ],
   [
-   "ton_10000",
-   3
-  ],
-  [
-   "jingle_bell-4",
+   "valentine_box-4",
    1
   ],
   [
-   "jingle_bell-5",
+   "valentine_box-5",
    1
   ],
   [
-   "jingle_bell-6",
+   "valentine_box-6",
    1
   ],
   [
-   "trapped_heart-5",
+   "electric_skull-1",
    1
   ],
   [
-   "trapped_heart-6",
+   "spring_basket-1",
    1
   ],
   [
-   "trapped_heart-4",
+   "electric_skull-2",
    1
   ],
   [
-   "khabibs_papakha-5",
+   "electric_skull-3",
    1
   ],
   [
-   "khabibs_papakha-6",
+   "gem_signet-2",
    1
   ],
   [
-   "khabibs_papakha-2",
+   "gem_signet-3",
    1
   ],
   [
-   "voodoo_doll-1",
-   1
-  ],
-  [
-   "voodoo_doll-2",
-   1
-  ],
-  [
-   "voodoo_doll-4",
-   1
-  ],
-  [
-   "kissed_frog-3",
-   1
-  ],
-  [
-   "kissed_frog-4",
-   1
-  ],
-  [
-   "kissed_frog-5",
-   1
-  ]
- ],
- "telegram": [
-  [
-   "timeless_book-5",
-   90
-  ],
-  [
-   "timeless_book-6",
-   90
-  ],
-  [
-   "timeless_book-1",
-   90
-  ],
-  [
-   "ice_cream-1",
-   90
-  ],
-  [
-   "ice_cream-4",
-   90
-  ],
-  [
-   "ice_cream-5",
-   90
-  ],
-  [
-   "big_year-6",
-   90
-  ],
-  [
-   "big_year-4",
-   90
-  ],
-  [
-   "big_year-5",
-   90
-  ],
-  [
-   "snoop_dogg-3",
-   78
-  ],
-  [
-   "snoop_dogg-4",
-   78
-  ],
-  [
-   "snoop_dogg-5",
-   78
-  ],
-  [
-   "party_sparkler-6",
-   78
-  ],
-  [
-   "party_sparkler-1",
-   78
-  ],
-  [
-   "party_sparkler-4",
-   78
-  ],
-  [
-   "jolly_chimp-3",
-   62
-  ],
-  [
-   "jolly_chimp-4",
-   62
-  ],
-  [
-   "jolly_chimp-5",
-   62
-  ],
-  [
-   "fine_pen-6",
-   56
-  ],
-  [
-   "fine_pen-2",
-   56
-  ],
-  [
-   "fine_pen-3",
-   56
-  ],
-  [
-   "jingle_bell-1",
-   45
-  ],
-  [
-   "jingle_bell-2",
-   45
-  ],
-  [
-   "jingle_bell-4",
-   45
-  ],
-  [
-   "trapped_heart-6",
-   32
-  ],
-  [
-   "trapped_heart-4",
-   32
-  ],
-  [
-   "trapped_heart-5",
-   32
-  ],
-  [
-   "khabibs_papakha-2",
-   23
-  ],
-  [
-   "khabibs_papakha-4",
-   23
-  ],
-  [
-   "khabibs_papakha-5",
-   23
-  ],
-  [
-   "voodoo_doll-5",
-   16
-  ],
-  [
-   "voodoo_doll-6",
-   16
-  ],
-  [
-   "voodoo_doll-1",
-   16
-  ],
-  [
-   "kissed_frog-6",
-   12
-  ],
-  [
-   "kissed_frog-1",
-   12
-  ],
-  [
-   "kissed_frog-3",
-   12
-  ],
-  [
-   "magic_potion-6",
-   1
-  ],
-  [
-   "magic_potion-1",
-   1
-  ],
-  [
-   "magic_potion-4",
-   1
-  ]
- ],
- "magic": [
-  [
-   "ton_1000",
-   30
-  ],
-  [
-   "ton_5000",
-   12
-  ],
-  [
-   "ice_cream-5",
-   4
-  ],
-  [
-   "ice_cream-6",
-   4
-  ],
-  [
-   "ice_cream-1",
-   4
-  ],
-  [
-   "timeless_book-4",
-   4
-  ],
-  [
-   "timeless_book-5",
-   4
-  ],
-  [
-   "timeless_book-6",
-   4
-  ],
-  [
-   "big_year-6",
-   4
-  ],
-  [
-   "big_year-4",
-   4
-  ],
-  [
-   "big_year-5",
-   4
-  ],
-  [
-   "party_sparkler-4",
-   3
-  ],
-  [
-   "party_sparkler-5",
-   3
-  ],
-  [
-   "party_sparkler-6",
-   3
-  ],
-  [
-   "snoop_dogg-2",
-   3
-  ],
-  [
-   "snoop_dogg-3",
-   3
-  ],
-  [
-   "snoop_dogg-4",
-   3
-  ],
-  [
-   "jolly_chimp-6",
-   2
-  ],
-  [
-   "jolly_chimp-3",
-   2
-  ],
-  [
-   "jolly_chimp-4",
-   2
-  ],
-  [
-   "fine_pen-4",
-   3
-  ],
-  [
-   "fine_pen-5",
-   3
-  ],
-  [
-   "fine_pen-6",
-   3
-  ],
-  [
-   "ton_10000",
-   12
-  ],
-  [
-   "jingle_bell-6",
-   2
-  ],
-  [
-   "jingle_bell-1",
-   2
-  ],
-  [
-   "jingle_bell-2",
-   2
-  ],
-  [
-   "trapped_heart-4",
-   2
-  ],
-  [
-   "trapped_heart-5",
-   2
-  ],
-  [
-   "trapped_heart-6",
-   2
-  ],
-  [
-   "khabibs_papakha-2",
-   1
-  ],
-  [
-   "khabibs_papakha-4",
-   1
-  ],
-  [
-   "khabibs_papakha-5",
-   1
-  ],
-  [
-   "voodoo_doll-4",
-   1
-  ],
-  [
-   "voodoo_doll-5",
-   1
-  ],
-  [
-   "voodoo_doll-6",
-   1
-  ],
-  [
-   "kissed_frog-5",
-   1
-  ],
-  [
-   "kissed_frog-6",
-   1
-  ],
-  [
-   "kissed_frog-1",
-   1
-  ],
-  [
-   "magic_potion-6",
-   1
-  ],
-  [
-   "magic_potion-1",
-   1
-  ],
-  [
-   "magic_potion-4",
+   "gem_signet-4",
    1
   ]
  ],
  "kitty": [
   [
-   "timeless_book-1",
-   90
+   "candy_cane-1",
+   208
   ],
   [
-   "timeless_book-3",
-   90
+   "candy_cane-2",
+   207
   ],
   [
-   "timeless_book-4",
-   90
+   "candy_cane-6",
+   206
   ],
   [
-   "ice_cream-5",
-   90
+   "jester_hat-2",
+   200
   ],
   [
-   "ice_cream-6",
-   90
+   "jester_hat-3",
+   199
   ],
   [
-   "ice_cream-1",
-   90
+   "hypno_lollipop-2",
+   175
   ],
   [
-   "big_year-5",
-   90
+   "hypno_lollipop-3",
+   175
   ],
   [
-   "big_year-6",
-   90
+   "hypno_lollipop-4",
+   175
   ],
   [
-   "big_year-4",
-   90
+   "stellar_rocket-3",
+   166
   ],
   [
-   "snoop_dogg-5",
-   78
+   "stellar_rocket-4",
+   165
   ],
   [
-   "snoop_dogg-6",
-   78
+   "stellar_rocket-5",
+   165
   ],
   [
-   "snoop_dogg-2",
-   78
+   "faith_amulet-4",
+   159
   ],
   [
-   "party_sparkler-4",
-   78
+   "faith_amulet-5",
+   159
   ],
   [
-   "party_sparkler-5",
-   78
+   "faith_amulet-6",
+   159
   ],
   [
-   "party_sparkler-6",
-   78
+   "jester_hat-1",
+   158
   ],
   [
-   "jolly_chimp-5",
-   62
+   "santa_hat-1",
+   154
   ],
   [
-   "jolly_chimp-6",
-   62
+   "spring_basket-4",
+   154
   ],
   [
-   "jolly_chimp-3",
-   62
+   "spring_basket-5",
+   153
   ],
   [
-   "fine_pen-3",
-   56
+   "input_key-4",
+   149
   ],
   [
-   "fine_pen-4",
-   56
+   "input_key-5",
+   149
   ],
   [
-   "fine_pen-5",
-   56
+   "santa_hat-5",
+   148
   ],
   [
-   "jingle_bell-4",
+   "santa_hat-6",
+   148
+  ],
+  [
+   "berry_box-1",
+   129
+  ],
+  [
+   "berry_box-2",
+   129
+  ],
+  [
+   "berry_box-6",
+   127
+  ],
+  [
+   "spring_basket-3",
+   126
+  ],
+  [
+   "witch_hat-4",
+   126
+  ],
+  [
+   "witch_hat-5",
+   126
+  ],
+  [
+   "witch_hat-6",
+   126
+  ],
+  [
+   "input_key-1",
+   113
+  ],
+  [
+   "valentine_box-2",
+   100
+  ],
+  [
+   "valentine_box-3",
+   100
+  ],
+  [
+   "valentine_box-4",
+   100
+  ],
+  [
+   "electric_skull-1",
+   53
+  ],
+  [
+   "electric_skull-5",
    45
   ],
   [
-   "jingle_bell-5",
-   45
+   "electric_skull-6",
+   43
   ],
   [
-   "jingle_bell-6",
-   45
-  ],
-  [
-   "trapped_heart-5",
+   "gem_signet-1",
    32
   ],
   [
-   "trapped_heart-6",
+   "gem_signet-2",
    32
   ],
   [
-   "trapped_heart-4",
-   32
-  ],
-  [
-   "khabibs_papakha-5",
-   23
-  ],
-  [
-   "khabibs_papakha-6",
-   23
-  ],
-  [
-   "khabibs_papakha-2",
-   23
-  ],
-  [
-   "voodoo_doll-1",
-   16
-  ],
-  [
-   "voodoo_doll-2",
-   16
-  ],
-  [
-   "voodoo_doll-4",
-   16
-  ],
-  [
-   "kissed_frog-3",
-   12
-  ],
-  [
-   "kissed_frog-4",
-   12
-  ],
-  [
-   "kissed_frog-5",
-   12
-  ],
-  [
-   "magic_potion-4",
-   1
-  ],
-  [
-   "magic_potion-5",
-   1
-  ],
-  [
-   "magic_potion-6",
+   "gem_signet-6",
    1
   ]
  ],
  "space": [
   [
    "ton_1000",
-   30
+   9
   ],
   [
    "ton_5000",
-   6
+   3
   ],
   [
-   "ice_cream-1",
-   3
+   "candy_cane-3",
+   4
+  ],
+  [
+   "candy_cane-4",
+   4
+  ],
+  [
+   "candy_cane-5",
+   4
   ],
   [
    "ice_cream-4",
@@ -954,70 +962,576 @@
   ],
   [
    "ice_cream-5",
+   4
+  ],
+  [
+   "ice_cream-6",
+   4
+  ],
+  [
+   "jester_hat-4",
+   4
+  ],
+  [
+   "jester_hat-5",
+   4
+  ],
+  [
+   "jester_hat-6",
+   4
+  ],
+  [
+   "mood_pack-1",
+   4
+  ],
+  [
+   "mood_pack-5",
+   4
+  ],
+  [
+   "mood_pack-6",
+   4
+  ],
+  [
+   "swag_bag-1",
+   4
+  ],
+  [
+   "swag_bag-2",
+   4
+  ],
+  [
+   "swag_bag-6",
+   4
+  ],
+  [
+   "light_sword-1",
+   4
+  ],
+  [
+   "light_sword-2",
+   4
+  ],
+  [
+   "light_sword-3",
+   4
+  ],
+  [
+   "ton_10000",
    3
   ],
   [
-   "timeless_book-6",
+   "snow_mittens-4",
    3
   ],
   [
-   "timeless_book-1",
+   "snow_mittens-5",
    3
   ],
   [
-   "timeless_book-3",
+   "snow_mittens-6",
    3
   ],
   [
-   "big_year-5",
+   "jingle_bell-5",
    3
   ],
   [
-   "big_year-6",
+   "jingle_bell-6",
    3
   ],
   [
-   "big_year-4",
+   "top_hat-1",
    3
   ],
   [
-   "party_sparkler-6",
+   "top_hat-5",
+   3
+  ],
+  [
+   "top_hat-6",
+   3
+  ],
+  [
+   "flying_broom-1",
+   3
+  ],
+  [
+   "flying_broom-2",
+   3
+  ],
+  [
+   "flying_broom-6",
+   3
+  ],
+  [
+   "trapped_heart-4",
    2
   ],
   [
-   "party_sparkler-1",
+   "trapped_heart-5",
    2
   ],
   [
-   "party_sparkler-4",
+   "trapped_heart-6",
    2
   ],
   [
-   "snoop_dogg-4",
+   "jingle_bell-1",
    2
   ],
   [
-   "snoop_dogg-5",
+   "rare_bird-2",
    2
   ],
   [
-   "snoop_dogg-6",
+   "rare_bird-3",
    2
   ],
   [
-   "jolly_chimp-4",
+   "rare_bird-4",
    2
   ],
   [
-   "jolly_chimp-5",
+   "signet_ring-4",
    2
   ],
   [
-   "jolly_chimp-6",
+   "signet_ring-5",
    2
   ],
   [
-   "fine_pen-6",
+   "signet_ring-3",
+   1
+  ]
+ ],
+ "adult18": [
+  [
+   "candy_cane-2",
+   6
+  ],
+  [
+   "candy_cane-3",
+   6
+  ],
+  [
+   "candy_cane-4",
+   6
+  ],
+  [
+   "ice_cream-4",
+   6
+  ],
+  [
+   "ice_cream-5",
+   6
+  ],
+  [
+   "jester_hat-3",
+   5
+  ],
+  [
+   "jester_hat-4",
+   5
+  ],
+  [
+   "jester_hat-5",
+   5
+  ],
+  [
+   "mood_pack-4",
+   2
+  ],
+  [
+   "mood_pack-5",
+   2
+  ],
+  [
+   "mood_pack-6",
+   2
+  ],
+  [
+   "swag_bag-1",
+   2
+  ],
+  [
+   "swag_bag-5",
+   2
+  ],
+  [
+   "swag_bag-6",
+   2
+  ],
+  [
+   "ice_cream-1",
+   2
+  ],
+  [
+   "lush_bouquet-1",
+   1
+  ],
+  [
+   "lush_bouquet-2",
+   1
+  ],
+  [
+   "lush_bouquet-6",
+   1
+  ],
+  [
+   "snow_mittens-2",
+   1
+  ],
+  [
+   "snow_mittens-3",
+   1
+  ],
+  [
+   "snow_mittens-4",
+   1
+  ],
+  [
+   "record_player-3",
+   1
+  ],
+  [
+   "record_player-4",
+   1
+  ],
+  [
+   "record_player-5",
+   1
+  ],
+  [
+   "flying_broom-4",
+   1
+  ],
+  [
+   "flying_broom-5",
+   1
+  ],
+  [
+   "flying_broom-6",
+   1
+  ],
+  [
+   "lucky_locket-1",
+   1
+  ],
+  [
+   "lucky_locket-5",
+   1
+  ],
+  [
+   "lucky_locket-6",
+   1
+  ],
+  [
+   "eternal_rose-1",
+   1
+  ],
+  [
+   "eternal_rose-2",
+   1
+  ],
+  [
+   "toy_bear-5",
+   1
+  ],
+  [
+   "eternal_rose-6",
+   1
+  ],
+  [
+   "toy_bear-6",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "perfume_bottle-2",
+   1
+  ],
+  [
+   "perfume_bottle-3",
+   1
+  ],
+  [
+   "perfume_bottle-4",
+   1
+  ]
+ ],
+ "snoop": [
+  [
+   "candy_cane-3",
+   7
+  ],
+  [
+   "candy_cane-4",
+   6
+  ],
+  [
+   "candy_cane-5",
+   6
+  ],
+  [
+   "ice_cream-4",
+   6
+  ],
+  [
+   "ice_cream-5",
+   6
+  ],
+  [
+   "ice_cream-6",
+   6
+  ],
+  [
+   "jester_hat-4",
+   5
+  ],
+  [
+   "jester_hat-5",
+   5
+  ],
+  [
+   "jester_hat-6",
+   5
+  ],
+  [
+   "mood_pack-1",
+   5
+  ],
+  [
+   "mood_pack-5",
+   2
+  ],
+  [
+   "mood_pack-6",
+   2
+  ],
+  [
+   "swag_bag-1",
+   2
+  ],
+  [
+   "swag_bag-2",
+   2
+  ],
+  [
+   "swag_bag-6",
+   2
+  ],
+  [
+   "lush_bouquet-1",
+   2
+  ],
+  [
+   "lush_bouquet-2",
+   1
+  ],
+  [
+   "lush_bouquet-3",
+   1
+  ],
+  [
+   "snow_mittens-3",
+   1
+  ],
+  [
+   "snow_mittens-4",
+   1
+  ],
+  [
+   "snow_mittens-5",
+   1
+  ],
+  [
+   "record_player-4",
+   1
+  ],
+  [
+   "record_player-5",
+   1
+  ],
+  [
+   "record_player-6",
+   1
+  ],
+  [
+   "flying_broom-1",
+   3
+  ],
+  [
+   "flying_broom-5",
+   1
+  ],
+  [
+   "flying_broom-6",
+   1
+  ],
+  [
+   "lucky_locket-1",
+   1
+  ],
+  [
+   "lucky_locket-2",
+   1
+  ],
+  [
+   "lucky_locket-6",
+   1
+  ],
+  [
+   "eternal_rose-1",
+   1
+  ],
+  [
+   "eternal_rose-2",
+   1
+  ],
+  [
+   "eternal_rose-3",
+   1
+  ],
+  [
+   "toy_bear-6",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "perfume_bottle-3",
+   1
+  ],
+  [
+   "perfume_bottle-4",
+   1
+  ],
+  [
+   "perfume_bottle-5",
+   1
+  ],
+  [
+   "toy_bear-3",
+   1
+  ]
+ ],
+ "money": [
+  [
+   "ton_2000",
+   23
+  ],
+  [
+   "ton_5000",
+   3
+  ],
+  [
+   "candy_cane-1",
+   3
+  ],
+  [
+   "candy_cane-2",
+   3
+  ],
+  [
+   "candy_cane-6",
+   3
+  ],
+  [
+   "happy_brownie-1",
+   3
+  ],
+  [
+   "happy_brownie-2",
+   3
+  ],
+  [
+   "happy_brownie-3",
+   3
+  ],
+  [
+   "clover_pin-4",
+   2
+  ],
+  [
+   "mood_pack-2",
+   2
+  ],
+  [
+   "mood_pack-3",
+   2
+  ],
+  [
+   "mood_pack-4",
+   2
+  ],
+  [
+   "winter_wreath-3",
+   2
+  ],
+  [
+   "winter_wreath-4",
+   2
+  ],
+  [
+   "winter_wreath-5",
+   2
+  ],
+  [
+   "clover_pin-5",
+   2
+  ],
+  [
+   "moon_pendant-4",
+   1
+  ],
+  [
+   "moon_pendant-5",
+   1
+  ],
+  [
+   "moon_pendant-6",
+   1
+  ],
+  [
+   "clover_pin-1",
+   1
+  ],
+  [
+   "fine_pen-4",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "witch_hat-4",
+   1
+  ],
+  [
+   "witch_hat-5",
+   1
+  ],
+  [
+   "witch_hat-6",
+   1
+  ],
+  [
+   "hanging_star-1",
+   1
+  ],
+  [
+   "hanging_star-2",
+   1
+  ],
+  [
+   "hanging_star-3",
    1
   ],
   [
@@ -1025,27 +1539,15 @@
    1
   ],
   [
-   "fine_pen-3",
+   "love_candle-2",
    1
   ],
   [
-   "ton_10000",
-   6
-  ],
-  [
-   "love_potion-3",
+   "love_candle-3",
    1
   ],
   [
-   "love_potion-4",
-   1
-  ],
-  [
-   "love_potion-5",
-   1
-  ],
-  [
-   "mad_pumpkin-6",
+   "love_candle-4",
    1
   ],
   [
@@ -1057,19 +1559,27 @@
    1
   ],
   [
-   "signet_ring-5",
+   "mad_pumpkin-6",
    1
   ],
   [
-   "signet_ring-6",
+   "fine_pen-3",
    1
   ],
   [
-   "signet_ring-1",
+   "khabibs_papakha-4",
+   1
+  ],
+  [
+   "khabibs_papakha-6",
    1
   ],
   [
    "sharp_tongue-6",
+   1
+  ],
+  [
+   "khabibs_papakha-2",
    1
   ],
   [
@@ -1079,471 +1589,343 @@
   [
    "sharp_tongue-3",
    1
+  ]
+ ],
+ "onyx-black": [
+  [
+   "pet_snake-2",
+   58
   ],
   [
-   "low_rider-3",
-   1
+   "clover_pin-2",
+   28
   ],
   [
-   "low_rider-4",
-   1
+   "big_year-1",
+   24
   ],
   [
-   "low_rider-5",
-   1
+   "pool_float-1",
+   11
   ],
   [
-   "ion_gem-4",
-   1
+   "timeless_book-2",
+   11
   ],
   [
-   "ion_gem-5",
-   1
-  ],
-  [
-   "ion_gem-6",
+   "magic_potion-2",
    1
   ]
  ],
- "adult18": [
+ "peach": [
   [
-   "timeless_book-4",
-   11
+   "candy_cane-1",
+   5
   ],
   [
-   "timeless_book-5",
-   11
+   "candy_cane-2",
+   5
   ],
   [
-   "timeless_book-6",
-   11
+   "candy_cane-6",
+   5
   ],
   [
-   "ice_cream-1",
-   11
+   "happy_brownie-1",
+   5
   ],
   [
-   "ice_cream-4",
-   11
+   "happy_brownie-2",
+   5
   ],
   [
-   "ice_cream-5",
-   11
+   "happy_brownie-3",
+   5
   ],
   [
-   "big_year-4",
-   11
+   "clover_pin-4",
+   3
   ],
   [
-   "big_year-5",
-   11
+   "mood_pack-2",
+   2
   ],
   [
-   "big_year-6",
-   11
+   "mood_pack-3",
+   2
   ],
   [
-   "liberty_figure-5",
-   10
+   "mood_pack-4",
+   2
   ],
   [
-   "liberty_figure-6",
-   10
+   "winter_wreath-3",
+   2
   ],
   [
-   "liberty_figure-3",
-   10
+   "winter_wreath-4",
+   2
   ],
   [
-   "victory_medal-6",
-   10
+   "winter_wreath-5",
+   2
   ],
   [
-   "victory_medal-1",
-   10
+   "clover_pin-5",
+   2
   ],
   [
-   "victory_medal-2",
-   10
+   "moon_pendant-4",
+   2
   ],
   [
-   "surge_board-1",
-   9
+   "moon_pendant-5",
+   1
   ],
   [
-   "surge_board-2",
-   9
+   "moon_pendant-6",
+   1
   ],
   [
-   "surge_board-3",
-   9
-  ],
-  [
-   "witch_hat-5",
-   7
-  ],
-  [
-   "witch_hat-6",
-   7
+   "clover_pin-1",
+   1
   ],
   [
    "witch_hat-4",
-   7
+   1
   ],
   [
-   "love_potion-6",
-   7
+   "witch_hat-5",
+   1
   ],
   [
-   "love_potion-1",
-   7
+   "witch_hat-6",
+   1
   ],
   [
-   "love_potion-3",
-   7
+   "hanging_star-1",
+   1
+  ],
+  [
+   "hanging_star-2",
+   1
+  ],
+  [
+   "hanging_star-6",
+   1
+  ],
+  [
+   "fine_pen-2",
+   1
+  ],
+  [
+   "love_candle-1",
+   1
+  ],
+  [
+   "love_candle-2",
+   1
+  ],
+  [
+   "love_candle-3",
+   1
   ],
   [
    "mad_pumpkin-4",
-   5
+   1
   ],
   [
    "mad_pumpkin-5",
-   5
+   1
   ],
   [
    "mad_pumpkin-6",
-   5
-  ],
-  [
-   "signet_ring-3",
-   3
-  ],
-  [
-   "signet_ring-4",
-   3
-  ],
-  [
-   "signet_ring-5",
-   3
-  ],
-  [
-   "kissed_frog-4",
-   3
-  ],
-  [
-   "kissed_frog-5",
-   3
-  ],
-  [
-   "kissed_frog-6",
-   3
-  ],
-  [
-   "magic_potion-5",
-   2
-  ],
-  [
-   "magic_potion-6",
-   2
-  ],
-  [
-   "magic_potion-1",
-   2
-  ],
-  [
-   "westside_sign-2",
    1
   ],
   [
-   "westside_sign-3",
+   "fine_pen-3",
    1
   ],
   [
-   "westside_sign-4",
+   "fine_pen-6",
    1
-  ]
- ],
- "snoop": [
-  [
-   "timeless_book-5",
-   11
-  ],
-  [
-   "timeless_book-6",
-   11
-  ],
-  [
-   "timeless_book-1",
-   11
-  ],
-  [
-   "ice_cream-4",
-   11
-  ],
-  [
-   "ice_cream-5",
-   11
-  ],
-  [
-   "ice_cream-6",
-   11
-  ],
-  [
-   "big_year-5",
-   11
-  ],
-  [
-   "big_year-6",
-   11
-  ],
-  [
-   "big_year-4",
-   11
-  ],
-  [
-   "liberty_figure-6",
-   10
-  ],
-  [
-   "liberty_figure-3",
-   10
-  ],
-  [
-   "liberty_figure-4",
-   10
-  ],
-  [
-   "victory_medal-1",
-   10
-  ],
-  [
-   "victory_medal-2",
-   10
-  ],
-  [
-   "victory_medal-3",
-   10
-  ],
-  [
-   "surge_board-2",
-   9
-  ],
-  [
-   "surge_board-3",
-   9
-  ],
-  [
-   "surge_board-4",
-   9
-  ],
-  [
-   "jingle_bell-6",
-   5
-  ],
-  [
-   "jingle_bell-1",
-   5
-  ],
-  [
-   "jingle_bell-2",
-   5
-  ],
-  [
-   "trapped_heart-4",
-   5
-  ],
-  [
-   "trapped_heart-5",
-   5
-  ],
-  [
-   "trapped_heart-6",
-   5
-  ],
-  [
-   "khabibs_papakha-2",
-   4
-  ],
-  [
-   "khabibs_papakha-4",
-   4
   ],
   [
    "khabibs_papakha-5",
-   4
-  ],
-  [
-   "voodoo_doll-4",
-   3
-  ],
-  [
-   "voodoo_doll-5",
-   3
-  ],
-  [
-   "voodoo_doll-6",
-   3
-  ],
-  [
-   "kissed_frog-5",
-   3
-  ],
-  [
-   "kissed_frog-6",
-   3
-  ],
-  [
-   "kissed_frog-1",
-   3
-  ],
-  [
-   "mini_oscar-2",
-   2
-  ],
-  [
-   "mini_oscar-3",
-   2
-  ],
-  [
-   "mini_oscar-4",
-   2
-  ],
-  [
-   "astral_shard-2",
    1
   ],
   [
-   "astral_shard-3",
+   "khabibs_papakha-6",
    1
   ],
   [
-   "astral_shard-4",
+   "sharp_tongue-5",
+   1
+  ],
+  [
+   "sharp_tongue-6",
+   1
+  ],
+  [
+   "khabibs_papakha-2",
+   1
+  ],
+  [
+   "sharp_tongue-1",
    1
   ]
  ],
- "money": [
+ "gem": [
   [
    "ton_2000",
-   21
+   7
   ],
   [
    "ton_5000",
-   12
+   1
   ],
   [
-   "ice_cream-6",
-   4
+   "candy_cane-3",
+   1
   ],
   [
-   "ice_cream-1",
-   4
+   "candy_cane-4",
+   1
   ],
   [
-   "ice_cream-4",
-   4
+   "candy_cane-5",
+   1
   ],
   [
-   "timeless_book-4",
-   4
+   "mood_pack-1",
+   1
   ],
   [
-   "timeless_book-5",
-   4
+   "clover_pin-4",
+   1
   ],
   [
-   "timeless_book-6",
-   4
+   "happy_brownie-4",
+   1
   ],
   [
-   "xmas_stocking-4",
-   4
+   "happy_brownie-5",
+   1
   ],
   [
-   "xmas_stocking-5",
-   4
+   "happy_brownie-6",
+   1
   ],
   [
-   "xmas_stocking-6",
-   4
+   "mood_pack-5",
+   1
   ],
   [
-   "liberty_figure-5",
-   4
+   "mood_pack-6",
+   1
   ],
   [
-   "liberty_figure-6",
-   4
+   "winter_wreath-1",
+   1
   ],
   [
-   "liberty_figure-3",
-   4
+   "winter_wreath-2",
+   1
   ],
   [
-   "spring_basket-4",
-   4
+   "winter_wreath-6",
+   1
   ],
   [
-   "spring_basket-5",
-   4
+   "clover_pin-6",
+   1
   ],
   [
-   "spring_basket-6",
-   4
+   "moon_pendant-1",
+   1
   ],
   [
-   "input_key-1",
-   4
+   "moon_pendant-2",
+   1
   ],
   [
-   "input_key-4",
-   4
+   "moon_pendant-3",
+   1
   ],
   [
-   "input_key-5",
-   4
+   "clover_pin-1",
+   1
   ],
   [
    "ton_10000",
-   9
+   1
   ],
   [
-   "jingle_bell-5",
-   3
+   "fine_pen-5",
+   1
   ],
   [
-   "jingle_bell-6",
-   3
+   "witch_hat-4",
+   1
   ],
   [
-   "jingle_bell-1",
-   3
+   "witch_hat-5",
+   1
   ],
   [
-   "snoop_cigar-6",
+   "witch_hat-6",
+   1
+  ],
+  [
+   "hanging_star-4",
+   1
+  ],
+  [
+   "hanging_star-5",
+   1
+  ],
+  [
+   "hanging_star-6",
+   1
+  ],
+  [
+   "fine_pen-2",
+   1
+  ],
+  [
+   "love_candle-1",
+   1
+  ],
+  [
+   "love_candle-5",
+   1
+  ],
+  [
+   "love_candle-6",
+   1
+  ],
+  [
+   "mad_pumpkin-4",
    2
   ],
   [
-   "snoop_cigar-1",
-   2
+   "mad_pumpkin-5",
+   1
   ],
   [
-   "snoop_cigar-3",
-   2
+   "mad_pumpkin-6",
+   1
   ],
   [
-   "toy_bear-2",
-   2
+   "fine_pen-6",
+   1
   ],
   [
-   "toy_bear-3",
-   2
+   "khabibs_papakha-5",
+   1
   ],
   [
-   "toy_bear-4",
-   2
-  ],
-  [
-   "sharp_tongue-3",
+   "khabibs_papakha-6",
    1
   ],
   [
@@ -1555,535 +1937,339 @@
    1
   ],
   [
-   "low_rider-5",
-   1
-  ],
-  [
-   "low_rider-6",
-   1
-  ],
-  [
-   "low_rider-1",
-   1
-  ],
-  [
-   "westside_sign-6",
-   1
-  ],
-  [
-   "westside_sign-1",
-   1
-  ],
-  [
-   "westside_sign-2",
-   1
-  ],
-  [
-   "mighty_arm-6",
-   1
-  ],
-  [
-   "mighty_arm-1",
-   1
-  ],
-  [
-   "mighty_arm-3",
-   1
-  ]
- ],
- "onyx-black": [
-  [
-   "timeless_book-2",
-   12
-  ],
-  [
-   "pet_snake-2",
-   12
-  ],
-  [
-   "pool_float-1",
-   12
-  ],
-  [
-   "big_year-1",
-   12
-  ],
-  [
-   "clover_pin-2",
-   9
-  ],
-  [
-   "magic_potion-2",
-   3
-  ],
-  [
-   "loot_bag-1",
-   3
-  ]
- ],
- "peach": [
-  [
-   "timeless_book-3",
-   9
-  ],
-  [
-   "timeless_book-4",
-   9
-  ],
-  [
-   "timeless_book-5",
-   9
-  ],
-  [
-   "ice_cream-1",
-   9
-  ],
-  [
-   "ice_cream-4",
-   9
-  ],
-  [
-   "ice_cream-5",
-   9
-  ],
-  [
-   "xmas_stocking-4",
-   9
-  ],
-  [
-   "xmas_stocking-5",
-   9
-  ],
-  [
-   "xmas_stocking-6",
-   9
-  ],
-  [
-   "liberty_figure-5",
-   4
-  ],
-  [
-   "liberty_figure-6",
-   4
-  ],
-  [
-   "liberty_figure-3",
-   4
-  ],
-  [
-   "spring_basket-4",
-   3
-  ],
-  [
-   "spring_basket-5",
-   3
-  ],
-  [
-   "spring_basket-6",
-   3
-  ],
-  [
-   "input_key-1",
-   2
-  ],
-  [
-   "input_key-4",
-   2
-  ],
-  [
-   "input_key-5",
-   2
-  ],
-  [
-   "jingle_bell-4",
-   1
-  ],
-  [
-   "jingle_bell-5",
-   1
-  ],
-  [
-   "jingle_bell-6",
-   1
-  ],
-  [
-   "snoop_cigar-5",
-   1
-  ],
-  [
-   "snoop_cigar-6",
-   1
-  ],
-  [
-   "snoop_cigar-1",
-   1
-  ],
-  [
-   "toy_bear-6",
-   1
-  ],
-  [
-   "toy_bear-2",
-   1
-  ],
-  [
-   "toy_bear-3",
-   1
-  ],
-  [
-   "sharp_tongue-1",
-   1
-  ],
-  [
-   "sharp_tongue-3",
-   1
-  ],
-  [
-   "sharp_tongue-4",
-   1
-  ],
-  [
-   "low_rider-4",
-   1
-  ],
-  [
-   "low_rider-5",
-   1
-  ],
-  [
-   "low_rider-6",
-   1
-  ],
-  [
-   "westside_sign-5",
-   1
-  ],
-  [
-   "westside_sign-6",
-   1
-  ],
-  [
-   "westside_sign-1",
-   1
-  ],
-  [
-   "mighty_arm-5",
-   1
-  ],
-  [
-   "mighty_arm-6",
-   1
-  ],
-  [
-   "mighty_arm-1",
-   1
-  ]
- ],
- "gem": [
-  [
-   "ton_2000",
-   21
-  ],
-  [
-   "ton_5000",
-   12
-  ],
-  [
-   "ice_cream-5",
-   4
-  ],
-  [
-   "ice_cream-6",
-   4
-  ],
-  [
-   "ice_cream-1",
-   4
-  ],
-  [
-   "timeless_book-1",
-   4
-  ],
-  [
-   "timeless_book-3",
-   4
-  ],
-  [
-   "timeless_book-4",
-   4
-  ],
-  [
-   "xmas_stocking-3",
-   4
-  ],
-  [
-   "xmas_stocking-4",
-   4
-  ],
-  [
-   "xmas_stocking-5",
-   4
-  ],
-  [
-   "liberty_figure-4",
-   4
-  ],
-  [
-   "liberty_figure-5",
-   4
-  ],
-  [
-   "liberty_figure-6",
-   4
-  ],
-  [
-   "spring_basket-1",
-   4
-  ],
-  [
-   "spring_basket-2",
-   4
-  ],
-  [
-   "spring_basket-3",
-   4
-  ],
-  [
-   "input_key-6",
-   4
-  ],
-  [
-   "input_key-1",
-   4
-  ],
-  [
-   "input_key-4",
-   4
-  ],
-  [
-   "ton_10000",
-   9
-  ],
-  [
-   "jingle_bell-2",
-   3
-  ],
-  [
-   "jingle_bell-4",
-   3
-  ],
-  [
-   "jingle_bell-5",
-   3
-  ],
-  [
-   "snoop_cigar-4",
-   2
-  ],
-  [
-   "snoop_cigar-5",
-   2
-  ],
-  [
-   "snoop_cigar-6",
-   2
-  ],
-  [
-   "toy_bear-5",
-   2
-  ],
-  [
-   "toy_bear-6",
-   2
-  ],
-  [
-   "toy_bear-2",
-   2
-  ],
-  [
    "sharp_tongue-6",
    1
   ],
   [
-   "sharp_tongue-1",
-   1
-  ],
-  [
-   "sharp_tongue-3",
-   1
-  ],
-  [
-   "low_rider-2",
-   1
-  ],
-  [
-   "low_rider-3",
-   1
-  ],
-  [
-   "low_rider-4",
-   1
-  ],
-  [
-   "westside_sign-3",
-   1
-  ],
-  [
-   "westside_sign-4",
-   1
-  ],
-  [
-   "westside_sign-5",
-   1
-  ],
-  [
-   "mighty_arm-4",
-   1
-  ],
-  [
-   "mighty_arm-5",
-   1
-  ],
-  [
-   "mighty_arm-6",
+   "khabibs_papakha-2",
    1
   ]
  ],
  "pepe": [
   [
    "ton_5000",
-   9
-  ],
-  [
-   "ice_cream-5",
-   3
-  ],
-  [
-   "ice_cream-6",
-   3
-  ],
-  [
-   "ice_cream-1",
-   3
-  ],
-  [
-   "timeless_book-1",
-   3
-  ],
-  [
-   "timeless_book-3",
-   3
-  ],
-  [
-   "timeless_book-4",
-   3
-  ],
-  [
-   "xmas_stocking-3",
-   3
-  ],
-  [
-   "xmas_stocking-4",
-   3
-  ],
-  [
-   "xmas_stocking-5",
-   3
-  ],
-  [
-   "liberty_figure-4",
-   3
-  ],
-  [
-   "liberty_figure-5",
-   3
-  ],
-  [
-   "liberty_figure-6",
-   3
-  ],
-  [
-   "spring_basket-1",
-   2
-  ],
-  [
-   "spring_basket-2",
-   2
-  ],
-  [
-   "spring_basket-3",
-   2
-  ],
-  [
-   "input_key-6",
-   2
-  ],
-  [
-   "input_key-1",
-   2
-  ],
-  [
-   "input_key-4",
-   2
-  ],
-  [
-   "ton_10000",
    6
   ],
   [
-   "jingle_bell-2",
+   "big_year-6",
+   6
+  ],
+  [
+   "candy_cane-3",
+   6
+  ],
+  [
+   "candy_cane-4",
+   5
+  ],
+  [
+   "candy_cane-5",
+   5
+  ],
+  [
+   "mood_pack-1",
+   4
+  ],
+  [
+   "clover_pin-4",
+   3
+  ],
+  [
+   "happy_brownie-4",
+   2
+  ],
+  [
+   "happy_brownie-5",
+   2
+  ],
+  [
+   "happy_brownie-6",
+   2
+  ],
+  [
+   "mood_pack-5",
+   2
+  ],
+  [
+   "mood_pack-6",
+   2
+  ],
+  [
+   "winter_wreath-1",
+   2
+  ],
+  [
+   "winter_wreath-2",
+   2
+  ],
+  [
+   "winter_wreath-6",
    1
   ],
   [
-   "jingle_bell-4",
+   "big_year-4",
    1
   ],
   [
-   "jingle_bell-5",
+   "clover_pin-6",
    1
   ],
   [
-   "snoop_cigar-4",
+   "lush_bouquet-1",
    1
   ],
   [
-   "snoop_cigar-5",
+   "lush_bouquet-2",
    1
   ],
   [
-   "snoop_cigar-6",
+   "lush_bouquet-3",
+   1
+  ],
+  [
+   "clover_pin-1",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "fine_pen-5",
+   1
+  ],
+  [
+   "witch_hat-4",
+   1
+  ],
+  [
+   "witch_hat-5",
+   1
+  ],
+  [
+   "witch_hat-6",
+   1
+  ],
+  [
+   "hanging_star-4",
+   1
+  ],
+  [
+   "hanging_star-5",
+   1
+  ],
+  [
+   "hanging_star-6",
+   1
+  ],
+  [
+   "fine_pen-2",
+   1
+  ],
+  [
+   "big_year-5",
    1
   ],
   [
    "ton_25000",
-   3
-  ],
-  [
-   "toy_bear-6",
    1
   ],
   [
-   "toy_bear-2",
+   "fine_pen-6",
    1
   ],
   [
-   "toy_bear-3",
+   "khabibs_papakha-4",
    1
   ],
   [
-   "vintage_cigar-5",
+   "khabibs_papakha-6",
+   11
+  ],
+  [
+   "electric_skull-3",
    1
   ],
   [
-   "vintage_cigar-6",
+   "electric_skull-4",
    1
   ],
   [
-   "vintage_cigar-4",
+   "electric_skull-5",
    1
   ],
   [
-   "low_rider-3",
+   "low_rider-5",
+   1
+  ],
+  [
+   "low_rider-6",
+   1
+  ],
+  [
+   "khabibs_papakha-2",
+   1
+  ],
+  [
+   "mighty_arm-6",
+   1
+  ],
+  [
+   "low_rider-1",
+   1
+  ],
+  [
+   "mighty_arm-1",
+   1
+  ],
+  [
+   "mighty_arm-3",
+   1
+  ]
+ ],
+ "cap": [
+  [
+   "big_year-6",
+   2
+  ],
+  [
+   "candy_cane-3",
+   2
+  ],
+  [
+   "candy_cane-4",
+   2
+  ],
+  [
+   "candy_cane-5",
+   2
+  ],
+  [
+   "mood_pack-1",
+   2
+  ],
+  [
+   "clover_pin-4",
+   2
+  ],
+  [
+   "happy_brownie-4",
+   2
+  ],
+  [
+   "happy_brownie-5",
+   2
+  ],
+  [
+   "happy_brownie-6",
+   2
+  ],
+  [
+   "mood_pack-5",
+   1
+  ],
+  [
+   "mood_pack-6",
+   1
+  ],
+  [
+   "winter_wreath-1",
+   1
+  ],
+  [
+   "winter_wreath-2",
+   1
+  ],
+  [
+   "winter_wreath-6",
+   1
+  ],
+  [
+   "big_year-4",
+   1
+  ],
+  [
+   "clover_pin-6",
+   1
+  ],
+  [
+   "lush_bouquet-1",
+   1
+  ],
+  [
+   "lush_bouquet-2",
+   1
+  ],
+  [
+   "lush_bouquet-3",
+   1
+  ],
+  [
+   "clover_pin-1",
+   1
+  ],
+  [
+   "fine_pen-4",
+   1
+  ],
+  [
+   "fine_pen-5",
+   1
+  ],
+  [
+   "witch_hat-4",
+   1
+  ],
+  [
+   "witch_hat-5",
+   1
+  ],
+  [
+   "witch_hat-6",
+   1
+  ],
+  [
+   "hanging_star-3",
+   1
+  ],
+  [
+   "hanging_star-4",
+   1
+  ],
+  [
+   "hanging_star-5",
+   1
+  ],
+  [
+   "big_year-5",
+   1
+  ],
+  [
+   "fine_pen-6",
+   1
+  ],
+  [
+   "khabibs_papakha-4",
+   1
+  ],
+  [
+   "khabibs_papakha-5",
+   1
+  ],
+  [
+   "khabibs_papakha-6",
+   12
+  ],
+  [
+   "electric_skull-1",
+   2
+  ],
+  [
+   "electric_skull-2",
+   1
+  ],
+  [
+   "electric_skull-3",
    1
   ],
   [
@@ -2095,15 +2281,7 @@
    1
   ],
   [
-   "ion_gem-4",
-   1
-  ],
-  [
-   "ion_gem-5",
-   1
-  ],
-  [
-   "ion_gem-6",
+   "mighty_arm-4",
    1
   ],
   [
@@ -2115,141 +2293,173 @@
    1
   ],
   [
-   "mighty_arm-1",
-   1
-  ],
-  [
-   "scared_cat-4",
-   1
-  ],
-  [
-   "scared_cat-5",
-   1
-  ],
-  [
-   "scared_cat-6",
+   "low_rider-3",
    1
   ]
  ],
- "cap": [
+ "ring": [
   [
-   "timeless_book-6",
+   "ton_5000",
+   6
+  ],
+  [
+   "big_year-6",
    5
   ],
   [
-   "timeless_book-1",
+   "candy_cane-1",
    5
   ],
   [
-   "timeless_book-3",
+   "candy_cane-5",
    5
   ],
   [
-   "ice_cream-6",
+   "candy_cane-6",
    5
   ],
   [
-   "ice_cream-1",
+   "happy_brownie-1",
    5
   ],
   [
-   "ice_cream-4",
+   "happy_brownie-2",
    5
   ],
   [
-   "xmas_stocking-3",
-   5
+   "mood_pack-1",
+   4
   ],
   [
-   "xmas_stocking-4",
-   5
-  ],
-  [
-   "xmas_stocking-5",
-   5
-  ],
-  [
-   "liberty_figure-4",
+   "clover_pin-4",
    3
   ],
   [
-   "liberty_figure-5",
+   "happy_brownie-6",
    3
   ],
   [
-   "liberty_figure-6",
-   3
-  ],
-  [
-   "spring_basket-1",
+   "mood_pack-2",
    2
   ],
   [
-   "spring_basket-2",
+   "mood_pack-3",
    2
   ],
   [
-   "spring_basket-3",
+   "winter_wreath-2",
    2
   ],
   [
-   "input_key-6",
-   1
-  ],
-  [
-   "input_key-1",
-   1
-  ],
-  [
-   "input_key-4",
-   1
-  ],
-  [
-   "jingle_bell-1",
-   1
-  ],
-  [
-   "jingle_bell-2",
-   1
-  ],
-  [
-   "jingle_bell-4",
-   1
-  ],
-  [
-   "snoop_cigar-3",
-   1
-  ],
-  [
-   "snoop_cigar-4",
-   1
-  ],
-  [
-   "snoop_cigar-5",
-   1
-  ],
-  [
-   "toy_bear-4",
+   "winter_wreath-3",
    2
   ],
   [
-   "toy_bear-5",
+   "winter_wreath-4",
    2
   ],
   [
-   "toy_bear-6",
+   "big_year-4",
    2
   ],
   [
-   "vintage_cigar-6",
+   "clover_pin-5",
+   2
+  ],
+  [
+   "clover_pin-6",
+   2
+  ],
+  [
+   "lush_bouquet-3",
+   2
+  ],
+  [
+   "lush_bouquet-4",
    1
   ],
   [
-   "vintage_cigar-4",
+   "lush_bouquet-5",
    1
   ],
   [
-   "vintage_cigar-5",
+   "fine_pen-4",
+   1
+  ],
+  [
+   "ton_10000",
+   1
+  ],
+  [
+   "witch_hat-4",
+   1
+  ],
+  [
+   "witch_hat-5",
+   1
+  ],
+  [
+   "witch_hat-6",
+   1
+  ],
+  [
+   "hanging_star-1",
+   1
+  ],
+  [
+   "hanging_star-2",
+   1
+  ],
+  [
+   "hanging_star-6",
+   1
+  ],
+  [
+   "fine_pen-2",
+   1
+  ],
+  [
+   "big_year-5",
+   1
+  ],
+  [
+   "ton_25000",
+   1
+  ],
+  [
+   "fine_pen-3",
+   1
+  ],
+  [
+   "khabibs_papakha-4",
+   1
+  ],
+  [
+   "khabibs_papakha-5",
+   1
+  ],
+  [
+   "khabibs_papakha-6",
+   12
+  ],
+  [
+   "electric_skull-1",
+   1
+  ],
+  [
+   "electric_skull-5",
+   1
+  ],
+  [
+   "electric_skull-6",
+   1
+  ],
+  [
+   "mighty_arm-4",
+   1
+  ],
+  [
+   "mighty_arm-5",
    1
   ],
   [
@@ -2265,299 +2475,77 @@
    1
   ],
   [
-   "ion_gem-5",
-   1
-  ],
-  [
-   "ion_gem-6",
-   1
-  ],
-  [
-   "ion_gem-4",
-   1
-  ],
-  [
    "mighty_arm-3",
-   1
-  ],
-  [
-   "mighty_arm-4",
-   1
-  ],
-  [
-   "mighty_arm-5",
-   1
-  ],
-  [
-   "scared_cat-6",
-   1
-  ],
-  [
-   "scared_cat-3",
-   1
-  ],
-  [
-   "scared_cat-4",
-   1
-  ]
- ],
- "ring": [
-  [
-   "ton_5000",
-   9
-  ],
-  [
-   "ice_cream-1",
-   3
-  ],
-  [
-   "ice_cream-4",
-   3
-  ],
-  [
-   "ice_cream-5",
-   3
-  ],
-  [
-   "timeless_book-4",
-   3
-  ],
-  [
-   "timeless_book-5",
-   3
-  ],
-  [
-   "timeless_book-6",
-   3
-  ],
-  [
-   "xmas_stocking-5",
-   3
-  ],
-  [
-   "xmas_stocking-6",
-   3
-  ],
-  [
-   "xmas_stocking-3",
-   3
-  ],
-  [
-   "liberty_figure-6",
-   3
-  ],
-  [
-   "liberty_figure-3",
-   3
-  ],
-  [
-   "liberty_figure-4",
-   3
-  ],
-  [
-   "spring_basket-3",
-   2
-  ],
-  [
-   "spring_basket-4",
-   2
-  ],
-  [
-   "spring_basket-5",
-   2
-  ],
-  [
-   "input_key-4",
-   2
-  ],
-  [
-   "input_key-5",
-   2
-  ],
-  [
-   "input_key-6",
-   2
-  ],
-  [
-   "ton_10000",
-   6
-  ],
-  [
-   "jingle_bell-5",
-   1
-  ],
-  [
-   "jingle_bell-6",
-   1
-  ],
-  [
-   "jingle_bell-1",
-   1
-  ],
-  [
-   "snoop_cigar-6",
-   1
-  ],
-  [
-   "snoop_cigar-1",
-   1
-  ],
-  [
-   "snoop_cigar-3",
-   1
-  ],
-  [
-   "ton_25000",
-   3
-  ],
-  [
-   "toy_bear-3",
-   1
-  ],
-  [
-   "toy_bear-4",
-   1
-  ],
-  [
-   "toy_bear-5",
-   1
-  ],
-  [
-   "vintage_cigar-4",
-   1
-  ],
-  [
-   "vintage_cigar-5",
-   1
-  ],
-  [
-   "vintage_cigar-6",
-   1
-  ],
-  [
-   "low_rider-5",
-   1
-  ],
-  [
-   "low_rider-6",
-   1
-  ],
-  [
-   "low_rider-1",
-   1
-  ],
-  [
-   "ion_gem-6",
-   1
-  ],
-  [
-   "ion_gem-4",
-   1
-  ],
-  [
-   "ion_gem-5",
-   1
-  ],
-  [
-   "mighty_arm-1",
-   1
-  ],
-  [
-   "mighty_arm-3",
-   1
-  ],
-  [
-   "mighty_arm-4",
-   1
-  ],
-  [
-   "scared_cat-6",
-   1
-  ],
-  [
-   "scared_cat-3",
-   1
-  ],
-  [
-   "scared_cat-4",
    1
   ]
  ],
  "black": [
   [
-   "whip_cupcake-3",
-   12
+   "clover_pin-3",
+   23
+  ],
+  [
+   "lol_pop-2",
+   22
+  ],
+  [
+   "lol_pop-3",
+   22
   ],
   [
    "pool_float-2",
-   12
+   22
   ],
   [
    "chill_flame-1",
-   6
+   20
   ],
   [
    "chill_flame-3",
-   6
+   20
   ],
   [
-   "liberty_figure-2",
-   5
-  ],
-  [
-   "liberty_figure-1",
-   4
+   "fine_pen-1",
+   14
   ],
   [
    "jolly_chimp-1",
-   3
+   11
   ],
   [
    "jolly_chimp-2",
-   3
-  ],
-  [
-   "witch_hat-1",
-   1
-  ],
-  [
-   "witch_hat-2",
-   1
-  ],
-  [
-   "witch_hat-3",
-   1
-  ],
-  [
-   "love_potion-2",
-   3
+   11
   ],
   [
    "snoop_cigar-2",
-   3
+   5
   ],
   [
-   "toy_bear-1",
-   3
-  ],
-  [
-   "vintage_cigar-2",
-   3
-  ],
-  [
-   "vintage_cigar-3",
-   3
-  ],
-  [
-   "vintage_cigar-1",
-   3
-  ],
-  [
-   "swiss_watch-2",
+   "love_potion-2",
    2
   ],
   [
-   "swiss_watch-3",
+   "vintage_cigar-2",
+   2
+  ],
+  [
+   "vintage_cigar-3",
+   2
+  ],
+  [
+   "khabibs_papakha-1",
+   1
+  ],
+  [
+   "khabibs_papakha-3",
+   1
+  ],
+  [
+   "vintage_cigar-1",
+   1
+  ],
+  [
+   "sharp_tongue-2",
    1
   ],
   [
@@ -2573,17 +2561,29 @@
    1
   ],
   [
-   "mighty_arm-2",
-   3
+   "precious_peach-1",
+   1
   ],
   [
-   "durovs_cap-1",
-   3
+   "astral_shard-1",
+   1
+  ],
+  [
+   "precious_peach-2",
+   1
   ]
  ],
  "epic": [
   [
-   "ice_cream-4",
+   "candy_cane-1",
+   4
+  ],
+  [
+   "candy_cane-2",
+   4
+  ],
+  [
+   "candy_cane-6",
    4
   ],
   [
@@ -2592,98 +2592,114 @@
   ],
   [
    "ice_cream-6",
-   4
-  ],
-  [
-   "timeless_book-5",
-   4
-  ],
-  [
-   "timeless_book-6",
-   4
-  ],
-  [
-   "timeless_book-1",
-   4
-  ],
-  [
-   "xmas_stocking-6",
-   4
-  ],
-  [
-   "xmas_stocking-3",
-   4
-  ],
-  [
-   "xmas_stocking-4",
-   4
-  ],
-  [
-   "victory_medal-3",
    3
   ],
   [
-   "victory_medal-4",
+   "jester_hat-2",
    3
   ],
   [
-   "victory_medal-5",
+   "jester_hat-3",
    3
   ],
   [
-   "liberty_figure-4",
-   3
-  ],
-  [
-   "liberty_figure-5",
-   3
-  ],
-  [
-   "liberty_figure-6",
-   3
-  ],
-  [
-   "input_key-5",
+   "mood_pack-2",
    2
   ],
   [
-   "input_key-6",
+   "mood_pack-3",
    2
   ],
   [
-   "input_key-1",
+   "mood_pack-4",
    2
+  ],
+  [
+   "party_sparkler-5",
+   2
+  ],
+  [
+   "swag_bag-3",
+   2
+  ],
+  [
+   "swag_bag-4",
+   2
+  ],
+  [
+   "swag_bag-5",
+   2
+  ],
+  [
+   "ice_cream-1",
+   1
+  ],
+  [
+   "jester_hat-1",
+   1
+  ],
+  [
+   "lush_bouquet-4",
+   1
+  ],
+  [
+   "lush_bouquet-5",
+   1
+  ],
+  [
+   "lush_bouquet-6",
+   1
+  ],
+  [
+   "party_sparkler-4",
+   1
   ],
   [
    "ton_10000",
-   3
-  ],
-  [
-   "jingle_bell-6",
    1
   ],
   [
-   "jingle_bell-1",
+   "record_player-2",
    1
   ],
   [
-   "jingle_bell-2",
+   "record_player-3",
    1
   ],
   [
-   "snoop_cigar-1",
+   "record_player-4",
    1
   ],
   [
-   "snoop_cigar-3",
+   "flying_broom-3",
    1
   ],
   [
-   "snoop_cigar-4",
+   "flying_broom-4",
    1
   ],
   [
-   "toy_bear-3",
+   "flying_broom-5",
+   1
+  ],
+  [
+   "party_sparkler-1",
+   1
+  ],
+  [
+   "lucky_locket-4",
+   1
+  ],
+  [
+   "lucky_locket-5",
+   1
+  ],
+  [
+   "lucky_locket-6",
+   1
+  ],
+  [
+   "eternal_rose-1",
    1
   ],
   [
@@ -2691,55 +2707,35 @@
    1
   ],
   [
-   "toy_bear-5",
+   "eternal_rose-5",
    1
   ],
   [
-   "vintage_cigar-4",
+   "eternal_rose-6",
    1
   ],
   [
-   "vintage_cigar-5",
-   1
-  ],
-  [
-   "vintage_cigar-6",
+   "toy_bear-2",
    1
   ],
   [
    "ton_50000",
-   3
-  ],
-  [
-   "low_rider-6",
    1
-  ],
-  [
-   "low_rider-1",
-   1
-  ],
-  [
-   "low_rider-2",
-   1
-  ],
-  [
-   "ion_gem-4",
-   5
-  ],
-  [
-   "ion_gem-5",
-   5
-  ],
-  [
-   "ion_gem-6",
-   5
   ],
   [
    "ton_100000",
-   6
+   2
   ],
   [
-   "loot_bag-3",
+   "perfume_bottle-3",
+   2
+  ],
+  [
+   "perfume_bottle-4",
+   1
+  ],
+  [
+   "perfume_bottle-5",
    1
   ],
   [
@@ -2751,125 +2747,7 @@
    1
   ],
   [
-   "scared_cat-4",
-   1
-  ],
-  [
-   "scared_cat-5",
-   1
-  ],
-  [
-   "scared_cat-6",
-   1
-  ],
-  [
-   "heart_locket-5",
-   1
-  ],
-  [
-   "heart_locket-6",
-   1
-  ],
-  [
-   "heart_locket-1",
-   1
-  ]
- ],
- "vip": [
-  [
-   "timeless_book-5",
-   2
-  ],
-  [
-   "timeless_book-6",
-   2
-  ],
-  [
-   "timeless_book-1",
-   2
-  ],
-  [
-   "ice_cream-6",
-   2
-  ],
-  [
-   "ice_cream-1",
-   2
-  ],
-  [
-   "ice_cream-4",
-   2
-  ],
-  [
-   "xmas_stocking-3",
-   2
-  ],
-  [
-   "xmas_stocking-4",
-   2
-  ],
-  [
-   "xmas_stocking-5",
-   2
-  ],
-  [
-   "liberty_figure-4",
-   2
-  ],
-  [
-   "liberty_figure-5",
-   2
-  ],
-  [
-   "liberty_figure-6",
-   2
-  ],
-  [
-   "victory_medal-5",
-   2
-  ],
-  [
-   "victory_medal-6",
-   2
-  ],
-  [
-   "victory_medal-1",
-   2
-  ],
-  [
-   "input_key-6",
-   1
-  ],
-  [
-   "input_key-1",
-   1
-  ],
-  [
-   "input_key-4",
-   1
-  ],
-  [
-   "jingle_bell-6",
-   1
-  ],
-  [
-   "jingle_bell-1",
-   1
-  ],
-  [
-   "jingle_bell-2",
-   1
-  ],
-  [
-   "snoop_cigar-1",
-   1
-  ],
-  [
-   "snoop_cigar-3",
-   1
-  ],
-  [
-   "snoop_cigar-4",
+   "loot_bag-6",
    1
   ],
   [
@@ -2877,71 +2755,185 @@
    1
   ],
   [
-   "toy_bear-4",
+   "resistance_dog-5",
    1
   ],
   [
-   "toy_bear-5",
+   "resistance_dog-6",
    1
   ],
   [
-   "vintage_cigar-4",
+   "resistance_dog-1",
+   1
+  ]
+ ],
+ "vip": [
+  [
+   "big_year-6",
+   2
+  ],
+  [
+   "candy_cane-1",
+   2
+  ],
+  [
+   "candy_cane-2",
+   2
+  ],
+  [
+   "candy_cane-3",
+   2
+  ],
+  [
+   "ice_cream-4",
+   2
+  ],
+  [
+   "ice_cream-6",
+   2
+  ],
+  [
+   "jester_hat-2",
+   2
+  ],
+  [
+   "jester_hat-3",
+   2
+  ],
+  [
+   "jester_hat-4",
+   2
+  ],
+  [
+   "timeless_book-4",
+   2
+  ],
+  [
+   "timeless_book-5",
+   2
+  ],
+  [
+   "mood_pack-3",
    1
   ],
   [
-   "vintage_cigar-5",
+   "mood_pack-4",
    1
   ],
   [
-   "vintage_cigar-6",
+   "mood_pack-5",
    1
   ],
   [
-   "low_rider-5",
+   "party_sparkler-5",
    1
   ],
   [
-   "low_rider-6",
+   "winter_wreath-4",
    1
   ],
   [
-   "low_rider-1",
+   "winter_wreath-5",
    1
   ],
   [
-   "ion_gem-6",
+   "winter_wreath-6",
    1
   ],
   [
-   "ion_gem-4",
+   "big_year-4",
    1
   ],
   [
-   "ion_gem-5",
+   "ice_cream-1",
    1
   ],
   [
-   "loot_bag-5",
-   4
+   "lush_bouquet-1",
+   1
+  ],
+  [
+   "lush_bouquet-5",
+   1
+  ],
+  [
+   "lush_bouquet-6",
+   1
+  ],
+  [
+   "party_sparkler-4",
+   1
+  ],
+  [
+   "party_sparkler-1",
+   1
+  ],
+  [
+   "big_year-5",
+   1
+  ],
+  [
+   "lucky_locket-4",
+   1
+  ],
+  [
+   "lucky_locket-5",
+   1
+  ],
+  [
+   "timeless_book-3",
+   1
+  ],
+  [
+   "lucky_locket-6",
+   1
+  ],
+  [
+   "diamond_ring_nft-1",
+   1
+  ],
+  [
+   "diamond_ring_nft-5",
+   1
+  ],
+  [
+   "diamond_ring_nft-6",
+   1
+  ],
+  [
+   "gem_signet-1",
+   1
+  ],
+  [
+   "gem_signet-2",
+   1
+  ],
+  [
+   "gem_signet-6",
+   1
+  ],
+  [
+   "nail_bracelet-1",
+   2
+  ],
+  [
+   "nail_bracelet-2",
+   2
+  ],
+  [
+   "loot_bag-4",
+   1
   ],
   [
    "loot_bag-6",
-   4
+   1
+  ],
+  [
+   "nail_bracelet-3",
+   1
   ],
   [
    "loot_bag-3",
-   4
-  ],
-  [
-   "scared_cat-6",
-   1
-  ],
-  [
-   "scared_cat-3",
-   1
-  ],
-  [
-   "scared_cat-4",
    1
   ],
   [
@@ -2959,187 +2951,183 @@
  ],
  "elite": [
   [
-   "ice_cream-6",
-   3
+   "candy_cane-2",
+   10
   ],
   [
-   "ice_cream-1",
-   3
+   "candy_cane-3",
+   10
   ],
   [
-   "ice_cream-4",
-   3
+   "candy_cane-4",
+   10
   ],
   [
-   "timeless_book-1",
-   3
+   "happy_brownie-3",
+   10
   ],
   [
-   "timeless_book-3",
-   3
+   "happy_brownie-4",
+   7
   ],
   [
-   "timeless_book-4",
-   3
+   "happy_brownie-5",
+   6
   ],
   [
-   "xmas_stocking-4",
-   3
+   "mood_pack-4",
+   6
   ],
   [
-   "xmas_stocking-5",
-   3
+   "mood_pack-5",
+   6
   ],
   [
-   "xmas_stocking-6",
-   3
+   "mood_pack-6",
+   6
   ],
   [
-   "liberty_figure-5",
-   3
+   "winter_wreath-1",
+   5
   ],
   [
-   "liberty_figure-6",
-   3
+   "winter_wreath-5",
+   5
   ],
   [
-   "liberty_figure-3",
-   3
+   "winter_wreath-6",
+   5
+  ],
+  [
+   "moon_pendant-1",
+   4
+  ],
+  [
+   "moon_pendant-2",
+   4
+  ],
+  [
+   "moon_pendant-6",
+   4
+  ],
+  [
+   "spring_basket-4",
+   4
+  ],
+  [
+   "spring_basket-5",
+   4
   ],
   [
    "spring_basket-6",
+   4
+  ],
+  [
+   "evil_eye-1",
    3
   ],
   [
-   "spring_basket-1",
+   "evil_eye-2",
    3
   ],
   [
-   "spring_basket-2",
+   "evil_eye-3",
    3
   ],
   [
-   "input_key-1",
+   "witch_hat-4",
    2
   ],
   [
-   "input_key-4",
+   "witch_hat-5",
    2
   ],
   [
-   "input_key-5",
+   "witch_hat-6",
    2
   ],
   [
-   "crystal_ball-4",
+   "hanging_star-2",
+   2
+  ],
+  [
+   "hanging_star-3",
+   2
+  ],
+  [
+   "hanging_star-4",
+   2
+  ],
+  [
+   "love_candle-3",
    1
   ],
   [
-   "crystal_ball-5",
+   "love_candle-4",
    1
   ],
   [
-   "crystal_ball-6",
+   "love_candle-5",
    1
   ],
   [
-   "snoop_cigar-3",
+   "mad_pumpkin-4",
    1
   ],
   [
-   "snoop_cigar-4",
+   "mad_pumpkin-5",
    1
   ],
   [
-   "snoop_cigar-5",
+   "mad_pumpkin-6",
    1
   ],
   [
    "ton_25000",
-   3
-  ],
-  [
-   "toy_bear-5",
    1
   ],
   [
-   "toy_bear-6",
+   "voodoo_doll-4",
    1
   ],
   [
-   "toy_bear-2",
+   "voodoo_doll-2",
    1
   ],
   [
-   "sharp_tongue-6",
+   "voodoo_doll-5",
    1
   ],
   [
-   "sharp_tongue-1",
+   "swiss_watch-4",
    1
   ],
   [
-   "sharp_tongue-3",
+   "swiss_watch-5",
    1
   ],
   [
-   "low_rider-1",
-   1
-  ],
-  [
-   "low_rider-2",
-   1
-  ],
-  [
-   "low_rider-3",
+   "swiss_watch-6",
    1
   ],
   [
    "ton_100000",
-   3
-  ],
-  [
-   "westside_sign-3",
-   1
-  ],
-  [
-   "westside_sign-4",
-   1
-  ],
-  [
-   "westside_sign-5",
-   1
-  ],
-  [
-   "mighty_arm-5",
-   1
-  ],
-  [
-   "mighty_arm-6",
-   1
-  ],
-  [
-   "mighty_arm-1",
    1
   ],
   [
    "ton_250000",
-   3
-  ],
-  [
-   "durovs_cap-2",
    1
   ],
   [
-   "durovs_cap-3",
+   "mini_oscar-1",
    1
   ],
   [
-   "durovs_cap-4",
+   "mini_oscar-2",
    1
   ],
   [
-   "plush_pepe-3",
+   "mini_oscar-6",
    1
   ],
   [
@@ -3149,1122 +3137,1264 @@
   [
    "plush_pepe-5",
    1
-  ]
- ],
- "free": [
-  [
-   "ton_1000",
-   87
-  ],
-  [
-   "ton_5000",
-   27
-  ],
-  [
-   "ice_cream-5",
-   10
-  ],
-  [
-   "ice_cream-6",
-   10
-  ],
-  [
-   "ice_cream-1",
-   10
-  ],
-  [
-   "timeless_book-5",
-   10
-  ],
-  [
-   "timeless_book-6",
-   10
-  ],
-  [
-   "timeless_book-1",
-   10
-  ],
-  [
-   "big_year-4",
-   10
-  ],
-  [
-   "big_year-5",
-   10
-  ],
-  [
-   "big_year-6",
-   10
-  ],
-  [
-   "party_sparkler-4",
-   7
-  ],
-  [
-   "party_sparkler-5",
-   7
-  ],
-  [
-   "party_sparkler-6",
-   7
-  ],
-  [
-   "snoop_dogg-3",
-   8
-  ],
-  [
-   "snoop_dogg-4",
-   8
-  ],
-  [
-   "snoop_dogg-5",
-   8
-  ],
-  [
-   "jolly_chimp-6",
-   7
-  ],
-  [
-   "jolly_chimp-3",
-   7
-  ],
-  [
-   "jolly_chimp-4",
-   7
-  ],
-  [
-   "ton_10000",
-   18
-  ],
-  [
-   "witch_hat-6",
-   6
-  ],
-  [
-   "witch_hat-4",
-   6
-  ],
-  [
-   "witch_hat-5",
-   6
-  ],
-  [
-   "love_potion-1",
-   4
-  ],
-  [
-   "love_potion-3",
-   4
-  ],
-  [
-   "love_potion-4",
-   4
-  ],
-  [
-   "mad_pumpkin-5",
-   4
-  ],
-  [
-   "mad_pumpkin-6",
-   4
-  ],
-  [
-   "mad_pumpkin-4",
-   4
-  ],
-  [
-   "signet_ring-4",
-   2
-  ],
-  [
-   "signet_ring-5",
-   2
-  ],
-  [
-   "signet_ring-6",
-   2
-  ],
-  [
-   "sharp_tongue-5",
-   2
-  ],
-  [
-   "sharp_tongue-6",
-   2
-  ],
-  [
-   "sharp_tongue-1",
-   2
-  ],
-  [
-   "low_rider-5",
-   1
-  ],
-  [
-   "low_rider-6",
-   1
-  ],
-  [
-   "low_rider-1",
-   1
-  ]
- ],
- "sweet": [
-  [
-   "ton_500",
-   3
-  ],
-  [
-   "ton_2000",
-   3
-  ],
-  [
-   "ton_5000",
-   9
-  ],
-  [
-   "lol_pop-1",
-   3
-  ],
-  [
-   "lol_pop-4",
-   3
-  ],
-  [
-   "lol_pop-5",
-   3
-  ],
-  [
-   "pool_float-4",
-   3
-  ],
-  [
-   "pool_float-5",
-   3
-  ],
-  [
-   "pool_float-6",
-   3
-  ],
-  [
-   "ice_cream-5",
-   3
-  ],
-  [
-   "ice_cream-6",
-   3
-  ],
-  [
-   "ice_cream-1",
-   3
-  ],
-  [
-   "whip_cupcake-4",
-   3
-  ],
-  [
-   "whip_cupcake-5",
-   3
-  ],
-  [
-   "whip_cupcake-6",
-   3
-  ],
-  [
-   "chill_flame-2",
-   4
-  ],
-  [
-   "chill_flame-4",
-   4
-  ],
-  [
-   "chill_flame-5",
-   4
-  ],
-  [
-   "xmas_stocking-4",
-   4
-  ],
-  [
-   "xmas_stocking-5",
-   4
-  ],
-  [
-   "xmas_stocking-6",
-   4
-  ],
-  [
-   "party_sparkler-5",
-   17
-  ],
-  [
-   "party_sparkler-6",
-   17
-  ],
-  [
-   "party_sparkler-1",
-   17
-  ],
-  [
-   "spring_basket-2",
-   16
-  ],
-  [
-   "spring_basket-3",
-   16
-  ],
-  [
-   "spring_basket-4",
-   16
-  ],
-  [
-   "jingle_bell-4",
-   1
-  ],
-  [
-   "jingle_bell-5",
-   1
-  ],
-  [
-   "jingle_bell-6",
-   1
-  ]
- ],
- "potion": [
-  [
-   "witch_hat-5",
-   59
-  ],
-  [
-   "witch_hat-6",
-   59
-  ],
-  [
-   "witch_hat-4",
-   59
-  ],
-  [
-   "crystal_ball-6",
-   32
-  ],
-  [
-   "crystal_ball-1",
-   32
-  ],
-  [
-   "crystal_ball-4",
-   32
-  ],
-  [
-   "love_potion-6",
-   29
-  ],
-  [
-   "love_potion-1",
-   29
-  ],
-  [
-   "love_potion-3",
-   29
-  ],
-  [
-   "trapped_heart-5",
-   25
-  ],
-  [
-   "trapped_heart-6",
-   25
-  ],
-  [
-   "trapped_heart-4",
-   25
-  ],
-  [
-   "mad_pumpkin-6",
-   19
-  ],
-  [
-   "mad_pumpkin-4",
-   19
-  ],
-  [
-   "mad_pumpkin-5",
-   19
-  ],
-  [
-   "voodoo_doll-4",
-   7
-  ],
-  [
-   "voodoo_doll-5",
-   7
-  ],
-  [
-   "voodoo_doll-6",
-   7
-  ],
-  [
-   "magic_potion-1",
-   3
-  ],
-  [
-   "magic_potion-4",
-   3
-  ],
-  [
-   "magic_potion-5",
-   3
-  ],
-  [
-   "astral_shard-6",
-   1
-  ],
-  [
-   "astral_shard-2",
-   1
-  ],
-  [
-   "astral_shard-3",
-   1
-  ]
- ],
- "jewel": [
-  [
-   "clover_pin-6",
-   245
-  ],
-  [
-   "clover_pin-1",
-   245
-  ],
-  [
-   "clover_pin-4",
-   245
-  ],
-  [
-   "victory_medal-1",
-   245
-  ],
-  [
-   "victory_medal-2",
-   245
-  ],
-  [
-   "victory_medal-3",
-   245
-  ],
-  [
-   "fine_pen-2",
-   133
-  ],
-  [
-   "fine_pen-3",
-   133
-  ],
-  [
-   "fine_pen-4",
-   133
-  ],
-  [
-   "signet_ring-3",
-   15
-  ],
-  [
-   "signet_ring-4",
-   15
-  ],
-  [
-   "signet_ring-5",
-   15
-  ],
-  [
-   "swiss_watch-6",
-   7
-  ],
-  [
-   "swiss_watch-1",
-   7
-  ],
-  [
-   "swiss_watch-4",
-   7
-  ],
-  [
-   "ion_gem-5",
-   5
-  ],
-  [
-   "ion_gem-6",
-   5
-  ],
-  [
-   "ion_gem-4",
-   5
-  ],
-  [
-   "astral_shard-6",
-   2
-  ],
-  [
-   "astral_shard-2",
-   2
-  ],
-  [
-   "astral_shard-3",
-   2
-  ],
-  [
-   "loot_bag-5",
-   2
-  ],
-  [
-   "loot_bag-6",
-   2
-  ],
-  [
-   "loot_bag-3",
-   2
-  ],
-  [
-   "heart_locket-2",
-   1
-  ],
-  [
-   "heart_locket-3",
-   1
-  ],
-  [
-   "heart_locket-4",
-   1
-  ]
- ],
- "meme": [
-  [
-   "ton_1000",
-   4317
-  ],
-  [
-   "ton_2000",
-   2478
-  ],
-  [
-   "ton_5000",
-   1188
-  ],
-  [
-   "pet_snake-4",
-   393
-  ],
-  [
-   "pet_snake-5",
-   393
-  ],
-  [
-   "pet_snake-6",
-   393
-  ],
-  [
-   "snoop_dogg-5",
-   339
-  ],
-  [
-   "snoop_dogg-6",
-   339
-  ],
-  [
-   "snoop_dogg-2",
-   339
-  ],
-  [
-   "liberty_figure-4",
-   340
-  ],
-  [
-   "liberty_figure-5",
-   340
-  ],
-  [
-   "liberty_figure-6",
-   340
-  ],
-  [
-   "jolly_chimp-5",
-   272
-  ],
-  [
-   "jolly_chimp-6",
-   272
-  ],
-  [
-   "jolly_chimp-3",
-   272
-  ],
-  [
-   "snoop_cigar-3",
-   136
-  ],
-  [
-   "snoop_cigar-4",
-   136
-  ],
-  [
-   "snoop_cigar-5",
-   136
-  ],
-  [
-   "toy_bear-4",
-   79
-  ],
-  [
-   "toy_bear-5",
-   79
-  ],
-  [
-   "toy_bear-6",
-   79
-  ],
-  [
-   "kissed_frog-5",
-   53
-  ],
-  [
-   "kissed_frog-6",
-   53
-  ],
-  [
-   "kissed_frog-1",
-   53
-  ],
-  [
-   "plush_pepe-6",
-   1
-  ],
-  [
-   "plush_pepe-1",
-   1
   ],
   [
    "plush_pepe-3",
    1
   ]
  ],
- "party": [
+ "free": [
   [
-   "ton_500",
-   720
-  ],
-  [
-   "ton_2000",
-   360
+   "ton_1000",
+   40
   ],
   [
    "ton_5000",
-   225
+   8
   ],
   [
-   "lol_pop-1",
-   75
+   "candy_cane-1",
+   9
   ],
   [
-   "lol_pop-4",
-   75
+   "candy_cane-5",
+   9
   ],
   [
-   "lol_pop-5",
-   75
+   "candy_cane-6",
+   9
   ],
   [
-   "timeless_book-6",
-   75
+   "ice_cream-4",
+   9
   ],
   [
-   "timeless_book-1",
-   75
+   "ice_cream-6",
+   9
   ],
   [
-   "timeless_book-3",
-   75
+   "jester_hat-2",
+   9
   ],
   [
-   "big_year-4",
-   75
+   "jester_hat-6",
+   9
   ],
   [
-   "big_year-5",
-   75
+   "mood_pack-1",
+   8
   ],
   [
-   "big_year-6",
-   75
+   "timeless_book-4",
+   8
   ],
   [
-   "victory_medal-2",
-   69
+   "timeless_book-5",
+   8
   ],
   [
-   "victory_medal-3",
-   69
+   "mood_pack-2",
+   7
   ],
   [
-   "victory_medal-4",
-   69
-  ],
-  [
-   "party_sparkler-1",
-   69
-  ],
-  [
-   "party_sparkler-4",
-   69
+   "mood_pack-3",
+   7
   ],
   [
    "party_sparkler-5",
-   69
+   6
   ],
   [
-   "surge_board-4",
-   60
+   "party_sparkler-6",
+   7
   ],
   [
-   "surge_board-5",
-   60
+   "swag_bag-2",
+   7
   ],
   [
-   "surge_board-6",
-   60
+   "swag_bag-3",
+   7
   ],
   [
-   "jingle_bell-6",
-   49
+   "swag_bag-4",
+   7
   ],
   [
-   "jingle_bell-1",
-   49
+   "ice_cream-1",
+   6
   ],
   [
-   "jingle_bell-2",
-   49
+   "jester_hat-1",
+   6
   ],
   [
-   "mini_oscar-6",
-   19
+   "lush_bouquet-3",
+   6
   ],
   [
-   "mini_oscar-1",
-   19
+   "lush_bouquet-4",
+   6
   ],
   [
-   "mini_oscar-2",
-   19
+   "lush_bouquet-5",
+   6
   ],
   [
-   "westside_sign-1",
+   "party_sparkler-4",
+   6
+  ],
+  [
+   "ton_10000",
+   5
+  ],
+  [
+   "record_player-1",
+   4
+  ],
+  [
+   "record_player-2",
+   4
+  ],
+  [
+   "record_player-3",
+   4
+  ],
+  [
+   "lucky_locket-3",
+   2
+  ],
+  [
+   "lucky_locket-4",
+   2
+  ],
+  [
+   "lucky_locket-5",
+   2
+  ],
+  [
+   "timeless_book-3",
+   2
+  ],
+  [
+   "diamond_ring_nft-4",
    1
   ],
   [
-   "westside_sign-2",
+   "diamond_ring_nft-5",
    1
   ],
   [
-   "westside_sign-3",
+   "diamond_ring_nft-6",
+   1
+  ],
+  [
+   "toy_bear-6",
+   1
+  ],
+  [
+   "toy_bear-2",
+   1
+  ],
+  [
+   "toy_bear-3",
    1
   ]
  ],
- "heroes": [
+ "sweet": [
   [
-   "victory_medal-3",
-   377
-  ],
-  [
-   "victory_medal-4",
-   377
-  ],
-  [
-   "victory_medal-5",
-   377
-  ],
-  [
-   "liberty_figure-6",
-   377
-  ],
-  [
-   "liberty_figure-3",
-   377
-  ],
-  [
-   "liberty_figure-4",
-   377
-  ],
-  [
-   "khabibs_papakha-2",
-   62
-  ],
-  [
-   "khabibs_papakha-4",
-   62
-  ],
-  [
-   "khabibs_papakha-5",
-   62
-  ],
-  [
-   "mini_oscar-6",
-   17
-  ],
-  [
-   "mini_oscar-1",
-   17
-  ],
-  [
-   "mini_oscar-2",
-   17
-  ],
-  [
-   "mighty_arm-1",
-   8
-  ],
-  [
-   "mighty_arm-3",
-   8
-  ],
-  [
-   "mighty_arm-4",
-   8
-  ],
-  [
-   "heroic_helmet-6",
-   6
-  ],
-  [
-   "heroic_helmet-2",
-   6
-  ],
-  [
-   "heroic_helmet-4",
-   6
-  ],
-  [
-   "durovs_cap-4",
-   2
-  ],
-  [
-   "durovs_cap-5",
-   2
-  ],
-  [
-   "durovs_cap-6",
-   2
-  ],
-  [
-   "resistance_dog-4",
-   1
-  ],
-  [
-   "resistance_dog-5",
-   1
-  ],
-  [
-   "resistance_dog-6",
-   1
-  ]
- ],
- "street": [
-  [
-   "ton_1000",
-   207
+   "ton_500",
+   259
   ],
   [
    "ton_2000",
-   117
+   97
   ],
   [
    "ton_5000",
    51
   ],
   [
+   "chill_flame-4",
+   50
+  ],
+  [
+   "chill_flame-6",
+   50
+  ],
+  [
+   "ice_cream-5",
+   48
+  ],
+  [
+   "ice_cream-6",
+   49
+  ],
+  [
+   "lol_pop-1",
+   48
+  ],
+  [
+   "lol_pop-4",
+   48
+  ],
+  [
+   "lol_pop-5",
+   48
+  ],
+  [
+   "pool_float-4",
+   47
+  ],
+  [
+   "pool_float-5",
+   47
+  ],
+  [
+   "pool_float-6",
+   47
+  ],
+  [
+   "whip_cupcake-1",
+   48
+  ],
+  [
+   "xmas_stocking-5",
+   48
+  ],
+  [
+   "xmas_stocking-6",
+   48
+  ],
+  [
+   "party_sparkler-5",
+   42
+  ],
+  [
+   "ice_cream-1",
+   39
+  ],
+  [
+   "spring_basket-4",
+   38
+  ],
+  [
+   "whip_cupcake-2",
+   38
+  ],
+  [
+   "whip_cupcake-4",
+   38
+  ],
+  [
+   "party_sparkler-4",
+   37
+  ],
+  [
+   "spring_basket-3",
+   31
+  ],
+  [
+   "jingle_bell-4",
+   28
+  ],
+  [
+   "jingle_bell-5",
+   28
+  ],
+  [
+   "jingle_bell-6",
+   28
+  ],
+  [
+   "party_sparkler-1",
+   24
+  ],
+  [
+   "chill_flame-2",
+   17
+  ],
+  [
+   "xmas_stocking-3",
+   17
+  ],
+  [
+   "spring_basket-2",
+   1
+  ]
+ ],
+ "potion": [
+  [
+   "witch_hat-4",
+   31
+  ],
+  [
+   "witch_hat-5",
+   31
+  ],
+  [
+   "witch_hat-6",
+   31
+  ],
+  [
+   "crystal_ball-4",
+   15
+  ],
+  [
+   "love_potion-4",
+   13
+  ],
+  [
+   "trapped_heart-4",
+   11
+  ],
+  [
+   "trapped_heart-5",
+   10
+  ],
+  [
+   "trapped_heart-6",
+   10
+  ],
+  [
+   "mad_pumpkin-4",
+   7
+  ],
+  [
+   "mad_pumpkin-5",
+   6
+  ],
+  [
+   "mad_pumpkin-6",
+   6
+  ],
+  [
+   "crystal_ball-6",
+   4
+  ],
+  [
+   "crystal_ball-1",
+   3
+  ],
+  [
+   "voodoo_doll-4",
+   2
+  ],
+  [
+   "voodoo_doll-6",
+   2
+  ],
+  [
+   "voodoo_doll-5",
+   1
+  ],
+  [
+   "magic_potion-4",
+   1
+  ],
+  [
+   "love_potion-1",
+   1
+  ],
+  [
+   "love_potion-3",
+   1
+  ],
+  [
+   "magic_potion-5",
+   1
+  ],
+  [
+   "magic_potion-1",
+   1
+  ]
+ ],
+ "jewel": [
+  [
+   "clover_pin-4",
+   207
+  ],
+  [
+   "victory_medal-4",
+   164
+  ],
+  [
+   "clover_pin-6",
+   158
+  ],
+  [
+   "clover_pin-1",
+   110
+  ],
+  [
+   "fine_pen-2",
+   61
+  ],
+  [
+   "fine_pen-3",
+   21
+  ],
+  [
+   "fine_pen-6",
+   21
+  ],
+  [
+   "victory_medal-2",
+   16
+  ],
+  [
+   "victory_medal-3",
+   16
+  ],
+  [
+   "signet_ring-4",
+   11
+  ],
+  [
+   "signet_ring-5",
+   11
+  ],
+  [
+   "swiss_watch-4",
+   5
+  ],
+  [
+   "swiss_watch-6",
+   4
+  ],
+  [
+   "signet_ring-3",
+   1
+  ],
+  [
+   "swiss_watch-1",
+   1
+  ]
+ ],
+ "meme": [
+  [
+   "ton_1000",
+   100
+  ],
+  [
+   "ton_2000",
+   47
+  ],
+  [
+   "ton_5000",
+   17
+  ],
+  [
+   "pet_snake-4",
+   15
+  ],
+  [
+   "pet_snake-5",
+   15
+  ],
+  [
+   "liberty_figure-4",
+   13
+  ],
+  [
+   "liberty_figure-5",
+   12
+  ],
+  [
+   "liberty_figure-6",
+   12
+  ],
+  [
+   "snoop_dogg-5",
+   14
+  ],
+  [
+   "snoop_dogg-6",
+   12
+  ],
+  [
    "snoop_dogg-2",
-   14
+   10
   ],
   [
-   "snoop_dogg-3",
-   14
+   "jolly_chimp-5",
+   9
   ],
   [
-   "snoop_dogg-4",
-   14
+   "jolly_chimp-6",
+   9
   ],
   [
-   "surge_board-2",
-   15
+   "pet_snake-6",
+   9
   ],
   [
-   "surge_board-3",
-   15
-  ],
-  [
-   "surge_board-4",
-   15
-  ],
-  [
-   "input_key-1",
-   14
-  ],
-  [
-   "input_key-4",
-   14
-  ],
-  [
-   "input_key-5",
-   14
+   "snoop_cigar-4",
+   4
   ],
   [
    "snoop_cigar-5",
-   7
+   4
   ],
   [
-   "snoop_cigar-6",
-   7
-  ],
-  [
-   "snoop_cigar-1",
-   7
-  ],
-  [
-   "vintage_cigar-5",
+   "snoop_cigar-3",
    3
   ],
   [
-   "vintage_cigar-6",
-   3
-  ],
-  [
-   "vintage_cigar-4",
-   3
-  ],
-  [
-   "sharp_tongue-1",
-   3
-  ],
-  [
-   "sharp_tongue-3",
-   3
-  ],
-  [
-   "sharp_tongue-4",
-   3
-  ],
-  [
-   "low_rider-1",
+   "jolly_chimp-3",
    2
   ],
   [
-   "low_rider-2",
+   "toy_bear-4",
    2
   ],
   [
-   "low_rider-3",
+   "toy_bear-5",
    2
+  ],
+  [
+   "toy_bear-6",
+   2
+  ],
+  [
+   "kissed_frog-5",
+   1
+  ],
+  [
+   "kissed_frog-6",
+   1
+  ],
+  [
+   "kissed_frog-1",
+   1
+  ]
+ ],
+ "party": [
+  [
+   "ton_500",
+   959
+  ],
+  [
+   "ton_2000",
+   238
+  ],
+  [
+   "ton_5000",
+   94
+  ],
+  [
+   "big_year-6",
+   93
+  ],
+  [
+   "lol_pop-1",
+   87
+  ],
+  [
+   "lol_pop-4",
+   87
+  ],
+  [
+   "lol_pop-5",
+   87
+  ],
+  [
+   "timeless_book-4",
+   82
+  ],
+  [
+   "timeless_book-5",
+   82
+  ],
+  [
+   "party_sparkler-5",
+   71
+  ],
+  [
+   "party_sparkler-6",
+   71
+  ],
+  [
+   "victory_medal-4",
+   68
+  ],
+  [
+   "victory_medal-5",
+   68
+  ],
+  [
+   "big_year-4",
+   67
+  ],
+  [
+   "party_sparkler-4",
+   59
+  ],
+  [
+   "surge_board-6",
+   58
+  ],
+  [
+   "surge_board-5",
+   52
+  ],
+  [
+   "jingle_bell-5",
+   39
+  ],
+  [
+   "jingle_bell-6",
+   39
+  ],
+  [
+   "big_year-5",
+   29
+  ],
+  [
+   "jingle_bell-1",
+   24
+  ],
+  [
+   "timeless_book-3",
+   19
+  ],
+  [
+   "victory_medal-3",
+   16
+  ],
+  [
+   "surge_board-1",
+   12
   ],
   [
    "westside_sign-2",
+   4
+  ],
+  [
+   "westside_sign-6",
+   3
+  ],
+  [
+   "mini_oscar-1",
+   1
+  ],
+  [
+   "mini_oscar-2",
+   1
+  ],
+  [
+   "mini_oscar-3",
+   1
+  ],
+  [
+   "westside_sign-1",
+   1
+  ]
+ ],
+ "heroes": [
+  [
+   "liberty_figure-5",
+   264
+  ],
+  [
+   "liberty_figure-6",
+   265
+  ],
+  [
+   "victory_medal-4",
+   239
+  ],
+  [
+   "victory_medal-5",
+   238
+  ],
+  [
+   "victory_medal-6",
+   238
+  ],
+  [
+   "khabibs_papakha-4",
+   36
+  ],
+  [
+   "khabibs_papakha-5",
+   36
+  ],
+  [
+   "liberty_figure-3",
+   31
+  ],
+  [
+   "khabibs_papakha-2",
+   4
+  ],
+  [
+   "mighty_arm-6",
+   3
+  ],
+  [
+   "heroic_helmet-4",
+   2
+  ],
+  [
+   "heroic_helmet-6",
+   2
+  ],
+  [
+   "mighty_arm-1",
+   2
+  ],
+  [
+   "durovs_cap-4",
+   1
+  ],
+  [
+   "durovs_cap-5",
+   1
+  ],
+  [
+   "durovs_cap-6",
+   1
+  ],
+  [
+   "mini_oscar-1",
+   1
+  ],
+  [
+   "mini_oscar-2",
+   1
+  ],
+  [
+   "mini_oscar-3",
+   1
+  ],
+  [
+   "mighty_arm-3",
+   1
+  ],
+  [
+   "heroic_helmet-2",
+   1
+  ]
+ ],
+ "street": [
+  [
+   "ton_1000",
+   599
+  ],
+  [
+   "ton_2000",
+   261
+  ],
+  [
+   "ton_5000",
+   87
+  ],
+  [
+   "snoop_dogg-4",
+   74
+  ],
+  [
+   "snoop_dogg-2",
+   51
+  ],
+  [
+   "input_key-4",
+   48
+  ],
+  [
+   "input_key-6",
+   48
+  ],
+  [
+   "surge_board-5",
+   41
+  ],
+  [
+   "input_key-1",
+   30
+  ],
+  [
+   "surge_board-4",
+   29
+  ],
+  [
+   "snoop_cigar-5",
+   17
+  ],
+  [
+   "snoop_cigar-6",
+   17
+  ],
+  [
+   "snoop_dogg-3",
+   15
+  ],
+  [
+   "snoop_cigar-1",
+   10
+  ],
+  [
+   "surge_board-3",
+   7
+  ],
+  [
+   "vintage_cigar-4",
+   6
+  ],
+  [
+   "vintage_cigar-5",
+   5
+  ],
+  [
+   "vintage_cigar-6",
+   5
+  ],
+  [
+   "sharp_tongue-4",
+   5
+  ],
+  [
+   "sharp_tongue-5",
+   5
+  ],
+  [
+   "low_rider-6",
+   3
+  ],
+  [
+   "westside_sign-2",
+   2
+  ],
+  [
+   "westside_sign-4",
+   2
+  ],
+  [
+   "low_rider-1",
+   1
+  ],
+  [
+   "low_rider-2",
+   1
+  ],
+  [
+   "sharp_tongue-3",
    1
   ],
   [
    "westside_sign-3",
-   1
-  ],
-  [
-   "westside_sign-4",
    1
   ]
  ],
  "cute": [
   [
    "ton_500",
-   633
+   615
   ],
   [
    "ton_2000",
-   273
+   176
   ],
   [
    "ton_5000",
-   156
-  ],
-  [
-   "whip_cupcake-2",
-   52
-  ],
-  [
-   "whip_cupcake-4",
-   52
-  ],
-  [
-   "whip_cupcake-5",
-   52
+   78
   ],
   [
    "pet_snake-4",
-   52
+   70
   ],
   [
    "pet_snake-5",
-   52
+   70
   ],
   [
-   "pet_snake-6",
-   52
-  ],
-  [
-   "spring_basket-4",
-   43
+   "whip_cupcake-5",
+   76
   ],
   [
    "spring_basket-5",
-   43
+   52
   ],
   [
    "spring_basket-6",
-   43
+   51
+  ],
+  [
+   "whip_cupcake-2",
+   51
+  ],
+  [
+   "whip_cupcake-4",
+   51
+  ],
+  [
+   "jolly_chimp-4",
+   50
   ],
   [
    "jolly_chimp-5",
-   40
+   44
   ],
   [
    "jolly_chimp-6",
-   40
+   44
   ],
   [
-   "jolly_chimp-3",
-   40
+   "pet_snake-6",
+   44
   ],
   [
-   "toy_bear-2",
-   16
-  ],
-  [
-   "toy_bear-3",
-   16
+   "spring_basket-1",
+   13
   ],
   [
    "toy_bear-4",
-   16
+   13
   ],
   [
-   "kissed_frog-3",
-   12
-  ],
-  [
-   "kissed_frog-4",
-   12
+   "toy_bear-2",
+   10
   ],
   [
    "kissed_frog-5",
-   12
+   8
   ],
   [
-   "scared_cat-4",
-   1
+   "kissed_frog-4",
+   4
   ],
   [
-   "scared_cat-5",
-   1
+   "toy_bear-3",
+   3
   ],
   [
-   "scared_cat-6",
+   "kissed_frog-3",
    1
   ]
  ],
  "free24": [
   [
    "ton_2",
-   1200
+   400
   ],
   [
    "ton_5",
-   900
-  ],
-  [
-   "ton_10",
-   600
-  ],
-  [
-   "ton_50",
    300
   ],
   [
-   "timeless_book-3",
-   17
+   "ton_10",
+   200
   ],
   [
-   "timeless_book-4",
-   17
+   "ton_50",
+   100
   ],
   [
-   "timeless_book-5",
-   17
+   "candy_cane-1",
+   5
   ],
   [
-   "pet_snake-4",
-   17
+   "candy_cane-2",
+   5
   ],
   [
-   "pet_snake-5",
-   17
+   "candy_cane-6",
+   5
   ],
   [
-   "pet_snake-6",
-   17
+   "fresh_socks-2",
+   5
   ],
   [
-   "whip_cupcake-5",
-   17
+   "fresh_socks-3",
+   5
   ],
   [
-   "whip_cupcake-6",
-   17
+   "fresh_socks-4",
+   5
   ],
   [
-   "whip_cupcake-1",
-   17
+   "instant_ramen-1",
+   5
+  ],
+  [
+   "instant_ramen-2",
+   5
+  ],
+  [
+   "instant_ramen-3",
+   5
+  ],
+  [
+   "lunar_snake-3",
+   5
+  ],
+  [
+   "lunar_snake-4",
+   5
+  ],
+  [
+   "lunar_snake-5",
+   5
+  ],
+  [
+   "mirage_lamp-4",
+   5
+  ],
+  [
+   "mirage_lamp-5",
+   5
+  ],
+  [
+   "mirage_lamp-6",
+   5
+  ],
+  [
+   "snake_box-1",
+   5
+  ],
+  [
+   "snake_box-5",
+   5
+  ],
+  [
+   "snake_box-6",
+   5
+  ]
+ ],
+ "bronze": [
+  [
+   "ton_100",
+   28
+  ],
+  [
+   "ton_500",
+   26
+  ],
+  [
+   "ton_1000",
+   25
+  ],
+  [
+   "ton_1500",
+   24
+  ],
+  [
+   "ton_2000",
+   24
+  ],
+  [
+   "ton_2500",
+   48
+  ],
+  [
+   "ton_3000",
+   24
+  ],
+  [
+   "ton_5000",
+   12
   ],
   [
    "ice_cream-5",
-   17
+   1
   ],
   [
    "ice_cream-6",
-   17
-  ],
-  [
-   "ice_cream-1",
-   17
-  ],
-  [
-   "lol_pop-6",
-   17
+   1
   ],
   [
    "lol_pop-1",
-   17
+   1
   ],
   [
    "lol_pop-4",
-   17
+   1
   ],
   [
-   "pool_float-3",
-   17
+   "lol_pop-5",
+   1
+  ],
+  [
+   "whip_cupcake-1",
+   1
+  ],
+  [
+   "whip_cupcake-6",
+   1
+  ],
+  [
+   "ice_cream-1",
+   1
+  ],
+  [
+   "whip_cupcake-2",
+   1
+  ]
+ ],
+ "silver": [
+  [
+   "ton_100",
+   7
+  ],
+  [
+   "ton_500",
+   21
+  ],
+  [
+   "ton_1000",
+   33
+  ],
+  [
+   "ton_1500",
+   43
+  ],
+  [
+   "ton_2000",
+   52
+  ],
+  [
+   "ton_3000",
+   48
+  ],
+  [
+   "ton_4000",
+   24
+  ],
+  [
+   "ton_5000",
+   12
+  ],
+  [
+   "big_year-6",
+   1
+  ],
+  [
+   "chill_flame-4",
+   1
+  ],
+  [
+   "chill_flame-5",
+   1
+  ],
+  [
+   "pet_snake-4",
+   1
   ],
   [
    "pool_float-4",
-   17
+   1
   ],
   [
    "pool_float-5",
-   17
+   1
+  ],
+  [
+   "pool_float-6",
+   1
+  ],
+  [
+   "big_year-4",
+   1
+  ],
+  [
+   "pet_snake-1",
+   1
+  ],
+  [
+   "pet_snake-3",
+   1
+  ],
+  [
+   "big_year-5",
+   1
+  ],
+  [
+   "chill_flame-2",
+   1
+  ]
+ ],
+ "gold": [
+  [
+   "ton_500",
+   12
+  ],
+  [
+   "ton_1000",
+   37
+  ],
+  [
+   "ton_1500",
+   71
+  ],
+  [
+   "ton_2000",
+   113
+  ],
+  [
+   "ton_3000",
+   216
+  ],
+  [
+   "ton_4000",
+   48
+  ],
+  [
+   "ton_5000",
+   24
+  ],
+  [
+   "timeless_book-4",
+   1
+  ],
+  [
+   "xmas_stocking-4",
+   1
+  ],
+  [
+   "xmas_stocking-5",
+   1
+  ],
+  [
+   "clover_pin-4",
+   1
+  ],
+  [
+   "party_sparkler-6",
+   1
+  ],
+  [
+   "clover_pin-5",
+   1
+  ],
+  [
+   "clover_pin-6",
+   1
+  ],
+  [
+   "party_sparkler-4",
+   1
+  ],
+  [
+   "ton_10000",
+   12
+  ],
+  [
+   "party_sparkler-1",
+   1
+  ],
+  [
+   "timeless_book-1",
+   1
+  ],
+  [
+   "timeless_book-3",
+   1
+  ],
+  [
+   "xmas_stocking-3",
+   1
   ]
  ],
  "classic": [
@@ -4359,240 +4489,6 @@
   [
    "reg-trophy",
    1
-  ]
- ],
- "bronze": [
-  [
-   "ton_100",
-   3
-  ],
-  [
-   "ton_500",
-   36
-  ],
-  [
-   "ton_1000",
-   129
-  ],
-  [
-   "ton_1500",
-   276
-  ],
-  [
-   "ton_2000",
-   468
-  ],
-  [
-   "ton_2500",
-   144
-  ],
-  [
-   "ton_3000",
-   72
-  ],
-  [
-   "ton_5000",
-   36
-  ],
-  [
-   "lol_pop-1",
-   1
-  ],
-  [
-   "lol_pop-4",
-   1
-  ],
-  [
-   "lol_pop-5",
-   1
-  ],
-  [
-   "ice_cream-4",
-   1
-  ],
-  [
-   "ice_cream-5",
-   1
-  ],
-  [
-   "ice_cream-6",
-   1
-  ],
-  [
-   "whip_cupcake-1",
-   1
-  ],
-  [
-   "whip_cupcake-2",
-   1
-  ],
-  [
-   "whip_cupcake-4",
-   1
-  ]
- ],
- "silver": [
-  [
-   "ton_100",
-   3
-  ],
-  [
-   "ton_500",
-   24
-  ],
-  [
-   "ton_1000",
-   63
-  ],
-  [
-   "ton_1500",
-   105
-  ],
-  [
-   "ton_2000",
-   153
-  ],
-  [
-   "ton_3000",
-   144
-  ],
-  [
-   "ton_4000",
-   72
-  ],
-  [
-   "ton_5000",
-   36
-  ],
-  [
-   "pet_snake-1",
-   1
-  ],
-  [
-   "pet_snake-3",
-   1
-  ],
-  [
-   "pet_snake-4",
-   1
-  ],
-  [
-   "pool_float-3",
-   1
-  ],
-  [
-   "pool_float-4",
-   1
-  ],
-  [
-   "pool_float-5",
-   1
-  ],
-  [
-   "chill_flame-4",
-   1
-  ],
-  [
-   "chill_flame-5",
-   1
-  ],
-  [
-   "chill_flame-6",
-   1
-  ],
-  [
-   "big_year-5",
-   1
-  ],
-  [
-   "big_year-6",
-   1
-  ],
-  [
-   "big_year-4",
-   1
-  ]
- ],
- "gold": [
-  [
-   "ton_500",
-   45
-  ],
-  [
-   "ton_1000",
-   84
-  ],
-  [
-   "ton_1500",
-   123
-  ],
-  [
-   "ton_2000",
-   162
-  ],
-  [
-   "ton_3000",
-   240
-  ],
-  [
-   "ton_4000",
-   144
-  ],
-  [
-   "ton_5000",
-   72
-  ],
-  [
-   "timeless_book-3",
-   1
-  ],
-  [
-   "timeless_book-4",
-   1
-  ],
-  [
-   "timeless_book-5",
-   1
-  ],
-  [
-   "xmas_stocking-5",
-   1
-  ],
-  [
-   "xmas_stocking-6",
-   1
-  ],
-  [
-   "xmas_stocking-3",
-   1
-  ],
-  [
-   "clover_pin-6",
-   1
-  ],
-  [
-   "clover_pin-1",
-   1
-  ],
-  [
-   "clover_pin-4",
-   1
-  ],
-  [
-   "party_sparkler-1",
-   1
-  ],
-  [
-   "party_sparkler-4",
-   1
-  ],
-  [
-   "party_sparkler-5",
-   1
-  ],
-  [
-   "ton_10000",
-   36
   ]
  ]
 }

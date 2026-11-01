@@ -21,9 +21,11 @@ MAX_TOTAL = 6000
 manifest = json.loads((ROOT / "public/gifts/nft_manifest.json").read_text(encoding="utf-8"))
 # имя подарка -> цена в minor (1 TON = 1000 minor) и id трёх видов
 GIFTS = {
-    name: (int(round(v[0]["price_ton"] * 1000)), [x["id"] for x in v])
+    name: (int(round(sum(x["price_ton"] for x in v) / len(v) * 1000)), [x["id"] for x in v])
     for name, v in manifest.items()
 }
+# цена каждого вида (модель + фон) в minor: по ней считается EV, а не по средней цене подарка
+VARIANT_PRICE = {x["id"]: int(round(x["price_ton"] * 1000)) for v in manifest.values() for x in v}
 BACKDROP = {x["id"]: x["backdrop"] for v in manifest.values() for x in v}
 DARK = {"Black", "Onyx Black"}
 
@@ -80,6 +82,19 @@ def variant_picks(name: str, case_id: str, shift: int) -> list[str]:
     opts = allowed_variants(name, case_id)
     k = min(VARIANTS_PER_GIFT, len(opts))
     return [opts[(shift + i) % len(opts)] for i in range(k)]
+
+
+def expand(pool: list[str], case_id: str, shift: int) -> list[tuple[str, str, int]]:
+    """Подарки пула → отдельные предметы-виды (имя, id вида, цена вида), по возрастанию цены."""
+    items = []
+    for j, n in enumerate(pool):
+        for vid in variant_picks(n, case_id, shift + j):
+            items.append((n, vid, VARIANT_PRICE.get(vid, GIFTS[n][0])))
+    return sorted(items, key=lambda it: (it[2], it[1]))
+
+
+def emit(cid: str, items: list[tuple[str, str, int]], w: list[int]) -> None:
+    result[cid] = [[vid, wt] for (_, vid, _), wt in zip(items, w)]
 
 
 def ladder_for(case_id: str) -> list[str]:
@@ -177,29 +192,25 @@ for ci, (cid, name, price, mult, k) in enumerate(CASES):
             pool = pick_pool(price, mult + extra * 2, k + 5, cid, skew)
             if cid in TON_CASES:
                 pool = sorted(set(pool) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
-            v = [GIFTS[n][0] for n in pool]
+            items = expand(pool, cid, ci)
+            v = [it[2] for it in items]
             w = solve(v, price)
             if not w:
                 continue
             u = util(w, v, price)
             if u >= 0.9:
-                chosen = (pool, v, w)
+                chosen = (items, v, w)
                 break
             if chosen is None or u > util(chosen[2], chosen[1], price):
-                chosen = (pool, v, w)
+                chosen = (items, v, w)
         if chosen and util(chosen[2], chosen[1], price) >= 0.9:
             break
     assert chosen, f"no solution for {cid}"
-    pool, v, w = chosen
-    result[cid] = []
-    for j, (n, wt) in enumerate(zip(pool, w)):
-        picks = variant_picks(n, cid, ci + j)
-        q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
-        for vi, vid in enumerate(picks):
-            result[cid].append([vid, q + (1 if vi < r else 0)])
+    items, v, w = chosen
+    emit(cid, items, w)
     report.append(
         f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
-        f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"
+        f"total={sum(w)}  items={len(items)}"
     )
 
 # --- Тематические кейсы: набор подарков задан по смыслу, цена подбирается автоматически ---
@@ -215,33 +226,38 @@ THEMED = [
 ]
 PRICE_LADDER_TON = [6, 7, 8, 9, 10, 12, 14, 15, 16, 18, 20, 24, 25, 30, 35, 40, 50, 60, 70, 80, 100, 120, 150, 200, 250, 300, 400, 500, 750, 1000]
 
+# Цены тематических кейсов зафиксированы продуктом (catalog.ts). Если после обновления цен NFT состав
+# перестал укладываться в RTP 98%, самые дорогие подарки из пула убираются, а цена кейса остаётся прежней.
+THEMED_PRICE = {"sweet": 6000, "potion": 18000, "jewel": 12000, "meme": 7000, "party": 6000, "heroes": 14000, "street": 7000, "cute": 6000}
 themed_prices = {}
 for ti, (cid, name, names) in enumerate(THEMED):
     pool0 = sorted((n for n in names if n in GIFTS and allowed_variants(n, cid)), key=lambda n: GIFTS[n][0])
     best = None
-    for ton in PRICE_LADDER_TON:
+    # сначала прежняя цена (с отсечением самых дорогих призов), если не выходит — следующая ступень лестницы цен
+    for ton in [THEMED_PRICE[cid] // 1000] + [x for x in PRICE_LADDER_TON if x * 1000 > THEMED_PRICE[cid]]:
         price = ton * 1000
-        pool = pool0
-        if cid in TON_CASES:
-            pool = sorted(set(pool0) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
-        v = [GIFTS[n][0] for n in pool]
-        w = solve(v, price)
-        if w and util(w, v, price) >= 0.96:
-            best = (price, w, pool, v)
+        for cap_mult in (None, 200, 120, 80, 50, 30, 20, 12, 8):
+            base = pool0 if cap_mult is None else [n for n in pool0 if GIFTS[n][0] <= cap_mult * price]
+            if len(base) < 4:
+                continue
+            pool = base
+            if cid in TON_CASES:
+                pool = sorted(set(base) | set(ton_extras(price)), key=lambda n: GIFTS[n][0])
+            items = expand(pool, cid, len(CASES) + ti)
+            v = [it[2] for it in items]
+            w = solve(v, price)
+            if w and util(w, v, price) >= 0.93:
+                best = (price, w, items, v)
+                break
+        if best:
             break
-    assert best, f"no price for themed case {cid}"
-    price, w, pool, v = best
+    assert best, f"no solution for themed case {cid}"
+    price, w, items, v = best
     themed_prices[cid] = price
-    ci = len(CASES) + ti
-    result[cid] = []
-    for j, (n, wt) in enumerate(zip(pool, w)):
-        picks = variant_picks(n, cid, ci + j)
-        q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
-        for vi, vid in enumerate(picks):
-            result[cid].append([vid, q + (1 if vi < r else 0)])
+    emit(cid, items, w)
     report.append(
         f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  top={max(w)/sum(w):.0%}  "
-        f"total={sum(w)}  {[(n, wt) for n, wt in zip(pool, w)]}"
+        f"total={sum(w)}  items={len(items)}"
     )
 
 (ROOT / "scripts/themed_cases.json").write_text(json.dumps(themed_prices, indent=1), encoding="utf-8")
@@ -253,26 +269,21 @@ cheap_nft = sorted(
     (n for n in GIFTS if not is_ton(n) and allowed_variants(n, "free24")),
     key=lambda n: GIFTS[n][0],
 )[:6]
-pool24 = sorted(FREE24_MICRO + cheap_nft, key=lambda n: GIFTS[n][0])
-v24 = [GIFTS[n][0] for n in pool24]
+items24 = expand(FREE24_MICRO + cheap_nft, "free24", 7)
+v24 = [it[2] for it in items24]
 best24 = None
-for target in (300, 400, 500, 600, 800, 1000, 1500, 2000):
-    for per_nft in range(4, 80):
-        w24 = [FREE24_MICRO_W[FREE24_MICRO.index(n)] if n in FREE24_MICRO else per_nft for n in pool24]
-        if feasible(w24, v24, target) and util(w24, v24, target) >= 0.96:
+for target in (500, 600, 800, 1000, 1500, 2000, 3000, 5000):
+    for per_nft in range(1, 80):
+        w24 = [FREE24_MICRO_W[FREE24_MICRO.index(it[0])] if it[0] in FREE24_MICRO else per_nft for it in items24]
+        if feasible(w24, v24, target) and util(w24, v24, target) >= 0.9:
             best24 = (target, w24)
             break
     if best24:
         break
 assert best24, "no solution for free24"
 free24_price, w24 = best24
-result["free24"] = []
-for j, (n, wt) in enumerate(zip(pool24, w24)):
-    picks = variant_picks(n, "free24", 7 + j)
-    q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
-    for vi, vid in enumerate(picks):
-        result["free24"].append([vid, q + (1 if vi < r else 0)])
-report.append(f"free24      P={free24_price/1000:>6}  util={util(w24, v24, free24_price):.3f}  {list(zip(pool24, w24))}")
+emit("free24", items24, w24)
+report.append(f"free24      P={free24_price/1000:>6}  util={util(w24, v24, free24_price):.3f}  items={len(items24)}")
 (ROOT / "scripts/free24_target.json").write_text(json.dumps({"targetMinor": free24_price}), encoding="utf-8")
 
 
@@ -318,19 +329,14 @@ MINI_CASES = [
     ("gold", "Gold", 3000, ["TON 0.5", "TON 1", "TON 1.5", "TON 2", "TON 3", "TON 4", "TON 5", "TON 10"], ["Timeless Book", "Xmas Stocking", "Clover Pin", "Party Sparkler"]),
 ]
 for mi, (cid, name, price, tons, nfts) in enumerate(MINI_CASES):
-    pool = sorted(tons + nfts, key=lambda n: GIFTS[n][0])
-    v = [GIFTS[n][0] for n in pool]
-    w = solve_mini(v, [n in nfts for n in pool], price)
-    result[cid] = []
-    for j, (n, wt) in enumerate(zip(pool, w)):
-        picks = variant_picks(n, cid, 40 + mi * 7 + j)
-        q, r = divmod(VARIANTS_PER_GIFT * wt, len(picks))
-        for vi, vid in enumerate(picks):
-            result[cid].append([vid, q + (1 if vi < r else 0)])
+    items = expand(sorted(tons + nfts, key=lambda n: GIFTS[n][0]), cid, 40 + mi * 7)
+    v = [it[2] for it in items]
+    w = solve_mini(v, [it[0] in nfts for it in items], price)
+    emit(cid, items, w)
     tot = sum(w)
     report.append(
         f"{cid:<11} P={price/1000:>6}  util={util(w, v, price):.3f}  "
-        + "  ".join(f"{n}:{wt / tot:.1%}" for n, wt in zip(pool, w))
+        + "  ".join(f"{it[1]}:{wt / tot:.2%}" for it, wt in zip(items, w))
     )
 
 # --- Кейсы с обычными подарками Telegram (не NFT): цены по Stars (175 Stars = 1 TON, вниз) ---

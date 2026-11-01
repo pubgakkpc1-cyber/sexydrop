@@ -1,0 +1,4340 @@
+{
+ "plushpepe|": {
+  "v": 7000.0
+ },
+ "plushpepe|Gummy Frog": {
+  "v": 8800.0
+ },
+ "plushpepe|Platinum": {
+  "v": 18000.0
+ },
+ "plushpepe|Christmas": {
+  "v": 13420.0
+ },
+ "plushpepe|Black": {
+  "v": 18888.0
+ },
+ "plushpepe|Cozy Galaxy": {
+  "v": null
+ },
+ "plushpepe|Electric Purple": {
+  "v": 25555.0
+ },
+ "plushpepe|Stripes": {
+  "v": 7000.0
+ },
+ "plushpepe|Jade Green": {
+  "v": 7000.0
+ },
+ "plushpepe|Spectrum": {
+  "v": 7800.0
+ },
+ "plushpepe|Cobalt Blue": {
+  "v": 7800.0
+ },
+ "plushpepe|Kung Fu Pepe": {
+  "v": 8000.0
+ },
+ "plushpepe|Neon Blue": {
+  "v": 8000.0
+ },
+ "heartlocket|": {
+  "v": 1444.0
+ },
+ "heartlocket|Turtles": {
+  "v": null
+ },
+ "heartlocket|Lemongrass": {
+  "v": null
+ },
+ "heartlocket|Black Hole": {
+  "v": null
+ },
+ "heartlocket|Electric Indigo": {
+  "v": 2999.0
+ },
+ "heartlocket|Spider Web": {
+  "v": null
+ },
+ "heartlocket|Neon Blue": {
+  "v": null
+ },
+ "heartlocket|Heartwood": {
+  "v": 1444.0
+ },
+ "heartlocket|Rifle Green": {
+  "v": 1444.0
+ },
+ "heartlocket|Karaoke Bar": {
+  "v": 1700.0
+ },
+ "heartlocket|Soulkeeper": {
+  "v": 1777.0
+ },
+ "heartlocket|Khaki Green": {
+  "v": 1777.0
+ },
+ "resistancedog|": {
+  "v": 470.0
+ },
+ "resistancedog|Creeper": {
+  "v": 999.0
+ },
+ "resistancedog|Midnight Blue": {
+  "v": 4999.0
+ },
+ "resistancedog|Proxy Server": {
+  "v": 2500.0
+ },
+ "resistancedog|Steel Grey": {
+  "v": 699.0
+ },
+ "resistancedog|Ultras": {
+  "v": 3300.0
+ },
+ "resistancedog|Satin Gold": {
+  "v": 867.0
+ },
+ "resistancedog|Airbender": {
+  "v": 470.0
+ },
+ "resistancedog|Azure Blue": {
+  "v": 470.0
+ },
+ "resistancedog|Arrakis": {
+  "v": 699.0
+ },
+ "resistancedog|Privateer": {
+  "v": 700.0
+ },
+ "resistancedog|Sky Blue": {
+  "v": 700.0
+ },
+ "durovscap|": {
+  "v": 465.0
+ },
+ "durovscap|Duskwave": {
+  "v": 470.0
+ },
+ "durovscap|Black": {
+  "v": 1999.0
+ },
+ "durovscap|Asterix": {
+  "v": null
+ },
+ "durovscap|Electric Indigo": {
+  "v": 700.0
+ },
+ "durovscap|Artwork": {
+  "v": 1399.0
+ },
+ "durovscap|Satin Gold": {
+  "v": 470.0
+ },
+ "durovscap|Jade": {
+  "v": 470.0
+ },
+ "durovscap|Persimmon": {
+  "v": 470.0
+ },
+ "durovscap|Caramel": {
+  "v": 470.0
+ },
+ "scaredcat|": {
+  "v": 299.0
+ },
+ "scaredcat|Obelisk": {
+  "v": 3700.0
+ },
+ "scaredcat|Onyx Black": {
+  "v": 2000.0
+ },
+ "scaredcat|Cat Nukem": {
+  "v": 444.0
+ },
+ "scaredcat|Celestia": {
+  "v": 425.0
+ },
+ "scaredcat|Sapphire": {
+  "v": 440.0
+ },
+ "scaredcat|El Tigre": {
+  "v": 299.0
+ },
+ "scaredcat|Moonstone": {
+  "v": 299.0
+ },
+ "scaredcat|Cathulhu": {
+  "v": 300.0
+ },
+ "scaredcat|Caramel": {
+  "v": 300.0
+ },
+ "scaredcat|Virus": {
+  "v": 300.0
+ },
+ "scaredcat|Jade Green": {
+  "v": 300.0
+ },
+ "preciouspeach|": {
+  "v": 295.0
+ },
+ "preciouspeach|Spoiled": {
+  "v": null
+ },
+ "preciouspeach|Black": {
+  "v": 500.0
+ },
+ "preciouspeach|Cutout": {
+  "v": 3200.0
+ },
+ "preciouspeach|Twilight": {
+  "v": null
+ },
+ "preciouspeach|Cyberpunk": {
+  "v": null
+ },
+ "preciouspeach|Cozy Warmth": {
+  "v": 295.0
+ },
+ "preciouspeach|Lemongrass": {
+  "v": 295.0
+ },
+ "preciouspeach|Ogre Green": {
+  "v": 295.0
+ },
+ "preciouspeach|Neon Blue": {
+  "v": 295.0
+ },
+ "preciouspeach|Jelly Bubble": {
+  "v": 310.0
+ },
+ "preciouspeach|Sapphire": {
+  "v": 310.0
+ },
+ "heroichelmet|": {
+  "v": 199.0
+ },
+ "heroichelmet|Mercurial": {
+  "v": 500.0
+ },
+ "heroichelmet|Onyx Black": {
+  "v": 15000.0
+ },
+ "heroichelmet|Battleship Grey": {
+  "v": 900.0
+ },
+ "heroichelmet|Ancient Gold": {
+  "v": 444.0
+ },
+ "heroichelmet|Black": {
+  "v": 333.0
+ },
+ "heroichelmet|Ladybug": {
+  "v": 199.0
+ },
+ "heroichelmet|Camo Green": {
+  "v": 199.0
+ },
+ "heroichelmet|Aegean Sea": {
+  "v": 250.0
+ },
+ "heroichelmet|Hunter Green": {
+  "v": 250.0
+ },
+ "heroichelmet|Skeleton": {
+  "v": 250.0
+ },
+ "heroichelmet|Mustard": {
+  "v": 250.0
+ },
+ "lootbag|": {
+  "v": 150.0
+ },
+ "lootbag|Money Bag": {
+  "v": 360.0
+ },
+ "lootbag|Onyx Black": {
+  "v": 420.0
+ },
+ "lootbag|Scrooge": {
+  "v": 1990.0
+ },
+ "lootbag|Black": {
+  "v": 180.0
+ },
+ "lootbag|Liberty": {
+  "v": 365.0
+ },
+ "lootbag|Platinum": {
+  "v": 299.0
+ },
+ "lootbag|Cargo Citron": {
+  "v": 150.0
+ },
+ "lootbag|Indigo Dye": {
+  "v": 150.0
+ },
+ "lootbag|Sunrise Bands": {
+  "v": 150.0
+ },
+ "lootbag|Midnight Blue": {
+  "v": 150.0
+ },
+ "lootbag|Jade Serpent": {
+  "v": 150.0
+ },
+ "lootbag|Emerald": {
+  "v": 150.0
+ },
+ "mightyarm|": {
+  "v": 150.0
+ },
+ "mightyarm|Colossus": {
+  "v": null
+ },
+ "mightyarm|Rifle Green": {
+  "v": 255.0
+ },
+ "mightyarm|Xeno Grip": {
+  "v": 335.0
+ },
+ "mightyarm|Black": {
+  "v": 1000.0
+ },
+ "mightyarm|Gladiator": {
+  "v": 1984.0
+ },
+ "mightyarm|Amber": {
+  "v": 187.0
+ },
+ "mightyarm|Petrified": {
+  "v": 150.0
+ },
+ "mightyarm|Mint Green": {
+  "v": 150.0
+ },
+ "mightyarm|Poor Yorick": {
+  "v": 159.0
+ },
+ "mightyarm|Cobalt Blue": {
+  "v": 159.0
+ },
+ "mightyarm|Robocop": {
+  "v": 160.0
+ },
+ "mightyarm|Pure Gold": {
+  "v": 160.0
+ },
+ "astralshard|": {
+  "v": 147.0
+ },
+ "astralshard|Barbed": {
+  "v": 666.0
+ },
+ "astralshard|Black": {
+  "v": 168.0
+ },
+ "astralshard|Ethereal": {
+  "v": null
+ },
+ "astralshard|Desert Sand": {
+  "v": 1250.0
+ },
+ "astralshard|Crystal Punk": {
+  "v": 149.0
+ },
+ "astralshard|Pacific Cyan": {
+  "v": 240.0
+ },
+ "astralshard|Uranium": {
+  "v": 147.0
+ },
+ "astralshard|Mystic Pearl": {
+  "v": 147.0
+ },
+ "astralshard|Arctite": {
+  "v": 148.0
+ },
+ "astralshard|Amber": {
+  "v": 148.0
+ },
+ "astralshard|Shamrock Green": {
+  "v": 149.0
+ },
+ "westsidesign|": {
+  "v": 128.0
+ },
+ "westsidesign|Gold Ruby": {
+  "v": 888.0
+ },
+ "westsidesign|Satin Gold": {
+  "v": 500.0
+ },
+ "westsidesign|Woofee": {
+  "v": null
+ },
+ "westsidesign|Tomato": {
+  "v": null
+ },
+ "westsidesign|Pure Gold": {
+  "v": 380.0
+ },
+ "westsidesign|Green Slime": {
+  "v": 128.0
+ },
+ "westsidesign|Orange": {
+  "v": 128.0
+ },
+ "westsidesign|Bow Wizzle": {
+  "v": 144.0
+ },
+ "westsidesign|Midnight Blue": {
+  "v": 144.0
+ },
+ "westsidesign|Sapphire": {
+  "v": 144.0
+ },
+ "westsidesign|Turquoise": {
+  "v": 144.0
+ },
+ "minioscar|": {
+  "v": 105.0
+ },
+ "minioscar|Seraphim": {
+  "v": 10000.0
+ },
+ "minioscar|Purple": {
+  "v": 120.0
+ },
+ "minioscar|Pink Guard": {
+  "v": 1000.0
+ },
+ "minioscar|Grape": {
+  "v": 188.0
+ },
+ "minioscar|Dark Side": {
+  "v": 222.0
+ },
+ "minioscar|Platinum": {
+  "v": 5000.0
+ },
+ "minioscar|Jokester": {
+  "v": 188.0
+ },
+ "minioscar|Neon Blue": {
+  "v": 5000.0
+ },
+ "minioscar|Astronaut": {
+  "v": 105.0
+ },
+ "minioscar|French Blue": {
+  "v": 105.0
+ },
+ "minioscar|Caveman": {
+  "v": 123.0
+ },
+ "minioscar|Pistachio": {
+  "v": 5000.0
+ },
+ "iongem|": {
+  "v": 85.0
+ },
+ "iongem|Barbie": {
+  "v": 120.0
+ },
+ "iongem|Black": {
+  "v": 880.0
+ },
+ "iongem|Ice Crystal": {
+  "v": 145.0
+ },
+ "iongem|Tiberium": {
+  "v": 150.0
+ },
+ "iongem|Bronzite": {
+  "v": 85.0
+ },
+ "iongem|Grape": {
+  "v": 85.0
+ },
+ "iongem|Garnet": {
+  "v": 88.0
+ },
+ "iongem|Navy Blue": {
+  "v": 88.0
+ },
+ "iongem|Live Wire": {
+  "v": 89.0
+ },
+ "iongem|Cyberpunk": {
+  "v": 89.0
+ },
+ "lowrider|": {
+  "v": 70.0
+ },
+ "lowrider|Soul Plane": {
+  "v": 188.0
+ },
+ "lowrider|Lavender": {
+  "v": 88.0
+ },
+ "lowrider|Gold Rush": {
+  "v": 240.0
+ },
+ "lowrider|Burgundy": {
+  "v": 88.0
+ },
+ "lowrider|First Class": {
+  "v": 5000.0
+ },
+ "lowrider|Neon Blue": {
+  "v": 90.0
+ },
+ "lowrider|Toy Car": {
+  "v": 70.0
+ },
+ "lowrider|Grape": {
+  "v": 70.0
+ },
+ "lowrider|Lovemobile": {
+  "v": 73.0
+ },
+ "lowrider|Old Gold": {
+  "v": 73.0
+ },
+ "lowrider|Grasshopper": {
+  "v": 73.0
+ },
+ "lowrider|Emerald": {
+  "v": 73.0
+ },
+ "magicpotion|": {
+  "v": 75.0
+ },
+ "magicpotion|Mummify": {
+  "v": null
+ },
+ "magicpotion|Sky Blue": {
+  "v": 99.0
+ },
+ "magicpotion|Supernova": {
+  "v": null
+ },
+ "magicpotion|Onyx Black": {
+  "v": null
+ },
+ "magicpotion|Agent Orange": {
+  "v": 115.0
+ },
+ "magicpotion|Black": {
+  "v": 100.0
+ },
+ "magicpotion|Dimensional": {
+  "v": 75.0
+ },
+ "magicpotion|Pacific Green": {
+  "v": 75.0
+ },
+ "magicpotion|Pink Poultice": {
+  "v": 85.0
+ },
+ "magicpotion|Persimmon": {
+  "v": 85.0
+ },
+ "magicpotion|English Violet": {
+  "v": 90.0
+ },
+ "swisswatch|": {
+  "v": 65.0
+ },
+ "swisswatch|Day Trader": {
+  "v": 488.0
+ },
+ "swisswatch|Steel Grey": {
+  "v": 122.0
+ },
+ "swisswatch|Blue Daytona": {
+  "v": 599.0
+ },
+ "swisswatch|Black": {
+  "v": 199.0
+ },
+ "swisswatch|Rockefeller": {
+  "v": 588.0
+ },
+ "swisswatch|Gameboy": {
+  "v": 65.0
+ },
+ "swisswatch|Grape": {
+  "v": 65.0
+ },
+ "swisswatch|Salvador": {
+  "v": 72.0
+ },
+ "swisswatch|Chocolate": {
+  "v": 72.0
+ },
+ "swisswatch|Emerald": {
+  "v": 73.0
+ },
+ "kissedfrog|": {
+  "v": 63.0
+ },
+ "kissedfrog|Happy Pepe": {
+  "v": 2000.0
+ },
+ "kissedfrog|Lavender": {
+  "v": 99.0
+ },
+ "kissedfrog|Lucifrog": {
+  "v": 333.0
+ },
+ "kissedfrog|Black": {
+  "v": 130.0
+ },
+ "kissedfrog|Pacific Cyan": {
+  "v": 68.0
+ },
+ "kissedfrog|Banana Pox": {
+  "v": 140.0
+ },
+ "kissedfrog|Grape": {
+  "v": 68.0
+ },
+ "kissedfrog|Tide Pod": {
+  "v": 63.0
+ },
+ "kissedfrog|Persimmon": {
+  "v": 63.0
+ },
+ "kissedfrog|Lily Pond": {
+  "v": 63.0
+ },
+ "kissedfrog|Coral Red": {
+  "v": 63.0
+ },
+ "sharptongue|": {
+  "v": 55.0
+ },
+ "sharptongue|Golden Girl": {
+  "v": 290.0
+ },
+ "sharptongue|Amber": {
+  "v": 350.0
+ },
+ "sharptongue|Lady Night": {
+  "v": 110.0
+ },
+ "sharptongue|Black": {
+  "v": 444.0
+ },
+ "sharptongue|Cyberpunk": {
+  "v": null
+ },
+ "sharptongue|Coral Reef": {
+  "v": 55.0
+ },
+ "sharptongue|Coral Red": {
+  "v": 55.0
+ },
+ "sharptongue|Avatar": {
+  "v": null
+ },
+ "sharptongue|Pink Mamba": {
+  "v": 59.0
+ },
+ "sharptongue|Pure Gold": {
+  "v": 59.0
+ },
+ "voodoodoll|": {
+  "v": 43.0
+ },
+ "voodoodoll|Scribble Stab": {
+  "v": 666.0
+ },
+ "voodoodoll|Ivory White": {
+  "v": 60.0
+ },
+ "voodoodoll|Royal Gold": {
+  "v": 50.0
+ },
+ "voodoodoll|Cappuccino": {
+  "v": 53.0
+ },
+ "voodoodoll|Clear Water": {
+  "v": 85.0
+ },
+ "voodoodoll|Black": {
+  "v": 57.0
+ },
+ "voodoodoll|Pain Train": {
+  "v": 43.0
+ },
+ "voodoodoll|Rosewood": {
+  "v": 43.0
+ },
+ "voodoodoll|Cobalt Blue": {
+  "v": 57.0
+ },
+ "voodoodoll|Shamrock Green": {
+  "v": 44.0
+ },
+ "vintagecigar|": {
+  "v": 46.0
+ },
+ "vintagecigar|Oil Baron": {
+  "v": 199.0
+ },
+ "vintagecigar|Black": {
+  "v": 83.0
+ },
+ "vintagecigar|Rainbow Road": {
+  "v": 65.0
+ },
+ "vintagecigar|Long Draw": {
+  "v": 88.0
+ },
+ "vintagecigar|Green Gas": {
+  "v": 46.0
+ },
+ "vintagecigar|Purple": {
+  "v": 46.0
+ },
+ "vintagecigar|Blue Hue": {
+  "v": 50.0
+ },
+ "vintagecigar|Chocolate": {
+  "v": 50.0
+ },
+ "vintagecigar|Stained Glass": {
+  "v": 50.0
+ },
+ "vintagecigar|Burgundy": {
+  "v": 50.0
+ },
+ "signetring|": {
+  "v": 38.0
+ },
+ "signetring|Utya": {
+  "v": 3500.0
+ },
+ "signetring|Pure Gold": {
+  "v": 200.0
+ },
+ "signetring|Black Noir": {
+  "v": 99.0
+ },
+ "signetring|Black": {
+  "v": 65.0
+ },
+ "signetring|Grape": {
+  "v": 58.0
+ },
+ "signetring|White Gold": {
+  "v": 38.0
+ },
+ "signetring|Carrot Juice": {
+  "v": 38.0
+ },
+ "signetring|Mandarin": {
+  "v": 38.0
+ },
+ "signetring|Aquamarine": {
+  "v": 38.0
+ },
+ "signetring|Sapphire": {
+  "v": 43.0
+ },
+ "signetring|Silver Blue": {
+  "v": 43.0
+ },
+ "toybear|": {
+  "v": 37.0
+ },
+ "toybear|Angel": {
+  "v": 60.0
+ },
+ "toybear|Black": {
+  "v": 61.0
+ },
+ "toybear|Coral Reef": {
+  "v": 48.0
+ },
+ "toybear|Pistachio": {
+  "v": 45.0
+ },
+ "toybear|Ursa Major": {
+  "v": 199.0
+ },
+ "toybear|Fandango": {
+  "v": 45.0
+ },
+ "toybear|Panda Cow": {
+  "v": 37.0
+ },
+ "toybear|Indigo Dye": {
+  "v": 37.0
+ },
+ "toybear|Blue Dandy": {
+  "v": 39.0
+ },
+ "toybear|Hunter Green": {
+  "v": 39.0
+ },
+ "toybear|Mint Green": {
+  "v": 40.0
+ },
+ "khabibspapakha|": {
+  "v": 27.0
+ },
+ "khabibspapakha|Long Curls": {
+  "v": 49.0
+ },
+ "khabibspapakha|Black": {
+  "v": 150.0
+ },
+ "khabibspapakha|Legendary Item": {
+  "v": 9999.0
+ },
+ "khabibspapakha|Persimmon": {
+  "v": 80.0
+ },
+ "khabibspapakha|Papakha Swag": {
+  "v": 42.0
+ },
+ "khabibspapakha|Buffalo": {
+  "v": 27.0
+ },
+ "khabibspapakha|Tactical Pine": {
+  "v": 27.0
+ },
+ "khabibspapakha|Vineyard Crown": {
+  "v": 27.0
+ },
+ "khabibspapakha|Light Olive": {
+  "v": 27.0
+ },
+ "khabibspapakha|Pile Of Hats": {
+  "v": 29.0
+ },
+ "khabibspapakha|Gunship Green": {
+  "v": 29.0
+ },
+ "madpumpkin|": {
+  "v": 17.0
+ },
+ "madpumpkin|Jigsaw": {
+  "v": 300.0
+ },
+ "madpumpkin|Black": {
+  "v": 50.0
+ },
+ "madpumpkin|Red Demon": {
+  "v": 30.0
+ },
+ "madpumpkin|Squashbuckler": {
+  "v": 27.0
+ },
+ "madpumpkin|The Joker": {
+  "v": 21.0
+ },
+ "madpumpkin|Steel Grey": {
+  "v": 21.0
+ },
+ "madpumpkin|Solaris": {
+  "v": 23.0
+ },
+ "madpumpkin|Mint Green": {
+  "v": 22.0
+ },
+ "madpumpkin|Mandarin": {
+  "v": 24.0
+ },
+ "madpumpkin|Pacific Cyan": {
+  "v": 17.0
+ },
+ "trappedheart|": {
+  "v": 18.0
+ },
+ "trappedheart|Jinx": {
+  "v": 95.0
+ },
+ "trappedheart|Black": {
+  "v": 19.0
+ },
+ "trappedheart|Abyss Heart": {
+  "v": 999.0
+ },
+ "trappedheart|Colorful Beats": {
+  "v": 65.0
+ },
+ "trappedheart|Faded Relic": {
+  "v": 18.0
+ },
+ "trappedheart|Cappuccino": {
+  "v": 18.0
+ },
+ "trappedheart|Iron Pulse": {
+  "v": 18.0
+ },
+ "trappedheart|Orange": {
+  "v": 18.0
+ },
+ "trappedheart|Chestnut": {
+  "v": 18.0
+ },
+ "snoopcigar|": {
+  "v": 19.0
+ },
+ "snoopcigar|Dolla Rolla": {
+  "v": 25.0
+ },
+ "snoopcigar|Indigo Dye": {
+  "v": 30.0
+ },
+ "snoopcigar|Doggystyle": {
+  "v": 44.0
+ },
+ "snoopcigar|Black": {
+  "v": 43.0
+ },
+ "snoopcigar|Happy Face": {
+  "v": 21.0
+ },
+ "snoopcigar|Caramel": {
+  "v": 20.0
+ },
+ "snoopcigar|Mirage": {
+  "v": 19.0
+ },
+ "snoopcigar|Silver Blue": {
+  "v": 19.0
+ },
+ "snoopcigar|Bandana": {
+  "v": 19.0
+ },
+ "snoopcigar|Feldgrau": {
+  "v": 19.0
+ },
+ "snoopcigar|Herbalist": {
+  "v": 19.0
+ },
+ "snoopcigar|Navy Blue": {
+  "v": 19.0
+ },
+ "lovepotion|": {
+  "v": 16.0
+ },
+ "lovepotion|No Signal": {
+  "v": 99.0
+ },
+ "lovepotion|Electric Purple": {
+  "v": 35.0
+ },
+ "lovepotion|Spades": {
+  "v": 70.0
+ },
+ "lovepotion|Black": {
+  "v": 30.0
+ },
+ "lovepotion|Fandango": {
+  "v": 28.0
+ },
+ "lovepotion|Ruby Essence": {
+  "v": 16.0
+ },
+ "lovepotion|Lemongrass": {
+  "v": 16.0
+ },
+ "lovepotion|Old Rum": {
+  "v": 16.0
+ },
+ "lovepotion|Sky Blue": {
+  "v": 16.0
+ },
+ "lovepotion|Bubble Bath": {
+  "v": 17.0
+ },
+ "lovepotion|Light Olive": {
+  "v": 17.0
+ },
+ "crystalball|": {
+  "v": 15.0
+ },
+ "crystalball|Fortune": {
+  "v": 35.0
+ },
+ "crystalball|Amber": {
+  "v": 25.0
+ },
+ "crystalball|Lady Death": {
+  "v": 20.0
+ },
+ "crystalball|Black": {
+  "v": 39.0
+ },
+ "crystalball|Fatal Error": {
+  "v": 15.0
+ },
+ "crystalball|Original Sin": {
+  "v": 15.0
+ },
+ "crystalball|Coral Red": {
+  "v": 15.0
+ },
+ "crystalball|Rosewood": {
+  "v": 15.0
+ },
+ "crystalball|Cartoon": {
+  "v": 30.0
+ },
+ "crystalball|Hunter Green": {
+  "v": 18.0
+ },
+ "jinglebells|": {
+  "v": 12.0
+ },
+ "jinglebells|Red Petals": {
+  "v": null
+ },
+ "jinglebells|Amber": {
+  "v": 20.0
+ },
+ "jinglebells|Hot Cherry": {
+  "v": null
+ },
+ "jinglebells|Fandango": {
+  "v": 14.0
+ },
+ "jinglebells|Launchpad": {
+  "v": 450.0
+ },
+ "jinglebells|Black": {
+  "v": 25.0
+ },
+ "jinglebells|Woodland": {
+  "v": 12.0
+ },
+ "jinglebells|Chocolate": {
+  "v": 12.0
+ },
+ "jinglebells|Peppermint": {
+  "v": 12.0
+ },
+ "jinglebells|Jade Green": {
+  "v": 12.0
+ },
+ "jinglebells|Bumblebell": {
+  "v": 12.0
+ },
+ "jinglebells|Electric Indigo": {
+  "v": 12.0
+ },
+ "witchhat|": {
+  "v": 10.0
+ },
+ "witchhat|Obi-Wan": {
+  "v": 18.0
+ },
+ "witchhat|Black": {
+  "v": 22.0
+ },
+ "witchhat|Narnia": {
+  "v": 33.0
+ },
+ "witchhat|Bat Swarm": {
+  "v": 77.0
+ },
+ "witchhat|Beetroot": {
+  "v": 10.0
+ },
+ "witchhat|Battleship Grey": {
+  "v": 10.0
+ },
+ "witchhat|Aeromancy": {
+  "v": 10.0
+ },
+ "witchhat|Shamrock Green": {
+  "v": 10.0
+ },
+ "witchhat|Circus": {
+  "v": 10.0
+ },
+ "witchhat|Cobalt Blue": {
+  "v": 10.0
+ },
+ "finepen|": {
+  "v": 9.0
+ },
+ "finepen|Signature Scribe": {
+  "v": 13.0
+ },
+ "finepen|Black": {
+  "v": 14.0
+ },
+ "finepen|Tsar Gold": {
+  "v": 13.0
+ },
+ "finepen|Indigo Dye": {
+  "v": 11.0
+ },
+ "finepen|Firebird": {
+  "v": 25.0
+ },
+ "finepen|Fire Engine": {
+  "v": 15.0
+ },
+ "finepen|Mesh Maker": {
+  "v": 9.0
+ },
+ "finepen|Orange": {
+  "v": 9.0
+ },
+ "finepen|Elastic": {
+  "v": 10.0
+ },
+ "finepen|Sky Blue": {
+  "v": 10.0
+ },
+ "finepen|Master Stroke": {
+  "v": 10.0
+ },
+ "finepen|Emerald": {
+  "v": 25.0
+ },
+ "jollychimp|": {
+  "v": 8.0
+ },
+ "jollychimp|Genie": {
+  "v": 10.0
+ },
+ "jollychimp|Black": {
+  "v": 17.0
+ },
+ "jollychimp|Grayscale": {
+  "v": 13.0
+ },
+ "jollychimp|Bank Robber": {
+  "v": 29.0
+ },
+ "jollychimp|Deep Cyan": {
+  "v": 13.0
+ },
+ "jollychimp|Farm Girl": {
+  "v": 8.0
+ },
+ "jollychimp|Mint Green": {
+  "v": 8.0
+ },
+ "jollychimp|Knight": {
+  "v": 9.0
+ },
+ "jollychimp|Moonstone": {
+  "v": 9.0
+ },
+ "jollychimp|Gunship Green": {
+  "v": 9.0
+ },
+ "surgeboard|": {
+  "v": 8.0
+ },
+ "surgeboard|Pepe Surfer": {
+  "v": 389.0
+ },
+ "surgeboard|Purple": {
+  "v": 10.0
+ },
+ "surgeboard|Oracle": {
+  "v": 10.0
+ },
+ "surgeboard|Mystic Pearl": {
+  "v": 22.0
+ },
+ "surgeboard|Balls of Steel": {
+  "v": 180.0
+ },
+ "surgeboard|Silver Blue": {
+  "v": 13.0
+ },
+ "surgeboard|Hoverboard": {
+  "v": 9.0
+ },
+ "surgeboard|English Violet": {
+  "v": 12.0
+ },
+ "surgeboard|Da Vinci": {
+  "v": 9.0
+ },
+ "surgeboard|Sapphire": {
+  "v": 9.0
+ },
+ "surgeboard|Tiger Mask": {
+  "v": 8.0
+ },
+ "surgeboard|Azure Blue": {
+  "v": 8.0
+ },
+ "inputkey|": {
+  "v": 8.0
+ },
+ "inputkey|Chill Key": {
+  "v": 10.0
+ },
+ "inputkey|Indigo Dye": {
+  "v": 12.0
+ },
+ "inputkey|Coffee": {
+  "v": 18.0
+ },
+ "inputkey|Black": {
+  "v": 18.0
+ },
+ "inputkey|Bitcoin": {
+  "v": 21.0
+ },
+ "inputkey|Hot Grill": {
+  "v": 8.0
+ },
+ "inputkey|Battleship Grey": {
+  "v": 8.0
+ },
+ "inputkey|Helipad": {
+  "v": 8.0
+ },
+ "inputkey|Malachite": {
+  "v": 8.0
+ },
+ "inputkey|Continue": {
+  "v": 8.0
+ },
+ "inputkey|Hunter Green": {
+  "v": 8.0
+ },
+ "snoopdogg|": {
+  "v": 6.0
+ },
+ "snoopdogg|Dapper Doggo": {
+  "v": 7.0
+ },
+ "snoopdogg|Black": {
+  "v": 7.0
+ },
+ "snoopdogg|Black Gold": {
+  "v": 7.0
+ },
+ "snoopdogg|Electric Purple": {
+  "v": 7.0
+ },
+ "snoopdogg|Goldizzle": {
+  "v": 21.0
+ },
+ "snoopdogg|Carmine": {
+  "v": 8.0
+ },
+ "snoopdogg|Barks Lightyear": {
+  "v": 6.0
+ },
+ "snoopdogg|Hunter Green": {
+  "v": 6.0
+ },
+ "snoopdogg|Cappuccino": {
+  "v": 6.0
+ },
+ "snoopdogg|Moonstone": {
+  "v": 6.0
+ },
+ "springbasket|": {
+  "v": 7.0
+ },
+ "springbasket|Meme God": {
+  "v": 1999.0
+ },
+ "springbasket|Gunmetal": {
+  "v": 14.0
+ },
+ "springbasket|Mint Green": {
+  "v": 9.0
+ },
+ "springbasket|Balloon Dog": {
+  "v": 9.0
+ },
+ "springbasket|Cappuccino": {
+  "v": 10.0
+ },
+ "springbasket|Bear Market": {
+  "v": 7.0
+ },
+ "springbasket|Desert Sand": {
+  "v": 7.0
+ },
+ "springbasket|Candy Bat": {
+  "v": 7.0
+ },
+ "springbasket|Rifle Green": {
+  "v": 7.0
+ },
+ "springbasket|Meme Snake": {
+  "v": 7.0
+ },
+ "springbasket|Pure Gold": {
+  "v": 7.0
+ },
+ "libertyfigure|": {
+  "v": 6.0
+ },
+ "libertyfigure|Astronaut": {
+  "v": 7.0
+ },
+ "libertyfigure|Black": {
+  "v": 14.0
+ },
+ "libertyfigure|Obsidian": {
+  "v": 11.0
+ },
+ "libertyfigure|iFather": {
+  "v": 35.0
+ },
+ "libertyfigure|Pine Green": {
+  "v": 6.0
+ },
+ "libertyfigure|Pitcher": {
+  "v": 6.0
+ },
+ "libertyfigure|Coral Red": {
+  "v": 6.0
+ },
+ "libertyfigure|Street Beats": {
+  "v": 6.0
+ },
+ "libertyfigure|Cappuccino": {
+  "v": 6.0
+ },
+ "libertyfigure|Old Gold": {
+  "v": 6.0
+ },
+ "cloverpin|": {
+  "v": 6.0
+ },
+ "cloverpin|Celtic Knot": {
+  "v": 9.0
+ },
+ "cloverpin|Lavender": {
+  "v": 7.0
+ },
+ "cloverpin|Kaleidoscope": {
+  "v": 13.0
+ },
+ "cloverpin|Onyx Black": {
+  "v": 15.0
+ },
+ "cloverpin|Matrix": {
+  "v": 8.0
+ },
+ "cloverpin|Black": {
+  "v": 9.0
+ },
+ "cloverpin|Golden Ticket": {
+  "v": 6.0
+ },
+ "cloverpin|Rifle Green": {
+  "v": 6.0
+ },
+ "cloverpin|Pinwheel": {
+  "v": 7.0
+ },
+ "cloverpin|Celtic Blue": {
+  "v": 7.0
+ },
+ "cloverpin|Fortune Cookie": {
+  "v": 7.0
+ },
+ "cloverpin|Ranger Green": {
+  "v": 7.0
+ },
+ "partysparkler|": {
+  "v": 6.0
+ },
+ "partysparkler|Assault": {
+  "v": 15.0
+ },
+ "partysparkler|Raspberry": {
+  "v": 10.0
+ },
+ "partysparkler|Inverted": {
+  "v": 8.0
+ },
+ "partysparkler|Black": {
+  "v": 14.0
+ },
+ "partysparkler|Marksman": {
+  "v": 10.0
+ },
+ "partysparkler|Cyan Sizzle": {
+  "v": 8.0
+ },
+ "partysparkler|Pure Gold": {
+  "v": 7.0
+ },
+ "partysparkler|Ninja Turtle": {
+  "v": 6.0
+ },
+ "partysparkler|English Violet": {
+  "v": 6.0
+ },
+ "partysparkler|Amethyst": {
+  "v": 6.0
+ },
+ "partysparkler|Pacific Green": {
+  "v": 6.0
+ },
+ "victorymedal|": {
+  "v": 6.0
+ },
+ "victorymedal|The Founder": {
+  "v": 369.0
+ },
+ "victorymedal|Gunship Green": {
+  "v": 6.0
+ },
+ "victorymedal|Ranger Green": {
+  "v": 6.0
+ },
+ "victorymedal|Noble Prize": {
+  "v": 150.0
+ },
+ "victorymedal|Tomato": {
+  "v": 7.0
+ },
+ "victorymedal|Finish Line": {
+  "v": 6.0
+ },
+ "victorymedal|Desert Sand": {
+  "v": 6.0
+ },
+ "victorymedal|Top Swimmer": {
+  "v": 6.0
+ },
+ "victorymedal|Turquoise": {
+  "v": 6.0
+ },
+ "victorymedal|Inventor": {
+  "v": 6.0
+ },
+ "victorymedal|French Violet": {
+  "v": 6.0
+ },
+ "timelessbook|": {
+  "v": 5.0
+ },
+ "timelessbook|Death Note": {
+  "v": 1000.0
+ },
+ "timelessbook|Ivory White": {
+  "v": 6.0
+ },
+ "timelessbook|Onyx Black": {
+  "v": 19.0
+ },
+ "timelessbook|Rosewood": {
+  "v": 7.0
+ },
+ "timelessbook|Clay Tablets": {
+  "v": 5.0
+ },
+ "timelessbook|Light Olive": {
+  "v": 5.0
+ },
+ "timelessbook|Jade Green": {
+  "v": 5.0
+ },
+ "timelessbook|Cookbook": {
+  "v": 5.0
+ },
+ "timelessbook|Camo Green": {
+  "v": 5.0
+ },
+ "petsnake|": {
+  "v": 5.0
+ },
+ "petsnake|Venomous": {
+  "v": 6.0
+ },
+ "petsnake|Battleship Grey": {
+  "v": 8.0
+ },
+ "petsnake|Albino": {
+  "v": 7.0
+ },
+ "petsnake|Onyx Black": {
+  "v": 10.0
+ },
+ "petsnake|Pure Gold": {
+  "v": 9.0
+ },
+ "petsnake|Amber": {
+  "v": 6.0
+ },
+ "petsnake|Mojito": {
+  "v": 5.0
+ },
+ "petsnake|Mystic Pearl": {
+  "v": 5.0
+ },
+ "petsnake|Aquamarine": {
+  "v": 5.0
+ },
+ "petsnake|Lava Viper": {
+  "v": 5.0
+ },
+ "petsnake|Sky Blue": {
+  "v": 9.0
+ },
+ "whipcupcake|": {
+  "v": 5.0
+ },
+ "whipcupcake|Blueberry Hill": {
+  "v": 5.0
+ },
+ "whipcupcake|Coral Red": {
+  "v": 5.0
+ },
+ "whipcupcake|Cherry Top": {
+  "v": 7.0
+ },
+ "whipcupcake|Navy Blue": {
+  "v": 5.0
+ },
+ "whipcupcake|Heaven Seven": {
+  "v": 14.0
+ },
+ "whipcupcake|Black": {
+  "v": 10.0
+ },
+ "whipcupcake|Two Sweet!": {
+  "v": null
+ },
+ "whipcupcake|Moonstone": {
+  "v": 7.0
+ },
+ "whipcupcake|Wasteland": {
+  "v": 5.0
+ },
+ "whipcupcake|Deep Cyan": {
+  "v": 5.0
+ },
+ "whipcupcake|Arizona": {
+  "v": 5.0
+ },
+ "icecream|": {
+  "v": 5.0
+ },
+ "icecream|BiteCoin": {
+  "v": 7.0
+ },
+ "icecream|Mustard": {
+  "v": 5.0
+ },
+ "icecream|Black": {
+  "v": 13.0
+ },
+ "icecream|Stardust": {
+  "v": 9.0
+ },
+ "icecream|Trio Scoop": {
+  "v": 5.0
+ },
+ "icecream|Old Gold": {
+  "v": 5.0
+ },
+ "icecream|Bite-Size": {
+  "v": 5.0
+ },
+ "icecream|Feldgrau": {
+  "v": 5.0
+ },
+ "icecream|Kiwi Sorbet": {
+  "v": 5.0
+ },
+ "icecream|Emerald": {
+  "v": 5.0
+ },
+ "lolpop|": {
+  "v": 5.0
+ },
+ "lolpop|Prisma": {
+  "v": 5.0
+ },
+ "lolpop|Chestnut": {
+  "v": 5.0
+ },
+ "lolpop|Doodle Art": {
+  "v": 7.0
+ },
+ "lolpop|Black": {
+  "v": 9.0
+ },
+ "lolpop|Pineapple": {
+  "v": 5.0
+ },
+ "lolpop|Bitter Lemon": {
+  "v": 5.0
+ },
+ "lolpop|Sapphire": {
+  "v": 5.0
+ },
+ "lolpop|Delusion": {
+  "v": 5.0
+ },
+ "lolpop|Pistachio": {
+  "v": 5.0
+ },
+ "lolpop|Blender": {
+  "v": 5.0
+ },
+ "lolpop|Electric Indigo": {
+  "v": 5.0
+ },
+ "poolfloat|": {
+  "v": 5.0
+ },
+ "poolfloat|Pool Pepe": {
+  "v": 43.0
+ },
+ "poolfloat|Onyx Black": {
+  "v": 9.0
+ },
+ "poolfloat|Pool King": {
+  "v": 8.0
+ },
+ "poolfloat|Black": {
+  "v": 9.0
+ },
+ "poolfloat|Pine Green": {
+  "v": 5.0
+ },
+ "poolfloat|Rescue Mission": {
+  "v": 5.0
+ },
+ "poolfloat|Steel Grey": {
+  "v": 5.0
+ },
+ "poolfloat|Mojito": {
+  "v": 5.0
+ },
+ "poolfloat|Coral Red": {
+  "v": 5.0
+ },
+ "poolfloat|Palm Beach": {
+  "v": 5.0
+ },
+ "poolfloat|Desert Sand": {
+  "v": 5.0
+ },
+ "bigyear|": {
+  "v": 5.0
+ },
+ "bigyear|Pokeball": {
+  "v": 10.0
+ },
+ "bigyear|Onyx Black": {
+  "v": 17.0
+ },
+ "bigyear|Matrix": {
+  "v": 8.0
+ },
+ "bigyear|Black": {
+  "v": 17.0
+ },
+ "bigyear|Qing Dynasty": {
+  "v": 7.0
+ },
+ "bigyear|Einstein": {
+  "v": 5.0
+ },
+ "bigyear|Navy Blue": {
+  "v": 7.0
+ },
+ "bigyear|Steel Grey": {
+  "v": 16.0
+ },
+ "bigyear|Van Gogh": {
+  "v": 5.0
+ },
+ "bigyear|Roman Silver": {
+  "v": 5.0
+ },
+ "xmasstocking|": {
+  "v": 5.0
+ },
+ "xmasstocking|Morgenstern": {
+  "v": 50.0
+ },
+ "xmasstocking|Black": {
+  "v": 13.0
+ },
+ "xmasstocking|Gold Mine": {
+  "v": 22.0
+ },
+ "xmasstocking|Ivory White": {
+  "v": 5.0
+ },
+ "xmasstocking|Pink Faerie": {
+  "v": 5.0
+ },
+ "xmasstocking|Gunship Green": {
+  "v": 5.0
+ },
+ "xmasstocking|Moonstone": {
+  "v": 5.0
+ },
+ "xmasstocking|Hot Winter": {
+  "v": 5.0
+ },
+ "xmasstocking|Burnt Sienna": {
+  "v": 5.0
+ },
+ "chillflame|": {
+  "v": 5.0
+ },
+ "chillflame|The Match": {
+  "v": 5.0
+ },
+ "chillflame|Black": {
+  "v": 10.0
+ },
+ "chillflame|Satis-fire": {
+  "v": 88.0
+ },
+ "chillflame|Raspberry": {
+  "v": 5.0
+ },
+ "chillflame|Bull Run": {
+  "v": 6.0
+ },
+ "chillflame|Oil Lamp": {
+  "v": 5.0
+ },
+ "chillflame|Pine Green": {
+  "v": 5.0
+ },
+ "chillflame|Pure Gold": {
+  "v": 5.0
+ },
+ "chillflame|Ivory White": {
+  "v": 5.0
+ },
+ "algorithmcup|": {
+  "v": 3450.0
+ },
+ "algorithmcup|Silver": {
+  "v": 3450.0
+ },
+ "algorithmcup|Gunmetal": {
+  "v": 3450.0
+ },
+ "algorithmcup|Pure Gold": {
+  "v": 6000.0
+ },
+ "algorithmcup|Onyx Black": {
+  "v": 8000.0
+ },
+ "algorithmcup|Black": {
+  "v": 8000.0
+ },
+ "algorithmcup|Silver Blue": {
+  "v": 10000.0
+ },
+ "algorithmcup|Gold": {
+  "v": 6000.0
+ },
+ "algorithmcup|Amber": {
+  "v": 12000.0
+ },
+ "intelligencecup|": {
+  "v": 3099.0
+ },
+ "intelligencecup|Silver": {
+  "v": 3099.0
+ },
+ "intelligencecup|Gunmetal": {
+  "v": 3099.0
+ },
+ "intelligencecup|Bronze": {
+  "v": 4000.0
+ },
+ "intelligencecup|Black": {
+  "v": 4000.0
+ },
+ "intelligencecup|Roman Silver": {
+  "v": 4000.0
+ },
+ "intelligencecup|Ivory White": {
+  "v": 5500.0
+ },
+ "intelligencecup|Gold": {
+  "v": 20000.0
+ },
+ "intelligencecup|Onyx Black": {
+  "v": 27000.0
+ },
+ "durovsglasses|": {
+  "v": 150.0
+ },
+ "durovsglasses|Crystal Sight": {
+  "v": 150.0
+ },
+ "durovsglasses|Mint Green": {
+  "v": 150.0
+ },
+ "durovsglasses|Inuit": {
+  "v": 170.0
+ },
+ "durovsglasses|Shamrock Green": {
+  "v": 170.0
+ },
+ "durovsglasses|Stardust": {
+  "v": 200.0
+ },
+ "durovsglasses|Gunship Green": {
+  "v": 200.0
+ },
+ "durovsglasses|French Violet": {
+  "v": 215.0
+ },
+ "durovsglasses|Lovestruck": {
+  "v": 230.0
+ },
+ "durovsglasses|Marine Blue": {
+  "v": 230.0
+ },
+ "durovsglasses|Kaleidoscope": {
+  "v": 230.0
+ },
+ "nailbracelet|": {
+  "v": 149.0
+ },
+ "nailbracelet|Shadow": {
+  "v": 149.0
+ },
+ "nailbracelet|Shamrock Green": {
+  "v": 149.0
+ },
+ "nailbracelet|Red Fang": {
+  "v": 149.0
+ },
+ "nailbracelet|Malachite": {
+  "v": 149.0
+ },
+ "nailbracelet|Ultramarine": {
+  "v": 150.0
+ },
+ "nailbracelet|English Violet": {
+  "v": 150.0
+ },
+ "nailbracelet|Jade Serpent": {
+  "v": 150.0
+ },
+ "nailbracelet|Strawberry": {
+  "v": 150.0
+ },
+ "nailbracelet|Ranger Green": {
+  "v": 150.0
+ },
+ "nailbracelet|Pure Amber": {
+  "v": 150.0
+ },
+ "nailbracelet|Sapphire": {
+  "v": 150.0
+ },
+ "perfumebottle|": {
+  "v": 108.0
+ },
+ "perfumebottle|Ebony Rose": {
+  "v": 108.0
+ },
+ "perfumebottle|Desert Sand": {
+  "v": 108.0
+ },
+ "perfumebottle|Grape Splash": {
+  "v": 109.0
+ },
+ "perfumebottle|Cappuccino": {
+  "v": 109.0
+ },
+ "perfumebottle|Blush Petal": {
+  "v": 111.0
+ },
+ "perfumebottle|Indigo Dye": {
+  "v": 111.0
+ },
+ "perfumebottle|Solar Eclipse": {
+  "v": 125.0
+ },
+ "perfumebottle|Electric Indigo": {
+  "v": 125.0
+ },
+ "perfumebottle|Luminous": {
+  "v": 140.0
+ },
+ "perfumebottle|Fandango": {
+  "v": 140.0
+ },
+ "perfumebottle|№5 L’eau": {
+  "v": 140.0
+ },
+ "perfumebottle|Satin Gold": {
+  "v": 140.0
+ },
+ "artisanbrick|": {
+  "v": 85.0
+ },
+ "artisanbrick|Chocolate": {
+  "v": 85.0
+ },
+ "artisanbrick|Hunter Green": {
+  "v": 85.0
+ },
+ "artisanbrick|Concrete": {
+  "v": 99.0
+ },
+ "artisanbrick|Silver Blue": {
+  "v": 99.0
+ },
+ "artisanbrick|Sandstone": {
+  "v": 99.0
+ },
+ "artisanbrick|Pacific Cyan": {
+  "v": 99.0
+ },
+ "artisanbrick|Harlequin": {
+  "v": 100.0
+ },
+ "artisanbrick|Orange": {
+  "v": 100.0
+ },
+ "artisanbrick|Retro Player": {
+  "v": 104.0
+ },
+ "artisanbrick|Chestnut": {
+  "v": 104.0
+ },
+ "artisanbrick|Sky Blue": {
+  "v": 105.0
+ },
+ "gemsignet|": {
+  "v": 72.0
+ },
+ "gemsignet|Moonstone": {
+  "v": 72.0
+ },
+ "gemsignet|Carrot Juice": {
+  "v": 72.0
+ },
+ "gemsignet|Malibu Pink": {
+  "v": 73.0
+ },
+ "gemsignet|Cappuccino": {
+  "v": 73.0
+ },
+ "gemsignet|Fleur de Mer": {
+  "v": 74.0
+ },
+ "gemsignet|Ivory White": {
+  "v": 74.0
+ },
+ "gemsignet|Nuclear Core": {
+  "v": 77.0
+ },
+ "gemsignet|Sapphire": {
+  "v": 77.0
+ },
+ "gemsignet|Celtic Blue": {
+  "v": 79.0
+ },
+ "gemsignet|Old Bronze": {
+  "v": 80.0
+ },
+ "gemsignet|Marine Blue": {
+  "v": 80.0
+ },
+ "bondedring|": {
+  "v": 47.0
+ },
+ "bondedring|Soap Bubbles": {
+  "v": 47.0
+ },
+ "bondedring|Azure Blue": {
+  "v": 47.0
+ },
+ "bondedring|Astro Silver": {
+  "v": 49.0
+ },
+ "bondedring|English Violet": {
+  "v": 49.0
+ },
+ "bondedring|Hot Wheel": {
+  "v": 49.0
+ },
+ "bondedring|Shamrock Green": {
+  "v": 49.0
+ },
+ "bondedring|Duo Vision": {
+  "v": 49.0
+ },
+ "bondedring|Strawberry": {
+  "v": 49.0
+ },
+ "bondedring|Bloody Mary": {
+  "v": 50.0
+ },
+ "bondedring|Turquoise": {
+  "v": 50.0
+ },
+ "bondedring|Zebra": {
+  "v": 55.0
+ },
+ "bondedring|Moonstone": {
+  "v": 55.0
+ },
+ "nekohelmet|": {
+  "v": 45.0
+ },
+ "nekohelmet|Techno": {
+  "v": 45.0
+ },
+ "nekohelmet|Pistachio": {
+  "v": 45.0
+ },
+ "nekohelmet|Lightspeed": {
+  "v": 48.0
+ },
+ "nekohelmet|Shamrock Green": {
+  "v": 48.0
+ },
+ "nekohelmet|Twister": {
+  "v": 49.0
+ },
+ "nekohelmet|Mint Green": {
+  "v": 49.0
+ },
+ "nekohelmet|Turquoise": {
+  "v": 49.0
+ },
+ "nekohelmet|Copper Alloy": {
+  "v": 50.0
+ },
+ "nekohelmet|Satin Gold": {
+  "v": 50.0
+ },
+ "nekohelmet|Steampunk": {
+  "v": 52.0
+ },
+ "nekohelmet|Ivory White": {
+  "v": 52.0
+ },
+ "genielamp|": {
+  "v": 40.0
+ },
+ "genielamp|Bronze Dust": {
+  "v": 40.0
+ },
+ "genielamp|Khaki Green": {
+  "v": 40.0
+ },
+ "genielamp|Emerald": {
+  "v": 41.0
+ },
+ "genielamp|Lime Art": {
+  "v": 44.0
+ },
+ "genielamp|Orange": {
+  "v": 44.0
+ },
+ "genielamp|Blueprint": {
+  "v": 44.0
+ },
+ "genielamp|Purple": {
+  "v": 44.0
+ },
+ "genielamp|Pure Gold": {
+  "v": 45.0
+ },
+ "genielamp|Red Sketch": {
+  "v": 46.0
+ },
+ "diamondring|": {
+  "v": 37.0
+ },
+ "diamondring|Arabian Night": {
+  "v": 37.0
+ },
+ "diamondring|Pine Green": {
+  "v": 37.0
+ },
+ "diamondring|Dragon Eyes": {
+  "v": 37.0
+ },
+ "diamondring|Neon Blue": {
+  "v": 37.0
+ },
+ "diamondring|Aquamarine": {
+  "v": 37.0
+ },
+ "diamondring|Black Velvet": {
+  "v": 39.0
+ },
+ "diamondring|Sky Blue": {
+  "v": 39.0
+ },
+ "diamondring|Bronze Heart": {
+  "v": 39.0
+ },
+ "diamondring|Lemongrass": {
+  "v": 39.0
+ },
+ "diamondring|Hot Pink": {
+  "v": 39.0
+ },
+ "diamondring|Coral Red": {
+  "v": 39.0
+ },
+ "electricskull|": {
+  "v": 35.0
+ },
+ "electricskull|Corpse Mint": {
+  "v": 35.0
+ },
+ "electricskull|Rosewood": {
+  "v": 35.0
+ },
+ "electricskull|Frost Wraith": {
+  "v": 36.0
+ },
+ "electricskull|Dark Lilac": {
+  "v": 36.0
+ },
+ "electricskull|Red Death": {
+  "v": 40.0
+ },
+ "electricskull|Coral Red": {
+  "v": 40.0
+ },
+ "electricskull|Deadman": {
+  "v": 41.0
+ },
+ "electricskull|Jade Green": {
+  "v": 41.0
+ },
+ "electricskull|Solar Stone": {
+  "v": 45.0
+ },
+ "electricskull|Neon Blue": {
+  "v": 45.0
+ },
+ "electricskull|Cactus": {
+  "v": 48.0
+ },
+ "electricskull|Sky Blue": {
+  "v": 48.0
+ },
+ "eternalrose|": {
+  "v": 33.0
+ },
+ "eternalrose|Aurora Veil": {
+  "v": 33.0
+ },
+ "eternalrose|Aquamarine": {
+  "v": 33.0
+ },
+ "eternalrose|Mint Green": {
+  "v": 35.0
+ },
+ "eternalrose|Halftone": {
+  "v": 35.0
+ },
+ "eternalrose|Khaki Green": {
+  "v": 35.0
+ },
+ "eternalrose|Atlantis": {
+  "v": 37.0
+ },
+ "eternalrose|Midnight Glow": {
+  "v": 38.0
+ },
+ "eternalrose|Battleship Grey": {
+  "v": 38.0
+ },
+ "eternalrose|Fallout": {
+  "v": 40.0
+ },
+ "eternalrose|Raspberry": {
+  "v": 40.0
+ },
+ "rarebird|": {
+  "v": 30.0
+ },
+ "rarebird|Noble Puffin": {
+  "v": 30.0
+ },
+ "rarebird|Navy Blue": {
+  "v": 30.0
+ },
+ "rarebird|Lemongrass": {
+  "v": 30.0
+ },
+ "rarebird|Bat King": {
+  "v": 35.0
+ },
+ "rarebird|Azure Blue": {
+  "v": 35.0
+ },
+ "rarebird|Hippogriff": {
+  "v": 35.0
+ },
+ "rarebird|Ranger Green": {
+  "v": 35.0
+ },
+ "rarebird|Cappuccino": {
+  "v": 35.0
+ },
+ "rarebird|Pistachio": {
+  "v": 35.0
+ },
+ "blingbinky|": {
+  "v": 29.0
+ },
+ "blingbinky|Cubic": {
+  "v": 29.0
+ },
+ "blingbinky|Seal Brown": {
+  "v": 29.0
+ },
+ "blingbinky|Irish Kiss": {
+  "v": 30.0
+ },
+ "blingbinky|Electric Purple": {
+  "v": 30.0
+ },
+ "blingbinky|Soccer": {
+  "v": 33.0
+ },
+ "blingbinky|Strawberry": {
+  "v": 33.0
+ },
+ "blingbinky|Rancho": {
+  "v": 35.0
+ },
+ "blingbinky|Jade Green": {
+  "v": 35.0
+ },
+ "blingbinky|Marmalade": {
+  "v": 35.0
+ },
+ "blingbinky|Hunter Green": {
+  "v": 35.0
+ },
+ "blingbinky|Shellfish": {
+  "v": 35.0
+ },
+ "blingbinky|Pacific Green": {
+  "v": 35.0
+ },
+ "cupidcharm|": {
+  "v": 27.0
+ },
+ "cupidcharm|Gift Wrap": {
+  "v": 27.0
+ },
+ "cupidcharm|Copper": {
+  "v": 27.0
+ },
+ "cupidcharm|Bubbles": {
+  "v": 28.0
+ },
+ "cupidcharm|Dark Green": {
+  "v": 28.0
+ },
+ "cupidcharm|Azure Gem": {
+  "v": 28.0
+ },
+ "cupidcharm|Orange": {
+  "v": 28.0
+ },
+ "cupidcharm|Cursed Room": {
+  "v": 28.0
+ },
+ "cupidcharm|Vault": {
+  "v": 29.0
+ },
+ "cupidcharm|Platinum": {
+  "v": 29.0
+ },
+ "cupidcharm|Snow Queen": {
+  "v": 29.0
+ },
+ "cupidcharm|Satin Gold": {
+  "v": 29.0
+ },
+ "skystilettos|": {
+  "v": 20.0
+ },
+ "skystilettos|Companion": {
+  "v": 20.0
+ },
+ "skystilettos|Seal Brown": {
+  "v": 20.0
+ },
+ "skystilettos|Deep Cyan": {
+  "v": 20.0
+ },
+ "skystilettos|Fergie": {
+  "v": 20.0
+ },
+ "skystilettos|Gunship Green": {
+  "v": 20.0
+ },
+ "skystilettos|Cowgirl": {
+  "v": 22.0
+ },
+ "skystilettos|Sapphire": {
+  "v": 22.0
+ },
+ "skystilettos|Jester": {
+  "v": 22.0
+ },
+ "skystilettos|Cyberpunk": {
+  "v": 22.0
+ },
+ "skystilettos|Eooxy": {
+  "v": 22.0
+ },
+ "skystilettos|Rifle Green": {
+  "v": 22.0
+ },
+ "ufcstrike|": {
+  "v": 19.0
+ },
+ "ufcstrike|A. Pereira": {
+  "v": 19.0
+ },
+ "ufcstrike|Dark Lilac": {
+  "v": 19.0
+ },
+ "ufcstrike|UFC 30 Red": {
+  "v": 19.0
+ },
+ "ufcstrike|Azure Blue": {
+  "v": 19.0
+ },
+ "ufcstrike|Platinum": {
+  "v": 19.0
+ },
+ "ufcstrike|French Violet": {
+  "v": 19.0
+ },
+ "ufcstrike|M. Dvalishvili": {
+  "v": 19.0
+ },
+ "ufcstrike|Purple": {
+  "v": 19.0
+ },
+ "ufcstrike|Shamrock Green": {
+  "v": 19.0
+ },
+ "ionicdryer|": {
+  "v": 17.0
+ },
+ "ionicdryer|Rad-Dry 9000": {
+  "v": 17.0
+ },
+ "ionicdryer|Desert Sand": {
+  "v": 17.0
+ },
+ "ionicdryer|Dried Flowers": {
+  "v": 19.0
+ },
+ "ionicdryer|Turquoise": {
+  "v": 19.0
+ },
+ "ionicdryer|Dry Wood": {
+  "v": 20.0
+ },
+ "ionicdryer|Grape": {
+  "v": 20.0
+ },
+ "ionicdryer|Pacific Cyan": {
+  "v": 20.0
+ },
+ "ionicdryer|Fandango": {
+  "v": 21.0
+ },
+ "ionicdryer|Tiger Wave": {
+  "v": 21.0
+ },
+ "ionicdryer|Seal Brown": {
+  "v": 21.0
+ },
+ "luckylocket|": {
+  "v": 17.0
+ },
+ "luckylocket|Snapshot": {
+  "v": 17.0
+ },
+ "luckylocket|Copper": {
+  "v": 17.0
+ },
+ "luckylocket|Aether": {
+  "v": 19.0
+ },
+ "luckylocket|Tactical Pine": {
+  "v": 19.0
+ },
+ "luckylocket|Creepy Clown": {
+  "v": 22.0
+ },
+ "luckylocket|Purple": {
+  "v": 22.0
+ },
+ "luckylocket|Zeus": {
+  "v": 22.0
+ },
+ "luckylocket|Azure Blue": {
+  "v": 22.0
+ },
+ "luckylocket|Oceanus": {
+  "v": 25.0
+ },
+ "luckylocket|Old Gold": {
+  "v": 25.0
+ },
+ "luckylocket|DOGE": {
+  "v": 26.0
+ },
+ "luckylocket|Desert Sand": {
+  "v": 26.0
+ },
+ "flyingbroom|": {
+  "v": 15.0
+ },
+ "flyingbroom|Dusk Duster": {
+  "v": 15.0
+ },
+ "flyingbroom|Chestnut": {
+  "v": 15.0
+ },
+ "flyingbroom|Pop Art": {
+  "v": 15.0
+ },
+ "flyingbroom|Rosewood": {
+  "v": 15.0
+ },
+ "flyingbroom|Zig-Zag": {
+  "v": 15.0
+ },
+ "flyingbroom|Moonstone": {
+  "v": 15.0
+ },
+ "flyingbroom|Finish Line": {
+  "v": 15.0
+ },
+ "flyingbroom|Navy Blue": {
+  "v": 15.0
+ },
+ "flyingbroom|Visionary": {
+  "v": 15.0
+ },
+ "flyingbroom|Cobalt Blue": {
+  "v": 15.0
+ },
+ "flyingbroom|Scribbler": {
+  "v": 15.0
+ },
+ "flyingbroom|Pacific Cyan": {
+  "v": 15.0
+ },
+ "skullflower|": {
+  "v": 14.0
+ },
+ "skullflower|Technicolor": {
+  "v": 14.0
+ },
+ "skullflower|Light Olive": {
+  "v": 14.0
+ },
+ "skullflower|Azalea": {
+  "v": 15.0
+ },
+ "skullflower|Pamplona": {
+  "v": 15.0
+ },
+ "skullflower|Indigo Dye": {
+  "v": 15.0
+ },
+ "skullflower|Carnation": {
+  "v": 15.0
+ },
+ "skullflower|Emerald": {
+  "v": 15.0
+ },
+ "skullflower|Marigold": {
+  "v": 15.0
+ },
+ "skullflower|Cobalt Blue": {
+  "v": 15.0
+ },
+ "skullflower|Sunset": {
+  "v": 15.0
+ },
+ "skullflower|Silver Blue": {
+  "v": 15.0
+ },
+ "sleighbell|": {
+  "v": 14.0
+ },
+ "sleighbell|Bronze": {
+  "v": 14.0
+ },
+ "sleighbell|French Violet": {
+  "v": 14.0
+ },
+ "sleighbell|Faint Pearl": {
+  "v": 14.0
+ },
+ "sleighbell|Cobalt Blue": {
+  "v": 14.0
+ },
+ "sleighbell|Fairycore": {
+  "v": 14.0
+ },
+ "sleighbell|Roman Silver": {
+  "v": 14.0
+ },
+ "sleighbell|Truffle": {
+  "v": 14.0
+ },
+ "sleighbell|Raspberry": {
+  "v": 14.0
+ },
+ "sleighbell|Piranha Plant": {
+  "v": 14.0
+ },
+ "sleighbell|Pine Green": {
+  "v": 14.0
+ },
+ "sleighbell|Dark Orb": {
+  "v": 14.0
+ },
+ "sleighbell|Pacific Green": {
+  "v": 14.0
+ },
+ "lovecandle|": {
+  "v": 13.0
+ },
+ "lovecandle|Gentle Wind": {
+  "v": 13.0
+ },
+ "lovecandle|Strawberry": {
+  "v": 13.0
+ },
+ "lovecandle|French Blue": {
+  "v": 13.0
+ },
+ "lovecandle|White Wax": {
+  "v": 13.0
+ },
+ "lovecandle|Mystic Pearl": {
+  "v": 13.0
+ },
+ "lovecandle|Surprise": {
+  "v": 13.0
+ },
+ "lovecandle|Cappuccino": {
+  "v": 13.0
+ },
+ "lovecandle|Dreamscape": {
+  "v": 13.0
+ },
+ "lovecandle|Pacific Cyan": {
+  "v": 13.0
+ },
+ "lovecandle|Silver Temple": {
+  "v": 14.0
+ },
+ "lovecandle|Orange": {
+  "v": 14.0
+ },
+ "recordplayer|": {
+  "v": 13.0
+ },
+ "recordplayer|Passion Funk": {
+  "v": 13.0
+ },
+ "recordplayer|Carrot Juice": {
+  "v": 13.0
+ },
+ "recordplayer|Acid Jazz": {
+  "v": 13.0
+ },
+ "recordplayer|Chestnut": {
+  "v": 13.0
+ },
+ "recordplayer|Lemonight": {
+  "v": 13.0
+ },
+ "recordplayer|Azure Blue": {
+  "v": 13.0
+ },
+ "recordplayer|Rifle Green": {
+  "v": 13.0
+ },
+ "recordplayer|Pink Records": {
+  "v": 13.0
+ },
+ "recordplayer|Burnt Sienna": {
+  "v": 13.0
+ },
+ "recordplayer|Vanilla Sky": {
+  "v": 13.0
+ },
+ "recordplayer|Pacific Green": {
+  "v": 13.0
+ },
+ "valentinebox|": {
+  "v": 13.0
+ },
+ "valentinebox|Fuse Box": {
+  "v": 13.0
+ },
+ "valentinebox|Cappuccino": {
+  "v": 13.0
+ },
+ "valentinebox|Vibrant": {
+  "v": 14.0
+ },
+ "valentinebox|Cobalt Blue": {
+  "v": 14.0
+ },
+ "valentinebox|Christmas": {
+  "v": 14.0
+ },
+ "valentinebox|Turquoise": {
+  "v": 14.0
+ },
+ "valentinebox|Nikola Tesla": {
+  "v": 14.0
+ },
+ "valentinebox|Outline": {
+  "v": 15.0
+ },
+ "valentinebox|Grape": {
+  "v": 15.0
+ },
+ "valentinebox|Choco Mint": {
+  "v": 15.0
+ },
+ "valentinebox|Lemongrass": {
+  "v": 15.0
+ },
+ "sakuraflower|": {
+  "v": 12.0
+ },
+ "sakuraflower|Floraven": {
+  "v": 12.0
+ },
+ "sakuraflower|Pacific Green": {
+  "v": 12.0
+ },
+ "sakuraflower|Nectarium": {
+  "v": 12.0
+ },
+ "sakuraflower|Battleship Grey": {
+  "v": 12.0
+ },
+ "sakuraflower|Oxalis": {
+  "v": 12.0
+ },
+ "sakuraflower|Copper": {
+  "v": 12.0
+ },
+ "sakuraflower|Seraphina": {
+  "v": 12.0
+ },
+ "sakuraflower|Indigo Dye": {
+  "v": 12.0
+ },
+ "sakuraflower|Eclipsia": {
+  "v": 12.0
+ },
+ "sakuraflower|Cobalt Blue": {
+  "v": 12.0
+ },
+ "sakuraflower|Dark Green": {
+  "v": 12.0
+ },
+ "tophat|": {
+  "v": 12.0
+ },
+ "tophat|Limoncello": {
+  "v": 12.0
+ },
+ "tophat|Cyberpunk": {
+  "v": 12.0
+ },
+ "tophat|Aquamarine": {
+  "v": 12.0
+ },
+ "tophat|Graphite": {
+  "v": 13.0
+ },
+ "tophat|Sky Blue": {
+  "v": 13.0
+ },
+ "tophat|Low Rider": {
+  "v": 13.0
+ },
+ "tophat|Silver Blue": {
+  "v": 13.0
+ },
+ "tophat|Crosswalk": {
+  "v": 13.0
+ },
+ "tophat|Emerald": {
+  "v": 13.0
+ },
+ "tophat|Charlie": {
+  "v": 14.0
+ },
+ "tophat|Electric Purple": {
+  "v": 14.0
+ },
+ "hangingstar|": {
+  "v": 11.0
+ },
+ "hangingstar|Fusion": {
+  "v": 11.0
+ },
+ "hangingstar|Platinum": {
+  "v": 11.0
+ },
+ "hangingstar|Coral Red": {
+  "v": 11.0
+ },
+ "hangingstar|Gray Sage": {
+  "v": 11.0
+ },
+ "hangingstar|Navy Blue": {
+  "v": 11.0
+ },
+ "hangingstar|Spotty": {
+  "v": 11.0
+ },
+ "hangingstar|Mint Green": {
+  "v": 11.0
+ },
+ "hangingstar|Venice": {
+  "v": 11.0
+ },
+ "hangingstar|Khaki Green": {
+  "v": 11.0
+ },
+ "hangingstar|Lilac Split": {
+  "v": 11.0
+ },
+ "joyfulbundle|": {
+  "v": 11.0
+ },
+ "joyfulbundle|Lovesick": {
+  "v": 11.0
+ },
+ "joyfulbundle|Persimmon": {
+  "v": 11.0
+ },
+ "joyfulbundle|Pool Party": {
+  "v": 11.0
+ },
+ "joyfulbundle|Marine Blue": {
+  "v": 11.0
+ },
+ "joyfulbundle|The Big Bang": {
+  "v": 11.0
+ },
+ "joyfulbundle|Gunmetal": {
+  "v": 11.0
+ },
+ "joyfulbundle|Ninja Turtles": {
+  "v": 12.0
+ },
+ "joyfulbundle|Celtic Blue": {
+  "v": 12.0
+ },
+ "joyfulbundle|Antarctica": {
+  "v": 12.0
+ },
+ "joyfulbundle|Feldgrau": {
+  "v": 12.0
+ },
+ "joyfulbundle|Ladypug": {
+  "v": 12.0
+ },
+ "joyfulbundle|Seal Brown": {
+  "v": 12.0
+ },
+ "berrybox|": {
+  "v": 10.0
+ },
+ "berrybox|Harlequin": {
+  "v": 10.0
+ },
+ "berrybox|Lemongrass": {
+  "v": 10.0
+ },
+ "berrybox|Spring": {
+  "v": 10.0
+ },
+ "berrybox|Copper": {
+  "v": 10.0
+ },
+ "berrybox|Emerald": {
+  "v": 10.0
+ },
+ "berrybox|Azure Blue": {
+  "v": 10.0
+ },
+ "berrybox|Navy Blue": {
+  "v": 10.0
+ },
+ "berrybox|Aquamarine": {
+  "v": 10.0
+ },
+ "snowmittens|": {
+  "v": 10.0
+ },
+ "snowmittens|Brown Suede": {
+  "v": 10.0
+ },
+ "snowmittens|Pure Gold": {
+  "v": 10.0
+ },
+ "snowmittens|Sencha": {
+  "v": 10.0
+ },
+ "snowmittens|Persimmon": {
+  "v": 10.0
+ },
+ "snowmittens|Mauvelous": {
+  "v": 10.0
+ },
+ "snowmittens|Coral Red": {
+  "v": 10.0
+ },
+ "snowmittens|Orchid": {
+  "v": 10.0
+ },
+ "snowmittens|Malachite": {
+  "v": 10.0
+ },
+ "snowmittens|Cute Bunnies": {
+  "v": 10.0
+ },
+ "snowmittens|Shamrock Green": {
+  "v": 10.0
+ },
+ "snowmittens|Turquoise": {
+  "v": 10.0
+ },
+ "bunnymuffin|": {
+  "v": 9.0
+ },
+ "bunnymuffin|Space Drive": {
+  "v": 9.0
+ },
+ "bunnymuffin|Lemongrass": {
+  "v": 9.0
+ },
+ "bunnymuffin|Young Chili": {
+  "v": 10.0
+ },
+ "bunnymuffin|Neon Blue": {
+  "v": 10.0
+ },
+ "bunnymuffin|Shamrock Green": {
+  "v": 10.0
+ },
+ "bunnymuffin|Orange Bliss": {
+  "v": 10.0
+ },
+ "bunnymuffin|Satin Gold": {
+  "v": 10.0
+ },
+ "bunnymuffin|Сhamomile": {
+  "v": 10.0
+ },
+ "bunnymuffin|Indigo Dye": {
+  "v": 10.0
+ },
+ "bunnymuffin|Lava Cake": {
+  "v": 10.0
+ },
+ "bunnymuffin|Caramel": {
+  "v": 10.0
+ },
+ "evileye|": {
+  "v": 9.0
+ },
+ "evileye|Solar Flare": {
+  "v": 9.0
+ },
+ "evileye|Neon Blue": {
+  "v": 9.0
+ },
+ "evileye|Direct Current": {
+  "v": 9.0
+ },
+ "evileye|Mint Green": {
+  "v": 9.0
+ },
+ "evileye|Starlight": {
+  "v": 9.0
+ },
+ "evileye|Lemongrass": {
+  "v": 9.0
+ },
+ "evileye|Do Not Disturb": {
+  "v": 9.0
+ },
+ "evileye|Light Olive": {
+  "v": 9.0
+ },
+ "evileye|Baltic Amber": {
+  "v": 10.0
+ },
+ "evileye|Sky Blue": {
+  "v": 10.0
+ },
+ "evileye|English Violet": {
+  "v": 10.0
+ },
+ "jellybunny|": {
+  "v": 9.0
+ },
+ "jellybunny|Smelly": {
+  "v": 9.0
+ },
+ "jellybunny|Electric Purple": {
+  "v": 9.0
+ },
+ "jellybunny|Mutated": {
+  "v": 9.0
+ },
+ "jellybunny|Khaki Green": {
+  "v": 9.0
+ },
+ "jellybunny|Commando": {
+  "v": 10.0
+ },
+ "jellybunny|English Violet": {
+  "v": 10.0
+ },
+ "jellybunny|Stiches": {
+  "v": 10.0
+ },
+ "jellybunny|Coral Red": {
+  "v": 10.0
+ },
+ "jellybunny|Meat Jelly": {
+  "v": 11.0
+ },
+ "jellybunny|Light Olive": {
+  "v": 11.0
+ },
+ "jellybunny|Dad Joke": {
+  "v": 11.0
+ },
+ "jellybunny|Pine Green": {
+  "v": 11.0
+ },
+ "snowglobe|": {
+  "v": 8.0
+ },
+ "snowglobe|Sea Whisper": {
+  "v": 8.0
+ },
+ "snowglobe|Persimmon": {
+  "v": 8.0
+ },
+ "snowglobe|Lost Color": {
+  "v": 8.0
+ },
+ "snowglobe|Gunship Green": {
+  "v": 8.0
+ },
+ "snowglobe|Green Villa": {
+  "v": 8.0
+ },
+ "snowglobe|Orange": {
+  "v": 8.0
+ },
+ "snowglobe|Mint Green": {
+  "v": 8.0
+ },
+ "snowglobe|Bronze Temple": {
+  "v": 8.0
+ },
+ "snowglobe|Tomato": {
+  "v": 8.0
+ },
+ "snowglobe|Mexican Pink": {
+  "v": 8.0
+ },
+ "bowtie|": {
+  "v": 7.0
+ },
+ "bowtie|The Serpent": {
+  "v": 7.0
+ },
+ "bowtie|Sky Blue": {
+  "v": 7.0
+ },
+ "bowtie|Ladybug": {
+  "v": 7.0
+ },
+ "bowtie|Satin Gold": {
+  "v": 7.0
+ },
+ "bowtie|Bordeaux": {
+  "v": 7.0
+ },
+ "bowtie|Battleship Grey": {
+  "v": 7.0
+ },
+ "bowtie|Mistletoe": {
+  "v": 7.0
+ },
+ "bowtie|Lavender": {
+  "v": 7.0
+ },
+ "bowtie|Modern Art": {
+  "v": 7.0
+ },
+ "bowtie|Silver Blue": {
+  "v": 7.0
+ },
+ "bowtie|Irish Knot": {
+  "v": 7.0
+ },
+ "bowtie|Tomato": {
+  "v": 7.0
+ },
+ "deskcalendar|": {
+  "v": 7.0
+ },
+ "deskcalendar|Magic Flow": {
+  "v": 7.0
+ },
+ "deskcalendar|Amber": {
+  "v": 7.0
+ },
+ "deskcalendar|Toy Calendar": {
+  "v": 7.0
+ },
+ "deskcalendar|Pacific Cyan": {
+  "v": 7.0
+ },
+ "deskcalendar|April": {
+  "v": 7.0
+ },
+ "deskcalendar|Purple": {
+  "v": 7.0
+ },
+ "deskcalendar|Party Time": {
+  "v": 7.0
+ },
+ "deskcalendar|Platinum": {
+  "v": 7.0
+ },
+ "deskcalendar|Golden Touch": {
+  "v": 7.0
+ },
+ "deskcalendar|Ivory White": {
+  "v": 7.0
+ },
+ "deskcalendar|Groundhog Day": {
+  "v": 7.0
+ },
+ "deskcalendar|Persimmon": {
+  "v": 7.0
+ },
+ "eternalcandle|": {
+  "v": 7.0
+ },
+ "eternalcandle|Hot Emerald": {
+  "v": 7.0
+ },
+ "eternalcandle|Lavender": {
+  "v": 7.0
+ },
+ "eternalcandle|Bronze Rose": {
+  "v": 7.0
+ },
+ "eternalcandle|Persimmon": {
+  "v": 7.0
+ },
+ "eternalcandle|Gold Stars": {
+  "v": 7.0
+ },
+ "eternalcandle|Chocolate": {
+  "v": 7.0
+ },
+ "eternalcandle|Gradient Wax": {
+  "v": 7.0
+ },
+ "eternalcandle|Chestnut": {
+  "v": 7.0
+ },
+ "eternalcandle|Coastal Cove": {
+  "v": 7.0
+ },
+ "eternalcandle|Battleship Grey": {
+  "v": 7.0
+ },
+ "eternalcandle|Thick Honey": {
+  "v": 7.0
+ },
+ "eternalcandle|Mint Green": {
+  "v": 7.0
+ },
+ "faithamulet|": {
+  "v": 7.0
+ },
+ "faithamulet|Starlace": {
+  "v": 7.0
+ },
+ "faithamulet|Deep Cyan": {
+  "v": 7.0
+ },
+ "faithamulet|Constellation": {
+  "v": 7.0
+ },
+ "faithamulet|French Blue": {
+  "v": 7.0
+ },
+ "faithamulet|Serenity": {
+  "v": 7.0
+ },
+ "faithamulet|Desert Sand": {
+  "v": 7.0
+ },
+ "faithamulet|Emerald": {
+  "v": 7.0
+ },
+ "faithamulet|Dark Green": {
+  "v": 7.0
+ },
+ "faithamulet|Neon Blue": {
+  "v": 7.0
+ },
+ "hexpot|": {
+  "v": 7.0
+ },
+ "hexpot|Malibu": {
+  "v": 7.0
+ },
+ "hexpot|Emerald": {
+  "v": 7.0
+ },
+ "hexpot|Amethyst": {
+  "v": 7.0
+ },
+ "hexpot|Ivory White": {
+  "v": 7.0
+ },
+ "hexpot|Melon Brew": {
+  "v": 7.0
+ },
+ "hexpot|Mystic Pearl": {
+  "v": 7.0
+ },
+ "hexpot|Gummy Worm": {
+  "v": 7.0
+ },
+ "hexpot|Lavender": {
+  "v": 7.0
+ },
+ "hexpot|Rainbow Pearl": {
+  "v": 8.0
+ },
+ "hexpot|Pacific Green": {
+  "v": 8.0
+ },
+ "hexpot|Skygold": {
+  "v": 8.0
+ },
+ "hexpot|Raspberry": {
+  "v": 8.0
+ },
+ "lightsword|": {
+  "v": 7.0
+ },
+ "lightsword|Jet Fuel": {
+  "v": 7.0
+ },
+ "lightsword|Malachite": {
+  "v": 7.0
+ },
+ "lightsword|Toy Blade": {
+  "v": 7.0
+ },
+ "lightsword|Burgundy": {
+  "v": 7.0
+ },
+ "lightsword|Lotus Saber": {
+  "v": 7.0
+ },
+ "lightsword|Dark Green": {
+  "v": 7.0
+ },
+ "lightsword|Stick": {
+  "v": 7.0
+ },
+ "lightsword|Moonstone": {
+  "v": 7.0
+ },
+ "lightsword|Celtic Blue": {
+  "v": 7.0
+ },
+ "lightsword|Indigo Dye": {
+  "v": 7.0
+ },
+ "lushbouquet|": {
+  "v": 7.0
+ },
+ "lushbouquet|Cabbage": {
+  "v": 7.0
+ },
+ "lushbouquet|Platinum": {
+  "v": 7.0
+ },
+ "lushbouquet|Mushrooms": {
+  "v": 7.0
+ },
+ "lushbouquet|Purple": {
+  "v": 7.0
+ },
+ "lushbouquet|Satin Gold": {
+  "v": 7.0
+ },
+ "lushbouquet|Yarn Balls": {
+  "v": 7.0
+ },
+ "lushbouquet|Marine Blue": {
+  "v": 7.0
+ },
+ "lushbouquet|Carrots": {
+  "v": 7.0
+ },
+ "lushbouquet|Amber": {
+  "v": 7.0
+ },
+ "lushbouquet|Pacific Green": {
+  "v": 7.0
+ },
+ "moonpendant|": {
+  "v": 7.0
+ },
+ "moonpendant|Emerald": {
+  "v": 7.0
+ },
+ "moonpendant|Caramel": {
+  "v": 7.0
+ },
+ "moonpendant|Sea Jewel": {
+  "v": 7.0
+ },
+ "moonpendant|Camo Green": {
+  "v": 7.0
+ },
+ "moonpendant|Royal Purple": {
+  "v": 7.0
+ },
+ "moonpendant|Chocolate": {
+  "v": 7.0
+ },
+ "moonpendant|Copper Alloy": {
+  "v": 7.0
+ },
+ "moonpendant|Pistachio": {
+  "v": 7.0
+ },
+ "moonpendant|Orange": {
+  "v": 7.0
+ },
+ "moonpendant|Feldgrau": {
+  "v": 7.0
+ },
+ "santahat|": {
+  "v": 7.0
+ },
+ "santahat|Cold Slushy": {
+  "v": 7.0
+ },
+ "santahat|Caramel": {
+  "v": 7.0
+ },
+ "santahat|Cold Vapor": {
+  "v": 7.0
+ },
+ "santahat|Carrot Juice": {
+  "v": 7.0
+ },
+ "santahat|Minted Rose": {
+  "v": 8.0
+ },
+ "santahat|Pine Green": {
+  "v": 8.0
+ },
+ "santahat|Dreamy": {
+  "v": 8.0
+ },
+ "santahat|Copper": {
+  "v": 8.0
+ },
+ "santahat|Lemon Sorbet": {
+  "v": 8.0
+ },
+ "santahat|Pacific Cyan": {
+  "v": 8.0
+ },
+ "santahat|Evergreen": {
+  "v": 8.0
+ },
+ "santahat|Dark Lilac": {
+  "v": 8.0
+ },
+ "spyagaric|": {
+  "v": 7.0
+ },
+ "spyagaric|Herbalist": {
+  "v": 7.0
+ },
+ "spyagaric|Neon Blue": {
+  "v": 7.0
+ },
+ "spyagaric|Hypnotoad": {
+  "v": 7.0
+ },
+ "spyagaric|Sky Blue": {
+  "v": 7.0
+ },
+ "spyagaric|Monoshroom": {
+  "v": 8.0
+ },
+ "spyagaric|Satin Gold": {
+  "v": 8.0
+ },
+ "spyagaric|Lava Lamp": {
+  "v": 8.0
+ },
+ "spyagaric|Purple": {
+  "v": 8.0
+ },
+ "spyagaric|Sunburst": {
+  "v": 8.0
+ },
+ "spyagaric|Mysctic": {
+  "v": 8.0
+ },
+ "spyagaric|Ivory White": {
+  "v": 8.0
+ },
+ "bdaycandle|": {
+  "v": 6.0
+ },
+ "bdaycandle|Spring Meadow": {
+  "v": 6.0
+ },
+ "bdaycandle|Coral Red": {
+  "v": 6.0
+ },
+ "bdaycandle|Lolipop": {
+  "v": 6.0
+ },
+ "bdaycandle|Sky Blue": {
+  "v": 6.0
+ },
+ "bdaycandle|Wicked": {
+  "v": 6.0
+ },
+ "bdaycandle|Satin Gold": {
+  "v": 6.0
+ },
+ "bdaycandle|Best Wishes": {
+  "v": 6.0
+ },
+ "bdaycandle|Carrot Juice": {
+  "v": 6.0
+ },
+ "bdaycandle|Candy Message": {
+  "v": 6.0
+ },
+ "bdaycandle|Raspberry": {
+  "v": 6.0
+ },
+ "bdaycandle|Silver Year": {
+  "v": 6.0
+ },
+ "bdaycandle|Grape": {
+  "v": 6.0
+ },
+ "cookieheart|": {
+  "v": 6.0
+ },
+ "cookieheart|Elven Bakery": {
+  "v": 6.0
+ },
+ "cookieheart|Satin Gold": {
+  "v": 6.0
+ },
+ "cookieheart|The Star": {
+  "v": 6.0
+ },
+ "cookieheart|Jade Green": {
+  "v": 6.0
+ },
+ "cookieheart|Lemongrass": {
+  "v": 6.0
+ },
+ "cookieheart|Red Apple": {
+  "v": 6.0
+ },
+ "cookieheart|Light Olive": {
+  "v": 6.0
+ },
+ "cookieheart|Cheesecake": {
+  "v": 6.0
+ },
+ "cookieheart|Shamrock Green": {
+  "v": 6.0
+ },
+ "cookieheart|Strawberry": {
+  "v": 6.0
+ },
+ "gingercookie|": {
+  "v": 6.0
+ },
+ "gingercookie|Marzipan": {
+  "v": 6.0
+ },
+ "gingercookie|Pacific Cyan": {
+  "v": 6.0
+ },
+ "gingercookie|Toffee": {
+  "v": 6.0
+ },
+ "gingercookie|Aquamarine": {
+  "v": 6.0
+ },
+ "gingercookie|Mint Fringe": {
+  "v": 6.0
+ },
+ "gingercookie|Cappuccino": {
+  "v": 6.0
+ },
+ "gingercookie|Amaretto": {
+  "v": 6.0
+ },
+ "gingercookie|Coral Red": {
+  "v": 6.0
+ },
+ "gingercookie|Platinum": {
+  "v": 6.0
+ },
+ "gingercookie|Santa Claus": {
+  "v": 6.0
+ },
+ "gingercookie|Khaki Green": {
+  "v": 6.0
+ },
+ "holidaydrink|": {
+  "v": 6.0
+ },
+ "holidaydrink|Mango Blast": {
+  "v": 6.0
+ },
+ "holidaydrink|Cyberpunk": {
+  "v": 6.0
+ },
+ "holidaydrink|Marigold": {
+  "v": 6.0
+ },
+ "holidaydrink|Pine Green": {
+  "v": 6.0
+ },
+ "holidaydrink|Banana Split": {
+  "v": 6.0
+ },
+ "holidaydrink|Roman Silver": {
+  "v": 6.0
+ },
+ "holidaydrink|Citrus": {
+  "v": 6.0
+ },
+ "holidaydrink|Rosewood": {
+  "v": 6.0
+ },
+ "holidaydrink|Matcha": {
+  "v": 6.0
+ },
+ "holidaydrink|Steel Grey": {
+  "v": 6.0
+ },
+ "holidaydrink|Ginger Joker": {
+  "v": 6.0
+ },
+ "holidaydrink|Sapphire": {
+  "v": 6.0
+ },
+ "homemadecake|": {
+  "v": 6.0
+ },
+ "homemadecake|Caramel Joy": {
+  "v": 6.0
+ },
+ "homemadecake|Chocolate": {
+  "v": 6.0
+ },
+ "homemadecake|Vanilla Sky": {
+  "v": 6.0
+ },
+ "homemadecake|Khaki Green": {
+  "v": 6.0
+ },
+ "homemadecake|Pure Gold": {
+  "v": 6.0
+ },
+ "homemadecake|Velvet Cocoa": {
+  "v": 6.0
+ },
+ "homemadecake|Sky Blue": {
+  "v": 6.0
+ },
+ "homemadecake|Toffee": {
+  "v": 6.0
+ },
+ "homemadecake|Cobalt Blue": {
+  "v": 6.0
+ },
+ "homemadecake|Pink Whirl": {
+  "v": 6.0
+ },
+ "homemadecake|Roman Silver": {
+  "v": 6.0
+ },
+ "hypnolollipop|": {
+  "v": 6.0
+ },
+ "hypnolollipop|Beach Ball": {
+  "v": 6.0
+ },
+ "hypnolollipop|Khaki Green": {
+  "v": 6.0
+ },
+ "hypnolollipop|Grand Slam": {
+  "v": 6.0
+ },
+ "hypnolollipop|Carrot Juice": {
+  "v": 6.0
+ },
+ "hypnolollipop|Purple": {
+  "v": 6.0
+ },
+ "hypnolollipop|Azure Blue": {
+  "v": 6.0
+ },
+ "hypnolollipop|Marksman": {
+  "v": 6.0
+ },
+ "hypnolollipop|Light Olive": {
+  "v": 6.0
+ },
+ "hypnolollipop|Nightfall": {
+  "v": 6.0
+ },
+ "hypnolollipop|Copper": {
+  "v": 6.0
+ },
+ "jackinthebox|": {
+  "v": 6.0
+ },
+ "jackinthebox|Unicorn": {
+  "v": 6.0
+ },
+ "jackinthebox|Copper": {
+  "v": 6.0
+ },
+ "jackinthebox|Pistachio": {
+  "v": 6.0
+ },
+ "jackinthebox|Teddy Bear": {
+  "v": 6.0
+ },
+ "jackinthebox|Mustard": {
+  "v": 6.0
+ },
+ "jackinthebox|Bouquet": {
+  "v": 6.0
+ },
+ "jackinthebox|Platinum": {
+  "v": 6.0
+ },
+ "jackinthebox|Bombox": {
+  "v": 6.0
+ },
+ "jackinthebox|Roman Silver": {
+  "v": 6.0
+ },
+ "jackinthebox|Dentures": {
+  "v": 6.0
+ },
+ "jackinthebox|Orange": {
+  "v": 6.0
+ },
+ "moneypot|": {
+  "v": 6.0
+ },
+ "moneypot|Scavenger": {
+  "v": 6.0
+ },
+ "moneypot|Burnt Sienna": {
+  "v": 6.0
+ },
+ "moneypot|Doctor Jones": {
+  "v": 6.0
+ },
+ "moneypot|Roman Silver": {
+  "v": 6.0
+ },
+ "moneypot|Metal Soul": {
+  "v": 6.0
+ },
+ "moneypot|Turquoise": {
+  "v": 6.0
+ },
+ "moneypot|Witch Brew": {
+  "v": 6.0
+ },
+ "moneypot|Raspberry": {
+  "v": 6.0
+ },
+ "moneypot|Snowballs": {
+  "v": 6.0
+ },
+ "moneypot|Strawberry": {
+  "v": 6.0
+ },
+ "moneypot|Fungi Soup": {
+  "v": 6.0
+ },
+ "moneypot|Malachite": {
+  "v": 6.0
+ },
+ "moussecake|": {
+  "v": 6.0
+ },
+ "moussecake|Sky Peacock": {
+  "v": 6.0
+ },
+ "moussecake|Cyberpunk": {
+  "v": 6.0
+ },
+ "moussecake|Emerald": {
+  "v": 6.0
+ },
+ "moussecake|Pony Princess": {
+  "v": 6.0
+ },
+ "moussecake|Burnt Sienna": {
+  "v": 6.0
+ },
+ "moussecake|Harvest": {
+  "v": 6.0
+ },
+ "moussecake|Malachite": {
+  "v": 6.0
+ },
+ "moussecake|Moonstone": {
+  "v": 6.0
+ },
+ "moussecake|Persimmon": {
+  "v": 6.0
+ },
+ "prettyposy|": {
+  "v": 6.0
+ },
+ "prettyposy|Tangerine": {
+  "v": 6.0
+ },
+ "prettyposy|Caramel": {
+  "v": 6.0
+ },
+ "prettyposy|Art Therapy": {
+  "v": 6.0
+ },
+ "prettyposy|Pistachio": {
+  "v": 6.0
+ },
+ "prettyposy|Viva Italia": {
+  "v": 6.0
+ },
+ "prettyposy|Shamrock Green": {
+  "v": 6.0
+ },
+ "prettyposy|Provence": {
+  "v": 7.0
+ },
+ "prettyposy|Malachite": {
+  "v": 7.0
+ },
+ "prettyposy|Boom Bloom": {
+  "v": 7.0
+ },
+ "prettyposy|Ranger Green": {
+  "v": 7.0
+ },
+ "prettyposy|Snake Den": {
+  "v": 7.0
+ },
+ "prettyposy|Cobalt Blue": {
+  "v": 7.0
+ },
+ "restlessjar|": {
+  "v": 6.0
+ },
+ "restlessjar|Aquarium": {
+  "v": 6.0
+ },
+ "restlessjar|Purple": {
+  "v": 6.0
+ },
+ "restlessjar|Miniland": {
+  "v": 6.0
+ },
+ "restlessjar|Gunship Green": {
+  "v": 6.0
+ },
+ "restlessjar|Mocktail": {
+  "v": 7.0
+ },
+ "restlessjar|Silver Blue": {
+  "v": 7.0
+ },
+ "restlessjar|Uranium": {
+  "v": 7.0
+ },
+ "restlessjar|Turquoise": {
+  "v": 7.0
+ },
+ "restlessjar|Honey Bees": {
+  "v": 7.0
+ },
+ "restlessjar|Navy Blue": {
+  "v": 7.0
+ },
+ "restlessjar|Tornado": {
+  "v": 7.0
+ },
+ "restlessjar|Grape": {
+  "v": 7.0
+ },
+ "spicedwine|": {
+  "v": 6.0
+ },
+ "spicedwine|Golden Goblet": {
+  "v": 6.0
+ },
+ "spicedwine|Coral Red": {
+  "v": 6.0
+ },
+ "spicedwine|Dusky Draft": {
+  "v": 6.0
+ },
+ "spicedwine|Sapphire": {
+  "v": 6.0
+ },
+ "spicedwine|Persimmon": {
+  "v": 6.0
+ },
+ "spicedwine|Amber": {
+  "v": 6.0
+ },
+ "spicedwine|Pink Orange": {
+  "v": 6.0
+ },
+ "spicedwine|Caramel": {
+  "v": 6.0
+ },
+ "spicedwine|Aries Rum": {
+  "v": 6.0
+ },
+ "spicedwine|Satin Gold": {
+  "v": 6.0
+ },
+ "spicedwine|Aquarium": {
+  "v": 6.0
+ },
+ "spicedwine|Electric Purple": {
+  "v": 6.0
+ },
+ "starnotepad|": {
+  "v": 5.0
+ },
+ "starnotepad|Cyprus": {
+  "v": 5.0
+ },
+ "starnotepad|Mystic Pearl": {
+  "v": 5.0
+ },
+ "starnotepad|Paper Plane": {
+  "v": 6.0
+ },
+ "starnotepad|Caramel": {
+  "v": 6.0
+ },
+ "starnotepad|Watermelon": {
+  "v": 6.0
+ },
+ "starnotepad|Orange": {
+  "v": 6.0
+ },
+ "starnotepad|Indigo": {
+  "v": 6.0
+ },
+ "starnotepad|Satin Gold": {
+  "v": 6.0
+ },
+ "starnotepad|Tiger": {
+  "v": 6.0
+ },
+ "starnotepad|Malachite": {
+  "v": 6.0
+ },
+ "starnotepad|Coyote": {
+  "v": 6.0
+ },
+ "starnotepad|Azure Blue": {
+  "v": 6.0
+ },
+ "stellarrocket|": {
+  "v": 6.0
+ },
+ "stellarrocket|Knowledge": {
+  "v": 6.0
+ },
+ "stellarrocket|Desert Sand": {
+  "v": 6.0
+ },
+ "stellarrocket|Fireworks": {
+  "v": 6.0
+ },
+ "stellarrocket|Ranger Green": {
+  "v": 6.0
+ },
+ "stellarrocket|Seal Brown": {
+  "v": 6.0
+ },
+ "stellarrocket|Caramel": {
+  "v": 6.0
+ },
+ "stellarrocket|Popsicle": {
+  "v": 6.0
+ },
+ "stellarrocket|Camo Green": {
+  "v": 6.0
+ },
+ "stellarrocket|Copper": {
+  "v": 6.0
+ },
+ "swagbag|": {
+  "v": 6.0
+ },
+ "swagbag|Spicy Onion": {
+  "v": 6.0
+ },
+ "swagbag|Jade Green": {
+  "v": 6.0
+ },
+ "swagbag|Malachite": {
+  "v": 6.0
+ },
+ "swagbag|Copper": {
+  "v": 6.0
+ },
+ "swagbag|Camo Green": {
+  "v": 6.0
+ },
+ "swagbag|Crook To Cook": {
+  "v": 6.0
+ },
+ "swagbag|Persimmon": {
+  "v": 6.0
+ },
+ "swagbag|Light Olive": {
+  "v": 6.0
+ },
+ "winterwreath|": {
+  "v": 6.0
+ },
+ "winterwreath|Hearth": {
+  "v": 6.0
+ },
+ "winterwreath|Lavender": {
+  "v": 6.0
+ },
+ "winterwreath|Dragee": {
+  "v": 6.0
+ },
+ "winterwreath|Satin Gold": {
+  "v": 6.0
+ },
+ "winterwreath|Barbie Core": {
+  "v": 6.0
+ },
+ "winterwreath|Malachite": {
+  "v": 6.0
+ },
+ "winterwreath|Lemon Cake": {
+  "v": 6.0
+ },
+ "winterwreath|Deep Cyan": {
+  "v": 6.0
+ },
+ "winterwreath|Harmony": {
+  "v": 6.0
+ },
+ "winterwreath|Platinum": {
+  "v": 6.0
+ },
+ "winterwreath|Cold Night": {
+  "v": 6.0
+ },
+ "winterwreath|Mint Green": {
+  "v": 6.0
+ },
+ "candycane|": {
+  "v": 5.0
+ },
+ "candycane|Silver Frost": {
+  "v": 5.0
+ },
+ "candycane|Old Gold": {
+  "v": 5.0
+ },
+ "candycane|Lime Twist": {
+  "v": 5.0
+ },
+ "candycane|Grape": {
+  "v": 5.0
+ },
+ "candycane|Platinum": {
+  "v": 5.0
+ },
+ "candycane|Joker": {
+  "v": 5.0
+ },
+ "candycane|Lemongrass": {
+  "v": 5.0
+ },
+ "candycane|Pink Mango": {
+  "v": 5.0
+ },
+ "candycane|Golden Jelly": {
+  "v": 5.0
+ },
+ "candycane|Hunter Green": {
+  "v": 5.0
+ },
+ "easteregg|": {
+  "v": 5.0
+ },
+ "easteregg|Stained Glass": {
+  "v": 5.0
+ },
+ "easteregg|Orange": {
+  "v": 5.0
+ },
+ "easteregg|Matryoshka": {
+  "v": 5.0
+ },
+ "easteregg|Cobalt Blue": {
+  "v": 5.0
+ },
+ "easteregg|Meadow": {
+  "v": 5.0
+ },
+ "easteregg|Mint Green": {
+  "v": 5.0
+ },
+ "easteregg|Egghead": {
+  "v": 6.0
+ },
+ "easteregg|Pacific Green": {
+  "v": 6.0
+ },
+ "easteregg|Ice Cream": {
+  "v": 6.0
+ },
+ "easteregg|Light Olive": {
+  "v": 6.0
+ },
+ "easteregg|Electric Purple": {
+  "v": 6.0
+ },
+ "freshsocks|": {
+  "v": 5.0
+ },
+ "freshsocks|Gingerbread": {
+  "v": 5.0
+ },
+ "freshsocks|Cyberpunk": {
+  "v": 5.0
+ },
+ "freshsocks|Ambition": {
+  "v": 5.0
+ },
+ "freshsocks|Moonstone": {
+  "v": 5.0
+ },
+ "freshsocks|Intellect": {
+  "v": 5.0
+ },
+ "freshsocks|Tomato": {
+  "v": 5.0
+ },
+ "freshsocks|Peg Leg": {
+  "v": 5.0
+ },
+ "freshsocks|Jade Green": {
+  "v": 5.0
+ },
+ "freshsocks|French Blue": {
+  "v": 5.0
+ },
+ "freshsocks|Rifle Green": {
+  "v": 6.0
+ },
+ "happybrownie|": {
+  "v": 5.0
+ },
+ "happybrownie|Alien": {
+  "v": 5.0
+ },
+ "happybrownie|Burnt Sienna": {
+  "v": 5.0
+ },
+ "happybrownie|Cactus": {
+  "v": 5.0
+ },
+ "happybrownie|Copper": {
+  "v": 5.0
+ },
+ "happybrownie|Light Olive": {
+  "v": 5.0
+ },
+ "happybrownie|Khaki Green": {
+  "v": 6.0
+ },
+ "happybrownie|Rattlesnake": {
+  "v": 6.0
+ },
+ "happybrownie|Chocolate": {
+  "v": 6.0
+ },
+ "happybrownie|Toilet Bot": {
+  "v": 6.0
+ },
+ "instantramen|": {
+  "v": 5.0
+ },
+ "instantramen|Bacon": {
+  "v": 5.0
+ },
+ "instantramen|Deep Cyan": {
+  "v": 5.0
+ },
+ "instantramen|Ratatouille": {
+  "v": 5.0
+ },
+ "instantramen|Ranger Green": {
+  "v": 5.0
+ },
+ "instantramen|Slurp-Slurp": {
+  "v": 5.0
+ },
+ "instantramen|Pacific Cyan": {
+  "v": 5.0
+ },
+ "instantramen|Sandbox": {
+  "v": 5.0
+ },
+ "instantramen|Shamrock Green": {
+  "v": 5.0
+ },
+ "instantramen|Silver Blue": {
+  "v": 5.0
+ },
+ "instantramen|Squid Wok": {
+  "v": 5.0
+ },
+ "instantramen|Moonstone": {
+  "v": 5.0
+ },
+ "jesterhat|": {
+  "v": 5.0
+ },
+ "jesterhat|Party Time": {
+  "v": 7.0
+ },
+ "jesterhat|Orange": {
+  "v": 5.0
+ },
+ "jesterhat|So Cute!": {
+  "v": null
+ },
+ "jesterhat|Xmas Prank": {
+  "v": 5.0
+ },
+ "jesterhat|Cyberpunk": {
+  "v": 5.0
+ },
+ "jesterhat|Twinkle Boom": {
+  "v": 5.0
+ },
+ "jesterhat|Chestnut": {
+  "v": 5.0
+ },
+ "jesterhat|Forest Stream": {
+  "v": 5.0
+ },
+ "jesterhat|Strawberry": {
+  "v": 5.0
+ },
+ "jesterhat|Trick Tones": {
+  "v": 5.0
+ },
+ "jesterhat|Indigo Dye": {
+  "v": 5.0
+ },
+ "lunarsnake|": {
+  "v": 5.0
+ },
+ "lunarsnake|Crimson Jade": {
+  "v": 5.0
+ },
+ "lunarsnake|Carrot Juice": {
+  "v": 5.0
+ },
+ "lunarsnake|Polarized": {
+  "v": 5.0
+ },
+ "lunarsnake|Aquamarine": {
+  "v": 5.0
+ },
+ "lunarsnake|Purple Laser": {
+  "v": 5.0
+ },
+ "lunarsnake|Caramel": {
+  "v": 5.0
+ },
+ "lunarsnake|Frost Fangs": {
+  "v": 5.0
+ },
+ "lunarsnake|Copper": {
+  "v": 5.0
+ },
+ "lunarsnake|Glowbra": {
+  "v": 5.0
+ },
+ "lunarsnake|Neon Blue": {
+  "v": 5.0
+ },
+ "lunarsnake|Super Hot": {
+  "v": 5.0
+ },
+ "miragelamp|": {
+  "v": 5.0
+ },
+ "miragelamp|Split Aura": {
+  "v": 5.0
+ },
+ "miragelamp|Camo Green": {
+  "v": 5.0
+ },
+ "miragelamp|Moonlit Flower": {
+  "v": 5.0
+ },
+ "miragelamp|Emerald": {
+  "v": 5.0
+ },
+ "miragelamp|Mosaic": {
+  "v": 5.0
+ },
+ "miragelamp|Battleship Grey": {
+  "v": 5.0
+ },
+ "miragelamp|Silver Blue": {
+  "v": 5.0
+ },
+ "miragelamp|Verdant Gold": {
+  "v": 5.0
+ },
+ "miragelamp|Steel Grey": {
+  "v": 5.0
+ },
+ "miragelamp|Green Canopy": {
+  "v": 5.0
+ },
+ "miragelamp|Light Olive": {
+  "v": 5.0
+ },
+ "moodpack|": {
+  "v": 5.0
+ },
+ "moodpack|Star Pupil": {
+  "v": 5.0
+ },
+ "moodpack|Lemongrass": {
+  "v": 5.0
+ },
+ "moodpack|Retro Wave": {
+  "v": 6.0
+ },
+ "moodpack|Neon Blue": {
+  "v": 6.0
+ },
+ "moodpack|Croc Sack": {
+  "v": 6.0
+ },
+ "moodpack|Mystic Pearl": {
+  "v": 6.0
+ },
+ "moodpack|Cyberpunk": {
+  "v": 6.0
+ },
+ "moodpack|Street Art": {
+  "v": 6.0
+ },
+ "moodpack|Aquamarine": {
+  "v": 6.0
+ },
+ "moodpack|Caramel": {
+  "v": 6.0
+ },
+ "snakebox|": {
+  "v": 5.0
+ },
+ "snakebox|Cotton Candy": {
+  "v": 5.0
+ },
+ "snakebox|Shamrock Green": {
+  "v": 5.0
+ },
+ "snakebox|Fuchsia": {
+  "v": 5.0
+ },
+ "snakebox|Celtic Blue": {
+  "v": 5.0
+ },
+ "snakebox|Holly Jolly": {
+  "v": 5.0
+ },
+ "snakebox|Cappuccino": {
+  "v": 5.0
+ },
+ "snakebox|Secret Santa": {
+  "v": 5.0
+ },
+ "snakebox|Jade Green": {
+  "v": 5.0
+ },
+ "snakebox|Meadow": {
+  "v": 5.0
+ },
+ "snakebox|Light Olive": {
+  "v": 5.0
+ },
+ "snakebox|Bluebell": {
+  "v": 5.0
+ },
+ "snakebox|Strawberry": {
+  "v": 5.0
+ },
+ "tamagadget|": {
+  "v": 5.0
+ },
+ "tamagadget|Ocean": {
+  "v": 5.0
+ },
+ "tamagadget|Deep Cyan": {
+  "v": 5.0
+ },
+ "tamagadget|Peach": {
+  "v": 5.0
+ },
+ "tamagadget|Indigo Dye": {
+  "v": 5.0
+ },
+ "tamagadget|Verdant": {
+  "v": 5.0
+ },
+ "tamagadget|Sapphire": {
+  "v": 5.0
+ },
+ "tamagadget|Malachite": {
+  "v": 5.0
+ },
+ "tamagadget|Tomato": {
+  "v": 5.0
+ },
+ "tamagadget|Pacific Green": {
+  "v": 5.0
+ },
+ "tamagadget|Winter": {
+  "v": 5.0
+ },
+ "tamagadget|Pine Green": {
+  "v": 5.0
+ },
+ "vicecream|": {
+  "v": 5.0
+ },
+ "vicecream|Dreamland": {
+  "v": 5.0
+ },
+ "vicecream|Khaki Green": {
+  "v": 5.0
+ },
+ "vicecream|Taiyaki": {
+  "v": 5.0
+ },
+ "vicecream|Dark Green": {
+  "v": 5.0
+ },
+ "vicecream|Pine Cone": {
+  "v": 5.0
+ },
+ "vicecream|Moonstone": {
+  "v": 5.0
+ },
+ "vicecream|Classic": {
+  "v": 5.0
+ },
+ "vicecream|Grape": {
+  "v": 5.0
+ },
+ "vicecream|French Violet": {
+  "v": 5.0
+ },
+ "vicecream|Chocolate": {
+  "v": 5.0
+ }
+}

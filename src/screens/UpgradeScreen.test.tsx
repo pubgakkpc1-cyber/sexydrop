@@ -10,6 +10,9 @@ import { useWalletStore } from '../store/wallet'
 import { useGamesHistoryStore } from '../store/gamesHistory'
 import { _resetUpgradeForTests, _setUpgradeRngForTests } from '../services/demoUpgradeService'
 
+/** В окне выбора цели первым идёт самый дешёвый вид Snoop Dogg (цены у видов разные). */
+const SNOOP_ID = [...giftById.values()].filter((g) => g.name === 'Snoop Dogg' && /-\d$/.test(g.id)).sort((a, b) => a.priceMinor - b.priceMinor)[0]!.id
+
 /** Показываемый процент шанса для предмета ценой priceMinor против цели из каталога. */
 function pctText(sourceMinor: number, targetId: string): string {
   const pct = upgradeChancePercent(sourceMinor, giftById.get(targetId)!.priceMinor)
@@ -75,7 +78,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     const targetDialog = screen.getByRole('dialog')
     await user.click(within(targetDialog).getAllByRole('button', { name: /^Snoop Dogg$/ })[0]!)
     await user.click(within(targetDialog).getByRole('button', { name: 'Подтвердить' }))
-    expect(screen.getAllByText(`${pctText(50, 'snoop_dogg-1')}%`).length).toBeGreaterThan(0)
+    expect(screen.getAllByText(`${pctText(50, SNOOP_ID)}%`).length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
   })
 
@@ -100,7 +103,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
 
     const resultDialog = await screen.findByRole('dialog', {}, { timeout: 12_000 })
     expect(within(resultDialog).getByText('Не получилось')).toBeInTheDocument()
-    expect(within(resultDialog).getByText(new RegExp(`шанс был ${pctText(50, 'snoop_dogg-1').replace('.', '\.')}%`))).toBeInTheDocument()
+    expect(within(resultDialog).getByText(new RegExp(`шанс был ${pctText(50, SNOOP_ID).replace('.', '\.')}%`))).toBeInTheDocument()
 
     await user.click(within(resultDialog).getByRole('button', { name: 'Готово' }))
     expect(useInventoryStore.getState().items).toHaveLength(0)

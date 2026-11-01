@@ -15,6 +15,7 @@ interface Group {
 }
 
 const TOTAL_WEIGHT = 1_000_000
+const PROFIT_STEPS = [50, 100, 250, 500, 750, 1000]
 
 function itemInfo(itemId: string): { name: string; priceMinor: number } | null {
   if (isTonPrize(itemId)) {
@@ -188,11 +189,36 @@ function CaseEditor({ def, onSaved }: CaseEditorProps) {
             ? `Расход на 1 открытие: ${formatMinor(Math.round(ev))} TON`
             : `Заработок с 1 открытия: ${profit >= 0 ? '+' : '−'}${formatMinor(Math.round(Math.abs(profit)))} TON`}
         </strong>
-        {!free && <span>С 1000 открытий: {profit >= 0 ? '+' : '−'}{formatMinor(Math.round(Math.abs(profit) * 1000))} TON</span>}
         <span>{rtp !== null ? `Возврат игрокам (RTP): ${rtp.toFixed(1)}%` : `Средний выигрыш: ${formatMinor(Math.round(ev))}`}</span>
         {!free && <span>Дороже кейса: {fmtPct(beatCase)}%</span>}
         {!free && <span>Хотя бы вернуть цену: {fmtPct(atLeastBack)}%</span>}
       </div>
+      <table className={styles.table}>
+        <thead>
+          <tr>
+            <th>Открытий</th>
+            <th>Грязная (приход)</th>
+            <th>Выплаты</th>
+            <th>Чистая</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PROFIT_STEPS.map((n) => {
+            const net = n * profit
+            return (
+              <tr key={n}>
+                <td>{n}</td>
+                <td>{formatMinor(n * def.priceMinor)}</td>
+                <td>{formatMinor(Math.round(n * ev))}</td>
+                <td className={net >= 0 ? styles.good : styles.bad}>
+                  {net >= 0 ? '+' : '−'}
+                  {formatMinor(Math.round(Math.abs(net)))}
+                </td>
+              </tr>
+            )
+          })}
+        </tbody>
+      </table>
       {sim && !free && (
         <p className={styles.note}>
           1000 открытий: потрачено {formatMinor(sim.spent)}, выиграно {formatMinor(sim.won)} → казна{' '}

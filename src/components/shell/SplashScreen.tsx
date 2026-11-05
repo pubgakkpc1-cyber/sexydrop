@@ -116,7 +116,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
         ))}
 
         <div className={styles.avatarWrapper}>
-          <div className={styles.rotatingRing} aria-hidden />
+          <div className={styles.rotatingRing} data-gfx-keep aria-hidden />
           <div className={styles.avatarInner}>
             <UserAvatar size={80} />
           </div>
@@ -146,7 +146,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
         <div className={styles.progressContainer}>
           <div className={styles.progressBarTrack}>
             <div className={styles.progressBarFill} style={{ width: `${progress}%` }}>
-              <span className={styles.shimmer} aria-hidden />
+              <span className={styles.shimmer} data-gfx-keep aria-hidden />
             </div>
           </div>
           <span className={styles.statusText}>{statusMessage}</span>

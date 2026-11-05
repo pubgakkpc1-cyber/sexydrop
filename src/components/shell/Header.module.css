@@ -336,3 +336,23 @@ button.balanceCol:active {
   font-size: 10px;
   opacity: 0.8;
 }
+
+/* Рядом с «Пополнить» — шестерёнка графики: на узких экранах кнопку делаем компактнее */
+@media (max-width: 400px) {
+  .depositBtn.depositBtn {
+    height: 40px;
+    padding: 0 12px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .depositIcon {
+    display: none;
+  }
+
+  .depositBtn.depositBtn {
+    padding: 0 10px;
+    font-size: 13px;
+  }
+}

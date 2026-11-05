@@ -407,3 +407,7 @@
 .topBadgesRow {
   justify-content: center;
 }
+
+/* Качество графики: без бегущего блика на средней и минимальной */
+:global(html[data-gfx='medium']) .shimmerEffect::after,
+:global(html[data-gfx='low']) .shimmerEffect::after { display: none; }

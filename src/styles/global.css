@@ -1,6 +1,7 @@
 @import './tokens.css';
 @import './fonts.css';
 @import './typography.css';
+@import './graphics.css';
 
 :root {
   font-family: var(--font-body), 'Apple Color Emoji', 'Segoe UI Emoji';

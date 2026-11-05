@@ -350,3 +350,11 @@
     animation-iteration-count: 1;
   }
 }
+
+/* Качество графики (src/styles/graphics.css): средняя — лучи не вращаются, карточка не качается;
+   минимальная — без лучей и блика */
+:global(html[data-gfx='medium']) .rays { animation: raysIn 0.6s ease-out 0.25s forwards; }
+:global(html[data-gfx='medium']) .imageWrap { animation: cardFlip 0.8s cubic-bezier(0.2, 1.1, 0.3, 1) 0.15s forwards; }
+:global(html[data-gfx='medium']) .shine { animation: cardShine 0.9s ease-in-out 0.85s forwards; }
+:global(html[data-gfx='low']) .rays,
+:global(html[data-gfx='low']) .shine { display: none; }

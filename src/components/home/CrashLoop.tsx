@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { MULT_TIER_STYLE, multTier } from '../../lib/multTier'
+import { GRAPHICS_PRESETS, useGraphicsStore } from '../../store/graphics'
 import { ROCKET_SKINS, drawCartoonRocket } from '../games/Rocket3DCanvas'
 import styles from './CrashLoop.module.css'
 
@@ -39,13 +40,14 @@ export function CrashLoop() {
     const skin = ROCKET_SKINS[0]!
 
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false
+    let gfx = GRAPHICS_PRESETS[useGraphicsStore.getState().quality]
     let W = 0
     let H = 0
     const resize = () => {
       const r = wrap.getBoundingClientRect()
       W = Math.max(1, r.width)
       H = Math.max(1, r.height)
-      const dpr = Math.min(2, window.devicePixelRatio || 1)
+      const dpr = Math.min(gfx.menuDpr, window.devicePixelRatio || 1)
       canvas.width = Math.round(W * dpr)
       canvas.height = Math.round(H * dpr)
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
@@ -77,9 +79,13 @@ export function CrashLoop() {
       y: H * (0.8 - 0.56 * Math.pow(p, 1.35)),
     })
 
+    let lastDraw = 0
     const frame = (now: number) => {
       raf = requestAnimationFrame(frame)
       if (!visible) return
+      // на минимальной графике рисуем ~30 кадров в секунду
+      if (now - lastDraw < 1000 / gfx.menuFps - 2) return
+      lastDraw = now
       const el = (now - start) / 1000
       const t = el % CYCLE_S
       const cycle = Math.floor(el / CYCLE_S)
@@ -102,7 +108,7 @@ export function CrashLoop() {
         ctx.stroke()
       }
       ctx.fillStyle = '#fff'
-      for (const s of stars) {
+      for (const s of stars.slice(0, gfx.menuStars)) {
         const x = (((s.x - el * s.sp) % 1) + 1) % 1
         ctx.globalAlpha = 0.2 + s.s * 0.25
         ctx.fillRect(x * W, s.y * H, s.s * 1.5, s.s * 1.5)
@@ -119,7 +125,7 @@ export function CrashLoop() {
         trail.push({ x, y })
         if (trail.length > 90) trail.shift()
         if (!reduced) {
-          for (let i = 0; i < 2; i += 1) {
+          for (let i = 0; i < gfx.menuSparks; i += 1) {
             particles.push({
               x: x - 14,
               y: y + 3,
@@ -133,8 +139,9 @@ export function CrashLoop() {
         }
       } else if (!burst) {
         burst = true
-        for (let i = 0; i < 34; i += 1) {
-          const a = (i / 34) * Math.PI * 2 + Math.random() * 0.2
+        const burstCount = gfx.menuBurst
+        for (let i = 0; i < burstCount; i += 1) {
+          const a = (i / burstCount) * Math.PI * 2 + Math.random() * 0.2
           const v = 50 + Math.random() * 110
           particles.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v, life: 1, hue: 8 + Math.random() * 40, size: 2 + Math.random() * 2.6 })
         }
@@ -143,7 +150,7 @@ export function CrashLoop() {
       // светящийся след
       if (trail.length > 1) {
         ctx.lineCap = 'round'
-        for (let pass = 0; pass < 2; pass += 1) {
+        for (let pass = gfx.menuGlow ? 0 : 1; pass < 2; pass += 1) {
           for (let i = 1; i < trail.length; i += 1) {
             const a = i / trail.length
             ctx.strokeStyle = pass === 0
@@ -160,9 +167,10 @@ export function CrashLoop() {
 
       // частицы пламени / взрыва
       for (const q of particles) {
-        q.x += q.vx / 60
-        q.y += q.vy / 60
-        q.life -= flying ? 0.06 : 0.026
+        const step = 60 / gfx.menuFps
+        q.x += (q.vx / 60) * step
+        q.y += (q.vy / 60) * step
+        q.life -= (flying ? 0.06 : 0.026) * step
         if (q.life > 0) {
           ctx.fillStyle = `hsla(${q.hue}, 96%, ${flying ? 60 : 66}%, ${q.life})`
           ctx.beginPath()
@@ -209,8 +217,14 @@ export function CrashLoop() {
       : null
     io?.observe(wrap)
     raf = requestAnimationFrame(frame)
+    // смена качества в шестерёнке — сразу, без перезагрузки
+    const unsubGfx = useGraphicsStore.subscribe((s) => {
+      gfx = GRAPHICS_PRESETS[s.quality]
+      resize()
+    })
 
     return () => {
+      unsubGfx()
       cancelAnimationFrame(raf)
       ro?.disconnect()
       io?.disconnect()

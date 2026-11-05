@@ -4,6 +4,7 @@ import { formatBalanceTon } from '../../lib/balanceFormat'
 import { minorToStars } from '../../lib/stars'
 import { useDisplayCurrencyStore } from '../../store/displayCurrency'
 import { BalanceCurrencySheet } from './BalanceCurrencySheet'
+import { GraphicsMenu } from './GraphicsMenu'
 import { getTelegramUser } from '../../lib/telegram'
 import { useWalletStore } from '../../store/wallet'
 import { AdminPanelModal } from '../admin/AdminPanelModal'
@@ -81,6 +82,7 @@ export function Header() {
             👑 Админка
           </button>
         )}
+        <GraphicsMenu align="right" />
         <Button size="sm" className={styles.depositBtn} onClick={() => navigate('/deposit')}>
           <WalletIcon className={styles.depositIcon} aria-hidden />
           Пополнить

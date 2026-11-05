@@ -1,0 +1,30 @@
+/*
+ * Качество графики (шестерёнка в шапке меню и в играх) — атрибут data-gfx на <html>,
+ * ставит src/store/graphics.ts. Холсты (Ракетка, мини-ракета в меню) читают пресеты сами,
+ * здесь — CSS-анимации и тяжёлые эффекты. Точечные правила лежат в модулях через
+ * :global(html[data-gfx='…']).
+ *
+ * high    — всё как задумано.
+ * medium  — без размытия фона; самые тяжёлые фоновые петли (лучи, блики, покачивание карточки) выключены.
+ * low     — бесконечные декоративные анимации проигрываются один раз, без теней текста,
+ *           фоновые лучи и блики скрыты. Индикаторы загрузки (data-gfx-keep) крутятся всегда.
+ */
+
+html[data-gfx='medium'] *,
+html[data-gfx='low'] * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+html[data-gfx='low'] *,
+html[data-gfx='low'] *::before,
+html[data-gfx='low'] *::after {
+  animation-iteration-count: 1 !important;
+  text-shadow: none !important;
+}
+
+html[data-gfx='low'] [data-gfx-keep],
+html[data-gfx='low'] [data-gfx-keep]::before,
+html[data-gfx='low'] [data-gfx-keep]::after {
+  animation-iteration-count: infinite !important;
+}

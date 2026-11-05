@@ -78,8 +78,14 @@
   color: rgba(255, 255, 255, 0.85);
 }
 
+.gfxWrap {
+  position: relative;
+  display: inline-flex;
+}
+
 .menu {
   position: absolute;
+  z-index: 60;
   top: 46px;
   left: 0;
   min-width: 170px;
@@ -89,6 +95,11 @@
   border-radius: 16px;
   box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
   animation: menuIn 0.16s ease-out;
+}
+
+.menuRight {
+  left: auto;
+  right: 0;
 }
 
 @keyframes menuIn {

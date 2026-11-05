@@ -106,3 +106,7 @@
 @media (prefers-reduced-motion: reduce) {
   .beams, .strip, .flash { animation: none; }
 }
+
+/* Качество графики: средняя — лучи стоят, минимальная — без лучей */
+:global(html[data-gfx='medium']) .beams { animation: none; }
+:global(html[data-gfx='low']) .beams { display: none; }

@@ -38,7 +38,7 @@ export function Button({
       aria-busy={loading || undefined}
       {...rest}
     >
-      {loading && <span className={styles.spinner} aria-hidden />}
+      {loading && <span className={styles.spinner} data-gfx-keep aria-hidden />}
       {children}
     </button>
   )

@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import type { Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
-import { TonIcon } from '../shell/icons'
+import { LockIcon, TonIcon } from '../shell/icons'
+import type { LockedAction } from './LockedGiftSheet'
 import styles from './InventoryGiftCard.module.css'
 
 export interface InventoryGiftCardProps {
@@ -11,22 +12,27 @@ export interface InventoryGiftCardProps {
   onWithdraw: () => void
   /** Идёт анимация продажи: карточка плавно исчезает, всплывает «+X TON». */
   selling?: boolean
+  /** Подарок из одноразового FREE-кейса под замком: реальный прогресс приглашений. */
+  locked?: { joined: number; target: number }
+  /** Нажатие на действие у подарка под замком — показать, сколько друзей осталось пригласить. */
+  onLocked?: (action: LockedAction) => void
 }
 
 /**
  * Карточка подарка на экране инвентаря: крупная картинка на фоне NFT, цена в углу,
  * название, «Вывести» (чат с менеджером с готовым сообщением), «Продать за …»,
- * быстрые переходы в Апгрейд и Play Hub.
+ * быстрые переходы в Апгрейд и Play Hub. Подарок под замком показывает замок и прогресс.
  */
-export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }: InventoryGiftCardProps) {
+export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false, locked, onLocked }: InventoryGiftCardProps) {
   const navigate = useNavigate()
   const price = formatMinor(gift.priceMinor)
+  const lockedTap = (action: LockedAction) => () => onLocked?.(action)
 
   return (
     <article
-      className={`${styles.card} ${selling ? styles.selling : ''}`}
+      className={`${styles.card} ${selling ? styles.selling : ''} ${locked ? styles.locked : ''}`}
       data-rarity={gift.rarity}
-      aria-label={gift.name}
+      aria-label={locked ? `${gift.name}, под замком` : gift.name}
     >
       {selling && (
         <span className={styles.soldFloat} aria-hidden>
@@ -44,6 +50,14 @@ export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }:
           {price}
           <TonIcon className={styles.priceIcon} aria-hidden />
         </span>
+        {locked && (
+          <button type="button" className={styles.lockOverlay} onClick={lockedTap('withdraw')} aria-label="Подарок под замком">
+            <LockIcon className={styles.lockIcon} aria-hidden />
+            <span className={styles.lockCount}>
+              {locked.joined} / {locked.target}
+            </span>
+          </button>
+        )}
       </div>
 
       <div className={styles.body}>
@@ -52,9 +66,10 @@ export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }:
         <button
           type="button"
           className={styles.withdraw}
-          onClick={onWithdraw}
-          title="Написать менеджеру @SexyDropOwner для вывода подарка"
+          onClick={locked ? lockedTap('withdraw') : onWithdraw}
+          title={locked ? 'Подарок под замком' : 'Написать менеджеру @SexyDropOwner для вывода подарка'}
         >
+          {locked && <LockIcon className={styles.btnLock} aria-hidden />}
           Вывести
         </button>
 
@@ -62,9 +77,10 @@ export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }:
           type="button"
           className={styles.sell}
           disabled={selling}
-          onClick={onSell}
+          onClick={locked ? lockedTap('sell') : onSell}
           aria-label={`Продать за ${price} TON`}
         >
+          {locked && <LockIcon className={styles.btnLock} aria-hidden />}
           <span>Продать за</span>
           <span className={styles.sellPrice}>
             {price}
@@ -73,7 +89,11 @@ export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false }:
         </button>
 
         <div className={styles.quick}>
-          <button type="button" className={styles.upgrade} onClick={() => navigate('/games/upgrade')}>
+          <button
+            type="button"
+            className={styles.upgrade}
+            onClick={locked ? lockedTap('upgrade') : () => navigate('/games/upgrade')}
+          >
             Апгрейд
           </button>
           <button type="button" className={styles.hub} onClick={() => navigate('/games')}>

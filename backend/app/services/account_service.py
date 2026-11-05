@@ -139,6 +139,7 @@ async def get_state(session: AsyncSession, user: User) -> dict[str, Any]:
 async def sell_item(session: AsyncSession, user_id: uuid.UUID, item_id: str) -> dict[str, Any]:
     await ensure_account(session, user_id)
     item = await lock_item(session, user_id, item_id)
+    await play_service.check_quest_item(session, user_id, item, "продать подарок")
     if item.status != "available":
         raise GameError("item_unavailable", 409, "Подарок уже продан или недоступен")
     item.status = "sold"
@@ -153,6 +154,7 @@ async def sell_item(session: AsyncSession, user_id: uuid.UUID, item_id: str) -> 
 async def withdraw_item(session: AsyncSession, user_id: uuid.UUID, item_id: str) -> dict[str, Any]:
     await ensure_account(session, user_id)
     item = await lock_item(session, user_id, item_id)
+    await play_service.check_quest_item(session, user_id, item, "вывести подарок")
     if item.status != "available":
         raise GameError("item_unavailable", 409, "Подарок недоступен для вывода")
     item.status = "withdraw_pending"

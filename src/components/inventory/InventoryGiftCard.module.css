@@ -197,3 +197,65 @@
 @media (prefers-reduced-motion: reduce) {
   .selling, .soldFloat { animation-duration: 0.01s; }
 }
+
+/* Подарок из FREE под замком: приглушённая картинка, замок с прогрессом приглашений */
+.locked .imageFull,
+.locked .imageContain {
+  filter: grayscale(0.55) brightness(0.55);
+}
+
+.lockOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.lockIcon {
+  width: 30px;
+  height: 30px;
+  padding: 11px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  background: rgba(20, 20, 22, 0.85);
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+}
+
+.lockCount {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(20, 20, 22, 0.85);
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.btnLock {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.locked .withdraw {
+  background: #5a2a2d;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.locked .sell,
+.locked .upgrade {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.locked .upgrade {
+  background: #2b2b2f;
+}

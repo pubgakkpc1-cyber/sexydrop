@@ -224,6 +224,35 @@ async def quest_status(session: AsyncSession, user_id: uuid.UUID) -> dict[str, A
     return {"pending": pending, "joined": min(joined, QUEST_FRIENDS), "target": QUEST_FRIENDS, "completed": completed}
 
 
+def _friends_word(n: int) -> str:
+    return "друга" if n % 10 == 1 and n % 100 != 11 else "друзей"
+
+
+async def check_quest_item(session: AsyncSession, user_id: uuid.UUID, item: NftItem, action: str) -> None:
+    """Подарок из FREE с замком (quest_pending): вывести/продать/улучшить можно после 5 друзей.
+
+    `item` уже заблокирован вызывающим. Задание выполнено — подарок становится обычным (статус
+    available; ключ quest уберёт quest_status). Иначе отказ с реальными числами: сколько друзей
+    засчитано и сколько осталось.
+    """
+    if item.status != "quest_pending":
+        return
+    meta = (await session.execute(select(UserMeta).where(UserMeta.user_id == user_id))).scalar_one_or_none()
+    quest = ((meta.free_state if meta else None) or {}).get("quest") or {}
+    if str(quest.get("item_id")) != str(item.id) or now_ms() >= int(quest.get("expires_at", 0)):
+        raise GameError("item_unavailable", 409, "Срок задания истёк — подарок больше недоступен")
+    joined = min(await friends_joined(session, user_id, int(quest["claimed_at"])), QUEST_FRIENDS)
+    if joined >= QUEST_FRIENDS:
+        item.status = "available"
+        return
+    left = QUEST_FRIENDS - joined
+    raise GameError(
+        "invite_required",
+        403,
+        f"Чтобы {action}, пригласите ещё {left} {_friends_word(left)} — засчитано {joined} из {QUEST_FRIENDS}",
+    )
+
+
 async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, request_id: str) -> dict[str, Any]:
     _check_request_id(request_id)
     case = catalog.get_case(case_id)
@@ -305,6 +334,7 @@ async def upgrade(
     except _Replay as replay:
         return replay.result
     item = await lock_item(session, user_id, item_id)
+    await check_quest_item(session, user_id, item, "улучшить подарок")
     if item.status != "available":
         raise GameError("item_unavailable", 409)
     source_price = item.price_minor

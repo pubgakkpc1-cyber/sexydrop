@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { useInventoryStore, type InventoryItem } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
+import { useFreeCasesStore } from '../store/freeCases'
 import { InventoryScreen } from './InventoryScreen'
 
 function renderScreen() {
@@ -25,6 +26,40 @@ const card = (name: string) => screen.getByRole('article', { name })
 beforeEach(() => {
   useInventoryStore.setState({ items: [], history: [] })
   useWalletStore.setState({ mode: 'demo', balances: { demo: 100_000, real: 0 } })
+  setQuest(null, 0)
+})
+
+function setQuest(giftId: string | null, joined: number) {
+  const quest = useFreeCasesStore.getState().quest
+  useFreeCasesStore.setState({
+    quest: {
+      ...quest,
+      pendingReward: giftId
+        ? { giftId, uid: 'free-uid', wonAt: Date.now(), expiresAt: Date.now() + 3 * 86_400_000 }
+        : null,
+      referralsJoined: joined,
+    },
+  })
+}
+
+describe('InventoryScreen: подарок из FREE под замком', () => {
+  it('показывает подарок с замком и честный прогресс приглашений', async () => {
+    setQuest('plush-pepe', 2)
+    renderScreen()
+    const locked = screen.getByRole('article', { name: /под замком/ })
+    expect(within(locked).getByText('2 / 5')).toBeInTheDocument()
+    await userEvent.click(within(locked).getByRole('button', { name: 'Вывести' }))
+    expect(screen.getByText('Чтобы вывести подарок, пригласите ещё 3 друзей')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Пригласить друзей/ })).toBeInTheDocument()
+  })
+
+  it('продажа подарка под замком тоже просит пригласить друзей', async () => {
+    setQuest('plush-pepe', 4)
+    renderScreen()
+    const locked = screen.getByRole('article', { name: /под замком/ })
+    await userEvent.click(within(locked).getByRole('button', { name: /Продать за/ }))
+    expect(screen.getByText('Чтобы продать подарок, пригласите ещё 1 друга')).toBeInTheDocument()
+  })
 })
 
 describe('InventoryScreen (пустой и заполненный инвентарь)', () => {

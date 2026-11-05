@@ -14,3 +14,6 @@ export const GAME_RTP_BPS = 9800
 
 /** Максимальная ставка в играх: 1000 TON (в minor-единицах, 1 TON = 1000). */
 export const MAX_BET_MINOR = 1_000_000
+
+/** Минимальная ставка в играх: 0.1 TON. */
+export const MIN_BET_MINOR = 100

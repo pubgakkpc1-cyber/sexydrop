@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { loadDepositConfig, type DepositConfig } from '../../lib/deposits'
+import { adminFetch } from '../../lib/adminApi'
+import { formatMinor } from '../../lib/money'
 import styles from './AdminPanel.module.css'
 
 interface BotStatus {
@@ -66,6 +68,56 @@ export function AdminSystemTab() {
       {chats.map(([id, title]) => (
         <Row key={id} label={title} ok value={id} />
       ))}
+
+      <ResetBalances />
     </div>
+  )
+}
+
+/** Обнуление TON-балансов всех игроков, кроме админа. Требует ввести «ОБНУЛИТЬ». */
+function ResetBalances() {
+  const [confirm, setConfirm] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [result, setResult] = useState<string | null>(null)
+  const ready = confirm.trim().toUpperCase() === 'ОБНУЛИТЬ'
+
+  const run = async () => {
+    if (!ready || busy) return
+    setBusy(true)
+    setResult(null)
+    const r = await adminFetch<{ users: number; total_minor: number }>('/api/admin/reset-balances', {
+      method: 'POST',
+      body: { confirm: confirm.trim() },
+    })
+    setBusy(false)
+    if (r.ok) {
+      setResult(`Готово: обнулено ${r.data.users} игроков, списано ${formatMinor(r.data.total_minor)} TON`)
+      setConfirm('')
+    } else {
+      setResult(r.error)
+    }
+  }
+
+  return (
+    <>
+      <h3 className={styles.h3}>Обнулить балансы</h3>
+      <p className={styles.note}>
+        Спишет весь TON-баланс у всех игроков, кроме админа. Отменить нельзя. Звёзды и подарки не
+        трогаются. Чтобы включить кнопку, введите слово ОБНУЛИТЬ.
+      </p>
+      <input
+        className={styles.search}
+        aria-label="Подтверждение обнуления"
+        placeholder="ОБНУЛИТЬ"
+        value={confirm}
+        onChange={(e) => setConfirm(e.target.value)}
+      />
+      <div className={styles.actions}>
+        <button type="button" className={`${styles.refresh} ${styles.danger}`} disabled={!ready || busy} onClick={() => void run()}>
+          {busy ? 'Обнуляем…' : 'Обнулить балансы всем, кроме админа'}
+        </button>
+      </div>
+      {result && <p className={styles.note}>{result}</p>}
+    </>
   )
 }

@@ -34,6 +34,7 @@ FREE24_SPINS_BEFORE_DEPOSIT = 3
 DEPOSIT_UNLOCK_MINOR = 250  # 0.25 TON; 50 Stars = 0.285 TON тоже проходит
 QUEST_TTL_MS = 3 * 24 * 3600 * 1000
 MINES_TILES = 25
+MIN_BET_MINOR = 100  # минимальная ставка в играх — 0.1 TON
 
 
 def now_ms() -> int:
@@ -396,7 +397,7 @@ async def mines_start(
     session: AsyncSession, user_id: uuid.UUID, bet_minor: int, mines_count: int, request_id: str
 ) -> dict[str, Any]:
     _check_request_id(request_id)
-    if not isinstance(bet_minor, int) or bet_minor <= 0 or bet_minor > MAX_BET_MINOR:
+    if not isinstance(bet_minor, int) or bet_minor < MIN_BET_MINOR or bet_minor > MAX_BET_MINOR:
         raise GameError("invalid_amount", 400)
     if not 1 <= mines_count <= 24:
         raise GameError("invalid_mines", 400)

@@ -96,3 +96,22 @@ async def players(
         }
         for k, v in rows[: min(max(limit, 1), 200)]
     ]
+
+
+class ResetBody(BaseModel):
+    confirm: str
+
+
+@router.post("/reset-balances")
+async def reset_balances(
+    body: ResetBody,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Обнуляет TON-баланс всем игрокам, кроме админов. Нужна фраза подтверждения «ОБНУЛИТЬ»."""
+    _admin(x_telegram_init_data)
+    if body.confirm.strip().upper() != "ОБНУЛИТЬ":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нужно подтверждение: ОБНУЛИТЬ")
+    from app.services import account_service
+
+    return await account_service.reset_balances(session, set(ADMIN_USERNAMES))

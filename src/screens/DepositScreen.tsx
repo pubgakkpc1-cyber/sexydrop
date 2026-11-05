@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { useStarsBalanceStore } from '../store/starsBalance'
+import { EXCHANGE_MIN_STARS, useStarsBalanceStore } from '../store/starsBalance'
 import { SERVER_MODE } from '../lib/serverMode'
 import { setServerBalance } from '../lib/serverSync'
 import { exchangeStarsApi } from '../services/gameApi'
@@ -591,11 +591,44 @@ function GiftsPanel() {
 /** Панель «Конвертировать»: Stars → TON с живым пересчётом. */
 function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
   const [input, setInput] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const stars = parseStars(input)
   const earned = useStarsBalanceStore((s) => s.stars)
-  const valid = isValidStars(stars)
+  // Минимум обмена совпадает с сервером (175 ★ = 1 TON); STARS_MIN относится к покупке Stars.
+  const valid = stars !== null && stars >= EXCHANGE_MIN_STARS && stars <= STARS_MAX
   const enough = valid && stars <= earned
-  const payout = valid ? starsToMinor(stars) : stars !== null ? starsToMinor(stars) : 0
+  const payout = stars !== null ? starsToMinor(stars) : 0
+
+  const submit = async () => {
+    if (!enough || payout <= 0 || busy) return
+    setError(null)
+    if (!SERVER_MODE) {
+      // сначала списываем звёзды, и только фактически списанное превращаем в TON
+      const used = useStarsBalanceStore.getState().spend(stars)
+      if (used !== stars) return
+      onDone(payout)
+      setInput('')
+      return
+    }
+    // звёзды списывает и TON зачисляет сервер
+    setBusy(true)
+    try {
+      const r = await exchangeStarsApi(stars)
+      if (r === 'ok') {
+        onDone(payout)
+        setInput('')
+      } else if (r === 'too_small') {
+        setError(`Минимальный обмен — ${EXCHANGE_MIN_STARS} ★`)
+      } else {
+        setError('Недостаточно звёзд на балансе')
+      }
+    } catch {
+      setError('Не удалось обменять, попробуйте ещё раз')
+    } finally {
+      setBusy(false)
+    }
+  }
 
   return (
     <div className={styles.panel}>
@@ -613,7 +646,10 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
             inputMode="numeric"
             placeholder="0"
             value={input}
-            onChange={(e) => setInput(e.target.value.replace(/[^\d]/g, ''))}
+            onChange={(e) => {
+              setError(null)
+              setInput(e.target.value.replace(/[^\d]/g, ''))
+            }}
           />
           <span className={styles.unit}>
             <StarIcon className={styles.unitIcon} aria-hidden /> Stars
@@ -639,7 +675,7 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
         Курс: <strong>{STARS_PER_TON} Stars = 1 TON</strong> · 1 Star = <strong>{TON_PER_STAR_LABEL} TON</strong>
       </p>
       <p className={styles.rate}>
-        От {STARS_MIN} до {STARS_MAX.toLocaleString('ru-RU')} Stars за раз
+        От {EXCHANGE_MIN_STARS} до {STARS_MAX.toLocaleString('ru-RU')} Stars за раз
       </p>
       {earned > 0 && (
         <button type="button" className={styles.preset} onClick={() => setInput(String(Math.min(STARS_MAX, earned)))}>
@@ -661,33 +697,22 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
       {stars !== null && !enough && (
         <p className={styles.note} role="alert">
           {!valid
-            ? `Можно конвертировать от ${STARS_MIN} до ${STARS_MAX.toLocaleString('ru-RU')} ★ за раз`
+            ? `Можно конвертировать от ${EXCHANGE_MIN_STARS} до ${STARS_MAX.toLocaleString('ru-RU')} ★ за раз`
             : `Недостаточно звёзд: у вас ${earned.toLocaleString('ru-RU')} ★`}
+        </p>
+      )}
+      {error && (
+        <p className={styles.note} role="alert">
+          {error}
         </p>
       )}
       <button
         type="button"
         className={styles.primary}
-        disabled={!enough || payout <= 0}
-        onClick={() => {
-          if (!enough || payout <= 0) return
-          if (SERVER_MODE) {
-            // звёзды списывает и TON зачисляет сервер
-            void exchangeStarsApi(stars).then((r) => {
-              if (r !== 'ok') return
-              onDone(payout)
-              setInput('')
-            })
-            return
-          }
-          // сначала списываем звёзды, и только фактически списанное превращаем в TON
-          const used = useStarsBalanceStore.getState().spend(stars)
-          if (used !== stars) return
-          onDone(payout)
-          setInput('')
-        }}
+        disabled={!enough || payout <= 0 || busy}
+        onClick={() => void submit()}
       >
-        Конвертировать
+        {busy ? 'Обмениваем…' : 'Конвертировать'}
       </button>
     </div>
   )

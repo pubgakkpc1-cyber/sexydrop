@@ -357,3 +357,38 @@ async def credit_deposit(
     order.paid_at = datetime.now(timezone.utc)
     await session.commit()
     return {"status": "paid", "amount_minor": amount_minor, "balance_minor": new_balance}
+
+
+# ----------------------------------------------------------------- админ: обнуление балансов
+
+async def reset_balances(session: AsyncSession, keep_usernames: set[str]) -> dict[str, Any]:
+    """Списывает весь TON-баланс у всех, кроме указанных админов. Каждое списание — проводка в журнале."""
+    from app.core.money import gram_to_minor
+    from app.models.ledger import Account
+
+    rows = (
+        await session.execute(
+            select(Account.user_id, User.username)
+            .join(User, User.id == Account.user_id)
+            .where(Account.balance > 0)
+        )
+    ).all()
+    users = 0
+    total = 0
+    for user_id, username in rows:
+        if (username or "").lower().lstrip("@") in keep_usernames:
+            continue
+        account = (
+            await session.execute(select(Account).where(Account.user_id == user_id).with_for_update())
+        ).scalar_one()
+        minor = gram_to_minor(account.balance)
+        if minor <= 0:
+            continue
+        await post_ledger(
+            session, user_id, type="admin_reset", direction="debit", minor=minor,
+            description="Обнуление баланса администратором",
+        )
+        users += 1
+        total += minor
+    await session.commit()
+    return {"ok": True, "users": users, "total_minor": total}

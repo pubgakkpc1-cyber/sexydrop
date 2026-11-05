@@ -23,6 +23,9 @@ log = logging.getLogger("sexydrop.bot")
 
 CHANNEL_URL = "https://t.me/SexyDrop_official"
 SUPPORT_URL = "https://t.me/SexyDropOwner"
+# Кнопка меню чата (слева от поля ввода): Telegram разрешает тут только обычный текст и юникод-эмодзи,
+# премиум-эмодзи в ней не поддерживаются.
+MENU_BUTTON_TEXT = "🎁 Играть"
 
 # Запасные юникод-эмодзи (показываются, если у клиента нет Premium или id не заданы)
 FALLBACK = {
@@ -72,17 +75,19 @@ def build_caption(premium: bool = True) -> str:
         return em(n, premium)
 
     return (
-        f"{e('spark')} <b>Добро пожаловать в SEXY DROP!</b>\n"
-        "NFT-подарки и игры в Telegram — всё в TON.\n\n"
-        f"{e('rocket')} <b>Ракета</b> — лови иксы и забирай выигрыш до взрыва\n"
-        f"{e('case')} <b>Кейсы</b> — открывай и выбивай NFT-подарки\n"
+        f"{e('spark')} <b>SEXY DROP — NFT-подарки Telegram</b>\n"
+        "Кейсы, Ракета и апгрейды. Все выигрыши — в TON.\n\n"
+        "<blockquote>"
+        f"{e('case')} <b>Кейсы</b> — выбивай NFT-подарки\n"
+        f"{e('rocket')} <b>Ракета</b> — лови иксы и забирай до взрыва\n"
         f"{e('upgrade')} <b>Апгрейд</b> — меняй подарок на более ценный\n"
-        f"{e('trophy')} <b>Рейтинг</b> — соревнуйся с другими игроками\n"
-        f"{e('friends')} <b>Друзья</b> — приглашай и получай по 2 ★ за каждого, кто откроет фри-кейс\n\n"
-        f"{e('bolt')} <b>Авто-выдача.</b> Выигранные NFT-подарки выдаёт менеджер автоматически — "
-        "прямо на твой аккаунт Telegram.\n"
-        f"{e('shield')} <b>Прозрачно.</b> Баланс, ставки и вывод — в TON, история игр всегда в профиле.\n\n"
-        f"{e('play')} Жми «Играть» и забирай свой дроп!"
+        f"{e('trophy')} <b>Рейтинг</b> — соревнуйся с игроками\n"
+        f"{e('friends')} <b>Друзья</b> — 2 ★ за каждого, кто откроет фри-кейс"
+        "</blockquote>\n\n"
+        f"{e('bolt')} <b>Авто-выдача</b> — NFT приходят прямо на твой аккаунт\n"
+        f"{e('shield')} <b>Прозрачно</b> — баланс, ставки и вывод в TON\n\n"
+        f"{e('nft')} <b>Первый кейс — бесплатно!</b>\n"
+        f"{e('play')} Жми «Играть» и забирай свой дроп"
     )
 
 
@@ -97,7 +102,7 @@ def build_keyboard(app_url: str, premium: bool = True) -> dict[str, Any]:
 
     return {
         "inline_keyboard": [
-            [btn("Играть", "play", "danger", web_app={"url": app_url})],
+            [btn("Играть в SEXY DROP", "play", "danger", web_app={"url": app_url})],
             [
                 btn("Канал", "channel", url=CHANNEL_URL),
                 btn("Поддержка", "support", url=SUPPORT_URL),
@@ -215,7 +220,7 @@ async def _set_menu_button(chat_id: int) -> None:
                     "chat_id": chat_id,
                     "menu_button": {
                         "type": "web_app",
-                        "text": "SEXY DROP",
+                        "text": MENU_BUTTON_TEXT,
                         "web_app": {"url": settings.app_url},
                     },
                 },

@@ -25,7 +25,7 @@ CHANNEL_URL = "https://t.me/SexyDrop_official"
 SUPPORT_URL = "https://t.me/SexyDropOwner"
 # Кнопка меню чата (слева от поля ввода): Telegram разрешает тут только обычный текст и юникод-эмодзи,
 # премиум-эмодзи в ней не поддерживаются.
-MENU_BUTTON_TEXT = "🎁 Играть"
+MENU_BUTTON_TEXT = "Играть"
 
 # Запасные юникод-эмодзи (показываются, если у клиента нет Premium или id не заданы)
 FALLBACK = {

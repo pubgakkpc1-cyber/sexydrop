@@ -80,4 +80,5 @@ async def get_or_create_telegram_user(
     session.add(new_user)
     await session.commit()
     await session.refresh(new_user)
+    new_user.just_registered = True  # type: ignore[attr-defined]  # для уведомления админов
     return new_user

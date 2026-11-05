@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     db_max_overflow: int = Field(default=10, ge=0, le=50)
 
     bot_token: str = ""
+    # Доп. получатели уведомлений о новых игроках (telegram id через запятую). Админы из ADMIN_USERNAMES
+    # получают их и без этого, если уже писали боту.
+    admin_notify_chat_ids: str = ""
     # Публичный адрес сервиса (https://...): по нему регистрируется вебхук бота. Пусто — вебхук не ставится.
     public_base_url: str = ""
     # Адрес мини-аппа для кнопки «Играть» и меню чата

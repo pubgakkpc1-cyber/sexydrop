@@ -1,17 +1,21 @@
 from __future__ import annotations
 
+import asyncio
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.api.deps import get_current_user
+from app.api.odds import ADMIN_USERNAMES
 from app.core.config import get_settings
 from app.core.db import get_session
 from app.core.security import create_access_token, validate_telegram_init_data
 from app.models.economy import UserMeta
 from app.models.user import User
 from app.services.economy_core import ensure_account
+from app.services.telegram_bot import notify_admins_new_user
 from app.schemas.auth import AuthResponse, DevAuthRequest, TelegramAuthRequest
 from app.schemas.user import UserRead
 from app.services.user_service import get_or_create_telegram_user
@@ -61,12 +65,44 @@ async def auth_telegram(
         meta.is_premium = True
     await session.commit()
 
+    if getattr(user, "just_registered", False):
+        await _schedule_new_user_notice(session, user)
+
     token = create_access_token(user.id, user.telegram_id)
     return AuthResponse(
         token=token,
         token_type="bearer",
         user=UserRead.model_validate(user),
     )
+
+
+async def _schedule_new_user_notice(session: AsyncSession, user: User) -> None:
+    """Уведомляет админов в боте о новом игроке (в фоне, ответ авторизации не задерживается)."""
+    try:
+        ids = {int(x) for x in get_settings().admin_notify_chat_ids.split(",") if x.strip().lstrip("-").isdigit()}
+        rows = await session.execute(
+            select(User.telegram_id).where(func.lower(User.username).in_(ADMIN_USERNAMES))
+        )
+        ids.update(int(r[0]) for r in rows.all())
+        total = int((await session.execute(select(func.count()).select_from(User))).scalar_one())
+        referrer = None
+        if user.referred_by_id is not None:
+            ref = await session.get(User, user.referred_by_id)
+            if ref is not None:
+                referrer = f"@{ref.username}" if ref.username else str(ref.telegram_id)
+        asyncio.create_task(
+            notify_admins_new_user(
+                sorted(ids),
+                telegram_id=user.telegram_id,
+                username=user.username,
+                first_name=user.first_name,
+                last_name=user.last_name,
+                total_users=total,
+                referrer=referrer,
+            )
+        )
+    except Exception:  # noqa: BLE001 — уведомление не должно ломать вход
+        pass
 
 
 @router.post("/auth/dev", response_model=AuthResponse)

@@ -9,6 +9,7 @@ app/assets/bot_emoji_ids.json. Если Telegram не принял премиу�
 from __future__ import annotations
 
 import hashlib
+import html
 import json
 import logging
 from pathlib import Path
@@ -165,6 +166,43 @@ async def send_welcome(chat_id: int) -> dict[str, Any]:
             if not res.get("ok"):
                 log.warning("welcome(plain) failed: %s", res.get("description"))
         return res
+
+
+async def notify_admins_new_user(
+    chat_ids: list[int],
+    *,
+    telegram_id: int,
+    username: str | None,
+    first_name: str | None,
+    last_name: str | None,
+    total_users: int,
+    referrer: str | None = None,
+) -> None:
+    """Сообщение админам в бота о новом игроке. Ошибки только логируются."""
+    if not chat_ids or not get_settings().bot_token:
+        return
+    name = html.escape(" ".join(p for p in (first_name, last_name) if p) or "—")
+    lines = [
+        "🆕 <b>Новый пользователь</b>",
+        f"Имя: {name}",
+        f"Username: {'@' + html.escape(username) if username else '—'}",
+        f"ID: <code>{telegram_id}</code>",
+    ]
+    if referrer:
+        lines.append(f"Пригласил: {html.escape(referrer)}")
+    lines.append(f"Всего игроков: {total_users}")
+    text = "\n".join(lines)
+    try:
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            for cid in chat_ids:
+                res = await client.post(
+                    f"{_api_url()}/sendMessage",
+                    json={"chat_id": cid, "text": text, "parse_mode": "HTML"},
+                )
+                if not res.json().get("ok"):
+                    log.warning("admin notify to %s failed: %s", cid, res.text[:200])
+    except Exception as exc:  # noqa: BLE001
+        log.warning("admin notify failed: %s", exc)
 
 
 async def _set_menu_button(chat_id: int) -> None:

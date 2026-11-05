@@ -1,9 +1,9 @@
 """Приветствие @SexyDropBot на сервере: баннер + HTML-подпись с премиум-эмодзи нашего пака.
 
 Серверный аналог scripts/bot_welcome.py: бот отвечает на /start (и на любое сообщение) через
-вебхук Telegram, без отдельного локального поллера. Пак эмодзи:
-https://t.me/addemoji/sexydrop_by_sexydropbot, соответствие имя → custom_emoji_id лежит в
-app/assets/bot_emoji_ids.json. Если Telegram не принял премиум-эмодзи, уходит обычная версия.
+вебхук Telegram, без отдельного локального поллера. Анимированные премиум-эмодзи
+из официального набора Telegram (RestrictedEmoji) и TON Emoji; соответствие имя → custom_emoji_id
+лежит в app/assets/bot_emoji_ids.json (чужие эмодзи работают, пока у владельца бота есть Premium). Если Telegram не принял премиум-эмодзи, уходит обычная версия.
 """
 
 from __future__ import annotations
@@ -29,9 +29,9 @@ MENU_BUTTON_TEXT = "🎁 Играть"
 
 # Запасные юникод-эмодзи (показываются, если у клиента нет Premium или id не заданы)
 FALLBACK = {
-    "case": "🎁", "rocket": "🚀", "upgrade": "⬆️", "ton": "💎", "trophy": "🏆",
-    "bolt": "⚡", "nft": "🖼", "friends": "👥", "shield": "🛡", "play": "▶️",
-    "channel": "📣", "support": "🎧", "dot": "🔸", "spark": "✨", "check": "✅",
+    "case": "🎁", "rocket": "🚀", "upgrade": "📈", "ton": "💎", "trophy": "🏆",
+    "bolt": "⚡️", "nft": "🖼", "friends": "👥", "shield": "🔐", "play": "🎮",
+    "channel": "📣", "support": "💬", "dot": "⭐️", "spark": "✨", "check": "✅", "free": "🆓",
 }
 
 _APP_ROOT = Path(__file__).resolve().parents[1]  # backend/app
@@ -86,7 +86,7 @@ def build_caption(premium: bool = True) -> str:
         "</blockquote>\n\n"
         f"{e('bolt')} <b>Авто-выдача</b> — NFT приходят прямо на твой аккаунт\n"
         f"{e('shield')} <b>Прозрачно</b> — баланс, ставки и вывод в TON\n\n"
-        f"{e('nft')} <b>Первый кейс — бесплатно!</b>\n"
+        f"{e('free')} <b>Первый кейс — бесплатно!</b>\n"
         f"{e('play')} Жми «Играть» и забирай свой дроп"
     )
 

@@ -69,8 +69,10 @@
 - Аккаунт выдач («Секси менеджер», авто-выдача подарков) использует ту же айдентику; его аватарка и
   брендовые картинки бота лежат в `public/brand/` (`bot-avatar.png`, `bot-welcome.png`,
   `manager-avatar.png`). Использовать только эти хэндлы в ссылках, текстах и документах.
-- **Премиум-эмодзи бота:** свой пак `t.me/addemoji/sexydrop_by_sexydropbot` (создан ботом; иконки в
-  `public/brand/emoji/`, id в `backend/app/assets/bot_emoji_ids.json`). Приветствие `/start` (баннер +
+- **Премиум-эмодзи бота:** анимированные эмодзи из официального набора Telegram `RestrictedEmoji` и
+  `TONEmoji` (id в `backend/app/assets/bot_emoji_ids.json`; работают, пока у владельца бота есть Premium).
+  Свой статичный пак `t.me/addemoji/sexydrop_by_sexydropbot` (иконки в `public/brand/emoji/`, анимированные
+  версии в `public/brand/emoji/anim/`) остаётся запасным. Приветствие `/start` (баннер +
   подпись + кнопки) отправляет **сервер**: `backend/app/services/telegram_bot.py` через вебхук
   `POST /api/telegram/webhook/{секрет}`; вебхук ставится сам при старте, если заданы `BOT_TOKEN` и
   `PUBLIC_BASE_URL` (адрес сервиса). Локальный `scripts/telegram_bot_poller.py` при включённом вебхуке

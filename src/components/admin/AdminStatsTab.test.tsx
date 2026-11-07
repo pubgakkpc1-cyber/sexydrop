@@ -24,9 +24,10 @@ describe('AdminStatsTab (обзор)', () => {
       })),
     )
     render(<AdminStatsTab />)
-    expect(await screen.findByText('Всего в боте (открывали приложение)')).toBeInTheDocument()
+    expect(await screen.findByText('Всего в боте')).toBeInTheDocument()
     expect(screen.getByText('1240')).toBeInTheDocument()
     expect(screen.getByText('57 / 300')).toBeInTheDocument()
+    expect(screen.getByText('впервые открыли приложение')).toBeInTheDocument()
     expect(screen.getByText('Пополняли баланс').nextSibling).toHaveTextContent('95')
     expect(screen.getByText('Пополнено всего').nextSibling).toHaveTextContent('1830 TON')
     expect(screen.getByText('Ракета')).toBeInTheDocument()

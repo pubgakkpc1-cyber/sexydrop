@@ -68,11 +68,12 @@ const GAME_LABEL: Record<string, string> = { crash: 'Ракета', mines: 'Ми
 
 const METHOD_LABEL: Record<string, string> = { ton: 'TON-кошелёк', crypto: 'CryptoBot', stars: 'Stars', demo: 'Демо' }
 
-function Card({ label, value, tone }: { label: string; value: string; tone?: 'good' | 'bad' }) {
+function Card({ label, value, tone, hint }: { label: string; value: string; tone?: 'good' | 'bad'; hint?: string }) {
   return (
     <div className={styles.statCard}>
       <span className={styles.statLabel}>{label}</span>
       <strong className={`${styles.statValue} ${tone ? styles[tone] : ''}`}>{value}</strong>
+      {hint && <span className={styles.statHint}>{hint}</span>}
     </div>
   )
 }
@@ -120,14 +121,14 @@ export function AdminStatsTab() {
     <div className={styles.tab}>
       <h3 className={styles.h3}>Пользователи</h3>
       <div className={styles.statGrid}>
-        <Card label="Всего в боте (открывали приложение)" value={String(stats.users_total)} />
-        <Card label="Новых за 24 ч / 7 дней" value={`${stats.users_new_24h} / ${stats.users_new_7d ?? 0}`} />
-        <Card label="Заходили за 24 ч" value={String(stats.users_24h)} />
-        <Card label="Заходили за 7 / 30 дней" value={`${stats.users_7d ?? 0} / ${stats.users_30d ?? 0}`} />
-        <Card label="Играли хоть раз" value={String(stats.users_played ?? 0)} />
-        <Card label="Пополняли баланс" value={String(stats.users_paid ?? 0)} />
-        <Card label="Пришли по рефке" value={String(stats.users_referred ?? 0)} />
-        <Card label="С Telegram Premium" value={String(stats.users_premium ?? 0)} />
+        <Card label="Всего в боте" value={String(stats.users_total)} hint="все, кто хоть раз открыл приложение" />
+        <Card label="Новых: сутки / неделя" value={`${stats.users_new_24h} / ${stats.users_new_7d ?? 0}`} hint="впервые открыли приложение" />
+        <Card label="Заходили за сутки" value={String(stats.users_24h)} hint="были в приложении за 24 часа" />
+        <Card label="Заходили: неделя / месяц" value={`${stats.users_7d ?? 0} / ${stats.users_30d ?? 0}`} hint="активные за 7 и 30 дней" />
+        <Card label="Играли хоть раз" value={String(stats.users_played ?? 0)} hint="открыли кейс или сыграли в игру" />
+        <Card label="Пополняли баланс" value={String(stats.users_paid ?? 0)} hint="платящие игроки" />
+        <Card label="Пришли по рефке" value={String(stats.users_referred ?? 0)} hint="по ссылке друга" />
+        <Card label="С Telegram Premium" value={String(stats.users_premium ?? 0)} hint="у кого есть Premium" />
       </div>
 
       <h3 className={styles.h3}>Деньги</h3>
@@ -138,19 +139,20 @@ export function AdminStatsTab() {
         NFT под замком не считаются выданными, пока игрок не пригласит друзей.
       </p>
       <div className={styles.statGrid}>
-        <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} />
-        <Card label="Пополнено за 24 ч" value={ton(stats.deposited_24h ?? 0)} />
-        <Card label="Оборот ставок" value={ton(stats.wagered)} />
+        <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} hint="TON, Stars и CryptoBot вместе" />
+        <Card label="Пополнено за сутки" value={ton(stats.deposited_24h ?? 0)} hint="за последние 24 часа" />
+        <Card label="Оборот ставок" value={ton(stats.wagered)} hint="сколько всего поставили" />
         <Card
           label="Прибыль казино"
           value={`${stats.house_profit >= 0 ? '+' : '−'}${ton(Math.abs(stats.house_profit))}`}
           tone={stats.house_profit >= 0 ? 'good' : 'bad'}
+          hint="поставили минус выиграли"
         />
-        <Card label="Лежит на балансах игроков" value={ton(stats.balances_total ?? 0)} />
-        <Card label="Звёзд у игроков" value={`${stats.stars_total ?? 0} ★`} />
-        <Card label="Выводов ждут" value={String(stats.withdrawals_pending ?? 0)} tone={(stats.withdrawals_pending ?? 0) > 0 ? 'bad' : undefined} />
-        <Card label="Подарков выдано" value={String(stats.withdrawals_done ?? 0)} />
-        <Card label="NFT под замком (не выданы)" value={`${stats.locked_gifts ?? 0} · ${ton(stats.locked_value ?? 0)}`} />
+        <Card label="Лежит у игроков" value={ton(stats.balances_total ?? 0)} hint="TON на балансах сейчас" />
+        <Card label="Звёзд у игроков" value={`${stats.stars_total ?? 0} ★`} hint="можно обменять на TON" />
+        <Card label="Выводов ждут" value={String(stats.withdrawals_pending ?? 0)} tone={(stats.withdrawals_pending ?? 0) > 0 ? 'bad' : undefined} hint="раздел «Выводы»" />
+        <Card label="Подарков выдано" value={String(stats.withdrawals_done ?? 0)} hint="отмечены «Выдал»" />
+        <Card label="NFT под замком" value={`${stats.locked_gifts ?? 0} · ${ton(stats.locked_value ?? 0)}`} hint="ждут 5 друзей, ещё не выданы" />
       </div>
 
       <h3 className={styles.h3}>Активность за 14 дней</h3>

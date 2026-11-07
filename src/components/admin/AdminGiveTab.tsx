@@ -77,11 +77,6 @@ export function AdminGiveTab() {
 
   return (
     <div className={styles.body}>
-        <div className={styles.adminBadge}>
-          <span className={styles.adminIcon}>👑</span>
-          <span>Администратор: @zapixxgarant</span>
-        </div>
-
         <Input
           label="Юзернейм получателя"
           placeholder="@username"
@@ -113,6 +108,13 @@ export function AdminGiveTab() {
             </button>
           ))}
         </div>
+
+        {username.trim().replace(/^@/, '') && Number(amount.replace(',', '.')) > 0 && (
+          <div className={styles.statusMessage}>
+            Будет начислено <b>{amount.replace(',', '.')} TON</b> игроку <b>@{username.trim().replace(/^@/, '')}</b>.
+            Проверьте ник — отменить начисление нельзя.
+          </div>
+        )}
 
         {status && (
           <div className={`${styles.statusMessage} ${styles[status.type]}`}>

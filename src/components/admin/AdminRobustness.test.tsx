@@ -42,7 +42,7 @@ describe('админка не падает в серый экран', () => {
     vi.stubGlobal('fetch', vi.fn(async () => ({ ok: true, json: async () => ({ users_total: 3, house_profit: -100, wagered: 0 }) })))
     const { AdminStatsTab } = await import('./AdminStatsTab')
     render(<AdminStatsTab />)
-    expect(await screen.findByText('Всего в боте (открывали приложение)')).toBeInTheDocument()
+    expect(await screen.findByText('Всего в боте')).toBeInTheDocument()
   })
 
   it('если раздел всё же упал — видно ошибку и есть «Назад»', async () => {

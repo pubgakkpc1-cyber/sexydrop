@@ -208,3 +208,9 @@
   font-size: 13.5px;
   line-height: 1.45;
 }
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

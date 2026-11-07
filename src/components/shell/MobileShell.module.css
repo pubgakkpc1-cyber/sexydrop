@@ -190,7 +190,9 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-width: 440px;
+  max-width: var(--shell-max, 440px);
+  /* фиксированные слои внутри (звёзды и летающие NFT Ракеты, листы) привязаны к колонке, а не к окну */
+  contain: layout;
   height: 100vh;
   height: 100dvh;
   margin: 0 auto;
@@ -245,4 +247,12 @@
 .mainCustomHeader {
   /* панель игры (GameTopBar) сама учитывает вырез/кнопки Telegram и липнет к верху */
   padding-top: 0;
+}
+
+/* Вид для ПК (Telegram Desktop, широкое окно): шире поля и больше колонок в сетках */
+@media (min-width: 900px) {
+  .shellContainer .main {
+    padding-left: var(--space-6);
+    padding-right: var(--space-6);
+  }
 }

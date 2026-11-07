@@ -493,3 +493,9 @@
 @media (prefers-reduced-motion: reduce) {
   .qBtnReady { animation: none; }
 }
+
+@media (min-width: 900px) {
+  .rewardsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}

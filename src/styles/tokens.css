@@ -4,6 +4,8 @@
  */
 
 :root {
+  /* ширина колонки приложения: на телефоне 440px, на ПК шире (см. MobileShell) */
+  --shell-max: 440px;
   /* --- Типографика (зафиксирована, см. AI_RULES.md) --- */
   --font-display: 'Unbounded', 'Golos Text', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-body: 'Golos Text', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -111,4 +113,10 @@
   --safe-bottom: max(env(safe-area-inset-bottom, 0px), var(--tg-bottom));
   --safe-left: env(safe-area-inset-left, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
+}
+
+@media (min-width: 900px) {
+  :root {
+    --shell-max: 980px;
+  }
 }

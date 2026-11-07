@@ -2739,3 +2739,9 @@
   border: 1px dashed rgba(255, 255, 255, 0.12);
   border-radius: 16px;
 }
+
+/* Звёзды — по размеру колонки приложения, а не окна */
+.screenStarfield {
+  width: 100%;
+  height: 100%;
+}

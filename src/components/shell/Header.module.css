@@ -356,3 +356,14 @@ button.balanceCol:active {
     font-size: 13px;
   }
 }
+
+/* У админа в шапке ещё и кнопка админки: на узких экранах — только корона */
+@media (max-width: 400px) {
+  .adminLabel {
+    display: none;
+  }
+
+  .adminBadgeBtn {
+    padding: 0 9px;
+  }
+}

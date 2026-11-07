@@ -79,7 +79,7 @@ export function Header() {
             onClick={() => setAdminOpen(true)}
             aria-label="Панель администратора"
           >
-            👑 Админка
+            👑<span className={styles.adminLabel}> Админка</span>
           </button>
         )}
         <GraphicsMenu align="right" />

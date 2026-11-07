@@ -94,4 +94,6 @@ async def admin_stats(
     name = str(user.get("username") or "").lower().lstrip("@")
     if name not in ADMIN_USERNAMES:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещён")
-    return await stats_service.snapshot(session)
+    from app.services import admin_players
+
+    return {**await stats_service.snapshot(session), **await admin_players.overview_extra(session)}

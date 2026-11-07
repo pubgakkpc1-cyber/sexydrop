@@ -12,7 +12,7 @@ from app.api.odds import ADMIN_USERNAMES
 from app.core.config import get_settings
 from app.core.security import validate_telegram_init_data
 from app.services import broadcast_service as svc
-from app.services import stats_service
+from app.services import admin_players, stats_service
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
@@ -79,23 +79,27 @@ async def broadcast_send(
 async def players(
     session: Annotated[AsyncSession, Depends(get_session)],
     x_telegram_init_data: Annotated[str | None, Header()] = None,
-    limit: int = 50,
-) -> list[dict[str, Any]]:
-    """Последние активные игроки (имя, оборот, результат) для списка в админке."""
+    q: str = "",
+    sort: str = "last",
+    limit: int = 100,
+) -> dict[str, Any]:
+    """Игроки для админки: поиск по имени/@/ID, сортировка (last, new, wagered, deposited, balance)."""
     _admin(x_telegram_init_data)
-    rows = sorted((await stats_service.users_snapshot(session)).items(), key=lambda kv: kv[1].get("last", 0), reverse=True)
-    return [
-        {
-            "id": k,
-            "name": v.get("name"),
-            "first": v.get("first"),
-            "last": v.get("last"),
-            "wagered": v.get("wagered", 0),
-            "delta": v.get("delta", 0),
-            "events": v.get("events", 0),
-        }
-        for k, v in rows[: min(max(limit, 1), 200)]
-    ]
+    return await admin_players.players_list(session, q[:64], sort, limit)
+
+
+@router.get("/players/{telegram_id}")
+async def player_card(
+    telegram_id: int,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Карточка игрока: профиль, деньги, игры, кейсы, подарки, друзья, история операций."""
+    _admin(x_telegram_init_data)
+    detail = await admin_players.player_detail(session, telegram_id)
+    if detail is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Игрок не найден")
+    return detail
 
 
 class ResetBody(BaseModel):

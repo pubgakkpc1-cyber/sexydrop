@@ -50,7 +50,10 @@ async def test_endpoints_admin_only(client: AsyncClient, monkeypatch):
     info = (await client.get("/api/admin/broadcast", headers=headers)).json()
     assert {a["id"]: a["count"] for a in info["audiences"]}["all"] >= 1
     players = (await client.get("/api/admin/players", headers=headers)).json()
-    assert players and all(p["id"].isdigit() for p in players)
+    assert players["total"] >= 1 and all(p["id"].isdigit() for p in players["rows"])
+    card = (await client.get(f"/api/admin/players/{players['rows'][0]['id']}", headers=headers)).json()
+    assert {"profile", "money", "games", "cases", "items", "history"} <= set(card)
+    assert (await client.get("/api/admin/players/999999999999", headers=headers)).status_code == 404
     monkeypatch.setenv("BOT_TOKEN", "123:abc")
     get_settings.cache_clear()
     bad = await client.post("/api/admin/broadcast", json={"text": "hi", "audience": "zzz"}, headers=headers)

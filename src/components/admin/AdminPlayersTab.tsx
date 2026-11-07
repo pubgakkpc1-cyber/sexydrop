@@ -1,76 +1,124 @@
 import { useEffect, useState } from 'react'
 import { adminFetch } from '../../lib/adminApi'
-import { formatMinor } from '../../lib/money'
+import { cx } from '../../lib/cx'
+import { PlayerAvatar } from './AdminAvatar'
+import { AdminPlayerCard } from './AdminPlayerCard'
+import { ago, signedTon, ton } from './adminFormat'
 import styles from './AdminPanel.module.css'
 
-interface Player {
+export interface PlayerRow {
   id: string
-  name: string | null
+  name: string
+  username: string | null
+  photo: string | null
   first: number
   last: number
+  balance: number
+  deposited: number
   wagered: number
   delta: number
-  events: number
+  rounds: number
 }
 
-function ago(ts: number): string {
-  const s = Math.max(0, Math.floor(Date.now() / 1000) - ts)
-  if (s < 90) return 'сейчас'
-  if (s < 3600) return `${Math.floor(s / 60)} мин назад`
-  if (s < 86400) return `${Math.floor(s / 3600)} ч назад`
-  return `${Math.floor(s / 86400)} дн назад`
+interface PlayersResponse {
+  total: number
+  rows: PlayerRow[]
 }
 
-/** Игроки, которых видит сервер: кто, когда заходил, сколько поставил и в плюсе или в минусе. */
+const SORTS = [
+  { id: 'last', label: 'Последние' },
+  { id: 'new', label: 'Новые' },
+  { id: 'deposited', label: 'Пополнения' },
+  { id: 'wagered', label: 'Оборот' },
+  { id: 'balance', label: 'Баланс' },
+] as const
+type SortId = (typeof SORTS)[number]['id']
+
+/** Игроки: поиск, сортировка, по нажатию — карточка игрока со всей статистикой. */
 export function AdminPlayersTab() {
-  const [rows, setRows] = useState<Player[] | null>(null)
+  const [data, setData] = useState<PlayersResponse | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [query, setQuery] = useState('')
+  const [sort, setSort] = useState<SortId>('last')
+  const [openId, setOpenId] = useState<string | null>(null)
 
   useEffect(() => {
     let dead = false
-    void adminFetch<Player[]>('/api/admin/players?limit=200').then((r) => {
-      if (dead) return
-      if (r.ok) setRows(r.data)
-      else setError(r.error)
-    })
+    // поиск на сервере, с небольшой задержкой после ввода
+    const t = window.setTimeout(() => {
+      const params = new URLSearchParams({ q: query.trim(), sort, limit: '200' })
+      void adminFetch<PlayersResponse>(`/api/admin/players?${params}`).then((r) => {
+        if (dead) return
+        if (r.ok) {
+          setData(r.data)
+          setError(null)
+        } else setError(r.error)
+      })
+    }, 250)
     return () => {
       dead = true
+      window.clearTimeout(t)
     }
-  }, [])
+  }, [query, sort])
 
-  const q = query.trim().toLowerCase().replace(/^@/, '')
-  const list = (rows ?? []).filter((p) => q === '' || (p.name ?? '').toLowerCase().includes(q) || p.id.includes(q))
+  if (openId) return <AdminPlayerCard telegramId={openId} onBack={() => setOpenId(null)} onOpen={setOpenId} />
 
   return (
     <div className={styles.tab}>
       <input
         className={styles.search}
         type="search"
-        placeholder="Поиск по имени или ID"
+        placeholder="Поиск: имя, @юзернейм или ID"
         aria-label="Поиск игрока"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />
+      <div className={styles.chips} role="group" aria-label="Сортировка">
+        {SORTS.map((s) => (
+          <button
+            key={s.id}
+            type="button"
+            className={cx(styles.chip, sort === s.id && styles.chipOn)}
+            aria-pressed={sort === s.id}
+            onClick={() => setSort(s.id)}
+          >
+            {s.label}
+          </button>
+        ))}
+      </div>
+
       {error && <p className={`${styles.note} ${styles.bad}`}>{error}</p>}
-      {!rows && !error && <p className={styles.muted}>Загрузка…</p>}
-      {rows && <p className={styles.note}>Показаны последние {rows.length} игроков по активности. «Итог» — выигрыш игрока минус его траты (минус = в плюсе казна).</p>}
-      {list.map((p) => (
-        <div key={p.id} className={styles.sysRow}>
-          <span>
-            <strong>{p.name ? `@${p.name.replace(/^@/, '')}` : `ID ${p.id}`}</strong>
-            <br />
-            <span className={styles.muted}>
-              {ago(p.last)} · оборот {formatMinor(p.wagered)}
+      {!data && !error && <p className={styles.muted}>Загрузка…</p>}
+      {data && (
+        <p className={styles.note}>
+          Найдено игроков: <b>{data.total}</b>
+          {data.total > data.rows.length ? ` (показаны первые ${data.rows.length})` : ''}. Нажмите на игрока,
+          чтобы открыть всю его статистику.
+        </p>
+      )}
+
+      {data?.rows.map((p) => (
+        <button key={p.id} type="button" className={styles.playerRow} onClick={() => setOpenId(p.id)}>
+          <PlayerAvatar name={p.name} photo={p.photo} />
+          <span className={styles.pMain}>
+            <span className={styles.pName}>{p.name}</span>
+            <span className={styles.pSub}>
+              {p.username ? `@${p.username} · ` : ''}
+              {ago(p.last)}
+            </span>
+            <span className={styles.pSub}>
+              пополнил {ton(p.deposited)} · оборот {ton(p.wagered)}
             </span>
           </span>
-          <span className={p.delta >= 0 ? styles.good : styles.bad}>
-            {p.delta >= 0 ? '+' : '−'}
-            {formatMinor(Math.abs(p.delta))}
+          <span className={styles.pRight}>
+            <span className={styles.pBalance}>{ton(p.balance)}</span>
+            <span className={cx(styles.pSub, p.delta > 0 ? styles.good : p.delta < 0 ? styles.bad : undefined)}>
+              {p.rounds > 0 ? signedTon(p.delta) : 'не играл'}
+            </span>
           </span>
-        </div>
+        </button>
       ))}
-      {rows && list.length === 0 && <p className={styles.muted}>Никого не найдено</p>}
+      {data && data.rows.length === 0 && <p className={styles.muted}>Никого не найдено</p>}
     </div>
   )
 }

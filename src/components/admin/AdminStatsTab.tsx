@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getWebApp } from '../../lib/telegram'
 import { formatMinor } from '../../lib/money'
+import { signedTon } from './adminFormat'
 import styles from './AdminPanel.module.css'
 
 interface GameRow {
@@ -46,7 +47,22 @@ interface Stats {
   deposits: DepositRow[]
   series: SeriesRow[]
   top: TopRow[]
+  users_7d: number
+  users_30d: number
+  users_new_7d: number
+  users_premium: number
+  users_played: number
+  users_paid: number
+  users_referred: number
+  deposited_total: number
+  deposited_24h: number
+  balances_total: number
+  stars_total: number
+  withdrawals_pending: number
+  withdrawals_done: number
 }
+
+const GAME_LABEL: Record<string, string> = { crash: 'Ракета', mines: 'Мины', upgrade: 'Апгрейд', case: 'Кейсы' }
 
 const METHOD_LABEL: Record<string, string> = { ton: 'TON-кошелёк', crypto: 'CryptoBot', stars: 'Stars', demo: 'Демо' }
 
@@ -101,16 +117,32 @@ export function AdminStatsTab() {
 
   return (
     <div className={styles.tab}>
+      <h3 className={styles.h3}>Пользователи</h3>
       <div className={styles.statGrid}>
-        <Card label="Игроков всего" value={String(stats.users_total)} />
-        <Card label="Онлайн за 24 ч" value={String(stats.users_24h)} />
-        <Card label="Новых за 24 ч" value={String(stats.users_new_24h)} />
-        <Card label="Оборот" value={ton(stats.wagered)} />
+        <Card label="Всего в боте (открывали приложение)" value={String(stats.users_total)} />
+        <Card label="Новых за 24 ч / 7 дней" value={`${stats.users_new_24h} / ${stats.users_new_7d ?? 0}`} />
+        <Card label="Заходили за 24 ч" value={String(stats.users_24h)} />
+        <Card label="Заходили за 7 / 30 дней" value={`${stats.users_7d ?? 0} / ${stats.users_30d ?? 0}`} />
+        <Card label="Играли хоть раз" value={String(stats.users_played ?? 0)} />
+        <Card label="Пополняли баланс" value={String(stats.users_paid ?? 0)} />
+        <Card label="Пришли по рефке" value={String(stats.users_referred ?? 0)} />
+        <Card label="С Telegram Premium" value={String(stats.users_premium ?? 0)} />
+      </div>
+
+      <h3 className={styles.h3}>Деньги</h3>
+      <div className={styles.statGrid}>
+        <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} />
+        <Card label="Пополнено за 24 ч" value={ton(stats.deposited_24h ?? 0)} />
+        <Card label="Оборот ставок" value={ton(stats.wagered)} />
         <Card
           label="Прибыль казино"
           value={`${stats.house_profit >= 0 ? '+' : '−'}${ton(Math.abs(stats.house_profit))}`}
           tone={stats.house_profit >= 0 ? 'good' : 'bad'}
         />
+        <Card label="Лежит на балансах игроков" value={ton(stats.balances_total ?? 0)} />
+        <Card label="Звёзд у игроков" value={`${stats.stars_total ?? 0} ★`} />
+        <Card label="Выводов ждут" value={String(stats.withdrawals_pending ?? 0)} tone={(stats.withdrawals_pending ?? 0) > 0 ? 'bad' : undefined} />
+        <Card label="Подарков выдано" value={String(stats.withdrawals_done ?? 0)} />
       </div>
 
       <h3 className={styles.h3}>Активность за 14 дней</h3>
@@ -131,7 +163,7 @@ export function AdminStatsTab() {
             <th>Игра</th>
             <th>Раунды</th>
             <th>Оборот</th>
-            <th>Игроки +</th>
+            <th>Итог игроков</th>
           </tr>
         </thead>
         <tbody>
@@ -142,10 +174,10 @@ export function AdminStatsTab() {
           )}
           {stats.games.map((g) => (
             <tr key={g.game}>
-              <td>{g.game}</td>
+              <td>{GAME_LABEL[g.game] ?? g.game}</td>
               <td>{g.rounds}</td>
               <td>{formatMinor(g.wagered)}</td>
-              <td className={g.delta >= 0 ? styles.bad : styles.good}>{formatMinor(g.delta)}</td>
+              <td className={g.delta >= 0 ? styles.bad : styles.good}>{signedTon(g.delta)}</td>
             </tr>
           ))}
         </tbody>
@@ -222,15 +254,15 @@ export function AdminStatsTab() {
             <tr key={u.id}>
               <td>{u.name ? `@${u.name}` : u.id}</td>
               <td>{formatMinor(u.wagered)}</td>
-              <td className={u.delta >= 0 ? styles.good : styles.bad}>{formatMinor(u.delta)}</td>
+              <td className={u.delta >= 0 ? styles.good : styles.bad}>{signedTon(u.delta)}</td>
             </tr>
           ))}
         </tbody>
       </table>
 
       <p className={styles.note}>
-        Статистика копится с {since} и сбрасывается при перезапуске сервера, если нет постоянного
-        тома. «Игроки +» — чистый выигрыш игроков (минус — выигрывает казино).
+        Данные из базы с {since}. «Итог игроков» — сколько игроки выиграли минус поставили: минус
+        значит, что в плюсе казино. Подробности по каждому игроку — в разделе «Игроки».
       </p>
       <button type="button" className={styles.refresh} onClick={() => setTick((t) => t + 1)}>
         Обновить

@@ -8,6 +8,7 @@ import { AdminPlayersTab } from './AdminPlayersTab'
 import { AdminStatsTab } from './AdminStatsTab'
 import { AdminSystemTab } from './AdminSystemTab'
 import { AdminWithdrawalsTab } from './AdminWithdrawalsTab'
+import { ton } from './adminFormat'
 import styles from './AdminConsole.module.css'
 
 type SectionId = 'stats' | 'players' | 'chances' | 'broadcast' | 'give' | 'withdrawals' | 'system'
@@ -28,7 +29,7 @@ const icon = (d: string) => (
 
 const SECTIONS: readonly Section[] = [
   { id: 'stats', title: 'Обзор', hint: 'Игроки, оборот, прибыль казны, игры и кейсы', icon: icon('M4 20V10M10 20V4M16 20v-7M22 20H2'), view: () => <AdminStatsTab /> },
-  { id: 'players', title: 'Игроки', hint: 'Кто заходил, кто сколько поставил и в плюсе ли', icon: icon('M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0ZM4 21c0-4 3.6-6 8-6s8 2 8 6'), view: () => <AdminPlayersTab /> },
+  { id: 'players', title: 'Игроки', hint: 'Каждый игрок: пополнения, ставки, выигрыши, подарки, друзья', icon: icon('M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0ZM4 21c0-4 3.6-6 8-6s8 2 8 6'), view: () => <AdminPlayersTab /> },
   { id: 'chances', title: 'Шансы кейсов', hint: 'Впишите шанс приза, смотрите RTP и прибыль', icon: icon('M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4'), view: () => <AdminChancesTab /> },
   { id: 'broadcast', title: 'Рассылка', hint: 'Сообщение от бота всем или части игроков', icon: icon('M3 11l18-8-8 18-2-8-8-2Z'), view: () => <AdminBroadcastTab /> },
   { id: 'give', title: 'Выдача TON', hint: 'Начислить TON игроку по юзернейму', icon: icon('M12 3v18M17 7H9.5a2.5 2.5 0 0 0 0 5h5a2.5 2.5 0 0 1 0 5H7'), view: () => <AdminGiveTab /> },
@@ -39,6 +40,8 @@ const SECTIONS: readonly Section[] = [
 interface QuickStats {
   users_total: number
   users_24h: number
+  users_new_24h: number
+  deposited_total?: number
 }
 
 interface AdminPanelModalProps {
@@ -97,11 +100,19 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
               <div className={styles.summary}>
                 <div>
                   <span className={styles.sumNum}>{quick.users_total}</span>
-                  <span className={styles.sumLabel}>игроков всего</span>
+                  <span className={styles.sumLabel}>пользователей в боте</span>
                 </div>
                 <div>
                   <span className={styles.sumNum}>{quick.users_24h}</span>
-                  <span className={styles.sumLabel}>за 24 часа</span>
+                  <span className={styles.sumLabel}>заходили за 24 ч</span>
+                </div>
+                <div>
+                  <span className={styles.sumNum}>+{quick.users_new_24h}</span>
+                  <span className={styles.sumLabel}>новых за 24 ч</span>
+                </div>
+                <div>
+                  <span className={styles.sumNum}>{ton(quick.deposited_total ?? 0)}</span>
+                  <span className={styles.sumLabel}>пополнено всего</span>
                 </div>
               </div>
             )}

@@ -28,6 +28,14 @@ async function post<T>(path: string, body: Record<string, unknown>): Promise<T |
   }
 }
 
+export type ReferralFriend = MineResponse['friends'][number]
+
+/** Друзья по ссылке с сервера: Premium и открыл ли бесплатный кейс. null — сервер недоступен / вне Telegram. */
+export async function fetchMyFriends(): Promise<ReferralFriend[] | null> {
+  const res = await post<MineResponse>('/api/referrals/mine', {})
+  return res ? res.friends : null
+}
+
 /**
  * Забирает с сервера друзей текущего игрока: за каждого, кто открыл бесплатный кейс, начисляет
  * +2 ★ (один раз), а друзей с Telegram Premium передаёт в задание «5 друзей» бесплатного кейса.

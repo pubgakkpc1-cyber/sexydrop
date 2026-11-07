@@ -58,7 +58,8 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
   it('условия программы и нули в статистике; вне Telegram кнопки недоступны', () => {
     render(<InviteScreen />)
     expect(screen.getByRole('heading', { name: /2 ★ за каждого друга/ })).toBeInTheDocument()
-    expect(screen.getByText('как только он откроет бесплатный кейс')).toBeInTheDocument()
+    expect(screen.getByText('как только он прокрутит бесплатный кейс')).toBeInTheDocument()
+    expect(screen.getByRole('region', { name: 'Как заработать' })).toHaveTextContent(/Крути FREE-кейсы/)
     expect(screen.getByText('Заработано звёзд')).toBeInTheDocument()
     expect(screen.getByText('Мои рефералы')).toBeInTheDocument()
     expect(screen.getByText('Пока нет приглашений')).toBeInTheDocument()
@@ -70,7 +71,8 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
   it('правила видны сразу: друг должен открыть бесплатный кейс, награда +2 ★ мгновенно', () => {
     render(<InviteScreen />)
     const rules = screen.getByRole('region', { name: 'Правила' })
-    expect(rules).toHaveTextContent(/открывает бесплатный кейс/)
+    expect(rules).toHaveTextContent(/обязательно прокручивает бесплатный кейс/)
+    expect(rules).toHaveTextContent(/звёзды не начисляются/)
     expect(rules).toHaveTextContent(/мгновенно получаете \+2 ★/)
     expect(rules).toHaveTextContent(/один раз/)
   })
@@ -89,6 +91,10 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
     render(<InviteScreen />)
 
     await user.click(screen.getByRole('button', { name: /Скопировать ссылку/ }))
+    // сначала предупреждение во весь экран, ссылка ещё не скопирована
+    expect(screen.getByRole('alertdialog', { name: 'Важно перед приглашением' })).toBeInTheDocument()
+    expect(writeText).not.toHaveBeenCalled()
+    await user.click(screen.getByRole('button', { name: 'Понятно, скопировать ссылку' }))
     expect(writeText).toHaveBeenCalledWith(
       `https://t.me/${REFERRAL_BOT_USERNAME}?startapp=ref-77`,
     )
@@ -101,9 +107,24 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
     render(<InviteScreen />)
 
     await user.click(screen.getByRole('button', { name: /Пригласить друзей/ }))
+    const warn = screen.getByRole('alertdialog', { name: 'Важно перед приглашением' })
+    expect(warn).toHaveTextContent(/только когда друг прокрутит бесплатный кейс/)
+    expect(openTelegramLink).not.toHaveBeenCalled()
+    await user.click(screen.getByRole('button', { name: 'Понятно, пригласить' }))
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
     expect(openTelegramLink).toHaveBeenCalledTimes(1)
     const url = String(openTelegramLink.mock.calls[0]?.[0])
     expect(url.startsWith('https://t.me/share/url?url=')).toBe(true)
     expect(decodeURIComponent(url)).toContain(`https://t.me/${REFERRAL_BOT_USERNAME}?startapp=ref-5`)
+  })
+
+  it('«Отмена» закрывает предупреждение, ничего не отправляя', async () => {
+    const openTelegramLink = vi.fn()
+    setTelegramUser({ id: 6, first_name: 'C' }, { platform: 'ios', openTelegramLink })
+    render(<InviteScreen />)
+    await user.click(screen.getByRole('button', { name: /Пригласить друзей/ }))
+    await user.click(screen.getByRole('button', { name: 'Отмена' }))
+    expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument()
+    expect(openTelegramLink).not.toHaveBeenCalled()
   })
 })

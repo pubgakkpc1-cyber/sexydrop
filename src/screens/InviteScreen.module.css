@@ -309,3 +309,155 @@
     white-space: normal;
   }
 }
+
+/* ---------- Промо «Крути, зови, забирай» ---------- */
+.promo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 24px;
+  background: #2a1d1e;
+  border: 1px solid rgba(200, 106, 111, 0.35);
+}
+
+.promoTitle {
+  font-size: 20px;
+  line-height: 1.2;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.promoSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.promoStep {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.promoNum {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #c86a6f;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.promoText {
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.promoText b {
+  color: #ffffff;
+}
+
+.promoNote {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #d8979a;
+}
+
+.waiting {
+  margin: 4px 6px 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(200, 106, 111, 0.12);
+  font-size: 14px;
+  line-height: 1.4;
+  color: #e3b1b3;
+}
+
+.refSummary {
+  margin: 0;
+  padding: 6px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Предупреждение во весь экран перед приглашением ---------- */
+.warnOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(16px + var(--safe-top, 0px)) 16px calc(16px + var(--safe-bottom, 0px));
+  background: #121111;
+  overflow-y: auto;
+}
+
+.warnBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+.warnIcon {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #b83a3f;
+  font-family: var(--font-display);
+  font-size: 40px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.warnTitle {
+  font-size: 22px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.warnText {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.warnText b {
+  color: #ffffff;
+}
+
+.warnList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 14px 16px 14px 34px;
+  border-radius: 18px;
+  background: #222020;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: left;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.75);
+}

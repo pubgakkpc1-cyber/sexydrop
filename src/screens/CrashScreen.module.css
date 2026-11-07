@@ -2745,3 +2745,27 @@
   width: 100%;
   height: 100%;
 }
+
+/* Плитка выигрыша/NFT крупнее, картинка подарка заполняет её целиком */
+.playerNftBox {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+}
+
+.playerNftBox .playerNftImg {
+  padding: 0;
+  object-fit: cover;
+}
+
+.playerNftBox .playerNftImg[src$='.svg'] {
+  padding: 8px;
+  object-fit: contain;
+}
+
+@media (max-width: 380px) {
+  .playerNftBox {
+    width: 54px;
+    height: 54px;
+  }
+}

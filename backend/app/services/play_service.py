@@ -161,6 +161,11 @@ async def _active_quest_item(session: AsyncSession, user_id: uuid.UUID, meta: Us
 
 async def friends_joined(session: AsyncSession, user_id: uuid.UUID, since_ms: int) -> int:
     """Друзья с Telegram Premium, пришедшие по ссылке после `since_ms` и открывшие бесплатный кейс."""
+    return len(await friends_joined_rows(session, user_id, since_ms))
+
+
+async def friends_joined_rows(session: AsyncSession, user_id: uuid.UUID, since_ms: int) -> list[Any]:
+    """Те же друзья списком (id, telegram_id, имя) — для проверки, что они в чате SEXY DROP."""
     from datetime import datetime, timezone
 
     from sqlalchemy import exists, func
@@ -169,7 +174,7 @@ async def friends_joined(session: AsyncSession, user_id: uuid.UUID, since_ms: in
 
     since = datetime.fromtimestamp(since_ms / 1000, tz=timezone.utc)
     stmt = (
-        select(func.count())
+        select(User.id, User.telegram_id, User.first_name, User.username)
         .select_from(User)
         .join(UserMeta, UserMeta.user_id == User.id)
         .where(
@@ -181,7 +186,7 @@ async def friends_joined(session: AsyncSession, user_id: uuid.UUID, since_ms: in
             ),
         )
     )
-    return int((await session.execute(stmt)).scalar_one())
+    return list((await session.execute(stmt)).all())
 
 
 async def has_unlock_deposit(session: AsyncSession, user_id: uuid.UUID) -> bool:
@@ -209,7 +214,11 @@ async def quest_status(session: AsyncSession, user_id: uuid.UUID) -> dict[str, A
         await session.commit()
         return {"pending": None, "joined": 0, "target": QUEST_FRIENDS, "completed": False}
     quest = meta.free_state["quest"]
-    joined = await friends_joined(session, user_id, int(quest["claimed_at"]))
+    rows = await friends_joined_rows(session, user_id, int(quest["claimed_at"]))
+    joined = len(rows)
+    if joined >= QUEST_FRIENDS:
+        # друзей хватает — перед выдачей NFT проверяем, что все они в чате SEXY DROP
+        joined = await _count_in_chat(meta, rows)
     completed = joined >= QUEST_FRIENDS
     pending = {
         "uid": str(item.id),
@@ -251,6 +260,34 @@ async def check_quest_item(session: AsyncSession, user_id: uuid.UUID, item: NftI
         403,
         f"Чтобы {action}, пригласите ещё {left} {_friends_word(left)} — засчитано {joined} из {QUEST_FRIENDS}",
     )
+
+
+async def _count_in_chat(meta: UserMeta, rows: list[Any]) -> int:
+    """Сколько друзей в чате SEXY DROP; не в чате — запись в историю (один раз на друга). Без коммита."""
+    from app.services import ref_chat
+
+    status = await ref_chat.members([int(r.telegram_id) for r in rows])
+    claimed = dict(meta.quests_claimed or {})
+    noted = set(claimed.get("_gift_out", []))
+    count = 0
+    changed = False
+    for r in rows:
+        inside = status.get(int(r.telegram_id))
+        if inside is False:
+            if str(r.id) not in noted:
+                noted.add(str(r.id))
+                name = (r.first_name or "").strip() or (f"@{r.username}" if r.username else "Друг")
+                ref_chat.add_log(claimed, 0, f"{name} не засчитан для NFT — не в чате SEXY DROP")
+                changed = True
+        else:
+            count += 1  # в чате или проверить не удалось — не наказываем
+            if str(r.id) in noted:
+                noted.discard(str(r.id))
+                changed = True
+    if changed:
+        claimed["_gift_out"] = sorted(noted)
+        meta.quests_claimed = claimed
+    return count
 
 
 async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, request_id: str) -> dict[str, Any]:

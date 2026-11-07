@@ -56,6 +56,9 @@ class Settings(BaseSettings):
     sub_public_url: str = "https://t.me/SexyDrop_official"
     sub_private_chat_id: str = "-1005262725960"
     sub_private_url: str = "https://t.me/+YZoeECjxGmszNzZk"
+    # Чат SEXY DROP: друг по рефке засчитывается, только если он в этом чате (бот — админ чата)
+    ref_chat_id: str = "-1004442964935"
+    ref_chat_url: str = "https://t.me/+hQUjqYtgmTA2NmQ0"
     # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
     stats_path: str = "/tmp/sexydrop_stats.json"
     # Реестр приглашений (JSON). Без постоянного тома сбрасывается при деплое.

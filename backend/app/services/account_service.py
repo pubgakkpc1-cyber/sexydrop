@@ -12,7 +12,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import catalog
 from app.models.economy import DepositOrder, NftItem, PlayRound, UserMeta, Withdrawal
 from app.models.user import User
-from app.services import play_service
+from app.core.config import get_settings
+from app.services import play_service, ref_chat
 from app.services.economy_core import (
     GameError,
     balance_minor,
@@ -92,20 +93,60 @@ async def sweep_referral_stars(session: AsyncSession, user_id: uuid.UUID, meta: 
     """
     rows = (
         await session.execute(
-            select(User.id).where(
+            select(User.id, User.first_name, User.username).where(
                 User.referred_by_id == user_id,
                 exists().where(
                     PlayRound.user_id == User.id, PlayRound.game == "case", PlayRound.case_id.in_(("free", "free24"))
                 ),
             )
         )
-    ).scalars()
+    ).all()
     claimed = dict(meta.quests_claimed or {})
     credited = set(claimed.get("_ref", []))
-    fresh = [str(uid) for uid in rows if str(uid) not in credited]
+    fresh = [r for r in rows if str(r.id) not in credited]
     if fresh:
-        claimed["_ref"] = sorted(credited | set(fresh))
+        claimed["_ref"] = sorted(credited | {str(r.id) for r in fresh})
+        # друзья, чьи звёзды лежат в банке — их сервер перепроверяет на участие в чате
+        claimed["_bank_ref"] = sorted(set(claimed.get("_bank_ref", [])) | {str(r.id) for r in fresh})
         claimed["_bank"] = int(claimed.get("_bank", 0) or 0) + REFERRAL_BONUS_STARS * len(fresh)
+        for r in fresh:
+            ref_chat.add_log(claimed, REFERRAL_BONUS_STARS, f"{_friend_name(r.first_name, r.username)} прокрутил бесплатный кейс")
+        meta.quests_claimed = claimed
+
+
+def _friend_name(first_name: str | None, username: str | None) -> str:
+    return (first_name or "").strip() or (f"@{username}" if username else "Друг")
+
+
+async def recheck_bank_friends(session: AsyncSession, meta: UserMeta) -> None:
+    """Перепроверка: друзья, чьи звёзды лежат в банке, должны быть в чате SEXY DROP.
+
+    Нет в чате — минус 2 ★ и запись «почему»; вернулся — звёзды обратно. Коммит — снаружи.
+    """
+    claimed = dict(meta.quests_claimed or {})
+    ids = [uuid.UUID(x) for x in claimed.get("_bank_ref", [])]
+    if not ids:
+        return
+    friends = (await session.execute(select(User.id, User.telegram_id, User.first_name, User.username).where(User.id.in_(ids)))).all()
+    status = await ref_chat.members([int(f.telegram_id) for f in friends])
+    out = set(claimed.get("_bank_out", []))
+    bank = int(claimed.get("_bank", 0) or 0)
+    changed = False
+    for f in friends:
+        key, name, inside = str(f.id), _friend_name(f.first_name, f.username), status.get(int(f.telegram_id))
+        if inside is False and key not in out:
+            out.add(key)
+            bank = max(0, bank - REFERRAL_BONUS_STARS)
+            ref_chat.add_log(claimed, -REFERRAL_BONUS_STARS, f"{name} не в чате SEXY DROP — звёзды за него сняты")
+            changed = True
+        elif inside is True and key in out:
+            out.discard(key)
+            bank += REFERRAL_BONUS_STARS
+            ref_chat.add_log(claimed, REFERRAL_BONUS_STARS, f"{name} вступил в чат SEXY DROP — звёзды вернулись")
+            changed = True
+    if changed:
+        claimed["_bank_out"] = sorted(out)
+        claimed["_bank"] = bank
         meta.quests_claimed = claimed
 
 
@@ -144,7 +185,13 @@ async def get_state(session: AsyncSession, user: User) -> dict[str, Any]:
             and not await play_service.has_unlock_deposit(session, user.id)
         },
         "free_quest": quest,
-        "ref_bank": {"stars": bank_stars(meta), "min": BANK_MIN_CLAIM, "per_friend": REFERRAL_BONUS_STARS},
+        "ref_bank": {
+            "stars": bank_stars(meta),
+            "min": BANK_MIN_CLAIM,
+            "per_friend": REFERRAL_BONUS_STARS,
+            "chat_url": get_settings().ref_chat_url,
+            "history": list((meta.quests_claimed or {}).get(ref_chat.LOG_KEY) or [])[:20],
+        },
         "server_now_ms": play_service.now_ms(),
         "me": {"id": user.telegram_id, "username": user.username, "name": user.first_name},
     }
@@ -246,12 +293,18 @@ async def claim_bank(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any
     await ensure_account(session, user_id)
     meta = (await session.execute(select(UserMeta).where(UserMeta.user_id == user_id).with_for_update())).scalar_one()
     await sweep_referral_stars(session, user_id, meta)
+    # перед выдачей — все друзья из банка должны быть в чате SEXY DROP
+    await recheck_bank_friends(session, meta)
     bank = bank_stars(meta)
     if bank < BANK_MIN_CLAIM:
         await session.commit()  # новые друзья, найденные при проверке, уже в банке
         raise GameError("bank_too_small", 409, f"Забрать можно от {BANK_MIN_CLAIM} ★, в банке {bank} ★")
     claimed = dict(meta.quests_claimed or {})
     claimed["_bank"] = 0
+    # забранные звёзды больше не перепроверяем
+    claimed["_bank_ref"] = []
+    claimed["_bank_out"] = []
+    ref_chat.add_log(claimed, 0, f"Забрали {bank} ★ на баланс звёзд")
     meta.quests_claimed = claimed
     meta.stars = int(meta.stars) + bank
     await session.commit()

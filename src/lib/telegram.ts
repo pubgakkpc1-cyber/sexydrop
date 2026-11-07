@@ -134,6 +134,13 @@ export function shareTelegramLink(link: string, text: string): void {
   else window.open(url, '_blank', 'noopener')
 }
 
+/** Открыть ссылку t.me внутри Telegram (вне Telegram — новая вкладка). */
+export function openTelegramUrl(url: string): void {
+  const webApp = getWebApp()
+  if (webApp?.openTelegramLink) webApp.openTelegramLink(url)
+  else window.open(url, '_blank', 'noopener')
+}
+
 /** Параметр запуска мини-аппа (ссылка t.me/bot?startapp=ref-123) — нужен для реферальной программы. */
 export function getStartParam(): string | undefined {
   return getWebApp()?.initDataUnsafe?.start_param

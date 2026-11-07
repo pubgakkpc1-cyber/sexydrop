@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { getTelegramUser, isTelegramEnv } from '../lib/telegram'
+import { getTelegramUser, isTelegramEnv, openTelegramUrl } from '../lib/telegram'
 import { shareRefGif } from '../lib/refShare'
 import {
   CheckIcon,
@@ -62,6 +62,8 @@ export function InviteScreen() {
   const waiting = invited - friends
   const bank = useRefBankStore((s) => s.stars)
   const bankMin = useRefBankStore((s) => s.min)
+  const chatUrl = useRefBankStore((s) => s.chatUrl)
+  const history = useRefBankStore((s) => s.history)
   const [claiming, setClaiming] = useState(false)
   const [claimNote, setClaimNote] = useState<string | null>(null)
   const canClaim = bank >= bankMin
@@ -163,6 +165,15 @@ export function InviteScreen() {
             ? 'Банк полон — забирайте звёзды и меняйте их на TON.'
             : `Ещё ${left} ★ — это ${friendsLeft} ${friendWord(friendsLeft)}, прокрутивших бесплатный кейс.`}
         </p>
+        <div className={styles.chatRule}>
+          <span className={styles.chatRuleText}>
+            Друг засчитывается, только если он <b>в чате SEXY DROP</b>. При «Забрать» проверяем всех:
+            кого нет в чате — звёзды за него снимаются.
+          </span>
+          <button type="button" className={styles.chatBtn} onClick={() => openTelegramUrl(chatUrl)}>
+            Открыть чат
+          </button>
+        </div>
         <button type="button" className={styles.claimBtn} disabled={!canClaim || claiming} onClick={() => void claim()}>
           {claiming ? 'Забираем…' : canClaim ? `Забрать ${bank} ★` : `Забрать от ${bankMin} ★`}
         </button>
@@ -180,6 +191,20 @@ export function InviteScreen() {
             {waiting} {friendWord(waiting)} ещё не {waiting === 1 ? 'прокрутил' : 'прокрутили'} бесплатный
             кейс. Напомните: звёзды придут в банк сразу после прокрута.
           </p>
+        )}
+        {history.length > 0 && (
+          <div className={styles.history} aria-label="История банка">
+            <span className={styles.historyTitle}>История</span>
+            {history.slice(0, 8).map((h, i) => (
+              <div key={`${h.at}-${i}`} className={styles.historyRow}>
+                <span className={h.d > 0 ? styles.histPlus : h.d < 0 ? styles.histMinus : styles.histZero}>
+                  {h.d > 0 ? `+${h.d} ★` : h.d < 0 ? `−${-h.d} ★` : '•'}
+                </span>
+                <span className={styles.historyText}>{h.t}</span>
+                <span className={styles.historyAt}>{shortAgo(h.at)}</span>
+              </div>
+            ))}
+          </div>
         )}
       </section>
 
@@ -219,7 +244,8 @@ export function InviteScreen() {
           <li className={styles.promoStep}>
             <span className={styles.promoNum}>1</span>
             <span className={styles.promoText}>
-              <b>Кидай ссылку</b> в чаты и сторис. Друг переходит по ней и запускает приложение.
+              <b>Кидай ссылку</b> в чаты и сторис. Друг переходит по ней, запускает приложение и
+              вступает в чат SEXY DROP.
             </span>
           </li>
           <li className={styles.promoStep}>
@@ -251,6 +277,7 @@ export function InviteScreen() {
             <ul className={styles.warnList}>
               <li>Друг переходит именно по вашей ссылке и запускает приложение.</li>
               <li>Сразу открывает бесплатный кейс на главной.</li>
+              <li>Вступает в чат SEXY DROP и не выходит из него — иначе звёзды за него снимут.</li>
               <li>Только после этого в ваш банк приходит +{REFERRAL_BONUS_STARS} ★.</li>
             </ul>
             <p className={styles.warnText}>
@@ -268,6 +295,15 @@ export function InviteScreen() {
       )}
     </div>
   )
+}
+
+/** «сейчас», «12 мин», «3 ч», «2 дн» — для мини-истории (at в миллисекундах). */
+function shortAgo(atMs: number): string {
+  const s = Math.max(0, Math.floor((Date.now() - atMs) / 1000))
+  if (s < 90) return 'сейчас'
+  if (s < 3600) return `${Math.floor(s / 60)} мин`
+  if (s < 86400) return `${Math.floor(s / 3600)} ч`
+  return `${Math.floor(s / 86400)} дн`
 }
 
 /** 1 друг, 2 друга, 5 друзей. */

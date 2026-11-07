@@ -93,8 +93,9 @@ export function LockedGiftSheet({ gift, action, joined, target, expiresAt, onClo
         </div>
 
         <p className={styles.terms}>
-          Засчитывается друг с Telegram Premium, который перешёл по вашей ссылке и открыл бесплатный
-          кейс. Осталось времени: {countdown(expiresAt, now)}.
+          Засчитывается друг с Telegram Premium, который перешёл по вашей ссылке, открыл бесплатный
+          кейс и состоит в чате SEXY DROP (проверяем перед выдачей). Осталось времени:{' '}
+          {countdown(expiresAt, now)}.
         </p>
 
         <div className={styles.actions}>

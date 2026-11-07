@@ -304,6 +304,25 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
     return True
 
 
+async def _delete_service_message(chat_id: Any, message_id: Any) -> bool:
+    """Удаляет сообщение о входе/выходе участника в чате SEXY DROP (бот — админ с правом удаления)."""
+    settings = get_settings()
+    if not isinstance(chat_id, int) or not isinstance(message_id, int) or not settings.bot_token:
+        return False
+    if str(chat_id) != (settings.ref_chat_id or "").strip():
+        return False
+    try:
+        async with httpx.AsyncClient(timeout=10) as client:
+            res = await client.post(f"{_api_url()}/deleteMessage", json={"chat_id": chat_id, "message_id": message_id})
+            ok = bool(res.json().get("ok"))
+    except Exception as exc:  # noqa: BLE001
+        log.warning("deleteMessage failed: %s", exc)
+        return False
+    if not ok:
+        log.warning("deleteMessage refused in chat %s", chat_id)
+    return ok
+
+
 async def handle_update(update: dict[str, Any]) -> bool:
     """Обработка входящего апдейта: на любое личное сообщение (в т.ч. /start) — приветствие."""
     member = update.get("my_chat_member")
@@ -322,6 +341,9 @@ async def handle_update(update: dict[str, Any]) -> bool:
         return True
     chat = message.get("chat") or {}
     if chat.get("type") not in (None, "private"):
+        # в чате SEXY DROP бот убирает служебные «вступил / покинул группу»
+        if message.get("new_chat_members") or message.get("left_chat_member"):
+            return await _delete_service_message(chat.get("id"), message.get("message_id"))
         return False
     chat_id = chat.get("id")
     if not isinstance(chat_id, int):

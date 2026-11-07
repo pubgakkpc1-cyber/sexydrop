@@ -34,7 +34,10 @@ async def test_join_qualify_and_mine(client: AsyncClient, monkeypatch):
     assert mine["friends"][0]["qualified"] is True
     # звёзды за друга копятся в банке (один раз за друга), на баланс звёзд — только от 15 ★
     state = (await client.get("/api/me/state", headers=h(inviter))).json()
-    assert state["ref_bank"] == {"stars": 2, "min": 15, "per_friend": 2} and state["stars"] == 0
+    bank = state["ref_bank"]
+    assert (bank["stars"], bank["min"], bank["per_friend"], state["stars"]) == (2, 15, 2, 0)
+    assert bank["chat_url"].startswith("https://t.me/")
+    assert bank["history"][0]["d"] == 2 and "прокрутил бесплатный кейс" in bank["history"][0]["t"]
     assert (await client.get("/api/me/state", headers=h(inviter))).json()["ref_bank"]["stars"] == 2
     small = await client.post("/api/me/bank/claim", headers=h(inviter))
     assert small.status_code == 409 and "15" in small.json()["detail"]

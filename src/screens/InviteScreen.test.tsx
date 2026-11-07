@@ -80,6 +80,27 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
     expect(rules).toHaveTextContent(/От 15 ★/)
   })
 
+  it('правило чата: кнопка открывает чат SEXY DROP, история показывает плюсы и минусы с причиной', async () => {
+    const openTelegramLink = vi.fn()
+    setTelegramUser({ id: 9, first_name: 'C' }, { platform: 'ios', openTelegramLink })
+    useRefBankStore.setState({
+      stars: 2,
+      min: 15,
+      history: [
+        { at: Date.now() - 60_000, d: -2, t: 'Оля не в чате SEXY DROP — звёзды за него сняты' },
+        { at: Date.now() - 3_600_000, d: 2, t: 'Оля прокрутил бесплатный кейс' },
+      ],
+    })
+    render(<InviteScreen />)
+    expect(screen.getByRole('region', { name: 'Банк звёзд' })).toHaveTextContent(/в чате SEXY DROP/)
+    await user.click(screen.getByRole('button', { name: 'Открыть чат' }))
+    expect(openTelegramLink).toHaveBeenCalledWith('https://t.me/+hQUjqYtgmTA2NmQ0')
+    const history = screen.getByLabelText('История банка')
+    expect(history).toHaveTextContent('−2 ★')
+    expect(history).toHaveTextContent('звёзды за него сняты')
+    expect(history).toHaveTextContent('+2 ★')
+  })
+
   it('банк полон — «Забрать» активна и переносит звёзды на баланс', async () => {
     useRefBankStore.setState({ stars: 18, min: 15 })
     useStarsBalanceStore.setState({ stars: 0 })

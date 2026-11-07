@@ -586,3 +586,106 @@
 .bankStats span {
   white-space: nowrap;
 }
+
+/* ---------- Банк: правило чата и мини-история ---------- */
+.chatRule {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.22);
+}
+
+.chatRuleText {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.chatRuleText b {
+  color: #ffffff;
+}
+
+.chatBtn {
+  flex-shrink: 0;
+  min-height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  background: #2d2b2b;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.history {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.historyTitle {
+  margin-bottom: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.historyRow {
+  display: grid;
+  grid-template-columns: 46px 1fr auto;
+  align-items: baseline;
+  gap: 8px;
+  padding: 5px 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.histPlus,
+.histMinus,
+.histZero {
+  font-family: var(--font-display);
+  font-size: 12.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.histPlus {
+  color: #4fd18b;
+}
+
+.histMinus {
+  color: #ff7b82;
+}
+
+.histZero {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.historyText {
+  min-width: 0;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.historyAt {
+  font-size: 11.5px;
+  color: rgba(255, 255, 255, 0.4);
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .chatRule {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

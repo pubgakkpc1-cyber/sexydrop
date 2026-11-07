@@ -1,7 +1,9 @@
-import { Suspense, lazy, useState } from 'react'
+import { Suspense, useState } from 'react'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { MobileShell } from './components/shell/MobileShell'
 import { SplashScreen } from './components/shell/SplashScreen'
+import { AppErrorBoundary } from './components/shell/AppErrorBoundary'
+import { lazyScreen as lazy } from './lib/chunkReload'
 const DevUiScreen = lazy(() => import('./screens/DevUiScreen'))
 const CaseDetailScreen = lazy(() => import('./screens/CaseDetailScreen').then((m) => ({ default: m.CaseDetailScreen })))
 const CrashScreen = lazy(() => import('./screens/CrashScreen').then((m) => ({ default: m.CrashScreen })))
@@ -30,6 +32,7 @@ function App() {
     <>
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
       <HashRouter>
+        <AppErrorBoundary>
         <Suspense fallback={null}>
         <Routes>
         <Route element={<MobileShell />}>
@@ -56,6 +59,7 @@ function App() {
         </Route>
       </Routes>
         </Suspense>
+        </AppErrorBoundary>
     </HashRouter>
     </>
   )

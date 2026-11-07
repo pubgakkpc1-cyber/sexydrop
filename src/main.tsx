@@ -11,6 +11,12 @@ import { startServerSync } from './lib/serverSync'
 import { normalizeStartRoute } from './lib/startRoute'
 import { startCrashEngine } from './services/demoCrashService'
 import './styles/global.css'
+import { reloadForNewVersion } from './lib/chunkReload'
+
+// Vite не смог подгрузить файл экрана (после деплоя старых файлов уже нет) — за свежей версией
+window.addEventListener('vite:preloadError', (event) => {
+  if (reloadForNewVersion()) event.preventDefault()
+})
 
 // Прогрев шрифтов: текст на канвасе ракеты рисуется до первого DOM-использования
 void document.fonts?.load('800 12px Unbounded')

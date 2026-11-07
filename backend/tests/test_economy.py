@@ -462,11 +462,11 @@ async def test_leaderboard_counts_turnover_without_leaking_ids(client: AsyncClie
     await client.post("/api/play/cases/farm/open", headers=h(player), json={"client_request_id": "lb"})
     board = (await client.get("/api/leaderboard")).json()
     assert board["total"] >= 1
-    assert all(set(r) == {"rank", "name", "points", "me"} for r in board["rows"])
+    assert all(set(r) == {"rank", "name", "avatar", "points", "me"} for r in board["rows"])
     async with get_session_factory()() as session:
         full = await account_service.leaderboard(session, uuid.UUID(player["_user"]["id"]), limit=100_000)
     mine = next(r for r in full["rows"] if r["me"])
-    assert mine["name"] == player["_user"]["username"] and mine["points"] == 650
+    assert mine["name"] == "T" and mine["points"] == 650  # имя, не username
     assert full["me"]["points"] == 650
 
 

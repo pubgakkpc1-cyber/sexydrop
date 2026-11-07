@@ -7,10 +7,23 @@ import { cx } from '../lib/cx'
 import { getWebApp } from '../lib/telegram'
 import styles from './RatingScreen.module.css'
 
-/** «kamronbek» → «ka***ek» */
-export function maskName(name: string): string {
-  if (name.length <= 4) return `${name[0] ?? ''}***`
-  return `${name.slice(0, 2)}***${name.slice(-2)}`
+/** Аватарка игрока из Telegram; если фото нет или не загрузилось — инициалы на градиенте. */
+function PlayerAvatar({ name, src }: { name: string; src?: string | null }) {
+  const [broken, setBroken] = useState(false)
+  if (!src || broken) return <TgAvatar name={name} size={44} className={styles.avatar} />
+  return (
+    <img
+      className={styles.avatar}
+      src={src}
+      alt=""
+      width={44}
+      height={44}
+      loading="lazy"
+      decoding="async"
+      referrerPolicy="no-referrer"
+      onError={() => setBroken(true)}
+    />
+  )
 }
 
 /** 29600000 → «29.6M», 84000 → «84.0K»: максимум один знак после точки. */
@@ -24,12 +37,12 @@ interface Row {
   key: string
   me: boolean
   name: string
-  avatar?: string
+  avatar?: string | null
   points: number
 }
 
 interface BoardResponse {
-  rows: Array<{ rank: number; name: string; points: number; me: boolean }>
+  rows: Array<{ rank: number; name: string; avatar?: string | null; points: number; me: boolean }>
   me: { rank: number; points: number } | null
   total: number
 }
@@ -57,11 +70,11 @@ export function RatingScreen() {
   const [infoOpen, setInfoOpen] = useState(false)
   const myPoints = Math.floor(wageredMinor / 10) // 1 TON оборота = 100 очков
 
-  // Таблица: боты + вы (если есть реальные раунды), по убыванию очков
+  // Топ-20 с сервера: имя из Telegram (не @username) и аватарка
   const rows = useMemo<Row[]>(() => {
     // Реальные игроки с сервера; если он не ответил, показываем только себя
     if (board && board.rows.length > 0) {
-      return board.rows.map((r) => ({ key: `r${r.rank}`, me: r.me, name: r.name, points: r.points }))
+      return board.rows.map((r) => ({ key: `r${r.rank}`, me: r.me, name: r.name, avatar: r.avatar, points: r.points }))
     }
     return noData ? [] : [{ key: 'me', me: true, name: 'Вы', points: myPoints }]
   }, [board, noData, myPoints])
@@ -102,7 +115,7 @@ export function RatingScreen() {
       <div className={styles.listHead}>
         <span className={styles.listTitle}>
           <TrophyIcon className={styles.listTitleIcon} aria-hidden />
-          Топ игроков
+          Топ-20 игроков
         </span>
         <span className={styles.colLabel}>Очки</span>
       </div>
@@ -133,14 +146,12 @@ export function RatingScreen() {
               >
                 {idx + 1}
               </span>
-              {row.me ? (
+              {row.me && !row.avatar ? (
                 <UserAvatar size={44} className={styles.avatar} />
               ) : (
-                <TgAvatar name={row.name} size={44} className={styles.avatar} />
+                <PlayerAvatar name={row.name} src={row.avatar} />
               )}
-              <span className={styles.name}>
-                {row.me ? 'Вы' : maskName(row.name)}
-              </span>
+              <span className={styles.name}>{row.name}</span>
               <span className={styles.points}>{formatPoints(row.points)}</span>
             </li>
           )

@@ -245,22 +245,36 @@ async def exchange_stars(session: AsyncSession, user_id: uuid.UUID, stars: int) 
 
 # ----------------------------------------------------------------- рейтинг
 
-async def leaderboard(session: AsyncSession, my_id: uuid.UUID | None, limit: int = 50) -> dict[str, Any]:
-    """Рейтинг по обороту (1 TON оборота = 100 очков). Чужие id не отдаются."""
-    total_bet = func.sum(PlayRound.bet_minor).label("bet")
+LEADERBOARD_TOP = 20
+
+
+def _display_name(first_name: str | None, last_name: str | None) -> str:
+    """Имя из Telegram («Иван Петров»), без @username."""
+    name = " ".join(p.strip() for p in (first_name, last_name) if p and p.strip())
+    return name[:40] or "Игрок"
+
+
+def _safe_photo(url: str | None) -> str | None:
+    """Аватарка из initData (t.me/i/userpic/...): отдаём только https-ссылки."""
+    return url if url and url.startswith("https://") and len(url) <= 512 else None
+
+
+async def leaderboard(session: AsyncSession, my_id: uuid.UUID | None, limit: int = LEADERBOARD_TOP) -> dict[str, Any]:
+    """Рейтинг всех игроков по обороту (1 TON оборота = 100 очков): имя и аватарка, без username и id."""
+    total_bet = func.coalesce(func.sum(PlayRound.bet_minor), 0).label("bet")
     rows = (
         await session.execute(
-            select(User.id, User.username, User.first_name, total_bet)
-            .join(PlayRound, PlayRound.user_id == User.id)
+            select(User.id, User.first_name, User.last_name, User.photo_url, total_bet)
+            .outerjoin(PlayRound, PlayRound.user_id == User.id)
             .group_by(User.id)
-            .having(func.sum(PlayRound.bet_minor) > 0)
-            .order_by(total_bet.desc())
+            .order_by(total_bet.desc(), User.created_at)
         )
     ).all()
     ranked = [
         {
             "rank": i + 1,
-            "name": r.username or r.first_name or "Игрок",
+            "name": _display_name(r.first_name, r.last_name),
+            "avatar": _safe_photo(r.photo_url),
             "points": int(r.bet) // 10,
             "me": my_id is not None and r.id == my_id,
         }

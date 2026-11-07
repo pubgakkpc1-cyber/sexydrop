@@ -1,7 +1,7 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { RatingScreen, formatPoints, maskName } from './RatingScreen'
+import { RatingScreen, formatPoints } from './RatingScreen'
 import { useProfileStore } from '../store/profile'
 import { useQuestsStore } from '../store/quests'
 import { useGamesHistoryStore } from '../store/gamesHistory'
@@ -20,7 +20,7 @@ describe('RatingScreen (матовый рейтинг по референсу)',
     expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
     expect(screen.queryByText('Заканчивается через')).not.toBeInTheDocument()
     expect(screen.queryByRole('timer')).not.toBeInTheDocument()
-    expect(screen.getByText('Топ игроков')).toBeInTheDocument()
+    expect(screen.getByText('Топ-20 игроков')).toBeInTheDocument()
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
     expect(within(list).queryAllByRole('listitem')).toHaveLength(0)
     expect(screen.getByText(/Пока в рейтинге никого нет/)).toBeInTheDocument()
@@ -45,12 +45,35 @@ describe('RatingScreen (матовый рейтинг по референсу)',
   })
 })
 
-describe('форматтеры рейтинга', () => {
-  it('maskName скрывает середину ника', () => {
-    expect(maskName('kamronbek')).toBe('ka***ek')
-    expect(maskName('abc')).toBe('a***')
-  })
+describe('RatingScreen: топ-20 с сервера', () => {
+  afterEach(() => vi.unstubAllGlobals())
 
+  it('показывает имена из Telegram и аватарки, без @username', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async () => ({
+        ok: true,
+        json: async () => ({
+          rows: [
+            { rank: 1, name: 'Иван Петров', avatar: 'https://t.me/i/userpic/320/ivan.svg', points: 5000, me: false },
+            { rank: 2, name: 'Маша', avatar: null, points: 0, me: false },
+          ],
+          me: null,
+          total: 2,
+        }),
+      })),
+    )
+    render(<RatingScreen />)
+    const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
+    expect(await within(list).findByText('Иван Петров')).toBeInTheDocument()
+    expect(within(list).getByText('Маша')).toBeInTheDocument()
+    expect(list.querySelector('img')).toHaveAttribute('src', 'https://t.me/i/userpic/320/ivan.svg')
+    expect(within(list).getByText('М')).toBeInTheDocument() // без фото — инициалы
+    expect(within(list).queryByText(/@/)).not.toBeInTheDocument()
+  })
+})
+
+describe('форматтеры рейтинга', () => {
   it('formatPoints — максимум один знак после точки, вниз', () => {
     expect(formatPoints(29_650_000)).toBe('29.6M')
     expect(formatPoints(84_000)).toBe('84.0K')

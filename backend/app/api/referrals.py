@@ -55,6 +55,24 @@ async def qualify(payload: InitRequest) -> dict[str, bool]:
     return {"qualified": True}
 
 
+class ShareRequest(InitRequest):
+    kind: str = Field(min_length=1, max_length=16)
+
+
+@router.post("/share")
+async def share(payload: ShareRequest) -> dict[str, Any]:
+    """Готовит сообщение «гифка + подпись со ссылкой» для WebApp.shareMessage (своё для каждого места)."""
+    from app.services import ref_share
+
+    tg = _user(payload.init_data)
+    if payload.kind not in ref_share.KINDS:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестная гифка")
+    prepared = await ref_share.prepare_share(int(tg["id"]), payload.kind)
+    if not prepared:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail="Не удалось подготовить сообщение")
+    return {"id": prepared}
+
+
 @router.post("/mine")
 async def mine(payload: InitRequest, session: Session) -> dict[str, Any]:
     """Друзья текущего игрока: для каждого — Premium и открыл ли он бесплатный кейс."""

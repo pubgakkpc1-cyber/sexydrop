@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { Gift } from '../../data/catalog'
-import { getTelegramUser, hapticImpact, shareTelegramLink } from '../../lib/telegram'
+import { getTelegramUser, hapticImpact } from '../../lib/telegram'
+import { shareRefGif } from '../../lib/refShare'
 import { syncReferrals } from '../../lib/referralSync'
 import { BottomSheet, Button } from '../ui'
 import { LockIcon, UsersIcon } from '../shell/icons'
@@ -58,7 +59,8 @@ export function LockedGiftSheet({ gift, action, joined, target, expiresAt, onClo
   const invite = () => {
     hapticImpact('light')
     if (refLink === null) return
-    shareTelegramLink(refLink, 'Залетай в SEXY DROP — кейсы, ракета и призы!')
+    // гифка «рулетка NFT» с текстовой ссылкой; на старом Telegram — обычная ссылка
+    void shareRefGif('roulette', refLink, 'Залетай в SEXY DROP — первый кейс с NFT бесплатно!')
   }
 
   return (

@@ -12,6 +12,7 @@ from app.api import api_router
 from app.core.config import get_settings
 from app.core.db import dispose_engine
 from app.services.economy_core import GameError
+from app.services.ref_share import send_previews_to_admins_once
 from app.services.telegram_bot import register_webhook
 
 
@@ -21,6 +22,8 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
     if settings.app_env != "test":
         # Бот отвечает на /start через вебхук (если задан PUBLIC_BASE_URL и BOT_TOKEN)
         asyncio.create_task(register_webhook())
+        # новые реферальные гифки — админу в бота, один раз на версию
+        asyncio.create_task(send_previews_to_admins_once())
     try:
         yield
     finally:

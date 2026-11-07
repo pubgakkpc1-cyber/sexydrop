@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { getTelegramUser, isTelegramEnv, shareTelegramLink } from '../lib/telegram'
+import { getTelegramUser, isTelegramEnv } from '../lib/telegram'
+import { shareRefGif } from '../lib/refShare'
 import {
   CheckIcon,
   CopyIcon,
@@ -82,7 +83,8 @@ export function InviteScreen() {
 
   const share = () => {
     if (link === null) return
-    shareTelegramLink(link, SHARE_TEXT)
+    // гифка «бесплатные NFT-кейсы» с текстовой ссылкой; на старом Telegram — обычная ссылка
+    void shareRefGif('invite', link, SHARE_TEXT)
   }
 
   /** Перед приглашением — предупреждение во весь экран: звёзды только за друга, который прокрутил FREE-кейс. */

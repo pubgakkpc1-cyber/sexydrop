@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react'
 import { giftById } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
-import { getTelegramUser, hapticNotify, hapticImpact, shareTelegramLink } from '../../lib/telegram'
+import { getTelegramUser, hapticNotify, hapticImpact } from '../../lib/telegram'
+import { shareRefGif } from '../../lib/refShare'
 import { syncReferrals } from '../../lib/referralSync'
 import { useInventoryStore } from '../../store/inventory'
 import { sellItemApi } from '../../services/gameApi'
@@ -60,7 +61,8 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
     hapticImpact('light')
     if (refLink === null) return
     navigator.clipboard?.writeText(refLink)
-    shareTelegramLink(refLink, 'Залетай в SEXY DROP — кейсы, ракета и призы!')
+    // гифка «открой NFT» с текстовой ссылкой; на старом Telegram — обычная ссылка
+    void shareRefGif('unlock', refLink, 'Помоги открыть NFT-подарок: зайди по ссылке и прокрути бесплатный кейс!')
     setCopied(true)
     setTimeout(() => setCopied(false), 2500)
   }

@@ -288,6 +288,22 @@ async def _record_payment(payment: dict[str, Any]) -> None:
         log.warning("stars payment credit failed: %s", exc)
 
 
+async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
+    """Команды админа в личке бота. /gifs — прислать все реферальные гифки."""
+    text = str(message.get("text") or "").strip()
+    command = text.split()[0].split("@")[0].lower() if text.startswith("/") else ""
+    if command != "/gifs":
+        return False
+    from app.api.odds import ADMIN_USERNAMES
+    from app.services import ref_share
+
+    sender = message.get("from") or {}
+    if str(sender.get("username") or "").lower().lstrip("@") not in ADMIN_USERNAMES:
+        return False  # не админ — обычное приветствие
+    await ref_share.send_previews(chat_id, int(sender.get("id") or chat_id))
+    return True
+
+
 async def handle_update(update: dict[str, Any]) -> bool:
     """Обработка входящего апдейта: на любое личное сообщение (в т.ч. /start) — приветствие."""
     member = update.get("my_chat_member")
@@ -310,6 +326,8 @@ async def handle_update(update: dict[str, Any]) -> bool:
     chat_id = chat.get("id")
     if not isinstance(chat_id, int):
         return False
+    if await _admin_command(message, chat_id):
+        return True
     await _set_menu_button(chat_id)
     await send_welcome(chat_id)
     return True

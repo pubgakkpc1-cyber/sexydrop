@@ -33,6 +33,17 @@ interface PlayerDetail {
   items: {
     counts: Array<{ status: string; count: number }>
     list: Array<{ name: string; gift_id: string; price: number; status: string; source: string; at: number }>
+    /** NFT из FREE, который игрок ещё не получил: задание «5 друзей». */
+    locked: Array<{
+      name: string
+      price: number
+      at: number
+      expired: boolean
+      joined: number
+      target: number
+      left: number
+      expires_at: number | null
+    }>
   }
   withdrawals: Array<{ name: string; status: string; at: number; done_at: number | null }>
   deposits: Array<{ method: string; amount: number; at: number }>
@@ -69,7 +80,7 @@ function normalize(raw: Partial<PlayerDetail> | null | undefined): PlayerDetail 
     },
     games: r.games ?? [],
     cases: r.cases ?? [],
-    items: { counts: r.items?.counts ?? [], list: r.items?.list ?? [] },
+    items: { counts: r.items?.counts ?? [], list: r.items?.list ?? [], locked: r.items?.locked ?? [] },
     withdrawals: r.withdrawals ?? [],
     deposits: r.deposits ?? [],
     history: r.history ?? [],
@@ -242,6 +253,37 @@ function Body({ d, onOpen }: { d: PlayerDetail; onOpen: (id: string) => void }) 
               ))}
             </tbody>
           </table>
+        </>
+      )}
+
+      {d.items.locked.length > 0 && (
+        <>
+          <h3 className={styles.h3}>Под замком (ещё не получил)</h3>
+          {d.items.locked.map((l, i) => (
+            <div key={i} className={styles.lockCard}>
+              <div className={styles.lockHead}>
+                <span className={styles.pName}>🔒 {l.name}</span>
+                <span className={styles.pSub}>{ton(l.price)}</span>
+              </div>
+              {l.expired ? (
+                <span className={cx(styles.pSub, styles.bad)}>Срок задания истёк — подарок не выдан</span>
+              ) : (
+                <>
+                  <span className={styles.lockLeft}>
+                    {l.left === 0 ? 'Задание выполнено — выдаётся' : `Осталось пригласить: ${l.left} из ${l.target}`}
+                  </span>
+                  <div className={styles.lockBar} role="progressbar" aria-valuemin={0} aria-valuemax={l.target} aria-valuenow={l.joined}>
+                    <span className={styles.lockFill} style={{ width: `${Math.min(100, (l.joined / Math.max(1, l.target)) * 100)}%` }} />
+                  </div>
+                  <span className={styles.pSub}>
+                    Засчитано друзей с Premium: {l.joined} / {l.target}
+                    {l.expires_at ? ` · до ${dateTime(l.expires_at)}` : ''}
+                  </span>
+                </>
+              )}
+            </div>
+          ))}
+          <p className={styles.note}>Пока замок не снят, подарок не входит в выигрыш игрока и в прибыль.</p>
         </>
       )}
 

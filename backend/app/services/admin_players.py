@@ -45,6 +45,10 @@ ITEM_STATUS_LABEL = {
 }
 
 
+# NFT из FREE, который игрок ещё не получил: задание «5 друзей» не выполнено (или срок истёк)
+LOCKED_STATUSES = ("quest_pending", "expired")
+
+
 def _ts(dt: datetime | None) -> int | None:
     return int(dt.timestamp()) if dt else None
 
@@ -89,11 +93,18 @@ async def players_list(session: AsyncSession, q: str = "", sort: str = "last", l
         .group_by(DepositOrder.user_id)
         .subquery()
     )
+    locked = (
+        select(NftItem.user_id.label("uid"), func.coalesce(func.sum(NftItem.price_minor), 0).label("val"))
+        .where(NftItem.source == "free-case", NftItem.status.in_(LOCKED_STATUSES))
+        .group_by(NftItem.user_id)
+        .subquery()
+    )
     stmt = (
-        select(User, rounds.c.wagered, rounds.c.paid, rounds.c.rounds, deps.c.dep, Account.balance)
+        select(User, rounds.c.wagered, rounds.c.paid, rounds.c.rounds, deps.c.dep, Account.balance, locked.c.val)
         .outerjoin(rounds, rounds.c.uid == User.id)
         .outerjoin(deps, deps.c.uid == User.id)
         .outerjoin(Account, Account.user_id == User.id)
+        .outerjoin(locked, locked.c.uid == User.id)
     )
     text = q.strip().lstrip("@").lower()
     if text:
@@ -128,10 +139,10 @@ async def players_list(session: AsyncSession, q: str = "", sort: str = "last", l
                 "balance": gram_to_minor(bal) if bal is not None else 0,
                 "deposited": int(dep or 0),
                 "wagered": int(w or 0),
-                "delta": int(p or 0) - int(w or 0),
+                "delta": int(p or 0) - int(lv or 0) - int(w or 0),
                 "rounds": int(n or 0),
             }
-            for u, w, p, n, dep, bal in rows
+            for u, w, p, n, dep, bal, lv in rows
         ],
     }
 
@@ -203,9 +214,13 @@ async def player_detail(session: AsyncSession, telegram_id: int) -> dict[str, An
     items = (
         await session.execute(select(NftItem).where(NftItem.user_id == uid).order_by(NftItem.created_at.desc()).limit(100))
     ).scalars().all()
+    received = [it for it in items if it.status not in LOCKED_STATUSES]
+    locked_items = [it for it in items if it.status in LOCKED_STATUSES]
+    locked_value = sum(int(it.price_minor) for it in locked_items)
     item_counts: dict[str, int] = {}
-    for it in items:
+    for it in received:
         item_counts[it.status] = item_counts.get(it.status, 0) + 1
+    locked_out = await _locked_progress(session, uid, meta, locked_items)
     withdrawals = (
         await session.execute(select(Withdrawal).where(Withdrawal.user_id == uid).order_by(Withdrawal.created_at.desc()).limit(20))
     ).scalars()
@@ -231,6 +246,14 @@ async def player_detail(session: AsyncSession, telegram_id: int) -> dict[str, An
         )
     ).scalars()
 
+    # выигрыш игрока — без NFT под замком (он его ещё не получил)
+    for g in games:
+        if g["game"] == GAME_LABEL["case"]:
+            g["paid"] = max(0, g["paid"] - locked_value)
+            g["net"] = g["paid"] - g["wagered"]
+    for c in cases:
+        if c["case"] == _case_name("free"):
+            c["prize"] = max(0, c["prize"] - locked_value)
     wagered = sum(g["wagered"] for g in games)
     paid = sum(g["paid"] for g in games)
     deposited = sum(d["amount"] for d in deposits_by)
@@ -277,8 +300,9 @@ async def player_detail(session: AsyncSession, telegram_id: int) -> dict[str, An
                     "source": it.source,
                     "at": _ts(it.created_at),
                 }
-                for it in items[:40]
+                for it in received[:40]
             ],
+            "locked": locked_out,
         },
         "withdrawals": [
             {"name": _gift_name(w.gift_id), "status": w.status, "at": _ts(w.created_at), "done_at": _ts(w.done_at)}
@@ -300,6 +324,37 @@ async def player_detail(session: AsyncSession, telegram_id: int) -> dict[str, An
             for t in txs
         ],
     }
+
+
+async def _locked_progress(
+    session: AsyncSession, uid: Any, meta: UserMeta | None, locked_items: list[NftItem]
+) -> list[dict[str, Any]]:
+    """NFT под замком: сколько друзей уже засчитано и сколько осталось пригласить."""
+    from app.services import play_service
+
+    quest = ((meta.free_state or {}) if meta else {}).get("quest") or {}
+    out: list[dict[str, Any]] = []
+    for it in locked_items:
+        active = it.status == "quest_pending" and str(quest.get("item_id")) == str(it.id)
+        joined = 0
+        if active:
+            joined = min(
+                await play_service.friends_joined(session, uid, int(quest.get("claimed_at", 0))),
+                play_service.QUEST_FRIENDS,
+            )
+        out.append(
+            {
+                "name": _gift_name(it.gift_id),
+                "price": int(it.price_minor),
+                "at": _ts(it.created_at),
+                "expired": it.status == "expired" or not active,
+                "joined": joined,
+                "target": play_service.QUEST_FRIENDS,
+                "left": max(0, play_service.QUEST_FRIENDS - joined),
+                "expires_at": int(quest.get("expires_at", 0)) // 1000 if active else None,
+            }
+        )
+    return out
 
 
 # ------------------------------------------------------------------ сводка

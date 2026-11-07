@@ -46,6 +46,7 @@ vi.mock('../../lib/adminApi', () => ({
           items: {
             counts: [{ status: 'В инвентаре', count: 1 }],
             list: [{ name: 'Plush Pepe', gift_id: 'plush_pepe-1', price: 500, status: 'В инвентаре', source: 'case', at: 1_700_000_100 }],
+            locked: [{ name: 'Mood Pack', price: 800, at: 1_700_000_200, expired: false, joined: 2, target: 5, left: 3, expires_at: 1_700_259_400 }],
           },
           withdrawals: [],
           deposits: [{ method: 'CryptoBot', amount: 10_000, at: 1_700_000_050 }],
@@ -72,7 +73,11 @@ describe('AdminPlayersTab', () => {
     expect(screen.getByText(/CryptoBot — 2 шт/)).toBeInTheDocument()
     expect(screen.getByText('Plush Pepe')).toBeInTheDocument()
     expect(screen.getByText('Пополнение CryptoBot')).toBeInTheDocument()
-    expect(screen.getByText(/Premium/)).toBeInTheDocument()
+    expect(screen.getByText(/ID 777 · Premium/)).toBeInTheDocument()
+    // NFT под замком: сколько друзей осталось пригласить
+    expect(screen.getByText('🔒 Mood Pack')).toBeInTheDocument()
+    expect(screen.getByText('Осталось пригласить: 3 из 5')).toBeInTheDocument()
+    expect(screen.getByText(/Засчитано друзей с Premium: 2 \/ 5/)).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: /Ко всем игрокам/ }))
     expect(await screen.findByRole('button', { name: /Иван Петров/ })).toBeInTheDocument()

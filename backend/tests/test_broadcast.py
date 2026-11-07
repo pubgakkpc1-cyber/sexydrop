@@ -54,6 +54,11 @@ async def test_endpoints_admin_only(client: AsyncClient, monkeypatch):
     card = (await client.get(f"/api/admin/players/{players['rows'][0]['id']}", headers=headers)).json()
     assert {"profile", "money", "games", "cases", "items", "history"} <= set(card)
     assert (await client.get("/api/admin/players/999999999999", headers=headers)).status_code == 404
+    # сброс прибыли: без слова СБРОС — отказ, со словом — прибыль считается с этой минуты
+    assert (await client.post("/api/admin/reset-profit", json={"confirm": "да"}, headers=headers)).status_code == 400
+    reset = (await client.post("/api/admin/reset-profit", json={"confirm": "СБРОС"}, headers=headers)).json()
+    stats = (await client.get("/api/admin/stats", headers=headers)).json()
+    assert stats["profit_since"] == reset["profit_since"] and stats["house_profit"] == 0
     monkeypatch.setenv("BOT_TOKEN", "123:abc")
     get_settings.cache_clear()
     bad = await client.post("/api/admin/broadcast", json={"text": "hi", "audience": "zzz"}, headers=headers)

@@ -59,6 +59,9 @@ interface Stats {
   stars_total: number
   withdrawals_pending: number
   withdrawals_done: number
+  profit_since?: number | null
+  locked_gifts?: number
+  locked_value?: number
 }
 
 const GAME_LABEL: Record<string, string> = { crash: 'Ракета', mines: 'Мины', upgrade: 'Апгрейд', case: 'Кейсы' }
@@ -128,6 +131,12 @@ export function AdminStatsTab() {
       </div>
 
       <h3 className={styles.h3}>Деньги</h3>
+      <p className={styles.note}>
+        {stats.profit_since
+          ? `Прибыль, игры и кейсы считаются с ${new Date(stats.profit_since * 1000).toLocaleString('ru-RU')} (сброс в «Системе»).`
+          : 'Прибыль, игры и кейсы — за всё время.'}{' '}
+        NFT под замком не считаются выданными, пока игрок не пригласит друзей.
+      </p>
       <div className={styles.statGrid}>
         <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} />
         <Card label="Пополнено за 24 ч" value={ton(stats.deposited_24h ?? 0)} />
@@ -141,6 +150,7 @@ export function AdminStatsTab() {
         <Card label="Звёзд у игроков" value={`${stats.stars_total ?? 0} ★`} />
         <Card label="Выводов ждут" value={String(stats.withdrawals_pending ?? 0)} tone={(stats.withdrawals_pending ?? 0) > 0 ? 'bad' : undefined} />
         <Card label="Подарков выдано" value={String(stats.withdrawals_done ?? 0)} />
+        <Card label="NFT под замком (не выданы)" value={`${stats.locked_gifts ?? 0} · ${ton(stats.locked_value ?? 0)}`} />
       </div>
 
       <h3 className={styles.h3}>Активность за 14 дней</h3>

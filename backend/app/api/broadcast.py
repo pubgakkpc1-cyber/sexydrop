@@ -119,3 +119,19 @@ async def reset_balances(
     from app.services import account_service
 
     return await account_service.reset_balances(session, set(ADMIN_USERNAMES))
+
+
+@router.post("/reset-profit")
+async def reset_profit(
+    body: ResetBody,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Обнулить прибыль в админке: игры, кейсы и прибыль казино считаются с этого момента. Фраза «СБРОС»."""
+    _admin(x_telegram_init_data)
+    if body.confirm.strip().upper() != "СБРОС":
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Нужно подтверждение: СБРОС")
+    from app.services.app_settings import reset_profit_now
+
+    at = await reset_profit_now(session)
+    return {"ok": True, "profit_since": int(at.timestamp())}

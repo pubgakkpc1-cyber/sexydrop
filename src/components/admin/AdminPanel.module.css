@@ -456,3 +456,45 @@
   white-space: pre-wrap;
   word-break: break-word;
 }
+
+/* ---------- Карточка игрока: NFT под замком ---------- */
+.lockCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(184, 58, 63, 0.1);
+  border: 1px solid rgba(184, 58, 63, 0.35);
+}
+
+.lockHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.lockLeft {
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffb3b7;
+}
+
+.lockBar {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.lockFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #c86a6f;
+}
+
+.lockCard .pSub {
+  white-space: normal;
+}

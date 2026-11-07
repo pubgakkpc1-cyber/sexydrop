@@ -9,11 +9,13 @@ from sqlalchemy import case as sql_case
 from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.models.economy import DepositOrder, PlayRound
+from app.models.economy import DepositOrder, NftItem, PlayRound
 from app.models.user import User
 
 _FINISHED = PlayRound.status != "active"
 _METHOD = {"cryptobot": "crypto", "ton": "ton", "stars": "stars"}
+# подарки из FREE, которые игрок ещё не получил (задание «5 друзей» не выполнено или истекло)
+LOCKED_STATUSES = ("quest_pending", "expired")
 
 
 async def users_snapshot(session: AsyncSession) -> dict[str, dict[str, Any]]:
@@ -50,8 +52,13 @@ async def users_snapshot(session: AsyncSession) -> dict[str, dict[str, Any]]:
 
 async def snapshot(session: AsyncSession) -> dict[str, Any]:
     """Сводка для админки: итоги, таблицы по играм/кейсам/пополнениям, динамика за 14 дней."""
+    from app.services.app_settings import get_profit_reset_at
+
     now = datetime.now(timezone.utc)
     day_ago = now - timedelta(days=1)
+    # прибыль, игры и кейсы — с момента сброса в админке (пользователи и пополнения — за всё время)
+    reset_at = await get_profit_reset_at(session)
+    since_reset = [PlayRound.created_at >= reset_at] if reset_at else []
 
     users_total = (await session.execute(select(func.count()).select_from(User))).scalar_one()
     users_24h = (
@@ -70,7 +77,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
                 func.coalesce(func.sum(PlayRound.payout_minor), 0),
                 func.coalesce(func.sum(sql_case((PlayRound.payout_minor > PlayRound.bet_minor, 1), else_=0)), 0),
             )
-            .where(_FINISHED, PlayRound.game != "case")
+            .where(_FINISHED, PlayRound.game != "case", *since_reset)
             .group_by(PlayRound.game)
             .order_by(PlayRound.game)
         )
@@ -87,12 +94,22 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
                 func.coalesce(func.sum(PlayRound.bet_minor), 0),
                 func.coalesce(func.sum(PlayRound.payout_minor), 0),
             )
-            .where(PlayRound.game == "case", PlayRound.case_id.is_not(None))
+            .where(PlayRound.game == "case", PlayRound.case_id.is_not(None), *since_reset)
             .group_by(PlayRound.case_id)
             .order_by(func.count().desc())
         )
     ).all()
     cases = [{"case": c, "opens": int(n), "spent": int(s), "prize": int(p)} for c, n, s, p in case_rows]
+    # NFT из FREE под замком ещё не выдан: не считаем его ни выигрышем игрока, ни расходом казны
+    locked_stmt = select(func.coalesce(func.sum(NftItem.price_minor), 0), func.count()).where(
+        NftItem.source == "free-case", NftItem.status.in_(LOCKED_STATUSES)
+    )
+    if reset_at:
+        locked_stmt = locked_stmt.where(NftItem.created_at >= reset_at)
+    locked_value, locked_count = (await session.execute(locked_stmt)).one()
+    for c in cases:
+        if c["case"] == "free":
+            c["prize"] = max(0, c["prize"] - int(locked_value))
 
     deposit_rows = (
         await session.execute(
@@ -149,6 +166,9 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
     first_round = (await session.execute(select(func.min(PlayRound.created_at)))).scalar_one()
     return {
         "since": int((first_round or now).timestamp()),
+        "profit_since": int(reset_at.timestamp()) if reset_at else None,
+        "locked_gifts": int(locked_count),
+        "locked_value": int(locked_value),
         "users_total": int(users_total),
         "users_24h": int(users_24h),
         "users_new_24h": int(users_new_24h),

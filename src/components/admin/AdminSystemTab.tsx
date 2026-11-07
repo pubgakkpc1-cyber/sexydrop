@@ -69,6 +69,7 @@ export function AdminSystemTab() {
         <Row key={id} label={title} ok value={id} />
       ))}
 
+      <ResetProfit />
       <ResetBalances />
     </div>
   )
@@ -115,6 +116,54 @@ function ResetBalances() {
       <div className={styles.actions}>
         <button type="button" className={`${styles.refresh} ${styles.danger}`} disabled={!ready || busy} onClick={() => void run()}>
           {busy ? 'Обнуляем…' : 'Обнулить балансы всем, кроме админа'}
+        </button>
+      </div>
+      {result && <p className={styles.note}>{result}</p>}
+    </>
+  )
+}
+
+/** Обнулить прибыль в админке: игры, кейсы и прибыль казино считаются заново с этого момента. */
+function ResetProfit() {
+  const [confirm, setConfirm] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [result, setResult] = useState<string | null>(null)
+  const ready = confirm.trim().toUpperCase() === 'СБРОС'
+
+  const run = async () => {
+    if (!ready || busy) return
+    setBusy(true)
+    setResult(null)
+    const r = await adminFetch<{ profit_since: number }>('/api/admin/reset-profit', {
+      method: 'POST',
+      body: { confirm: confirm.trim() },
+    })
+    setBusy(false)
+    if (r.ok) {
+      setResult(`Готово: прибыль считается с ${new Date(r.data.profit_since * 1000).toLocaleString('ru-RU')}`)
+      setConfirm('')
+    } else {
+      setResult(r.error)
+    }
+  }
+
+  return (
+    <>
+      <h3 className={styles.h3}>Сбросить прибыль к нулю</h3>
+      <p className={styles.note}>
+        «Обзор» начнёт считать прибыль казино, игры и кейсы заново с этой минуты. Деньги игроков,
+        балансы и история не меняются. Чтобы включить кнопку, введите слово СБРОС.
+      </p>
+      <input
+        className={styles.search}
+        aria-label="Подтверждение сброса прибыли"
+        placeholder="СБРОС"
+        value={confirm}
+        onChange={(e) => setConfirm(e.target.value)}
+      />
+      <div className={styles.actions}>
+        <button type="button" className={`${styles.refresh} ${styles.danger}`} disabled={!ready || busy} onClick={() => void run()}>
+          {busy ? 'Сбрасываем…' : 'Сбросить прибыль'}
         </button>
       </div>
       {result && <p className={styles.note}>{result}</p>}

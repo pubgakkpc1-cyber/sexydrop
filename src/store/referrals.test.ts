@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { parseReferrerId, setReferralTransport, REFERRAL_BONUS_STARS, type ReferralEvent } from '../lib/referral'
 import { useReferralsStore, referralStarsEarned } from './referrals'
+import { useRefBankStore } from './refBank'
 import { useStarsBalanceStore } from './starsBalance'
 
 beforeEach(() => {
@@ -41,11 +42,18 @@ describe('рефералы: +2 ★ за друга, открывшего бес�
     expect(useReferralsStore.getState().outbox).toHaveLength(0)
   })
 
-  it('пригласивший получает +2 ★ мгновенно и ровно один раз за друга', () => {
+  it('за друга +2 ★ падают в банк ровно один раз; на баланс звёзд — только «Забрать» от 15 ★', () => {
+    useRefBankStore.setState({ stars: 0, min: 15 })
     expect(useReferralsStore.getState().creditFriend('777')).toBe(true)
     expect(useReferralsStore.getState().creditFriend('777')).toBe(false)
     expect(useReferralsStore.getState().creditFriend('888')).toBe(true)
-    expect(useStarsBalanceStore.getState().stars).toBe(REFERRAL_BONUS_STARS * 2)
+    expect(useRefBankStore.getState().stars).toBe(REFERRAL_BONUS_STARS * 2)
+    expect(useStarsBalanceStore.getState().stars).toBe(0)
+    expect(useRefBankStore.getState().claimLocal()).toBe('too_small')
+    useRefBankStore.setState({ stars: 16 })
+    expect(useRefBankStore.getState().claimLocal()).toBe('ok')
+    expect(useStarsBalanceStore.getState().stars).toBe(16)
+    expect(useRefBankStore.getState().stars).toBe(0)
     expect(referralStarsEarned(useReferralsStore.getState().credited)).toBe(4)
   })
 })

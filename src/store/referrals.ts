@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { safeJsonStorage } from '../lib/persistStorage'
 import { REFERRAL_BONUS_STARS, sendReferralEvent, type ReferralEvent } from '../lib/referral'
-import { useStarsBalanceStore } from './starsBalance'
+import { useRefBankStore } from './refBank'
 
 interface ReferralsState {
   /** Кто пригласил этого пользователя (Telegram ID из start_param), если пришёл по ссылке. */
@@ -51,7 +51,8 @@ export const useReferralsStore = create<ReferralsState>()(
         set((s) => ({
           credited: { ...s.credited, [friendId]: { at: Date.now(), stars: REFERRAL_BONUS_STARS } },
         }))
-        useStarsBalanceStore.getState().add(REFERRAL_BONUS_STARS)
+        // звёзды за друга — в банк, на баланс звёзд по кнопке «Забрать» (от 15 ★)
+        useRefBankStore.getState().deposit(REFERRAL_BONUS_STARS)
         return true
       },
 

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { giftById, type CaseDefinition } from '../../data/catalog'
-import { pickWeighted } from '../../lib/caseMath'
+import { buildCaseStrip } from '../../lib/caseStrip'
 import { hapticImpact, hapticNotify } from '../../lib/telegram'
 import { playRouletteTick, playWinChime } from '../../lib/sound'
 import styles from './CaseRoulette.module.css'
@@ -21,11 +21,7 @@ interface CaseRouletteProps {
 }
 
 function generateInitialStrip(caseDefinition: CaseDefinition): string[] {
-  const list: string[] = []
-  for (let i = 0; i < 20; i += 1) {
-    list.push(pickWeighted(caseDefinition.entries).itemId)
-  }
-  return list
+  return buildCaseStrip(caseDefinition, 20)
 }
 
 /**
@@ -102,14 +98,8 @@ export function CaseRoulette({
     setWinningIndex(null)
 
     // Формируем новую ленту с целевым подарком на TARGET_INDEX
-    const newStrip: string[] = []
-    for (let i = 0; i < STRIP_LENGTH; i += 1) {
-      if (i === TARGET_INDEX) {
-        newStrip.push(targetGiftId)
-      } else {
-        newStrip.push(pickWeighted(caseDefinition.entries).itemId)
-      }
-    }
+    // лента — все подарки кейса вперемешку, без повторов подряд; выигрыш решён заранее
+    const newStrip = buildCaseStrip(caseDefinition, STRIP_LENGTH, { index: TARGET_INDEX, giftId: targetGiftId })
     setStrip(newStrip)
 
     const vpWidth = viewportRef.current?.clientWidth ?? 360

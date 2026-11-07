@@ -10,7 +10,10 @@ import {
   UsersIcon,
 } from '../components/shell/icons'
 import { REFERRAL_BONUS_STARS } from '../lib/referral'
-import { referralStarsEarned, useReferralsStore } from '../store/referrals'
+import { useReferralsStore } from '../store/referrals'
+import { useRefBankStore } from '../store/refBank'
+import { claimBankApi } from '../services/gameApi'
+import { hapticNotify } from '../lib/telegram'
 import { fetchMyFriends, type ReferralFriend } from '../lib/referralSync'
 import styles from './InviteScreen.module.css'
 
@@ -57,7 +60,33 @@ export function InviteScreen() {
   const invited = serverFriends ? serverFriends.length : Object.keys(credited).length
   const friends = serverFriends ? serverFriends.filter((f) => f.qualified).length : Object.keys(credited).length
   const waiting = invited - friends
-  const starsEarned = serverFriends ? friends * REFERRAL_BONUS_STARS : referralStarsEarned(credited)
+  const bank = useRefBankStore((s) => s.stars)
+  const bankMin = useRefBankStore((s) => s.min)
+  const [claiming, setClaiming] = useState(false)
+  const [claimNote, setClaimNote] = useState<string | null>(null)
+  const canClaim = bank >= bankMin
+  const left = Math.max(0, bankMin - bank)
+  const friendsLeft = Math.ceil(left / REFERRAL_BONUS_STARS)
+
+  const claim = async () => {
+    if (!canClaim || claiming) return
+    setClaiming(true)
+    setClaimNote(null)
+    try {
+      const amount = bank
+      const res = await claimBankApi()
+      if (res === 'ok') {
+        hapticNotify('success')
+        setClaimNote(`+${amount} ★ на баланс звёзд`)
+      } else {
+        setClaimNote(`Забрать можно от ${bankMin} ★`)
+      }
+    } catch {
+      setClaimNote('Не получилось, попробуйте ещё раз')
+    } finally {
+      setClaiming(false)
+    }
+  }
 
   const code = useMemo(() => {
     if (tgUser?.id === undefined) return null
@@ -109,46 +138,49 @@ export function InviteScreen() {
         </div>
       </section>
 
-      <section className={styles.promo} aria-label="Как заработать">
-        <h2 className={styles.promoTitle}>Крути, зови, забирай</h2>
-        <ol className={styles.promoSteps}>
-          <li className={styles.promoStep}>
-            <span className={styles.promoNum}>1</span>
-            <span className={styles.promoText}>
-              <b>Крути FREE-кейсы.</b> Сундук FREE 24 открывается бесплатно каждый день, а разовый
-              FREE даёт NFT-подарок.
-            </span>
-          </li>
-          <li className={styles.promoStep}>
-            <span className={styles.promoNum}>2</span>
-            <span className={styles.promoText}>
-              <b>Зови друзей.</b> Кидай ссылку в чаты и сторис: каждый друг, прокрутивший бесплатный
-              кейс, приносит тебе +{REFERRAL_BONUS_STARS} ★.
-            </span>
-          </li>
-          <li className={styles.promoStep}>
-            <span className={styles.promoNum}>3</span>
-            <span className={styles.promoText}>
-              <b>Забирай заработок.</b> Меняй звёзды на TON, а 5 друзей с Telegram Premium
-              открывают вывод NFT из FREE-кейса.
-            </span>
-          </li>
-        </ol>
-        <p className={styles.promoNote}>Чем больше друзей — тем больше звёзд. Лимита нет.</p>
-      </section>
-
-      <section className={styles.rules} aria-label="Правила">
-        <strong>Правила</strong>
-        <ol className={styles.rulesList}>
-          <li>Отправьте другу свою ссылку — он должен перейти по ней и запустить мини-апп.</li>
-          <li>
-            Друг <b>обязательно прокручивает бесплатный кейс</b> (FREE или FREE 24). Пока он этого не
-            сделал, звёзды не начисляются.
-          </li>
-          <li>Вы <b>мгновенно получаете +{REFERRAL_BONUS_STARS} ★</b> на баланс звёзд.</li>
-          <li>За одного друга награда выдаётся один раз. Пригласить самого себя нельзя.</li>
-          <li>Звёзды можно обменять на TON в разделе «Заработок».</li>
-        </ol>
+      <section className={styles.bank} aria-label="Банк звёзд">
+        <div className={styles.bankHead}>
+          <span className={styles.bankTitle}>Банк</span>
+          <span className={styles.bankHint}>забрать от {bankMin} ★</span>
+        </div>
+        <div className={styles.bankAmount}>
+          <span className={styles.bankNum}>{bank}</span>
+          <span className={styles.bankOf}>/ {bankMin}</span>
+          <StarIcon className={styles.bankStar} aria-hidden />
+        </div>
+        <div
+          className={styles.bankBar}
+          role="progressbar"
+          aria-label="Накоплено в банке"
+          aria-valuemin={0}
+          aria-valuemax={bankMin}
+          aria-valuenow={Math.min(bank, bankMin)}
+        >
+          <span className={styles.bankFill} style={{ width: `${Math.min(100, (bank / bankMin) * 100)}%` }} />
+        </div>
+        <p className={styles.bankText}>
+          {canClaim
+            ? 'Банк полон — забирайте звёзды и меняйте их на TON.'
+            : `Ещё ${left} ★ — это ${friendsLeft} ${friendWord(friendsLeft)}, прокрутивших бесплатный кейс.`}
+        </p>
+        <button type="button" className={styles.claimBtn} disabled={!canClaim || claiming} onClick={() => void claim()}>
+          {claiming ? 'Забираем…' : canClaim ? `Забрать ${bank} ★` : `Забрать от ${bankMin} ★`}
+        </button>
+        {claimNote && <p className={styles.claimNote} role="status">{claimNote}</p>}
+        <div className={styles.bankStats}>
+          <span>
+            По ссылке: <b>{invited}</b>
+          </span>
+          <span>
+            Прокрутили FREE: <b>{friends}</b>
+          </span>
+        </div>
+        {waiting > 0 && (
+          <p className={styles.waiting}>
+            {waiting} {friendWord(waiting)} ещё не {waiting === 1 ? 'прокрутил' : 'прокрутили'} бесплатный
+            кейс. Напомните: звёзды придут в банк сразу после прокрута.
+          </p>
+        )}
       </section>
 
       <section className={styles.card} aria-label="Приглашение">
@@ -181,47 +213,30 @@ export function InviteScreen() {
         )}
       </section>
 
-      <section className={styles.card} aria-label="Заработок">
-        <div className={styles.statRow}>
-          <span className={styles.statLabel}>Заработано звёзд</span>
-          <span className={styles.statValue}>
-            {starsEarned}
-            <StarIcon className={styles.statIcon} aria-hidden />
-          </span>
-        </div>
-        <div className={styles.statRow}>
-          <span className={styles.statLabel}>Приглашено друзей</span>
-          <span className={styles.statValue}>{invited}</span>
-        </div>
-        <div className={styles.statRow}>
-          <span className={styles.statLabel}>Прокрутили бесплатный кейс</span>
-          <span className={styles.statValue}>{friends}</span>
-        </div>
-        {waiting > 0 && (
-          <p className={styles.waiting}>
-            {waiting} {friendWord(waiting)} ещё не {waiting === 1 ? 'прокрутил' : 'прокрутили'} бесплатный
-            кейс. Напомните им: звёзды придут сразу после прокрута.
-          </p>
-        )}
-      </section>
-
-      <section className={styles.card} aria-label="Мои рефералы">
-        <div className={styles.refHead}>
-          <h2 className={styles.refTitle}>Мои рефералы</h2>
-          <span className={styles.refCount}>{invited}</span>
-        </div>
-        {invited === 0 ? (
-          <div className={styles.empty}>
-            <span className={styles.emptyIcon}>
-              <UsersIcon className={styles.emptyIconSvg} aria-hidden />
+      <section className={styles.promo} aria-label="Как это работает">
+        <h2 className={styles.promoTitle}>Как это работает</h2>
+        <ol className={styles.promoSteps}>
+          <li className={styles.promoStep}>
+            <span className={styles.promoNum}>1</span>
+            <span className={styles.promoText}>
+              <b>Кидай ссылку</b> в чаты и сторис. Друг переходит по ней и запускает приложение.
             </span>
-            <p className={styles.emptyText}>Пока нет приглашений</p>
-          </div>
-        ) : (
-          <p className={styles.refSummary}>
-            По вашей ссылке пришли: {invited}. Из них прокрутили бесплатный кейс: {friends}.
-          </p>
-        )}
+          </li>
+          <li className={styles.promoStep}>
+            <span className={styles.promoNum}>2</span>
+            <span className={styles.promoText}>
+              Друг <b>обязательно прокручивает бесплатный кейс</b> (FREE или FREE 24). Пока он этого не
+              сделал, звёзды не начисляются.
+            </span>
+          </li>
+          <li className={styles.promoStep}>
+            <span className={styles.promoNum}>3</span>
+            <span className={styles.promoText}>
+              В банк падает <b>+{REFERRAL_BONUS_STARS} ★</b> за друга (один раз). От {bankMin} ★ — забирай и
+              меняй на TON в «Заработке».
+            </span>
+          </li>
+        </ol>
       </section>
 
       {warning && createPortal(
@@ -236,7 +251,7 @@ export function InviteScreen() {
             <ul className={styles.warnList}>
               <li>Друг переходит именно по вашей ссылке и запускает приложение.</li>
               <li>Сразу открывает бесплатный кейс на главной.</li>
-              <li>Только после этого вам приходит +{REFERRAL_BONUS_STARS} ★.</li>
+              <li>Только после этого в ваш банк приходит +{REFERRAL_BONUS_STARS} ★.</li>
             </ul>
             <p className={styles.warnText}>
               Просто перейти по ссылке недостаточно. Предупредите друга об этом.

@@ -23,7 +23,7 @@ export interface Quest {
  * Серверная проверка заданий по журналу транзакций — TIER 7 (6.6/7.6).
  */
 export const QUESTS: readonly Quest[] = [
-  { id: 'open-3-cases', title: 'Открой 3 кейса', metric: 'casesOpened', target: 3, rewardStars: 15 },
+  { id: 'open-3-cases', title: 'Открой 3 платных кейса', metric: 'casesOpened', target: 3, rewardStars: 15 },
   { id: 'mines-10', title: 'Сыграй 10 раз в Мины', metric: 'minesRounds', target: 10, rewardStars: 15 },
   { id: 'upgrade-1', title: 'Сделай апгрейд', metric: 'upgrades', target: 1, rewardStars: 15 },
   { id: 'wagered-10', title: 'Сделай ставок на 10 TON', metric: 'wagered', target: 10_000, rewardStars: 50 },

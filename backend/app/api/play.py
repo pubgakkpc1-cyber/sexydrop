@@ -81,6 +81,12 @@ async def stars_exchange(body: StarsBody, user: CurrentUser, session: Session) -
     return await acct.exchange_stars(session, user.id, body.stars)
 
 
+@router.post("/me/bank/claim")
+async def bank_claim(user: CurrentUser, session: Session) -> dict[str, Any]:
+    """Забрать звёзды за друзей из банка (от 15 ★)."""
+    return await acct.claim_bank(session, user.id)
+
+
 @router.post("/me/quests/{quest_id}/claim")
 async def quest_claim(quest_id: str, user: CurrentUser, session: Session) -> dict[str, Any]:
     return await acct.claim_quest(session, user.id, quest_id)

@@ -21,6 +21,7 @@ import {
   type MinesStartResult,
 } from './demoMinesService'
 import { useGamesHistoryStore } from '../store/gamesHistory'
+import { useRefBankStore } from '../store/refBank'
 import { useStarsBalanceStore } from '../store/starsBalance'
 import { useQuestsStore } from '../store/quests'
 import { useInventoryStore } from '../store/inventory'
@@ -299,6 +300,19 @@ export async function exchangeStarsApi(stars: number): Promise<'ok' | 'too_small
   } catch (error) {
     if (error instanceof ApiError && error.code === 'too_small') return 'too_small'
     if (error instanceof ApiError && error.code === 'insufficient_stars') return 'insufficient'
+    throw error
+  }
+}
+
+/** Забрать звёзды за друзей из банка на баланс звёзд (от 15 ★). */
+export async function claimBankApi(): Promise<'ok' | 'too_small'> {
+  if (!SERVER_MODE) return useRefBankStore.getState().claimLocal()
+  try {
+    await apiPost('/api/me/bank/claim', {})
+    await hydrateFromServer()
+    return 'ok'
+  } catch (error) {
+    if (error instanceof ApiError && error.code === 'bank_too_small') return 'too_small'
     throw error
   }
 }

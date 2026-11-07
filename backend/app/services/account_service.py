@@ -24,6 +24,7 @@ from app.services.economy_core import (
 
 STARS_PER_TON = 175
 REFERRAL_BONUS_STARS = 2  # за каждого друга, открывшего бесплатный кейс (один раз за друга)
+BANK_MIN_CLAIM = 15  # звёзды за друзей копятся в банке; забрать на баланс звёзд — от 15 ★
 STARS_MIN_EXCHANGE = STARS_PER_TON
 
 # Задания и награды в Stars (как на клиенте; прогресс считает сервер по своим записям)
@@ -44,7 +45,12 @@ async def quest_metrics(session: AsyncSession, user_id: uuid.UUID) -> dict[str, 
     def count(*where: Any) -> Any:
         return select(func.count()).select_from(PlayRound).where(PlayRound.user_id == user_id, *where)
 
-    cases = (await session.execute(count(PlayRound.game == "case"))).scalar_one()
+    # бесплатные кейсы (FREE, FREE 24) в задания не засчитываются — только платные открытия
+    cases = (
+        await session.execute(
+            count(PlayRound.game == "case", PlayRound.case_id.not_in(("free", "free24")))
+        )
+    ).scalar_one()
     mines = (
         await session.execute(count(PlayRound.game == "mines", PlayRound.status.in_(("lost", "cashed", "cleared"))))
     ).scalar_one()
@@ -73,8 +79,17 @@ async def quest_metrics(session: AsyncSession, user_id: uuid.UUID) -> dict[str, 
     }
 
 
+def bank_stars(meta: UserMeta) -> int:
+    """Звёзды за друзей, ещё не забранные из банка."""
+    return int((meta.quests_claimed or {}).get("_bank", 0) or 0)
+
+
 async def sweep_referral_stars(session: AsyncSession, user_id: uuid.UUID, meta: UserMeta) -> None:
-    """Начисляет +2 ★ за каждого друга по ссылке, открывшего бесплатный кейс (один раз за друга). Коммит — снаружи."""
+    """Кладёт в банк +2 ★ за каждого друга по ссылке, открывшего бесплатный кейс (один раз за друга).
+
+    Звёзды за друзей копятся в банке (quests_claimed["_bank"]) и переходят на баланс звёзд только
+    по кнопке «Забрать», когда в банке от BANK_MIN_CLAIM ★. Коммит — снаружи.
+    """
     rows = (
         await session.execute(
             select(User.id).where(
@@ -90,8 +105,8 @@ async def sweep_referral_stars(session: AsyncSession, user_id: uuid.UUID, meta: 
     fresh = [str(uid) for uid in rows if str(uid) not in credited]
     if fresh:
         claimed["_ref"] = sorted(credited | set(fresh))
+        claimed["_bank"] = int(claimed.get("_bank", 0) or 0) + REFERRAL_BONUS_STARS * len(fresh)
         meta.quests_claimed = claimed
-        meta.stars = int(meta.stars) + REFERRAL_BONUS_STARS * len(fresh)
 
 
 async def get_state(session: AsyncSession, user: User) -> dict[str, Any]:
@@ -129,6 +144,7 @@ async def get_state(session: AsyncSession, user: User) -> dict[str, Any]:
             and not await play_service.has_unlock_deposit(session, user.id)
         },
         "free_quest": quest,
+        "ref_bank": {"stars": bank_stars(meta), "min": BANK_MIN_CLAIM, "per_friend": REFERRAL_BONUS_STARS},
         "server_now_ms": play_service.now_ms(),
         "me": {"id": user.telegram_id, "username": user.username, "name": user.first_name},
     }
@@ -223,6 +239,23 @@ async def claim_quest(session: AsyncSession, user_id: uuid.UUID, quest_id: str) 
     meta.stars = int(meta.stars) + int(quest["stars"])
     await session.commit()
     return {"status": "ok", "stars": meta.stars, "reward": quest["stars"]}
+
+
+async def claim_bank(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any]:
+    """Забрать звёзды из банка друзей на баланс звёзд — только если накопилось от BANK_MIN_CLAIM ★."""
+    await ensure_account(session, user_id)
+    meta = (await session.execute(select(UserMeta).where(UserMeta.user_id == user_id).with_for_update())).scalar_one()
+    await sweep_referral_stars(session, user_id, meta)
+    bank = bank_stars(meta)
+    if bank < BANK_MIN_CLAIM:
+        await session.commit()  # новые друзья, найденные при проверке, уже в банке
+        raise GameError("bank_too_small", 409, f"Забрать можно от {BANK_MIN_CLAIM} ★, в банке {bank} ★")
+    claimed = dict(meta.quests_claimed or {})
+    claimed["_bank"] = 0
+    meta.quests_claimed = claimed
+    meta.stars = int(meta.stars) + bank
+    await session.commit()
+    return {"status": "ok", "claimed": bank, "stars": meta.stars, "bank": 0}
 
 
 async def exchange_stars(session: AsyncSession, user_id: uuid.UUID, stars: int) -> dict[str, Any]:

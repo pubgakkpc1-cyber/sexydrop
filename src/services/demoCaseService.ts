@@ -111,7 +111,6 @@ export function claimFreeCase(
       const uid = `quest-${clientRequestId}`
       freeCases.setQuestPendingReward(chosen.itemId, uid, now)
       freeCases.claim(caseId, now)
-      useProfileStore.getState().caseOpened()
       useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
       track({ type: 'case', case: caseId, price: 0, prize: 0 })
       return { status: 'ok', giftId: chosen.itemId, uid } as const
@@ -119,7 +118,6 @@ export function claimFreeCase(
     if (isTonPrize(chosen.itemId)) {
       useWalletStore.getState().credit(Number(chosen.itemId.slice(4)))
       freeCases.claim(caseId, now)
-      useProfileStore.getState().caseOpened()
       useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
       track({ type: 'case', case: caseId, price: 0, prize: Number(chosen.itemId.slice(4)) })
       return { status: 'ok', giftId: chosen.itemId, uid: '' } as const
@@ -127,7 +125,6 @@ export function claimFreeCase(
     const [item] = useInventoryStore.getState().addGifts([chosen.itemId], 'free-case')
     if (!item) throw new Error('Inventory did not accept the gift')
     freeCases.claim(caseId, now)
-    useProfileStore.getState().caseOpened()
     useReferralsStore.getState().onFreeCaseOpened(getTelegramUser()?.id?.toString())
     track({ type: 'case', case: caseId, price: 0, prize: giftById.get(chosen.itemId)?.priceMinor ?? 0 })
     return { status: 'ok', giftId: chosen.itemId, uid: item.uid } as const

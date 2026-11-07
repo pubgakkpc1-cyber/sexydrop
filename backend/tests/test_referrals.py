@@ -32,8 +32,12 @@ async def test_join_qualify_and_mine(client: AsyncClient, monkeypatch):
     await client.post("/api/play/free/free24/claim", headers=h(friend), json={"client_request_id": "rf1"})
     mine = (await client.post("/api/referrals/mine", json={"init_data": "x"})).json()
     assert mine["friends"][0]["qualified"] is True
-    assert (await client.get("/api/me/state", headers=h(inviter))).json()["stars"] == 2
-    assert (await client.get("/api/me/state", headers=h(inviter))).json()["stars"] == 2
+    # звёзды за друга копятся в банке (один раз за друга), на баланс звёзд — только от 15 ★
+    state = (await client.get("/api/me/state", headers=h(inviter))).json()
+    assert state["ref_bank"] == {"stars": 2, "min": 15, "per_friend": 2} and state["stars"] == 0
+    assert (await client.get("/api/me/state", headers=h(inviter))).json()["ref_bank"]["stars"] == 2
+    small = await client.post("/api/me/bank/claim", headers=h(inviter))
+    assert small.status_code == 409 and "15" in small.json()["detail"]
 
 
 async def test_start_param_attributes_new_user(client: AsyncClient):

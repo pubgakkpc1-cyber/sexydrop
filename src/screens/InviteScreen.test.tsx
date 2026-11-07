@@ -3,6 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { InviteScreen, REFERRAL_BOT_USERNAME } from './InviteScreen'
 import type { TelegramUser } from '../lib/telegram'
+import { useRefBankStore } from '../store/refBank'
+import { useStarsBalanceStore } from '../store/starsBalance'
 
 const user = userEvent.setup()
 
@@ -28,6 +30,7 @@ function setTelegramUser(
 let clipboardStub: { writeText: ReturnType<typeof vi.fn> } | undefined
 
 beforeEach(() => {
+  useRefBankStore.setState({ stars: 0, min: 15 })
   setTelegramUser(undefined)
   clipboardStub = undefined
 })
@@ -59,22 +62,32 @@ describe('InviteScreen (6.5: честные нули, без фиктивной 
     render(<InviteScreen />)
     expect(screen.getByRole('heading', { name: /2 ★ за каждого друга/ })).toBeInTheDocument()
     expect(screen.getByText('как только он прокрутит бесплатный кейс')).toBeInTheDocument()
-    expect(screen.getByRole('region', { name: 'Как заработать' })).toHaveTextContent(/Крути FREE-кейсы/)
-    expect(screen.getByText('Заработано звёзд')).toBeInTheDocument()
-    expect(screen.getByText('Мои рефералы')).toBeInTheDocument()
-    expect(screen.getByText('Пока нет приглашений')).toBeInTheDocument()
+    const bank = screen.getByRole('region', { name: 'Банк звёзд' })
+    expect(bank).toHaveTextContent('0/ 15')
+    expect(bank).toHaveTextContent(/По ссылке: 0/)
+    expect(screen.getByRole('button', { name: 'Забрать от 15 ★' })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Пригласить друзей/ })).toBeDisabled()
     expect(screen.getByRole('button', { name: /Скопировать ссылку/ })).toBeDisabled()
     expect(screen.getByText(/Откройте мини-апп в Telegram/)).toBeInTheDocument()
   })
 
-  it('правила видны сразу: друг должен открыть бесплатный кейс, награда +2 ★ мгновенно', () => {
+  it('правила видны сразу: друг должен прокрутить бесплатный кейс, +2 ★ в банк, забрать от 15 ★', () => {
     render(<InviteScreen />)
-    const rules = screen.getByRole('region', { name: 'Правила' })
+    const rules = screen.getByRole('region', { name: 'Как это работает' })
     expect(rules).toHaveTextContent(/обязательно прокручивает бесплатный кейс/)
     expect(rules).toHaveTextContent(/звёзды не начисляются/)
-    expect(rules).toHaveTextContent(/мгновенно получаете \+2 ★/)
-    expect(rules).toHaveTextContent(/один раз/)
+    expect(rules).toHaveTextContent(/В банк падает \+2 ★ за друга \(один раз\)/)
+    expect(rules).toHaveTextContent(/От 15 ★/)
+  })
+
+  it('банк полон — «Забрать» активна и переносит звёзды на баланс', async () => {
+    useRefBankStore.setState({ stars: 18, min: 15 })
+    useStarsBalanceStore.setState({ stars: 0 })
+    render(<InviteScreen />)
+    await user.click(screen.getByRole('button', { name: 'Забрать 18 ★' }))
+    expect(await screen.findByRole('status')).toHaveTextContent('+18 ★ на баланс звёзд')
+    expect(useStarsBalanceStore.getState().stars).toBe(18)
+    expect(useRefBankStore.getState().stars).toBe(0)
   })
 
   it('в Telegram кнопки активны, ссылка ведёт на подтверждённого бота', () => {

@@ -2,6 +2,7 @@ import { apiGet } from './api'
 import { SERVER_MODE } from './serverMode'
 import { useWalletStore } from '../store/wallet'
 import { useInventoryStore, type InventoryItem, type InventorySource } from '../store/inventory'
+import { useRefBankStore } from '../store/refBank'
 import { useStarsBalanceStore } from '../store/starsBalance'
 import { useQuestsStore } from '../store/quests'
 import { useProfileStore } from '../store/profile'
@@ -32,6 +33,7 @@ export interface ServerState {
   free_used: { free: boolean }
   free_gate: { deposit_required: boolean }
   free_quest: FreeQuestServer
+  ref_bank?: { stars: number; min: number; per_friend: number }
   me: { id: number; username: string | null; name: string | null }
 }
 
@@ -83,6 +85,7 @@ export function applyServerState(state: ServerState): void {
   setServerBalance(state.balance_minor)
   setServerItems(state.items)
   useStarsBalanceStore.setState({ stars: state.stars })
+  if (state.ref_bank) useRefBankStore.setState({ stars: state.ref_bank.stars, min: state.ref_bank.min })
   useQuestsStore.setState({ claimed: state.quests_claimed })
   useProfileStore.setState({
     casesOpened: state.metrics.casesOpened,

@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { giftById, type CaseDefinition } from '../../data/catalog'
-import { pickWeighted } from '../../lib/caseMath'
+import { buildCaseStrip } from '../../lib/caseStrip'
 import { hapticNotify } from '../../lib/telegram'
 import { Button, GramAmount } from '../ui'
 import styles from './CaseOpeningOverlay.module.css'
@@ -21,11 +21,7 @@ interface CaseOpeningOverlayProps {
 }
 
 function buildStrip(caseDefinition: CaseDefinition, resultGiftId: string): string[] {
-  const strip: string[] = []
-  for (let i = 0; i < STRIP_LENGTH; i += 1) {
-    strip.push(i === TARGET_INDEX ? resultGiftId : pickWeighted(caseDefinition.entries).itemId)
-  }
-  return strip
+  return buildCaseStrip(caseDefinition, STRIP_LENGTH, { index: TARGET_INDEX, giftId: resultGiftId })
 }
 
 /**

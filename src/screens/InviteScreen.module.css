@@ -461,3 +461,128 @@
   line-height: 1.4;
   color: rgba(255, 255, 255, 0.75);
 }
+
+/* ---------- Банк звёзд за друзей ---------- */
+.bank {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px 16px 16px;
+  border-radius: 24px;
+  background: #2a1d1e;
+  border: 1px solid rgba(200, 106, 111, 0.35);
+}
+
+.bankHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.bankTitle {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.bankHint {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.bankAmount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+}
+
+.bankNum {
+  font-size: 44px;
+  line-height: 1;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.bankOf {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.bankStar {
+  width: 30px;
+  height: 30px;
+  color: #ffc93c;
+}
+
+.bankBar {
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.bankFill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #c86a6f;
+  transition: width 0.4s ease;
+}
+
+.bankText {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.claimBtn {
+  width: 100%;
+  min-height: 52px;
+  border: none;
+  border-radius: 16px;
+  background: #b83a3f;
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.claimBtn:disabled {
+  background: #3a3536;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: not-allowed;
+}
+
+.claimNote {
+  margin: 0;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4fd18b;
+}
+
+.bankStats {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.6);
+  font-variant-numeric: tabular-nums;
+}
+
+.bankStats b {
+  color: #ffffff;
+}
+
+.bankStats span {
+  white-space: nowrap;
+}

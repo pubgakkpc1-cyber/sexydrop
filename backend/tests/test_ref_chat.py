@@ -93,3 +93,11 @@ def test_history_keeps_newest_first_and_limit() -> None:
         ref_chat.add_log(claimed, 2, f"друг {i}", now_ms=i)
     log = claimed[ref_chat.LOG_KEY]
     assert len(log) == ref_chat.LOG_LIMIT and log[0]["t"] == "друг 39"
+
+
+def test_crash_payout_equal_to_nft_price_picks_a_gift() -> None:
+    from app.core import catalog
+
+    ids = catalog.gifts_priced(6400)
+    assert ids and all(i.rsplit("-", 1)[-1].isdigit() for i in ids)
+    assert catalog.gifts_priced(1) == []  # нет NFT с такой ценой — выплата в TON

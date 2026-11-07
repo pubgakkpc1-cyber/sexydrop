@@ -16,6 +16,7 @@ export interface ServerBet {
   status: 'active' | 'won' | 'lost'
   cashed_multiplier?: number | null
   won_minor: number
+  won_gift_id?: string | null
 }
 
 interface ServerCrashState {
@@ -173,10 +174,13 @@ export async function serverPlaceBet(body: {
   if (typeof res.balance_minor === 'number') setServerBalance(res.balance_minor)
 }
 
-export async function serverCashout(): Promise<{ multiplier: number; won_minor: number }> {
-  const res = await apiPost<{ multiplier: number; won_minor: number; balance_minor?: number }>('/api/play/crash/cashout', {})
+export async function serverCashout(): Promise<{ multiplier: number; won_minor: number; gift_id?: string; uid?: string }> {
+  const res = await apiPost<{ multiplier: number; won_minor: number; balance_minor?: number; gift_id?: string; uid?: string }>(
+    '/api/play/crash/cashout',
+    {},
+  )
   if (typeof res.balance_minor === 'number') setServerBalance(res.balance_minor)
-  return { multiplier: res.multiplier, won_minor: res.won_minor }
+  return { multiplier: res.multiplier, won_minor: res.won_minor, gift_id: res.gift_id, uid: res.uid }
 }
 
 export { ApiError }

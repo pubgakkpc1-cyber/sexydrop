@@ -49,6 +49,17 @@ def gift_price(gift_id: str) -> int | None:
     return int(gift["price"])
 
 
+def gifts_priced(minor: int) -> list[str]:
+    """NFT-подарки (id вида name-N) с ценой ровно minor — выплата Ракетки, равная цене NFT, выдаётся подарком."""
+    import re
+
+    return sorted(
+        gid
+        for gid, g in _raw()["gifts"].items()
+        if g.get("available", True) and int(g["price"]) == minor and re.search(r"-\d$", gid)
+    )
+
+
 def gift_name(gift_id: str) -> str:
     gift = _raw()["gifts"].get(gift_id)
     return gift["name"] if gift else gift_id

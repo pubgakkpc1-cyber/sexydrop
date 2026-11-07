@@ -10,12 +10,14 @@ from typing import Any
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core import catalog
 from app.core.config import get_settings
 from app.games.crash_schedule import BETTING_MS, TICK_MS, Schedule
 from app.models.economy import PlayRound
 from app.services.economy_core import (
     MAX_BET_MINOR,
     GameError,
+    add_item,
     balance_minor,
     ensure_account,
     lock_item,
@@ -59,6 +61,7 @@ def _bet_payload(row: PlayRound) -> dict[str, Any]:
         "status": {"active": "active", "won": "won", "lost": "lost"}.get(row.status, row.status),
         "cashed_multiplier": result.get("multiplier"),
         "won_minor": row.payout_minor,
+        "won_gift_id": result.get("gift_id"),
     }
 
 
@@ -74,14 +77,22 @@ async def _active_bets(session: AsyncSession, user_id: uuid.UUID, *, lock: bool 
 async def _pay(session: AsyncSession, user_id: uuid.UUID, row: PlayRound, mult: float) -> None:
     mult_h = _mult_h(mult)
     payout = row.bet_minor * mult_h // 100
-    if payout > 0:
+    result: dict[str, Any] = {"status": "ok", "multiplier": mult_h / 100, "won_minor": payout}
+    # выплата ровно равна цене NFT — выдаём подарок в инвентарь (как в правилах Ракетки), иначе TON
+    options = catalog.gifts_priced(payout) if payout > 0 else []
+    if options:
+        staked = (row.state or {}).get("gift_id")
+        gift_id = staked if staked in options else options[int(uuid.UUID(str(row.id)).int % len(options))]
+        item = await add_item(session, user_id, gift_id, payout, "crash-win")
+        result.update(gift_id=gift_id, uid=str(item.id), won_gift=True)
+    elif payout > 0:
         await post_ledger(
             session, user_id, type="crash_win", direction="credit", minor=payout, key=f"{row.id}:win",
             description=f"Ракетка x{mult:.2f}",
         )
     row.status = "won"
     row.payout_minor = payout
-    row.result = {"status": "ok", "multiplier": mult_h / 100, "won_minor": payout}
+    row.result = result
 
 
 async def settle(session: AsyncSession, user_id: uuid.UUID, now: int | None = None) -> None:
@@ -203,14 +214,23 @@ async def cashout(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any]:
             )
         ).scalar_one_or_none()
         if last is not None and (last.state or {}).get("round_id") == cur["round_id"]:
-            return {"status": "ok", "multiplier": (last.result or {}).get("multiplier"), "won_minor": last.payout_minor}
+            res = last.result or {}
+            out = {"status": "ok", "multiplier": res.get("multiplier"), "won_minor": last.payout_minor}
+            for k in ("gift_id", "uid"):
+                if k in res:
+                    out[k] = res[k]
+            return out
         raise GameError("no_bet", 409, "Нет активной ставки")
     if cur["phase"] != "flying":
         raise GameError("phase", 409, "Забрать можно только во время полёта")
     row = rows[0]
     await _pay(session, user_id, row, float(cur["multiplier"]))
     await session.commit()
-    return {"status": "ok", "multiplier": row.result["multiplier"], "won_minor": row.payout_minor}
+    out = {"status": "ok", "multiplier": row.result["multiplier"], "won_minor": row.payout_minor}
+    for k in ("gift_id", "uid"):
+        if k in row.result:
+            out[k] = row.result[k]
+    return out
 
 
 __all__ = ["state", "place_bet", "cashout", "settle", "schedule", "reset_for_tests"]

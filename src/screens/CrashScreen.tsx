@@ -245,6 +245,13 @@ export function CrashScreen() {
   const [adminModalOpen, setAdminModalOpen] = useState(false)
   const [cosmicReward, setCosmicReward] = useState<Gift | null>(null)
 
+  // Сервер выдал NFT за выигрыш (выплата ровно равна цене подарка) — показываем шторку «Награда Ракеты!»
+  const serverWonGiftId = myBet?.status === 'won' ? myBet.wonGift?.id : undefined
+  useEffect(() => {
+    if (serverWonGiftId && myBet?.wonGift) setCosmicReward(myBet.wonGift)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [serverWonGiftId, roundId])
+
   // Проверка супер-администратора (@zapixxgarant)
   const tgUser = useMemo(() => getTelegramUser(), [])
   const cleanUsername = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
@@ -386,6 +393,7 @@ export function CrashScreen() {
       profitMinor: number
       stakeGift?: Gift
       wonGift?: Gift
+      settled?: boolean
     }
 
     const rows: BetRow[] = []
@@ -416,6 +424,7 @@ export function CrashScreen() {
         profitMinor,
         stakeGift,
         wonGift,
+        settled: myBet.settled,
       })
     }
 
@@ -739,7 +748,7 @@ export function CrashScreen() {
             // Плитка живая: самый дорогой NFT, который не дороже текущей выплаты (меняется в полёте);
             // пока выплата ниже самого дешёвого NFT — значок TON; у проигравших — поставленный подарок.
             const liveGift = isLost ? row.stakeGift : tileGiftFor(row.profitMinor, row.id, row.stakeGift)
-            const displayGift = isWon ? (row.wonGift ?? liveGift) : liveGift
+            const displayGift = isWon ? (row.wonGift ?? (row.settled ? undefined : liveGift)) : liveGift
 
             return (
               <div

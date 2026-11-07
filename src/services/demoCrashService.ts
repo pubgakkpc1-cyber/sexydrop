@@ -444,6 +444,8 @@ function registerServerListener(): void {
           autoCashout: bet.auto_cashout ?? undefined,
           cashedMultiplier: bet.cashed_multiplier ?? undefined,
           wonMinor: bet.status === 'won' ? bet.won_minor : undefined,
+          wonGift: bet.won_gift_id ? giftById.get(bet.won_gift_id) : undefined,
+          settled: bet.status === 'won' ? true : undefined,
         },
       })
       return
@@ -455,8 +457,12 @@ function registerServerListener(): void {
           status: 'won',
           cashedMultiplier: bet.cashed_multiplier ?? s.myBet.cashedMultiplier,
           wonMinor: bet.won_minor,
+          // авто-вывод сработал на сервере: если выплата равна цене NFT, подарок уже выдан
+          wonGift: bet.won_gift_id ? giftById.get(bet.won_gift_id) : undefined,
+          settled: true,
         },
       })
+      if (bet.won_gift_id) void hydrateFromServer()
     } else if (bet.status === 'lost' && s.myBet.status === 'active') {
       useCrashStore.setState({ myBet: { ...s.myBet, status: 'lost' } })
     }
@@ -687,8 +693,13 @@ function cashoutAt(multiplier: number): CashoutResult {
         .then((res) => {
           const cur = useCrashStore.getState().myBet
           if (cur && cur.status === 'won') {
-            useCrashStore.setState({ myBet: { ...cur, cashedMultiplier: res.multiplier, wonMinor: res.won_minor } })
+            // выплата ровно равна цене NFT — сервер выдал подарок: показываем его и обновляем инвентарь
+            const wonGift = res.gift_id ? giftById.get(res.gift_id) : undefined
+            useCrashStore.setState({
+              myBet: { ...cur, cashedMultiplier: res.multiplier, wonMinor: res.won_minor, wonGift, settled: true },
+            })
           }
+          void hydrateFromServer()
           void pollCrashState(true)
         })
         .catch(() => {

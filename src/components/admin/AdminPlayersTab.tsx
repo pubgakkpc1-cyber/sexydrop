@@ -47,10 +47,13 @@ export function AdminPlayersTab() {
     // поиск на сервере, с небольшой задержкой после ввода
     const t = window.setTimeout(() => {
       const params = new URLSearchParams({ q: query.trim(), sort, limit: '200' })
-      void adminFetch<PlayersResponse>(`/api/admin/players?${params}`).then((r) => {
+      void adminFetch<PlayersResponse | PlayerRow[]>(`/api/admin/players?${params}`).then((r) => {
         if (dead) return
         if (r.ok) {
-          setData(r.data)
+          // старый сервер отдавал просто массив — принимаем оба вида
+          const rows = Array.isArray(r.data) ? r.data : Array.isArray(r.data?.rows) ? r.data.rows : []
+          const total = Array.isArray(r.data) ? rows.length : Number(r.data?.total ?? rows.length)
+          setData({ total, rows })
           setError(null)
         } else setError(r.error)
       })
@@ -99,9 +102,9 @@ export function AdminPlayersTab() {
 
       {data?.rows.map((p) => (
         <button key={p.id} type="button" className={styles.playerRow} onClick={() => setOpenId(p.id)}>
-          <PlayerAvatar name={p.name} photo={p.photo} />
+          <PlayerAvatar name={p.name || `ID ${p.id}`} photo={p.photo ?? null} />
           <span className={styles.pMain}>
-            <span className={styles.pName}>{p.name}</span>
+            <span className={styles.pName}>{p.name || `ID ${p.id}`}</span>
             <span className={styles.pSub}>
               {p.username ? `@${p.username} · ` : ''}
               {ago(p.last)}

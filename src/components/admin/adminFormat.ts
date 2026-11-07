@@ -1,10 +1,22 @@
 import { formatMinor } from '../../lib/money'
 
+/**
+ * Сумма для админки, которая никогда не падает: нет значения / дробное / минус — тоже показываем.
+ * (formatMinor бросает исключение на минус и не-целые числа, а одна ошибка рендера даёт серый экран.)
+ */
+export function safeAmount(minor: unknown): string {
+  const n = typeof minor === 'number' && Number.isFinite(minor) ? Math.trunc(minor) : 0
+  return `${n < 0 ? '−' : ''}${formatMinor(Math.abs(n))}`
+}
+
 /** «12.5 TON» — суммы в админке. */
-export const ton = (minor: number) => `${formatMinor(minor)} TON`
+export const ton = (minor: unknown) => `${safeAmount(minor)} TON`
 
 /** «+1.2 TON» / «−0.5 TON» — для итогов и движений по балансу. */
-export const signedTon = (minor: number) => `${minor >= 0 ? '+' : '−'}${formatMinor(Math.abs(minor))} TON`
+export function signedTon(minor: unknown): string {
+  const n = typeof minor === 'number' && Number.isFinite(minor) ? Math.trunc(minor) : 0
+  return `${n >= 0 ? '+' : '−'}${formatMinor(Math.abs(n))} TON`
+}
 
 /** «сейчас», «5 мин назад», «3 ч назад», «2 дн назад». */
 export function ago(ts: number | null | undefined): string {

@@ -39,6 +39,43 @@ interface PlayerDetail {
   history: Array<{ at: number; type: string; sign: 1 | -1; amount: number; balance_after: number; note: string | null }>
 }
 
+/** Неполный ответ сервера не должен ронять карточку: пустые списки и нули по умолчанию. */
+function normalize(raw: Partial<PlayerDetail> | null | undefined): PlayerDetail {
+  const r = raw ?? {}
+  const p: Partial<PlayerDetail['profile']> = r.profile ?? {}
+  const m: Partial<PlayerDetail['money']> = r.money ?? {}
+  return {
+    profile: {
+      id: String(p.id ?? ''),
+      name: p.name || (p.username ? `@${p.username}` : `ID ${p.id ?? ''}`),
+      username: p.username ?? null,
+      photo: p.photo ?? null,
+      first: p.first ?? 0,
+      last: p.last ?? 0,
+      premium: Boolean(p.premium),
+      inviter: p.inviter ?? null,
+      invited: p.invited ?? 0,
+      invited_qualified: p.invited_qualified ?? 0,
+    },
+    money: {
+      balance: m.balance ?? 0,
+      stars: m.stars ?? 0,
+      deposited: m.deposited ?? 0,
+      deposits_by: m.deposits_by ?? [],
+      admin_credit: m.admin_credit ?? 0,
+      wagered: m.wagered ?? 0,
+      paid: m.paid ?? 0,
+      net: m.net ?? 0,
+    },
+    games: r.games ?? [],
+    cases: r.cases ?? [],
+    items: { counts: r.items?.counts ?? [], list: r.items?.list ?? [] },
+    withdrawals: r.withdrawals ?? [],
+    deposits: r.deposits ?? [],
+    history: r.history ?? [],
+  }
+}
+
 const WITHDRAW_STATUS: Record<string, string> = { pending: 'ждёт', done: 'выдан', rejected: 'отклонён' }
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: 'good' | 'bad' }) {
@@ -71,7 +108,7 @@ export function AdminPlayerCard({
     void adminFetch<PlayerDetail>(`/api/admin/players/${encodeURIComponent(telegramId)}`).then((r) => {
       if (dead) return
       if (r.ok) {
-        setD(r.data)
+        setD(normalize(r.data))
         setError(null)
       } else setError(r.error)
     })

@@ -9,6 +9,7 @@ import { AdminStatsTab } from './AdminStatsTab'
 import { AdminSystemTab } from './AdminSystemTab'
 import { AdminWithdrawalsTab } from './AdminWithdrawalsTab'
 import { ton } from './adminFormat'
+import { AdminErrorBoundary } from './AdminErrorBoundary'
 import styles from './AdminConsole.module.css'
 
 type SectionId = 'stats' | 'players' | 'chances' | 'broadcast' | 'give' | 'withdrawals' | 'system'
@@ -93,7 +94,9 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
 
       <main className={styles.content}>
         {current ? (
-          current.view()
+          <AdminErrorBoundary resetKey={current.id} onBack={() => setSection(null)}>
+            {current.view()}
+          </AdminErrorBoundary>
         ) : (
           <>
             {quick && (

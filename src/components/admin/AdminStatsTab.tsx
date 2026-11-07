@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { getWebApp } from '../../lib/telegram'
-import { formatMinor } from '../../lib/money'
-import { signedTon } from './adminFormat'
+import { safeAmount, signedTon, ton } from './adminFormat'
 import styles from './AdminPanel.module.css'
 
 interface GameRow {
@@ -75,7 +74,6 @@ function Card({ label, value, tone }: { label: string; value: string; tone?: 'go
   )
 }
 
-const ton = (minor: number) => `${formatMinor(minor)} TON`
 
 /** Сводка по всем игрокам: пользователи, обороты, прибыль, игры, кейсы, пополнения, динамика. */
 export function AdminStatsTab() {
@@ -112,7 +110,7 @@ export function AdminStatsTab() {
   if (error) return <p className={`${styles.note} ${styles.bad}`}>{error}</p>
   if (!stats) return <p className={styles.note}>Загружаем…</p>
 
-  const maxEvents = Math.max(1, ...stats.series.map((s) => s.events))
+  const maxEvents = Math.max(1, ...(stats.series ?? []).map((s) => s.events))
   const since = new Date(stats.since * 1000).toLocaleString('ru-RU')
 
   return (
@@ -147,8 +145,8 @@ export function AdminStatsTab() {
 
       <h3 className={styles.h3}>Активность за 14 дней</h3>
       <div className={styles.bars} aria-label="Активность по дням">
-        {stats.series.length === 0 && <span className={styles.muted}>Данных пока нет</span>}
-        {stats.series.map((s) => (
+        {(stats.series ?? []).length === 0 && <span className={styles.muted}>Данных пока нет</span>}
+        {(stats.series ?? []).map((s) => (
           <div key={s.day} className={styles.barCol} title={`${s.day}: ${s.users} игроков, ${s.events} событий`}>
             <span className={styles.bar} style={{ height: `${Math.max(6, (s.events / maxEvents) * 100)}%` }} />
             <span className={styles.barLabel}>{s.day.slice(8)}</span>
@@ -167,16 +165,16 @@ export function AdminStatsTab() {
           </tr>
         </thead>
         <tbody>
-          {stats.games.length === 0 && (
+          {(stats.games ?? []).length === 0 && (
             <tr>
               <td colSpan={4} className={styles.muted}>Раундов ещё не было</td>
             </tr>
           )}
-          {stats.games.map((g) => (
+          {(stats.games ?? []).map((g) => (
             <tr key={g.game}>
               <td>{GAME_LABEL[g.game] ?? g.game}</td>
               <td>{g.rounds}</td>
-              <td>{formatMinor(g.wagered)}</td>
+              <td>{safeAmount(g.wagered)}</td>
               <td className={g.delta >= 0 ? styles.bad : styles.good}>{signedTon(g.delta)}</td>
             </tr>
           ))}
@@ -194,17 +192,17 @@ export function AdminStatsTab() {
           </tr>
         </thead>
         <tbody>
-          {stats.cases.length === 0 && (
+          {(stats.cases ?? []).length === 0 && (
             <tr>
               <td colSpan={4} className={styles.muted}>Открытий ещё не было</td>
             </tr>
           )}
-          {stats.cases.map((c) => (
+          {(stats.cases ?? []).map((c) => (
             <tr key={c.case}>
               <td>{c.case}</td>
               <td>{c.opens}</td>
-              <td>{formatMinor(c.spent)}</td>
-              <td>{formatMinor(c.prize)}</td>
+              <td>{safeAmount(c.spent)}</td>
+              <td>{safeAmount(c.prize)}</td>
             </tr>
           ))}
         </tbody>
@@ -220,16 +218,16 @@ export function AdminStatsTab() {
           </tr>
         </thead>
         <tbody>
-          {stats.deposits.length === 0 && (
+          {(stats.deposits ?? []).length === 0 && (
             <tr>
               <td colSpan={3} className={styles.muted}>Пополнений ещё не было</td>
             </tr>
           )}
-          {stats.deposits.map((d) => (
+          {(stats.deposits ?? []).map((d) => (
             <tr key={d.method}>
               <td>{METHOD_LABEL[d.method] ?? d.method}</td>
               <td>{d.count}</td>
-              <td>{formatMinor(d.amount)}</td>
+              <td>{safeAmount(d.amount)}</td>
             </tr>
           ))}
         </tbody>
@@ -245,15 +243,15 @@ export function AdminStatsTab() {
           </tr>
         </thead>
         <tbody>
-          {stats.top.length === 0 && (
+          {(stats.top ?? []).length === 0 && (
             <tr>
               <td colSpan={3} className={styles.muted}>Пока пусто</td>
             </tr>
           )}
-          {stats.top.map((u) => (
+          {(stats.top ?? []).map((u) => (
             <tr key={u.id}>
               <td>{u.name ? `@${u.name}` : u.id}</td>
-              <td>{formatMinor(u.wagered)}</td>
+              <td>{safeAmount(u.wagered)}</td>
               <td className={u.delta >= 0 ? styles.good : styles.bad}>{signedTon(u.delta)}</td>
             </tr>
           ))}

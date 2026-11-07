@@ -57,11 +57,25 @@ def create_app() -> FastAPI:
     for dist_path in dist_candidates:
         if dist_path.is_dir():
             application.mount(
-                "/", StaticFiles(directory=str(dist_path), html=True), name="frontend"
+                "/", _FrontendFiles(directory=str(dist_path), html=True), name="frontend"
             )
             break
 
     return application
+
+
+class _FrontendFiles(StaticFiles):
+    """Статика мини-аппа: index.html не кэшируется (Telegram сразу получает новую версию),
+    файлы из assets/ с хэшем в имени кэшируются навсегда."""
+
+    async def get_response(self, path: str, scope):  # type: ignore[no-untyped-def]
+        response = await super().get_response(path, scope)
+        path = path.replace("\\", "/")  # на Windows Starlette отдаёт путь с обратными слэшами
+        if path.startswith("assets/"):
+            response.headers["Cache-Control"] = "public, max-age=31536000, immutable"
+        elif path in ("", ".", "index.html") or path.endswith(".html") or response.media_type == "text/html":
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        return response
 
 
 app = create_app()

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { loadDepositConfig, type DepositConfig } from '../../lib/deposits'
 import { adminFetch } from '../../lib/adminApi'
-import { formatMinor } from '../../lib/money'
+import { safeAmount } from './adminFormat'
 import styles from './AdminPanel.module.css'
 
 interface BotStatus {
@@ -91,7 +91,7 @@ function ResetBalances() {
     })
     setBusy(false)
     if (r.ok) {
-      setResult(`Готово: обнулено ${r.data.users} игроков, списано ${formatMinor(r.data.total_minor)} TON`)
+      setResult(`Готово: обнулено ${r.data.users} игроков, списано ${safeAmount(r.data.total_minor)} TON`)
       setConfirm('')
     } else {
       setResult(r.error)

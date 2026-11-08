@@ -21,7 +21,7 @@ from app.models.user import User
 from app.services.economy_core import GameError, ensure_account
 
 TAG = "@sexydropbot"
-REWARD_STARS = 5
+REWARD_STARS = 10
 HOLD_MS = 24 * 3600 * 1000
 CLAIM_WINDOW_MS = 10 * 3600 * 1000
 

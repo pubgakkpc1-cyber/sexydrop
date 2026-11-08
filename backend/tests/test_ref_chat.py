@@ -111,4 +111,4 @@ def test_tag_quest_stages() -> None:
     assert t.view(st, now=1000 + 5)["stage"] == 2
     assert t.view(st, now=1000 + t.HOLD_MS + 1)["stage"] == 3
     assert t.view(st, now=1000 + t.HOLD_MS + t.CLAIM_WINDOW_MS + 5)["stage"] == 1  # не забрал вовремя
-    assert t.REWARD_STARS == 5
+    assert t.REWARD_STARS == 10

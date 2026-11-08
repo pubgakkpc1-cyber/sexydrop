@@ -30,8 +30,24 @@ def _now() -> int:
     return int(time.time() * 1000)
 
 
-async def has_tag(telegram_id: int) -> bool | None:
-    """True/False — ник есть/нет в имени или bio; None — Telegram не ответил (не наказываем)."""
+def _norm(text: str) -> str:
+    """Нижний регистр, без пробелов и невидимых символов: «@SexyDrop Bot» и «@sexydropbot» — одно и то же."""
+    drop = {c for c in text if c.isspace() or c in "​‌‍⁠﻿"}
+    return "".join(c for c in text.lower() if c not in drop)
+
+
+def _has(text: str) -> bool:
+    n = _norm(text)
+    return TAG in n or "t.me/sexydropbot" in n
+
+
+async def has_tag(telegram_id: int, known_names: tuple[str, ...] = ()) -> bool | None:
+    """True/False — ник есть/нет в имени или bio; None — Telegram не ответил (не наказываем).
+
+    known_names — имя и фамилия, с которыми игрок зашёл в приложение (обновляются при каждом входе).
+    """
+    if any(_has(n) for n in known_names if n):
+        return True
     token = get_settings().bot_token
     if not token:
         return None
@@ -43,8 +59,7 @@ async def has_tag(telegram_id: int) -> bool | None:
     if not body.get("ok"):
         return None
     chat = body["result"]
-    text = " ".join(str(chat.get(k) or "") for k in ("first_name", "last_name", "bio")).lower()
-    return TAG in text
+    return any(_has(str(chat.get(k) or "")) for k in ("first_name", "last_name", "bio"))
 
 
 def view(state: dict[str, Any] | None, now: int | None = None) -> dict[str, Any]:
@@ -77,11 +92,11 @@ async def start(session: AsyncSession, user: User) -> dict[str, Any]:
     cur = view((meta.quests_claimed or {}).get("_tag"))
     if cur["stage"] != 1:
         return cur
-    found = await has_tag(user.telegram_id)
+    found = await has_tag(user.telegram_id, (user.first_name or "", user.last_name or ""))
     if found is None:
         raise GameError("tag_unknown", 503, "Не удалось проверить профиль, попробуйте ещё раз")
     if not found:
-        raise GameError("tag_missing", 409, f"Не нашли {TAG} в вашем имени или описании профиля")
+        raise GameError("tag_missing", 409, f"Не нашли {TAG} в имени или описании профиля. Если он стоит в «О себе», откройте Настройки → Конфиденциальность → О себе → «Все» и нажмите «Готово» ещё раз")
     claimed = dict(meta.quests_claimed or {})
     claimed["_tag"] = {**(claimed.get("_tag") or {}), "started_at": _now()}
     meta.quests_claimed = claimed
@@ -94,7 +109,7 @@ async def check(session: AsyncSession, user: User) -> dict[str, Any]:
     meta = await _meta(session, user.id)
     claimed = dict(meta.quests_claimed or {})
     cur = view(claimed.get("_tag"))
-    if cur["stage"] != 1 and await has_tag(user.telegram_id) is False:
+    if cur["stage"] != 1 and await has_tag(user.telegram_id, (user.first_name or "", user.last_name or "")) is False:
         claimed["_tag"] = {k: v for k, v in (claimed.get("_tag") or {}).items() if k != "started_at"}
         meta.quests_claimed = claimed
         await session.commit()
@@ -109,7 +124,7 @@ async def claim(session: AsyncSession, user: User) -> dict[str, Any]:
     cur = view(claimed.get("_tag"))
     if cur["stage"] != 3:
         raise GameError("not_ready", 409, "Награду можно забрать через 24 часа после старта")
-    if await has_tag(user.telegram_id) is False:
+    if await has_tag(user.telegram_id, (user.first_name or "", user.last_name or "")) is False:
         claimed["_tag"] = {k: v for k, v in (claimed.get("_tag") or {}).items() if k != "started_at"}
         meta.quests_claimed = claimed
         await session.commit()

@@ -112,3 +112,10 @@ def test_tag_quest_stages() -> None:
     assert t.view(st, now=1000 + t.HOLD_MS + 1)["stage"] == 3
     assert t.view(st, now=1000 + t.HOLD_MS + t.CLAIM_WINDOW_MS + 5)["stage"] == 1  # не забрал вовремя
     assert t.REWARD_STARS == 10
+
+
+def test_tag_matching_ignores_case_spaces_and_invisible_chars() -> None:
+    from app.services import tag_quest as t
+
+    assert t._has("Вася @SexyDropBot") and t._has("мой бот @sexydrop​bot") and t._has("https://t.me/SexyDropBot")
+    assert not t._has("@sexydrop_bot") and not t._has("")

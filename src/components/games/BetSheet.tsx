@@ -204,7 +204,7 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
             ))}
             <button
               type="button"
-              className={styles.preset}
+              className={cx(styles.preset, styles.presetMax)}
               onClick={() => setAmountInput(formatMinor(Math.max(100, Math.min(balance, MAX_BET_MINOR))))}
             >
               Макс
@@ -345,6 +345,7 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
         fullWidth
         size="lg"
         variant="cta"
+        className={styles.confirmBtn}
         disabled={tab === 'gram' ? amountMinor === null || insufficient || amountMinor < 100 : !selectedRow}
         onClick={confirm}
         aria-label={confirmLabel(tab, amountMinor, selectedRow?.gift.name, isNextRound)}

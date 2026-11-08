@@ -13,6 +13,7 @@ export function AdminGiveTab() {
   const [loading, setLoading] = useState(false)
 
   const credit = useWalletStore((s) => s.credit)
+  const myName = (getTelegramUser()?.username ?? '').replace(/^@/, '')
 
   const handleGiveTon = async () => {
     const cleanUser = username.trim().replace(/^@/, '')
@@ -77,6 +78,12 @@ export function AdminGiveTab() {
 
   return (
     <div className={styles.body}>
+        {myName && (
+          <button type="button" className={styles.pill} onClick={() => setUsername(myName)}>
+            Себе (@{myName})
+          </button>
+        )}
+
         <Input
           label="Юзернейм получателя"
           placeholder="@username"

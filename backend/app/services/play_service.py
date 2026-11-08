@@ -35,7 +35,7 @@ DEPOSIT_UNLOCK_MINOR = 250  # 0.25 TON; 50 Stars = 0.285 TON тоже прохо
 QUEST_TTL_MS = 3 * 24 * 3600 * 1000
 MINES_TILES = 25
 # NFT из FREE выдаётся, когда выполнены ВСЕ шаги — они видны игроку на замке с самого начала
-QUEST_DEPOSIT_MINOR = 2500  # пополнить на 2.5 TON (после получения подарка)
+QUEST_DEPOSIT_MINOR = 5000  # пополнить на 5 TON (после получения подарка)
 QUEST_GAME_ROUNDS = 5  # и сыграть 5 раз в любой мини-игре
 QUEST_GAMES = ("mines", "crash", "upgrade")
 MIN_BET_MINOR = 100  # минимальная ставка в играх — 0.1 TON

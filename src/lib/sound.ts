@@ -316,47 +316,36 @@ export function playCrashBoom(): void {
     if (!ctx) return
     const now = ctx.currentTime
 
-    // 1. Низкочастотный саб-бас импульс (ударная волна)
-    const subOsc = ctx.createOscillator()
-    const subGain = ctx.createGain()
-    subOsc.type = 'triangle'
-    subOsc.frequency.setValueAtTime(140, now)
-    subOsc.frequency.exponentialRampToValueAtTime(28, now + 0.55)
+    // Мультяшный «бабах»: мягкий пузырьковый «поп» вниз по тону + короткий искристый хвост. Тихо, без баса и шума.
+    const pop = ctx.createOscillator()
+    const popGain = ctx.createGain()
+    pop.type = 'sine'
+    pop.frequency.setValueAtTime(520, now)
+    pop.frequency.exponentialRampToValueAtTime(110, now + 0.22)
+    popGain.gain.setValueAtTime(0.001, now)
+    popGain.gain.linearRampToValueAtTime(0.11, now + 0.01)
+    popGain.gain.exponentialRampToValueAtTime(0.001, now + 0.26)
+    pop.connect(popGain)
+    popGain.connect(ctx.destination)
+    pop.start(now)
+    pop.stop(now + 0.28)
 
-    subGain.gain.setValueAtTime(0.35, now)
-    subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.6)
-
-    subOsc.connect(subGain)
-    subGain.connect(ctx.destination)
-    subOsc.start(now)
-    subOsc.stop(now + 0.62)
-
-    // 2. Взрывной шум обломков и огня (Filtered Noise Burst)
-    const bufferSize = Math.floor(ctx.sampleRate * 0.45)
-    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate)
-    const output = buffer.getChannelData(0)
-    for (let i = 0; i < bufferSize; i++) {
-      output[i] = Math.random() * 2 - 1
-    }
-
-    const whiteNoise = ctx.createBufferSource()
-    whiteNoise.buffer = buffer
-
-    const filter = ctx.createBiquadFilter()
-    filter.type = 'lowpass'
-    filter.frequency.setValueAtTime(1200, now)
-    filter.frequency.exponentialRampToValueAtTime(60, now + 0.45)
-
-    const noiseGain = ctx.createGain()
-    noiseGain.gain.setValueAtTime(0.25, now)
-    noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.48)
-
-    whiteNoise.connect(filter)
-    filter.connect(noiseGain)
-    noiseGain.connect(ctx.destination)
-
-    whiteNoise.start(now)
-    whiteNoise.stop(now + 0.5)
+    // «дзинь-блинк» осколков: три быстрых нисходящих тона
+    ;[880, 660, 440].forEach((f, i) => {
+      const t = now + 0.05 + i * 0.07
+      const o = ctx.createOscillator()
+      const g = ctx.createGain()
+      o.type = 'triangle'
+      o.frequency.setValueAtTime(f, t)
+      o.frequency.exponentialRampToValueAtTime(f * 0.7, t + 0.12)
+      g.gain.setValueAtTime(0.001, t)
+      g.gain.linearRampToValueAtTime(0.035, t + 0.01)
+      g.gain.exponentialRampToValueAtTime(0.001, t + 0.14)
+      o.connect(g)
+      g.connect(ctx.destination)
+      o.start(t)
+      o.stop(t + 0.16)
+    })
   } catch {
     /* no-op */
   }

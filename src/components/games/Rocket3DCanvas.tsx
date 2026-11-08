@@ -819,8 +819,8 @@ export function Rocket3DCanvas({
         const rx = state.rocketPos.x > 0 ? state.rocketPos.x : (typeof window !== 'undefined' ? window.innerWidth * 0.52 : 200)
         const ry = state.rocketPos.y > 0 ? state.rocketPos.y : (typeof window !== 'undefined' ? window.innerHeight * 0.36 : 100)
 
-        state.shake = 22 // амплитуда тряски
-        state.flashAlpha = 0.9 // вспышка взрыва
+        state.shake = 7 // мягкая тряска (раньше 22 — вызывала лаги и дёргание)
+        state.flashAlpha = 0.55 // вспышка взрыва
         state.shockwaveRadius = 16
         state.shockwaveAlpha = 1.0
 
@@ -831,7 +831,7 @@ export function Rocket3DCanvas({
         for (let i = 0; i < expCount; i++) {
           const angle = Math.random() * Math.PI * 2
           const speed = 2.5 + Math.random() * 9
-          const maxLife = 40 + Math.floor(Math.random() * 40)
+          const maxLife = 20 + Math.floor(Math.random() * 16)
           exp.push({
             x: rx,
             y: ry,
@@ -1245,17 +1245,17 @@ export function Rocket3DCanvas({
         // Мягкая радиальная вспышка взрыва (БЕЗ прямоугольных рамок и границ холста!)
         if (state.flashAlpha > 0.01) {
           ctx.save()
-          const flashGrad = ctx.createRadialGradient(rx, ry, 0, rx, ry, 150)
-          flashGrad.addColorStop(0, `rgba(255, 255, 255, ${state.flashAlpha * 0.85})`)
-          flashGrad.addColorStop(0.25, `rgba(56, 189, 248, ${state.flashAlpha * 0.45})`)
-          flashGrad.addColorStop(0.65, `rgba(14, 165, 233, ${state.flashAlpha * 0.15})`)
-          flashGrad.addColorStop(1, 'rgba(0, 0, 0, 0)')
-          ctx.fillStyle = flashGrad
+          // два простых круга вместо градиента на каждый кадр (дешевле для телефона)
+          ctx.fillStyle = `rgba(255, 140, 140, ${state.flashAlpha * 0.28})`
           ctx.beginPath()
-          ctx.arc(rx, ry, 150, 0, Math.PI * 2)
+          ctx.arc(rx, ry, 70 + (1 - state.flashAlpha) * 60, 0, Math.PI * 2)
+          ctx.fill()
+          ctx.fillStyle = `rgba(255, 255, 255, ${state.flashAlpha * 0.7})`
+          ctx.beginPath()
+          ctx.arc(rx, ry, 30, 0, Math.PI * 2)
           ctx.fill()
           ctx.restore()
-          state.flashAlpha *= 0.86
+          state.flashAlpha *= 0.8
         }
 
         // Ударная волна взрыва (Shockwave Ring)
@@ -1269,7 +1269,7 @@ export function Rocket3DCanvas({
           ctx.restore()
 
           state.shockwaveRadius += 5
-          state.shockwaveAlpha *= 0.92
+          state.shockwaveAlpha *= 0.88
         }
 
         // 4.1. Отрисовка разлетающихся обломков ракеты (Debris Shatter)

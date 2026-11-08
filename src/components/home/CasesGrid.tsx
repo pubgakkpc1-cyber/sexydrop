@@ -12,12 +12,15 @@ import styles from './CasesGrid.module.css'
  * дешевле 1 GRAM, сиреневая у остальных), чип «НОВОЕ» слева сверху.
  * Правило пилюли — конфигурация оформления; цены остаются конфигом продукта.
  */
+/** Кейсы, скрытые с главной по решению владельца (прямая ссылка /case/:id продолжает работать). */
+const HIDDEN_ON_HOME = new Set(['classic', 'romance', 'holiday'])
+
 export function CasesGrid() {
   return (
     <section className={styles.section} aria-label="Кейсы">
       <h2 className={styles.title}>Кейсы</h2>
       <div className={styles.grid}>
-        {paidCases.map((gameCase) => {
+        {paidCases.filter((c) => !HIDDEN_ON_HOME.has(c.id)).map((gameCase) => {
           const cheap = gameCase.priceMinor < 1000
           return (
             <Link

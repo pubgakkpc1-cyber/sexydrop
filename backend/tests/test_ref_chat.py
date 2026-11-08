@@ -119,3 +119,12 @@ def test_tag_matching_ignores_case_spaces_and_invisible_chars() -> None:
 
     assert t._has("Вася @SexyDropBot") and t._has("мой бот @sexydrop​bot") and t._has("https://t.me/SexyDropBot")
     assert not t._has("@sexydrop_bot") and not t._has("")
+
+
+def test_broadcast_must_be_armed_by_a_test_first() -> None:
+    from app.services import ref_share as r
+
+    assert not r.is_broadcast_armed(777)
+    r.arm_broadcast(777)
+    assert r.is_broadcast_armed(777)
+    assert "+2 ★" in r.broadcast_caption(1) and "100 ★ = 1 TON" in r.broadcast_caption(1)

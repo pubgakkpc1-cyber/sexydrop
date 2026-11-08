@@ -288,11 +288,50 @@ async def _record_payment(payment: dict[str, Any]) -> None:
         log.warning("stars payment credit failed: %s", exc)
 
 
+async def _admin_broadcast(command: str, admin_id: int, chat_id: int) -> bool:
+    """/rassylka — тест рассылки (добивка + напоминание о рефке) только админу; /rassylka_vsem — отправить всем (в течение 10 минут после теста)."""
+    import asyncio
+    import time as _t
+
+    from app.core.db import get_session_factory
+    from app.services import broadcast_service as bs
+    from app.services import ref_share
+
+    async with httpx.AsyncClient(timeout=20.0) as client:
+        async def say(text: str) -> None:
+            await client.post(f"{_api_url()}/sendMessage", json={"chat_id": chat_id, "text": text, "parse_mode": "HTML"})
+
+        if command == "/rassylka":
+            ok, err = await ref_share._send_photo_to(client, admin_id, f"{ref_share._base_url()}/brand/ref/boost-photo.jpg")
+            if not ok:
+                await say(f"Не получилось отправить тест: {err}")
+                return True
+            ref_share.arm_broadcast(admin_id)
+            await say(
+                "Так сообщение увидят игроки (ссылки у каждого свои). Если всё хорошо, "
+                "в течение 10 минут отправьте /rassylka_vsem — оно уйдёт <b>всем игрокам</b>."
+            )
+            return True
+        if not ref_share.is_broadcast_armed(admin_id):
+            await say("Сначала отправьте /rassylka, проверьте тест, и затем в течение 10 минут /rassylka_vsem.")
+            return True
+        if bs.is_running():
+            await say("Предыдущая рассылка ещё идёт.")
+            return True
+        async with get_session_factory()() as session:
+            ids = await bs.audience_ids(session, "all")
+        ref_share._armed.pop(admin_id, None)
+        bs._state = {"state": "running", "audience": "all", "total": len(ids), "sent": 0, "failed": 0, "started": int(_t.time())}
+        bs._task = asyncio.get_running_loop().create_task(ref_share.run_boost_broadcast(ids, bs._state))
+        await say(f"Рассылка запущена: {len(ids)} получателей. Ход — в админке, раздел «Рассылка».")
+        return True
+
+
 async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
     """Команды админа в личке бота. /gifs — прислать все реферальные гифки."""
     text = str(message.get("text") or "").strip()
     command = text.split()[0].split("@")[0].lower() if text.startswith("/") else ""
-    if command not in ("/gifs", "/post"):
+    if command not in ("/gifs", "/post", "/rassylka", "/rassylka_vsem"):
         return False
     from app.api.odds import ADMIN_USERNAMES
     from app.services import ref_share
@@ -300,6 +339,8 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
     sender = message.get("from") or {}
     if str(sender.get("username") or "").lower().lstrip("@") not in ADMIN_USERNAMES:
         return False  # не админ — обычное приветствие
+    if command in ("/rassylka", "/rassylka_vsem"):
+        return await _admin_broadcast(command, int(sender.get("id") or chat_id), chat_id)
     if command == "/post":
         await ref_share.send_task_post(chat_id, int(sender.get("id") or chat_id))
         await ref_share.send_boost_post(chat_id, int(sender.get("id") or chat_id))

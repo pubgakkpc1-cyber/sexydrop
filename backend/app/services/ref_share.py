@@ -341,3 +341,83 @@ async def send_boost_post(chat_id: int, telegram_id: int) -> bool:
                 break
             log.warning("boost post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
     return bool(body.get("ok"))
+
+
+# ---------------------------------------------------------------- рассылка: добивка + напоминание о рефке
+
+BROADCAST_ARMED_FOR_S = 600  # после теста админу «отправить всем» доступно 10 минут
+_armed: dict[int, float] = {}
+
+
+def broadcast_caption(telegram_id: int, premium: bool = True) -> str:
+    """Текст рассылки: добивка про ник и курс + напоминание, что за друзей тоже можно зарабатывать по 2 ★."""
+    from app.services.telegram_bot import em
+
+    app = html.escape(ref_link(telegram_id), quote=True)
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('spark')} <b>Не забыл про звёзды?</b>\n\n"
+        f"{e('dot')} Поставь <code>@sexydropbot</code> в имя или в «О себе» — <b>10 ★ каждый день</b>\n"
+        f'{e("dot")} Зайди в <a href="{app}">приложение</a>, нажми «Готово», через сутки забери звёзды\n\n'
+        f"{e('ton')} <b>Курс: 100 ★ = 1 TON</b> — меняй в разделе «Заработок»\n\n"
+        f"{e('friends')} <b>И зови друзей:</b> за каждого, кто прокрутит бесплатный кейс и вступит в чат, "
+        f"тебе <b>+2 ★</b> в банк. Забирай от 15 ★.\n\n"
+        f'{e("play")} <a href="{app}">Забрать звёзды</a> · '
+        f'{e("channel")} <a href="https://t.me/SexyDrop_official">Канал</a> · '
+        f'{e("support")} <a href="https://t.me/SexyDropOwner">Поддержка</a>'
+    )
+
+
+def arm_broadcast(admin_tg_id: int) -> None:
+    import time as _t
+
+    _armed[admin_tg_id] = _t.time()
+
+
+def is_broadcast_armed(admin_tg_id: int) -> bool:
+    import time as _t
+
+    return _t.time() - _armed.get(admin_tg_id, 0) < BROADCAST_ARMED_FOR_S
+
+
+async def _send_photo_to(client: httpx.AsyncClient, chat_id: int, photo_url: str) -> tuple[bool, str | None]:
+    for premium in (True, False):
+        payload = {
+            "chat_id": chat_id,
+            "photo": photo_url,
+            "caption": broadcast_caption(chat_id, premium),
+            "parse_mode": "HTML",
+            "reply_markup": {"inline_keyboard": [[{"text": "⭐ Забрать звёзды", "url": ref_link(chat_id)}]]},
+        }
+        r = await client.post(f"{_api()}/sendPhoto", json=payload)
+        if r.status_code == 429:
+            await asyncio.sleep(float(r.json().get("parameters", {}).get("retry_after", 1)))
+            r = await client.post(f"{_api()}/sendPhoto", json=payload)
+        if r.is_success:
+            return True, None
+        err = str(r.json().get("description", r.status_code))
+        if not premium or "emoji" not in err.lower():
+            return False, err
+    return False, "send failed"
+
+
+async def run_boost_broadcast(ids: list[int], state: dict[str, Any]) -> None:
+    """Рассылка добивки с фото; у каждого получателя в ссылках его собственная реферальная ссылка."""
+    import time as _t
+
+    photo = f"{_base_url()}/brand/ref/boost-photo.jpg"
+    async with httpx.AsyncClient(timeout=20.0) as client:
+        for chat_id in ids:
+            try:
+                ok, err = await _send_photo_to(client, chat_id, photo)
+            except Exception as exc:  # noqa: BLE001
+                ok, err = False, str(exc)[:200]
+            state["sent" if ok else "failed"] += 1
+            if err:
+                state["last_error"] = err[:200]
+            await asyncio.sleep(0.05)
+    state["state"] = "done"
+    state["finished"] = int(_t.time())

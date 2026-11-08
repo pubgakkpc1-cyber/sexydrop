@@ -17,6 +17,7 @@ export function TagQuestCard() {
   const q = useTagQuestStore((s) => s.quest)
   const [now, setNow] = useState(() => Date.now())
   const [busy, setBusy] = useState(false)
+  const [copied, setCopied] = useState(false)
   const [note, setNote] = useState<{ ok: boolean; text: string } | null>(null)
 
   useEffect(() => {
@@ -27,6 +28,16 @@ export function TagQuestCard() {
   if (!q) return null
   const expired = q.expires_at !== null && now > q.expires_at
   const stage: 1 | 2 | 3 = !q.started_at || expired ? 1 : q.ready_at !== null && now >= q.ready_at ? 3 : 2
+
+  const copyTag = async () => {
+    try {
+      await navigator.clipboard.writeText(q.tag)
+      setCopied(true)
+      window.setTimeout(() => setCopied(false), 2500)
+    } catch {
+      setNote({ ok: false, text: `Не удалось скопировать — введите ${q.tag} вручную` })
+    }
+  }
 
   const act = async (action: 'start' | 'check' | 'claim') => {
     if (busy) return
@@ -78,6 +89,17 @@ export function TagQuestCard() {
         ))}
       </ol>
 
+      {stage === 1 && (
+        <div className={styles.copyRow}>
+          <button type="button" className={styles.btnGhost} onClick={() => void copyTag()}>
+            {copied ? '✓ Скопировано' : `Скопировать ${q.tag}`}
+          </button>
+          <p className={styles.copyHint}>
+            Telegram не даёт приложениям менять профиль сам. Скопируйте ник, откройте Настройки → Изменить профиль и
+            вставьте его в имя или в «О себе», затем вернитесь и нажмите «Готово».
+          </p>
+        </div>
+      )}
       {stage === 1 && (
         <button type="button" className={styles.btn} disabled={busy} onClick={() => void act('start')}>
           {busy ? 'Проверяем…' : 'Готово'}

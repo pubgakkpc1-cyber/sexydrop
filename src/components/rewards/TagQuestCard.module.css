@@ -21,3 +21,5 @@
 .btn:disabled, .btnGhost:disabled { opacity: 0.55; cursor: wait; }
 .ok { margin: 0; font-size: 14px; font-weight: 600; color: #4fd18b; }
 .err { margin: 0; font-size: 14px; font-weight: 600; color: #ff7b82; }
+.copyRow { display: flex; flex-direction: column; gap: 8px; }
+.copyHint { margin: 0; font-size: 12.5px; line-height: 1.4; color: rgba(255, 255, 255, 0.55); }

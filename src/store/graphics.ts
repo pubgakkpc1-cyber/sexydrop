@@ -52,15 +52,15 @@ export const useGraphicsStore = create<GraphicsState>((set) => ({
  */
 export const GRAPHICS_PRESETS = {
   high: {
-    dpr: 1.5, stars: 28, explosion: 14, bgStars: 28, floaters: true,
+    dpr: 1.5, stars: 14, explosion: 6, bgStars: 12, floaters: true,
     menuDpr: 2, menuStars: 22, menuSparks: 2, menuBurst: 34, menuGlow: true, menuFps: 60,
   },
   medium: {
-    dpr: 1.25, stars: 16, explosion: 9, bgStars: 18, floaters: true,
+    dpr: 1.25, stars: 8, explosion: 4, bgStars: 6, floaters: false,
     menuDpr: 1.5, menuStars: 14, menuSparks: 1, menuBurst: 20, menuGlow: true, menuFps: 60,
   },
   low: {
-    dpr: 1, stars: 6, explosion: 5, bgStars: 0, floaters: false,
+    dpr: 1, stars: 3, explosion: 3, bgStars: 0, floaters: false,
     menuDpr: 1, menuStars: 0, menuSparks: 0, menuBurst: 10, menuGlow: false, menuFps: 30,
   },
 } as const

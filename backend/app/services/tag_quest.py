@@ -41,25 +41,35 @@ def _has(text: str) -> bool:
     return TAG in n or "t.me/sexydropbot" in n
 
 
-async def has_tag(telegram_id: int, known_names: tuple[str, ...] = ()) -> bool | None:
-    """True/False — ник есть/нет в имени или bio; None — Telegram не ответил (не наказываем).
+async def tag_probe(telegram_id: int, known_names: tuple[str, ...] = ()) -> dict[str, Any]:
+    """Где стоит ник: found (True/False/None — Telegram не ответил), where ('name'|'bio'|None), bio_visible.
 
-    known_names — имя и фамилия, с которыми игрок зашёл в приложение (обновляются при каждом входе).
+    bio_visible=False — Telegram не отдал «О себе» боту (закрыто настройками приватности): тогда отсутствие ника
+    в bio доказать нельзя, и игрока не наказываем.
     """
     if any(_has(n) for n in known_names if n):
-        return True
+        return {"found": True, "where": "name", "bio_visible": True}
     token = get_settings().bot_token
     if not token:
-        return None
+        return {"found": None, "where": None, "bio_visible": False}
     try:
         async with httpx.AsyncClient(timeout=8) as client:
             body = (await client.get(f"https://api.telegram.org/bot{token}/getChat", params={"chat_id": telegram_id})).json()
     except Exception:  # noqa: BLE001
-        return None
+        return {"found": None, "where": None, "bio_visible": False}
     if not body.get("ok"):
-        return None
+        return {"found": None, "where": None, "bio_visible": False}
     chat = body["result"]
-    return any(_has(str(chat.get(k) or "")) for k in ("first_name", "last_name", "bio"))
+    if any(_has(str(chat.get(k) or "")) for k in ("first_name", "last_name")):
+        return {"found": True, "where": "name", "bio_visible": "bio" in chat}
+    if _has(str(chat.get("bio") or "")):
+        return {"found": True, "where": "bio", "bio_visible": True}
+    return {"found": False, "where": None, "bio_visible": "bio" in chat}
+
+
+async def has_tag(telegram_id: int, known_names: tuple[str, ...] = ()) -> bool | None:
+    """True/False — ник есть/нет в имени или bio; None — проверить нельзя (не наказываем)."""
+    return (await tag_probe(telegram_id, known_names))["found"]
 
 
 def view(state: dict[str, Any] | None, now: int | None = None) -> dict[str, Any]:
@@ -92,7 +102,14 @@ async def start(session: AsyncSession, user: User) -> dict[str, Any]:
     cur = view((meta.quests_claimed or {}).get("_tag"))
     if cur["stage"] != 1:
         return cur
-    found = await has_tag(user.telegram_id, (user.first_name or "", user.last_name or ""))
+    probe = await tag_probe(user.telegram_id, (user.first_name or "", user.last_name or ""))
+    found = probe["found"]
+    if found is False and not probe["bio_visible"]:
+        raise GameError(
+            "tag_bio_hidden",
+            409,
+            f"Не видим «О себе» — Telegram скрывает его от бота. Откройте Настройки → Конфиденциальность → О себе → «Все», или поставьте {TAG} в имя",
+        )
     if found is None:
         raise GameError("tag_unknown", 503, "Не удалось проверить профиль, попробуйте ещё раз")
     if not found:
@@ -135,3 +152,46 @@ async def claim(session: AsyncSession, user: User) -> dict[str, Any]:
     meta.stars = int(meta.stars) + REWARD_STARS
     await session.commit()
     return {"status": "ok", "stars": meta.stars, "reward": REWARD_STARS}
+
+
+RECHECK_EVERY_S = 3600
+
+
+async def recheck_all() -> int:
+    """Раз в час: у всех, кто держит ник (этап 2–3), проверяем, что он на месте; убрали — сбрасываем. Возвращает число сброшенных."""
+    from sqlalchemy import select as _select
+
+    from app.core.db import get_session_factory
+
+    reset = 0
+    async with get_session_factory()() as session:
+        rows = (await session.execute(_select(UserMeta, User).join(User, User.id == UserMeta.user_id))).all()
+        for meta, user in rows:
+            claimed = dict(meta.quests_claimed or {})
+            tag = claimed.get("_tag") or {}
+            if not tag.get("started_at") or view(tag)["stage"] == 1:
+                continue
+            probe = await tag_probe(user.telegram_id, (user.first_name or "", user.last_name or ""))
+            if probe["found"] is False and probe["bio_visible"]:
+                claimed["_tag"] = {k: v for k, v in tag.items() if k != "started_at"}
+                meta.quests_claimed = claimed
+                reset += 1
+        await session.commit()
+    return reset
+
+
+async def recheck_loop() -> None:
+    """Фоновая почасовая проверка ников для задания (запускается при старте сервера)."""
+    import asyncio
+    import logging
+
+    log = logging.getLogger("sexydrop.tagquest")
+    await asyncio.sleep(120)
+    while True:
+        try:
+            n = await recheck_all()
+            if n:
+                log.info("tag quest: reset %s players who removed the tag", n)
+        except Exception as exc:  # noqa: BLE001 — проверка не должна ронять сервер
+            log.warning("tag quest recheck failed: %s", exc)
+        await asyncio.sleep(RECHECK_EVERY_S)

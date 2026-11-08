@@ -24,6 +24,10 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         asyncio.create_task(register_webhook())
         # новые реферальные гифки — админу в бота, один раз на версию
         asyncio.create_task(send_previews_to_admins_once())
+        # раз в час проверяем, что игроки не убрали ник бота из профиля
+        from app.services.tag_quest import recheck_loop
+
+        asyncio.create_task(recheck_loop())
     try:
         yield
     finally:

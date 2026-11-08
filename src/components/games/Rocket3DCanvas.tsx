@@ -996,11 +996,13 @@ export function Rocket3DCanvas({
         ? window.innerHeight
         : (canvas.clientHeight || 280)
       const dprRaw = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1
-      const dpr = stateRef.current.lowQ ? 1 : Math.min(GRAPHICS_PRESETS[useGraphicsStore.getState().quality].dpr, dprRaw)
+      const wantDpr = stateRef.current.lowQ ? 1 : Math.min(GRAPHICS_PRESETS[useGraphicsStore.getState().quality].dpr, dprRaw)
+      // на широких окнах (ПК) холст на весь экран огромный — ограничиваем число пикселей (~1 млн), иначе не держит 60 FPS
+      const dpr = Math.max(0.6, Math.min(wantDpr, Math.sqrt(1_000_000 / Math.max(1, width * height))))
 
-      if (canvas.width !== width * dpr || canvas.height !== height * dpr) {
-        canvas.width = width * dpr
-        canvas.height = height * dpr
+      if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
+        canvas.width = Math.round(width * dpr)
+        canvas.height = Math.round(height * dpr)
       }
 
       ctx.save()
@@ -1015,7 +1017,7 @@ export function Rocket3DCanvas({
         state.time += dt
         // Облегчённый режим: если кадры стабильно дольше ~24 мс, отключаем мягкое свечение
         state.emaDt += (dt - state.emaDt) * 0.05
-        if (state.emaDt > 0.024) state.lowQ = true
+        if (state.emaDt > 0.021) state.lowQ = true
         else if (state.emaDt < 0.019) state.lowQ = false
 
         // Тряска экрана при взрыве
@@ -1136,8 +1138,8 @@ export function Rocket3DCanvas({
           const speed = 55 + Math.min(110, currentMult * 6)
 
           state.ribbonAcc += dt
-          const interval = state.lowQ ? 0.09 : 0.05
-          if (state.ribbonAcc >= interval && state.trail.length < 28) {
+          const interval = state.lowQ ? 0.14 : 0.1
+          if (state.ribbonAcc >= interval && state.trail.length < 10) {
             state.ribbonAcc = 0
             const r = Math.random()
             if (ship === 0) {

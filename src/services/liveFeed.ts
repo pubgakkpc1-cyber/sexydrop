@@ -1,4 +1,4 @@
-import { giftById, paidCases, type Gift } from '../data/catalog'
+import { giftById, isTonPrize, paidCases, type Gift } from '../data/catalog'
 import { pickWeighted } from '../lib/caseMath'
 
 /** Длительность одного «слота» ленты. Новый дроп появляется каждые SLOT_MS у всех одновременно. */
@@ -37,11 +37,13 @@ export function liveDropForSlot(slot: number): LiveDrop {
   const rng = seeded(slot * 2654435761 + 12345)
   const cases = paidCases
   let best: LiveDrop | null = null
-  for (let attempt = 0; attempt < 5; attempt += 1) {
+  for (let attempt = 0; attempt < 25; attempt += 1) {
     const gameCase = cases[Math.floor(rng() * cases.length)]!
     const entry = pickWeighted(gameCase.entries, rng)
+    // в Live показываем только NFT-подарки, выигрыши в TON не показываем
+    if (isTonPrize(entry.itemId)) continue
     const gift = giftById.get(entry.itemId)
-    if (!gift) continue
+    if (!gift || isTonPrize(gift)) continue
     const drop: LiveDrop = {
       slot,
       caseId: gameCase.id,

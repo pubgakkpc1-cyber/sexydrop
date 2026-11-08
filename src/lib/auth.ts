@@ -42,3 +42,9 @@ export async function authHeaders(): Promise<Record<string, string>> {
   const t = await getAuthToken()
   return t ? { Authorization: `Bearer ${t}` } : {}
 }
+
+/** Сбросить токен (истёк или отклонён сервером): следующий запрос войдёт заново по initData. */
+export function resetAuthToken(): void {
+  token = null
+  pending = null
+}

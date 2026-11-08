@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { giftById } from '../../data/catalog'
-import { authHeaders } from '../../lib/auth'
+import { authHeaders, resetAuthToken } from '../../lib/auth'
 import { adminFetch } from '../../lib/adminApi'
 import { ago, dateTime, ton } from './adminFormat'
 import styles from './AdminPanel.module.css'
@@ -60,15 +60,26 @@ export function AdminWithdrawalsTab() {
   const resolve = async (w: Withdrawal, action: 'done' | 'reject') => {
     setBusy(w.id)
     setDone(null)
+    setError(null)
+    const call = async () =>
+      fetch(`/api/admin/withdrawals/${w.id}/${action}`, { method: 'POST', headers: await authHeaders() })
     try {
-      const res = await fetch(`/api/admin/withdrawals/${w.id}/${action}`, { method: 'POST', headers: await authHeaders() })
+      let res = await call()
+      if (res.status === 401 || res.status === 403) {
+        // токен истёк — входим заново и повторяем один раз
+        resetAuthToken()
+        res = await call()
+      }
       if (!res.ok) {
         const data = (await res.json().catch(() => null)) as { detail?: string } | null
-        setError(data?.detail ?? `Ошибка ${res.status}`)
+        setError(`Не получилось: ${data?.detail ?? `ошибка ${res.status}`}`)
       } else {
         const gift = giftById.get(w.gift_id)?.name ?? w.name
+        setRows((r) => (r ? r.filter((x) => x.id !== w.id) : r)) // карточка исчезает сразу
         setDone(action === 'done' ? `Готово: «${gift}» отмечен выданным.` : `«${gift}» вернули игроку в инвентарь.`)
       }
+    } catch {
+      setError('Нет связи с сервером — попробуйте ещё раз')
     } finally {
       setBusy(null)
       void load()
@@ -77,7 +88,7 @@ export function AdminWithdrawalsTab() {
 
   return (
     <div className={styles.tab}>
-      {error && <p className={`${styles.note} ${styles.bad}`}>{error}</p>}
+      {error && <p className={`${styles.note} ${styles.bad} ${styles.stickyNote}`} role="alert">{error}</p>}
       {done && <p className={`${styles.note} ${styles.good}`} role="status">{done}</p>}
       {rows === null && !error && <p className={styles.muted}>Загрузка…</p>}
       {rows !== null && rows.length === 0 && (

@@ -2,6 +2,7 @@ import { apiGet } from './api'
 import { SERVER_MODE } from './serverMode'
 import { useWalletStore } from '../store/wallet'
 import { useInventoryStore, type InventoryItem, type InventorySource } from '../store/inventory'
+import { useQuestStepsStore } from '../store/questSteps'
 import { REF_CHAT_URL, useRefBankStore } from '../store/refBank'
 import { useStarsBalanceStore } from '../store/starsBalance'
 import { useQuestsStore } from '../store/quests'
@@ -21,6 +22,7 @@ export interface FreeQuestServer {
   joined: number
   target: number
   completed: boolean
+  steps?: import('../store/questSteps').QuestStepsState['steps']
 }
 
 export interface ServerState {
@@ -66,6 +68,7 @@ export function removeServerItem(uid: string): void {
 }
 
 function applyFreeQuest(q: FreeQuestServer): void {
+  useQuestStepsStore.setState({ steps: q.steps ?? null })
   const quest = useFreeCasesStore.getState().quest
   useFreeCasesStore.setState({
     quest: {

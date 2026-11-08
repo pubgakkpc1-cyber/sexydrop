@@ -34,6 +34,10 @@ FREE24_SPINS_BEFORE_DEPOSIT = 3
 DEPOSIT_UNLOCK_MINOR = 250  # 0.25 TON; 50 Stars = 0.285 TON тоже проходит
 QUEST_TTL_MS = 3 * 24 * 3600 * 1000
 MINES_TILES = 25
+# NFT из FREE выдаётся, когда выполнены ВСЕ шаги — они видны игроку на замке с самого начала
+QUEST_DEPOSIT_MINOR = 2500  # пополнить на 2.5 TON (после получения подарка)
+QUEST_GAME_ROUNDS = 5  # и сыграть 5 раз в любой мини-игре
+QUEST_GAMES = ("mines", "crash", "upgrade")
 MIN_BET_MINOR = 100  # минимальная ставка в играх — 0.1 TON
 
 
@@ -205,6 +209,45 @@ async def has_unlock_deposit(session: AsyncSession, user_id: uuid.UUID) -> bool:
     return int(total) >= DEPOSIT_UNLOCK_MINOR
 
 
+async def quest_steps(session: AsyncSession, user_id: uuid.UUID, since_ms: int, friends: int) -> dict[str, Any]:
+    """Прогресс трёх шагов замка: друзья, пополнение, игры. Депозиты и раунды считаются после получения подарка."""
+    from datetime import datetime, timezone
+
+    from sqlalchemy import func
+
+    from app.models.economy import DepositOrder
+
+    since = datetime.fromtimestamp(since_ms / 1000, tz=timezone.utc)
+    deposited = int(
+        (
+            await session.execute(
+                select(func.coalesce(func.sum(DepositOrder.amount_minor), 0)).where(
+                    DepositOrder.user_id == user_id, DepositOrder.status == "paid", DepositOrder.paid_at >= since
+                )
+            )
+        ).scalar_one()
+    )
+    rounds = int(
+        (
+            await session.execute(
+                select(func.count()).select_from(PlayRound).where(
+                    PlayRound.user_id == user_id,
+                    PlayRound.game.in_(QUEST_GAMES),
+                    PlayRound.status != "active",
+                    PlayRound.created_at >= since,
+                )
+            )
+        ).scalar_one()
+    )
+    steps = {
+        "friends": {"done": min(friends, QUEST_FRIENDS), "target": QUEST_FRIENDS},
+        "deposit": {"done": min(deposited, QUEST_DEPOSIT_MINOR), "target": QUEST_DEPOSIT_MINOR},
+        "games": {"done": min(rounds, QUEST_GAME_ROUNDS), "target": QUEST_GAME_ROUNDS},
+    }
+    steps["completed"] = all(v["done"] >= v["target"] for v in list(steps.values()))
+    return steps
+
+
 async def quest_status(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any]:
     """Состояние задания FREE; при выполнении подарок переходит в инвентарь."""
     meta = await _lock_meta(session, user_id)
@@ -212,14 +255,15 @@ async def quest_status(session: AsyncSession, user_id: uuid.UUID) -> dict[str, A
     item = await _active_quest_item(session, user_id, meta, now)
     if item is None:
         await session.commit()
-        return {"pending": None, "joined": 0, "target": QUEST_FRIENDS, "completed": False}
+        return {"pending": None, "joined": 0, "target": QUEST_FRIENDS, "completed": False, "steps": None}
     quest = meta.free_state["quest"]
     rows = await friends_joined_rows(session, user_id, int(quest["claimed_at"]))
     joined = len(rows)
     if joined >= QUEST_FRIENDS:
         # друзей хватает — перед выдачей NFT проверяем, что все они в чате SEXY DROP
         joined = await _count_in_chat(meta, rows)
-    completed = joined >= QUEST_FRIENDS
+    steps = await quest_steps(session, user_id, int(quest["claimed_at"]), joined)
+    completed = bool(steps["completed"])
     pending = {
         "uid": str(item.id),
         "gift_id": item.gift_id,
@@ -230,7 +274,13 @@ async def quest_status(session: AsyncSession, user_id: uuid.UUID) -> dict[str, A
         item.status = "available"
         meta.free_state = {k: v for k, v in meta.free_state.items() if k != "quest"}
     await session.commit()
-    return {"pending": pending, "joined": min(joined, QUEST_FRIENDS), "target": QUEST_FRIENDS, "completed": completed}
+    return {
+        "pending": pending,
+        "joined": min(joined, QUEST_FRIENDS),
+        "target": QUEST_FRIENDS,
+        "completed": completed,
+        "steps": steps,
+    }
 
 
 def _friends_word(n: int) -> str:
@@ -251,15 +301,21 @@ async def check_quest_item(session: AsyncSession, user_id: uuid.UUID, item: NftI
     if str(quest.get("item_id")) != str(item.id) or now_ms() >= int(quest.get("expires_at", 0)):
         raise GameError("item_unavailable", 409, "Срок задания истёк — подарок больше недоступен")
     joined = min(await friends_joined(session, user_id, int(quest["claimed_at"])), QUEST_FRIENDS)
-    if joined >= QUEST_FRIENDS:
+    steps = await quest_steps(session, user_id, int(quest["claimed_at"]), joined)
+    if steps["completed"]:
         item.status = "available"
         return
-    left = QUEST_FRIENDS - joined
-    raise GameError(
-        "invite_required",
-        403,
-        f"Чтобы {action}, пригласите ещё {left} {_friends_word(left)} — засчитано {joined} из {QUEST_FRIENDS}",
-    )
+    todo = []
+    if joined < QUEST_FRIENDS:
+        left = QUEST_FRIENDS - joined
+        todo.append(f"пригласите ещё {left} {_friends_word(left)} ({joined} из {QUEST_FRIENDS})")
+    dep = steps["deposit"]
+    if dep["done"] < dep["target"]:
+        todo.append(f"пополните баланс на {(dep['target'] - dep['done']) / 1000:g} TON")
+    g = steps["games"]
+    if g["done"] < g["target"]:
+        todo.append(f"сыграйте ещё {g['target'] - g['done']} раз в мини-играх")
+    raise GameError("invite_required", 403, f"Чтобы {action}: " + "; ".join(todo))
 
 
 async def _count_in_chat(meta: UserMeta, rows: list[Any]) -> int:

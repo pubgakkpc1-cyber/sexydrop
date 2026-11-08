@@ -5,6 +5,7 @@ import { shareRefGif } from '../../lib/refShare'
 import { syncReferrals } from '../../lib/referralSync'
 import { BottomSheet, Button } from '../ui'
 import { LockIcon, UsersIcon } from '../shell/icons'
+import { useQuestStepsStore } from '../../store/questSteps'
 import styles from './LockedGiftSheet.module.css'
 
 export type LockedAction = 'withdraw' | 'sell' | 'upgrade'
@@ -43,6 +44,7 @@ function countdown(expiresAt: number, now: number): string {
 export function LockedGiftSheet({ gift, action, joined, target, expiresAt, onClose }: LockedGiftSheetProps) {
   const [now, setNow] = useState(() => Date.now())
   const left = Math.max(0, target - joined)
+  const steps = useQuestStepsStore((s) => s.steps)
   const tgId = getTelegramUser()?.id
   const refLink = tgId === undefined ? null : `https://t.me/sexydropbot?startapp=ref-${tgId}`
 
@@ -77,7 +79,9 @@ export function LockedGiftSheet({ gift, action, joined, target, expiresAt, onClo
         <p className={styles.message}>
           {left > 0
             ? `Чтобы ${ACTION_TEXT[action]} подарок, пригласите ещё ${left} ${friendsWord(left)}`
-            : 'Задание выполнено — подарок откроется через несколько секунд'}
+            : steps && !steps.completed
+              ? 'Друзья засчитаны — осталось выполнить остальные условия ниже'
+              : 'Задание выполнено — подарок откроется через несколько секунд'}
         </p>
 
         <div className={styles.progress} aria-label={`Засчитано ${joined} из ${target}`}>
@@ -92,9 +96,26 @@ export function LockedGiftSheet({ gift, action, joined, target, expiresAt, onClo
           </div>
         </div>
 
+        {steps && (
+          <ol className={styles.steps} aria-label="Условия разблокировки">
+            <li>
+              <span>1. Пригласить друзей с Premium (в чате SEXY DROP)</span>
+              <b>{steps.friends.done} / {steps.friends.target}</b>
+            </li>
+            <li>
+              <span>2. Пополнить баланс</span>
+              <b>{steps.deposit.done / 1000} / {steps.deposit.target / 1000} TON</b>
+            </li>
+            <li>
+              <span>3. Сыграть в мини-играх (Ракета, Мины, Апгрейд)</span>
+              <b>{steps.games.done} / {steps.games.target}</b>
+            </li>
+          </ol>
+        )}
+
         <p className={styles.terms}>
-          Засчитывается друг с Telegram Premium, который перешёл по вашей ссылке, открыл бесплатный
-          кейс и состоит в чате SEXY DROP (проверяем перед выдачей). Осталось времени:{' '}
+          Друг засчитывается, если у него Telegram Premium, он перешёл по вашей ссылке, открыл бесплатный
+          кейс и состоит в чате SEXY DROP (проверяем перед выдачей). Пополнение и игры считаются после получения подарка. Осталось времени:{' '}
           {countdown(expiresAt, now)}.
         </p>
 

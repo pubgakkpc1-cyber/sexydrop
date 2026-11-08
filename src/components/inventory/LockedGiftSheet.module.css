@@ -126,3 +126,28 @@
   width: 18px;
   height: 18px;
 }
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 12px 14px;
+  list-style: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.05);
+  font-size: 13.5px;
+}
+
+.steps li {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.steps b {
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+  color: #ffffff;
+}

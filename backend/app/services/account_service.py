@@ -26,7 +26,7 @@ from app.services.economy_core import (
 STARS_PER_TON = 175
 REFERRAL_BONUS_STARS = 2  # за каждого друга, открывшего бесплатный кейс (один раз за друга)
 BANK_MIN_CLAIM = 15  # звёзды за друзей копятся в банке; забрать на баланс звёзд — от 15 ★
-STARS_MIN_EXCHANGE = STARS_PER_TON
+STARS_MIN_EXCHANGE = 1  # минимум обмена — 1 звезда
 
 # Задания и награды в Stars (как на клиенте; прогресс считает сервер по своим записям)
 QUESTS: dict[str, dict[str, Any]] = {
@@ -314,7 +314,7 @@ async def claim_bank(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any
 
 async def exchange_stars(session: AsyncSession, user_id: uuid.UUID, stars: int) -> dict[str, Any]:
     if not isinstance(stars, int) or stars < STARS_MIN_EXCHANGE:
-        raise GameError("too_small", 400, "Минимальный обмен — 175 Stars")
+        raise GameError("too_small", 400, "Минимальный обмен — 1 звезда")
     await ensure_account(session, user_id)
     meta = (await session.execute(select(UserMeta).where(UserMeta.user_id == user_id).with_for_update())).scalar_one()
     await sweep_referral_stars(session, user_id, meta)

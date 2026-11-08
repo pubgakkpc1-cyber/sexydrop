@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { formatBalanceTon } from '../../lib/balanceFormat'
-import { minorToStars } from '../../lib/stars'
+import { useStarsBalanceStore } from '../../store/starsBalance'
 import { useDisplayCurrencyStore } from '../../store/displayCurrency'
 import { BalanceCurrencySheet } from './BalanceCurrencySheet'
 import { GraphicsMenu } from './GraphicsMenu'
@@ -20,17 +20,19 @@ export function Header() {
   const [adminOpen, setAdminOpen] = useState(false)
   const [currencyOpen, setCurrencyOpen] = useState(false)
   const currency = useDisplayCurrencyStore((s) => s.currency)
+  const earnedStars = useStarsBalanceStore((s) => s.stars)
 
   const tgUser = useMemo(() => getTelegramUser(), [])
   const balanceParts = useMemo(() => {
     if (currency === 'STARS') {
-      return { int: minorToStars(balance).toLocaleString('ru-RU').replace(/\u00a0/g, ' '), frac: '' }
+      // \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u044b\u0439 \u0437\u0432\u0451\u0437\u0434\u043d\u044b\u0439 \u0431\u0430\u043b\u0430\u043d\u0441 (\u0437\u0430\u0440\u0430\u0431\u043e\u0442\u0430\u043d\u043d\u044b\u0435 \u0437\u0432\u0451\u0437\u0434\u044b), \u043d\u0435 TON \u0432 \u043f\u0435\u0440\u0435\u0441\u0447\u0451\u0442\u0435
+      return { int: earnedStars.toLocaleString('ru-RU').replace(/\u00a0/g, ' '), frac: '' }
     }
     // Больше 0.1 TON — одна цифра после точки (вниз); меньше — как есть (например 0.023)
     const shown = formatBalanceTon(balance)
     const [int = '0', frac] = shown.split('.')
     return { int, frac: frac ? `.${frac}` : '' }
-  }, [balance, currency])
+  }, [balance, currency, earnedStars])
   const balanceText = currency === 'STARS' ? `${balanceParts.int} Stars` : `${balanceParts.int}${balanceParts.frac} TON`
   const usernameClean = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
   const isAdmin =

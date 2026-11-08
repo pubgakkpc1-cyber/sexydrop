@@ -1,5 +1,6 @@
 import { formatMinor } from '../../lib/money'
-import { STARS_PER_TON, minorToStars } from '../../lib/stars'
+import { STARS_PER_TON } from '../../lib/stars'
+import { useStarsBalanceStore } from '../../store/starsBalance'
 import { hapticImpact } from '../../lib/telegram'
 import { useDisplayCurrencyStore, type DisplayCurrency } from '../../store/displayCurrency'
 import { cx } from '../../lib/cx'
@@ -21,10 +22,11 @@ function fmtStars(stars: number): string {
 export function BalanceCurrencySheet({ open, onClose, balanceMinor }: BalanceCurrencySheetProps) {
   const currency = useDisplayCurrencyStore((s) => s.currency)
   const setCurrency = useDisplayCurrencyStore((s) => s.setCurrency)
+  const earnedStars = useStarsBalanceStore((s) => s.stars)
 
   const options: ReadonlyArray<{ id: DisplayCurrency; name: string; hint: string; value: string; icon: 'ton' | 'star' }> = [
     { id: 'TON', name: 'TON', hint: 'Основная валюта игры', value: formatMinor(balanceMinor), icon: 'ton' },
-    { id: 'STARS', name: 'Telegram Stars', hint: `${STARS_PER_TON} Stars = 1 TON`, value: fmtStars(minorToStars(balanceMinor)), icon: 'star' },
+    { id: 'STARS', name: 'Telegram Stars', hint: `Заработанные звёзды · ${STARS_PER_TON} ★ = 1 TON`, value: fmtStars(earnedStars), icon: 'star' },
   ]
 
   return (

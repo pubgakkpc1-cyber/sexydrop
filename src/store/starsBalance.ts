@@ -1,11 +1,11 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { safeJsonStorage } from '../lib/persistStorage'
-import { STARS_PER_TON, starsToMinor } from '../lib/stars'
+import { starsToMinor } from '../lib/stars'
 import { useWalletStore } from './wallet'
 
-/** Минимальный обмен: 175 Stars = 1 TON. */
-export const EXCHANGE_MIN_STARS = STARS_PER_TON
+/** Минимальный обмен — 1 звезда (курс 175 Stars = 1 TON). */
+export const EXCHANGE_MIN_STARS = 1
 
 interface StarsBalanceState {
   /** Заработанные звёзды (за задания и бонусы). */

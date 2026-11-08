@@ -3,6 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { useWalletStore } from '../../store/wallet'
+import { useStarsBalanceStore } from '../../store/starsBalance'
 import { Header } from './Header'
 
 function renderHeader() {
@@ -50,14 +51,15 @@ describe('Header (аватар, «Ваш баланс», TON, Пополнить
     renderHeader()
     expect(screen.getByText(/Баланс: 100 TON/)).toBeInTheDocument()
   })
-  it('нажатие на баланс открывает выбор валюты; Stars меняют показ баланса', async () => {
+  it('нажатие на баланс открывает выбор валюты; у Stars свой отдельный баланс (не TON в пересчёте)', async () => {
+    useStarsBalanceStore.setState({ stars: 28 })
     renderHeader()
     await userEvent.click(screen.getByRole('button', { name: 'Баланс: 100 TON' }))
     expect(screen.getByText('В чём показывать баланс')).toBeInTheDocument()
     await userEvent.click(screen.getByRole('radio', { name: /Telegram Stars/ }))
-    expect(screen.getByRole('button', { name: 'Баланс: 17 500 Stars' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Баланс: 28 Stars' })).toBeInTheDocument()
     // вернуть TON, чтобы не влиять на другие тесты
-    await userEvent.click(screen.getByRole('button', { name: 'Баланс: 17 500 Stars' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Баланс: 28 Stars' }))
     await userEvent.click(screen.getByRole('radio', { name: /^TON/ }))
     expect(screen.getByRole('button', { name: 'Баланс: 100 TON' })).toBeInTheDocument()
   })

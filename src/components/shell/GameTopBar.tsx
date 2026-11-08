@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useWalletStore } from '../../store/wallet'
+import { useStarsBalanceStore } from '../../store/starsBalance'
 import { useDisplayCurrencyStore } from '../../store/displayCurrency'
 import { GRAPHICS_PRESETS, useGraphicsStore } from '../../store/graphics'
-import { formatBalanceStars, formatBalanceTon } from '../../lib/balanceFormat'
+import { formatBalanceTon } from '../../lib/balanceFormat'
 import { cx } from '../../lib/cx'
 import { GraphicsMenu } from './GraphicsMenu'
 import { CrownIcon, StarIcon, TonIcon } from './icons'
@@ -46,7 +47,8 @@ export function GameTopBar({ onAdmin, bleed = false }: GameTopBarProps) {
     }
   }, [])
 
-  const amount = currency === 'STARS' ? formatBalanceStars(balance) : formatBalanceTon(balance)
+  const earnedStars = useStarsBalanceStore((s) => s.stars)
+  const amount = currency === 'STARS' ? earnedStars.toLocaleString('ru-RU').replace(/ /g, ' ') : formatBalanceTon(balance)
 
   return (
     <div className={cx(styles.bar, bleed && styles.bleed)}>

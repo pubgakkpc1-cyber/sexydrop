@@ -673,6 +673,8 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
 
       <p className={styles.rate}>
         Курс: <strong>{STARS_PER_TON} Stars = 1 TON</strong> · 1 Star = <strong>{TON_PER_STAR_LABEL} TON</strong>
+        {' · '}
+        За 100 Stars получите <strong>{formatMinor(starsToMinor(100))} TON</strong>
       </p>
       <p className={styles.rate}>
         От {EXCHANGE_MIN_STARS} до {STARS_MAX.toLocaleString('ru-RU')} Stars за раз

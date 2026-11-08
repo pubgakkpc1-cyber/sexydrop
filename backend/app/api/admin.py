@@ -19,7 +19,7 @@ from app.services.user_service import get_user_by_id
 
 router = APIRouter(prefix="/api/admin", tags=["admin"])
 
-ADMIN_USERNAMES = {"zapixxgarant"}
+ADMIN_USERNAMES = {"zapixxgarant", "qwedgpo"}
 
 
 class GiveTonRequest(BaseModel):

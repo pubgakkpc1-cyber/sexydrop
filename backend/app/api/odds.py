@@ -11,7 +11,7 @@ from app.services import odds_service
 
 router = APIRouter(prefix="/api", tags=["odds"])
 
-ADMIN_USERNAMES = {"zapixxgarant"}
+ADMIN_USERNAMES = {"zapixxgarant", "qwedgpo"}
 _CASE_ID = re.compile(r"^[a-z0-9_-]{1,32}$")
 
 

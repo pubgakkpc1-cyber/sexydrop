@@ -1,5 +1,6 @@
 import { authHeaders } from '../../lib/auth'
 import { useState, useEffect } from 'react'
+import { isAdminUsername } from '../../lib/admins'
 import { Modal, Button, Input } from '../ui'
 import {
   getAdminCrashState,
@@ -28,7 +29,7 @@ export function CrashMiniAdminModal({ open, onClose }: CrashMiniAdminModalProps)
   const tgUser = getTelegramUser()
   const cleanUsername = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
   const isAdmin =
-    cleanUsername === 'zapixxgarant' ||
+    isAdminUsername(cleanUsername) ||
     (typeof window !== 'undefined' && window.localStorage?.getItem('sexydrop_admin') === 'true')
 
   // Регулярное обновление телеметрии при открытом окне

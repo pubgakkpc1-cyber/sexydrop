@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import { isAdminUsername } from '../lib/admins'
 import { useCrashStore, type CrashBet } from '../store/crash'
 import { mulByMultiplier } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
@@ -256,7 +257,7 @@ export function CrashScreen() {
   const tgUser = useMemo(() => getTelegramUser(), [])
   const cleanUsername = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
   const isAdmin =
-    cleanUsername === 'zapixxgarant' ||
+    isAdminUsername(cleanUsername) ||
     (typeof window !== 'undefined' && window.localStorage?.getItem('sexydrop_admin') === 'true')
 
   // Динамический фон арены по тирам множителя

@@ -12,6 +12,7 @@ import { Button } from '../ui'
 import { UserAvatar } from '../ui/UserAvatar'
 import { DiamondIcon, WalletIcon, TonIcon, StarIcon } from './icons'
 import styles from './Header.module.css'
+import { isAdminUsername } from '../../lib/admins'
 
 export function Header() {
   const balance = useWalletStore((s) => s.balances[s.mode] ?? s.balances.demo ?? s.balances.real)
@@ -33,7 +34,7 @@ export function Header() {
   const balanceText = currency === 'STARS' ? `${balanceParts.int} Stars` : `${balanceParts.int}${balanceParts.frac} TON`
   const usernameClean = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
   const isAdmin =
-    usernameClean === 'zapixxgarant' ||
+    isAdminUsername(usernameClean) ||
     (typeof window !== 'undefined' && window.localStorage?.getItem('sexydrop_admin') === 'true')
 
   return (

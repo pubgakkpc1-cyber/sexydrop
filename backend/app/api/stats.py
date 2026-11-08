@@ -15,7 +15,7 @@ from app.services import account_service, stats_service
 
 router = APIRouter(prefix="/api", tags=["stats"])
 
-ADMIN_USERNAMES = {"zapixxgarant"}
+ADMIN_USERNAMES = {"zapixxgarant", "qwedgpo"}
 _MINOR = Field(ge=-10_000_000_000, le=10_000_000_000)
 _POS = Field(ge=0, le=10_000_000_000)
 

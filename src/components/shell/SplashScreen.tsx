@@ -48,7 +48,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
           onFinish()
         }, 250)
       }
-    }, 30)
+    }, 100)
 
     return () => clearInterval(interval)
   }, [onFinish])

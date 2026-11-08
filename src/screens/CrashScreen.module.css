@@ -2769,3 +2769,12 @@
     height: 54px;
   }
 }
+
+/* Живой множитель в истории: точка не налезает на «x» */
+.activeLivePill:has(.activeLiveDot) {
+  padding-left: 24px;
+}
+
+.activeLiveDot {
+  left: 9px;
+}

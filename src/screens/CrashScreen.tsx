@@ -273,23 +273,6 @@ export function CrashScreen() {
   const multGlow = MULT_TIER_STYLE[multTier(multiplier)].glow
 
   const [showMoneyRain, setShowMoneyRain] = useState(false)
-  const [showLaunch, setShowLaunch] = useState(false)
-  const launchPrevPhase = useRef(phase)
-  const multiplierRef = useRef(multiplier)
-  multiplierRef.current = multiplier
-
-  // Анимированный запуск: на старте полёта на арене вспыхивает «SEXY DROP · ПУСК!»
-  useEffect(() => {
-    const started = launchPrevPhase.current !== 'flying' && phase === 'flying'
-    launchPrevPhase.current = phase
-    if (!started || multiplierRef.current >= 1.3) return
-    const showId = window.setTimeout(() => setShowLaunch(true), 450)
-    const hideId = window.setTimeout(() => setShowLaunch(false), 2250)
-    return () => {
-      window.clearTimeout(showId)
-      window.clearTimeout(hideId)
-    }
-  }, [phase])
   const prevMyBetStatusRef = useRef(myBet?.status)
 
   // Триггер дождика деньгами при победе игрока (без просадки FPS на слабых устройствах)
@@ -441,7 +424,8 @@ export function CrashScreen() {
       const diff = rank(a) - rank(b)
       return diff !== 0 ? diff : b.stakeMinor - a.stakeMinor
     })
-  }, [myBet, phase, multiplier])
+  // без своей ставки список не зависит от множителя — не пересобираем его 20 раз в секунду
+  }, [myBet, phase, myBet ? multiplier : 0]) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={styles.screen}>
@@ -468,16 +452,6 @@ export function CrashScreen() {
           roundId={roundId}
           secondsLeft={phase === 'betting' ? secondsLeft : undefined}
         />
-
-        {showLaunch && phase === 'flying' && (
-          <div className={styles.launchBanner} aria-hidden="true">
-            <svg viewBox="0 0 24 24" className={styles.launchDrop}>
-              <path d="M12 2.5c3.6 4.3 6 7.6 6 11a6 6 0 0 1-12 0c0-3.4 2.4-6.7 6-11z" fill="currentColor" />
-            </svg>
-            <span className={styles.launchTitle}>SEXY DROP</span>
-            <span className={styles.launchGo}>ПУСК!</span>
-          </div>
-        )}
 
         {/* ФАЗА 1: Круговой таймер обратного отсчёта от 5 */}
         {phase === 'betting' && (

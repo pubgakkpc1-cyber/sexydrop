@@ -12,12 +12,10 @@
   overflow: hidden;
   opacity: 1;
   transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: quake 0.42s ease-out 0.5s both;
 }
 
 .exiting {
   opacity: 0;
-  transform: scale(1.12);
   pointer-events: none;
 }
 
@@ -380,5 +378,25 @@
   .avatarWrapper, .fanCard, .wordLetter, .greetingTitle, .brandSub, .progressContainer {
     animation-duration: 0.01s;
     animation-delay: 0s;
+  }
+}
+
+/* ПК и широкие окна: сцена строго по центру и не шире телефона, без тяжёлых слоёв на весь экран */
+@media (min-width: 700px) {
+  .splashBackdrop {
+    transition: opacity 0.3s ease;
+  }
+
+  .stage {
+    transform: none;
+    max-width: 440px;
+  }
+
+  .ambientGlow {
+    width: 520px;
+    height: 520px;
+    left: 50%;
+    top: 40%;
+    transform: translate(-50%, -50%);
   }
 }

@@ -178,7 +178,8 @@ export const gifts: readonly Gift[] = [
   regularGift('reg-rocket', 'Rocket', 285, 'space_rocket'),
   regularGift('reg-champagne', 'Champagne', 285, 'champagne_bottle'),
   regularGift('reg-trophy', 'Trophy', 571, 'golden_trophy'),
-  regularGift('reg-ring', 'Ring', 571, 'solitaire_diamond_ring'),
+  // кольцо — оригинальный NFT-арт Fragment (Diamond Ring) с фоном, как у остальных NFT
+  { ...regularGift('reg-ring', 'Ring', 571, 'solitaire_diamond_ring'), image: '/gifts/diamond_ring_nft_2.webp' },
   regularGift('reg-diamond', 'Diamond', 571, 'blue_diamond_gem'),
 
   /* --- ПРИЗЫ В TON --- */

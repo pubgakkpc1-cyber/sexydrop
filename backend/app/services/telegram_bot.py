@@ -302,6 +302,7 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
         return False  # не админ — обычное приветствие
     if command == "/post":
         await ref_share.send_task_post(chat_id, int(sender.get("id") or chat_id))
+        await ref_share.send_boost_post(chat_id, int(sender.get("id") or chat_id))
     else:
         await ref_share.send_previews(chat_id, int(sender.get("id") or chat_id))
     return True

@@ -453,8 +453,8 @@ async def test_stars_exchange_only_spends_server_stars(client: AsyncClient, play
         meta.stars = 400
         await session.commit()
     ok = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 350})
-    # курс обмена: 100 ★ = 1.6 TON, то есть 1 ★ = 16 minor
-    assert ok.status_code == 200 and ok.json()["credited_minor"] == 5600 and ok.json()["balance_minor"] == 5600
+    # курс обмена: 100 ★ = 1 TON, то есть 1 ★ = 10 minor
+    assert ok.status_code == 200 and ok.json()["credited_minor"] == 3500 and ok.json()["balance_minor"] == 3500
     assert (await state(client, player))["stars"] == 50
 
 

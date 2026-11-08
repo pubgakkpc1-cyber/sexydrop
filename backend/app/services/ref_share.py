@@ -195,7 +195,7 @@ async def send_previews_to_admins_once(delay_s: float = 25.0) -> None:
 
 # ---------------------------------------------------------------- готовый пост про задание «ник в профиле»
 
-POST_VERSION = "2026-11-08-tag-v1"
+POST_VERSION = "2026-11-08-tag-v2"
 
 
 def task_post_caption(telegram_id: int) -> str:
@@ -216,7 +216,7 @@ def task_post_caption(telegram_id: int) -> str:
         "🚫 Закрывать «О себе» в приватности, если ник стоит там: бот его не увидит. "
         "Либо открой «О себе» всем, либо поставь ник в имя\n"
         "🚫 Пропускать окно в 10 часов — тогда задание начнётся заново\n\n"
-        "Звёзды можно обменять на TON: 100 ★ = 1.6 TON.\n\n"
+        "Звёзды можно обменять на TON: 100 ★ = 1 TON.\n\n"
         f'👉 <a href="{app}">Играть и забирать звёзды</a>\n'
         '💬 <a href="https://t.me/+hQUjqYtgmTA2NmQ0">Чат SEXY DROP</a> · '
         '📣 <a href="https://t.me/SexyDrop_official">Канал</a> · '
@@ -276,8 +276,68 @@ async def send_task_post_to_admins_once(delay_s: float = 40.0) -> None:
                 meta = await session.get(UserMeta, admin.id)
                 if meta is None or (meta.quests_claimed or {}).get("_taskpost") == POST_VERSION:
                     continue
-                if await send_task_post(admin.telegram_id, admin.telegram_id):
+                ok_task = await send_task_post(admin.telegram_id, admin.telegram_id)
+                ok_boost = await send_boost_post(admin.telegram_id, admin.telegram_id)
+                if ok_task or ok_boost:
                     meta.quests_claimed = {**(meta.quests_claimed or {}), "_taskpost": POST_VERSION}
                     await session.commit()
     except Exception as exc:  # noqa: BLE001
         log.warning("task post to admins failed: %s", exc)
+
+
+def boost_caption(telegram_id: int, premium: bool = True) -> str:
+    """Добивка: простым языком + инфа о курсе; премиум-эмодзи (анимированные), ссылки спрятаны под текстом."""
+    from app.services.telegram_bot import em
+
+    app = html.escape(ref_link(telegram_id), quote=True)
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('spark')} <b>Не забыл про звёзды?</b>\n\n"
+        "Просто и коротко:\n"
+        f"{e('dot')} Поставь <code>@sexydropbot</code> в имя или в «О себе» в Telegram\n"
+        f'{e("dot")} Зайди в <a href="{app}">приложение</a> и нажми «Готово»\n'
+        f"{e('dot')} Через сутки забери <b>10 ★</b>. Так каждый день\n\n"
+        f"{e('ton')} <b>Курс: 100 ★ = 1 TON</b>\n"
+        f"{e('check')} 1 звезда = 0.01 TON, обмен от 1 звезды в разделе «Заработок»\n"
+        f"{e('check')} Звёзды копятся, пока ник стоит в профиле\n\n"
+        "Убрал ник — отсчёт начнётся заново.\n\n"
+        f'{e("play")} <a href="{app}">Забрать звёзды</a> · '
+        f'{e("friends")} <a href="https://t.me/+hQUjqYtgmTA2NmQ0">Чат</a> · '
+        f'{e("support")} <a href="https://t.me/SexyDropOwner">Поддержка</a>'
+    )
+
+
+async def send_boost_post(chat_id: int, telegram_id: int) -> bool:
+    """Присылает добивку (фото + премиум-эмодзи); если Telegram не принял премиум — обычные эмодзи."""
+    if not get_settings().bot_token:
+        return False
+    path = next((d / "boost-photo.jpg" for d in _GIF_DIRS if (d / "boost-photo.jpg").is_file()), None)
+    if path is None:
+        log.warning("boost photo not found")
+        return False
+    markup = json.dumps({"inline_keyboard": [[{"text": "⭐ Забрать звёзды", "url": ref_link(telegram_id)}]]}, ensure_ascii=False)
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Добивка</b> — скопируйте или перешлите в канал и чат 👇", "parse_mode": "HTML"},
+        )
+        body: dict[str, Any] = {}
+        for premium in (True, False):
+            data = {
+                "chat_id": str(chat_id),
+                "caption": boost_caption(telegram_id, premium),
+                "parse_mode": "HTML",
+                "reply_markup": markup,
+            }
+            body = (
+                await client.post(
+                    f"{_api()}/sendPhoto", data=data, files={"photo": ("boost-photo.jpg", path.read_bytes(), "image/jpeg")}
+                )
+            ).json()
+            if body.get("ok"):
+                break
+            log.warning("boost post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
+    return bool(body.get("ok"))

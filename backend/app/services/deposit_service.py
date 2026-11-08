@@ -165,12 +165,12 @@ async def ton_payment_status(secret: str) -> dict[str, Any]:
 
 # ------------------------------------------------------------------- Stars ----
 
-STARS_PER_TON = 175
+MINOR_PER_STAR = 10  # единый курс: 100 Stars = 1 TON
 STARS_MIN = 10
 STARS_MAX = 10_000
 
 def stars_to_minor(stars: int) -> int:
-    return (stars * MINOR_PER_TON) // STARS_PER_TON
+    return stars * MINOR_PER_STAR
 
 
 def stars_payload(secret: str) -> str:

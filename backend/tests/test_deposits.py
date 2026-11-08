@@ -107,8 +107,8 @@ async def test_ton_status_matches_comment_and_value(monkeypatch):
 
 
 def test_stars_conversion():
-    assert svc.stars_to_minor(175) == 1000
-    assert svc.stars_to_minor(10) == 57
+    assert svc.stars_to_minor(100) == 1000
+    assert svc.stars_to_minor(10) == 100
 
 
 @pytest.mark.asyncio

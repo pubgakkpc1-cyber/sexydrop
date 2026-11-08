@@ -23,7 +23,6 @@ from app.services.economy_core import (
     post_ledger,
 )
 
-STARS_PER_TON = 175
 REFERRAL_BONUS_STARS = 2  # за каждого друга, открывшего бесплатный кейс (один раз за друга)
 BANK_MIN_CLAIM = 15  # звёзды за друзей копятся в банке; забрать на баланс звёзд — от 15 ★
 STARS_MIN_EXCHANGE = 1  # минимум обмена — 1 звезда
@@ -39,10 +38,10 @@ QUESTS: dict[str, dict[str, Any]] = {
 
 
 def stars_to_minor(stars: int) -> int:
-    return (stars * 1000) // STARS_PER_TON
+    return stars * EXCHANGE_MINOR_PER_STAR
 
 
-EXCHANGE_MINOR_PER_STAR = 16  # обмен заработанных звёзд: 100 ★ = 1.6 TON
+EXCHANGE_MINOR_PER_STAR = 10  # обмен заработанных звёзд: 100 ★ = 1 TON
 
 
 def exchange_minor(stars: int) -> int:

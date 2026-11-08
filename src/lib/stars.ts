@@ -1,11 +1,12 @@
 import type { Minor } from './money'
 
 /**
- * Курс Telegram Stars → TON (настройка продукта): 175 Stars = 1 TON.
- * 1 TON = 1000 minor ⇒ minor = floor(stars × 1000 / 175). Округление вниз
- * (в пользу казны, правило проекта).
+ * Единый курс Stars → TON (настройка продукта): 100 Stars = 1 TON, то есть 1 Star = 10 minor.
+ * Действует и для пополнения платными Telegram Stars, и для обмена заработанных звёзд.
+ * Округление вниз (в пользу казны, правило проекта).
  */
-export const STARS_PER_TON = 175
+export const MINOR_PER_STAR = 10
+export const STARS_PER_TON = 1000 / MINOR_PER_STAR // 100
 export const STARS_MIN = 10
 export const STARS_MAX = 10_000
 
@@ -15,7 +16,7 @@ export const TON_PER_STAR_LABEL = (Math.floor((1 / STARS_PER_TON) * 10_000) / 10
 /** Сколько minor TON даёт указанное число Stars (целое). */
 export function starsToMinor(stars: number): Minor {
   if (!Number.isFinite(stars) || stars <= 0) return 0
-  return Math.floor((Math.floor(stars) * 1000) / STARS_PER_TON)
+  return Math.floor(stars) * MINOR_PER_STAR
 }
 
 /** Парсинг ввода Stars: только целые цифры. */
@@ -33,14 +34,14 @@ export function isValidStars(stars: number | null): stars is number {
 /** Сколько Stars соответствует сумме в minor TON (округление вниз). */
 export function minorToStars(minor: Minor): number {
   if (!Number.isFinite(minor) || minor <= 0) return 0
-  return Math.floor((minor * STARS_PER_TON) / 1000)
+  return Math.floor(minor / MINOR_PER_STAR)
 }
 
 /**
- * Обмен ЗАРАБОТАННЫХ звёзд на TON (конвертер): 100 ★ = 1.6 TON, то есть 1 ★ = 16 minor.
- * Это не курс пополнения платными Telegram Stars (там по-прежнему 175 Stars = 1 TON).
+ * Обмен ЗАРАБОТАННЫХ звёзд на TON (конвертер): 100 ★ = 1 TON, то есть 1 ★ = 10 minor.
+ * Совпадает с курсом пополнения платными Telegram Stars.
  */
-export const EXCHANGE_MINOR_PER_STAR = 16
+export const EXCHANGE_MINOR_PER_STAR = 10
 
 export function exchangeStarsToMinor(stars: number): Minor {
   if (!Number.isFinite(stars) || stars <= 0) return 0

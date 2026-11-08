@@ -673,7 +673,7 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
       </div>
 
       <p className={styles.rate}>
-        Курс: <strong>100 Stars = 1.6 TON</strong> · 1 Star = <strong>0.016 TON</strong>
+        Курс: <strong>100 Stars = 1 TON</strong> · 1 Star = <strong>0.01 TON</strong>
         {' · '}
         За 100 Stars получите <strong>{formatMinor(exchangeStarsToMinor(100))} TON</strong>
       </p>

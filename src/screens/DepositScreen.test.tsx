@@ -23,11 +23,11 @@ beforeEach(() => {
 })
 
 describe('lib/stars (курс Stars → TON)', () => {
-  it('175 Stars = 1 TON: 175 Stars = 1000 minor, округление вниз', () => {
-    expect(STARS_PER_TON).toBe(175)
-    expect(starsToMinor(175)).toBe(1000)
-    expect(starsToMinor(10)).toBe(57)
-    expect(TON_PER_STAR_LABEL).toBe('0.0057')
+  it('100 Stars = 1 TON: 1 Star = 10 minor', () => {
+    expect(STARS_PER_TON).toBe(100)
+    expect(starsToMinor(100)).toBe(1000)
+    expect(starsToMinor(10)).toBe(100)
+    expect(TON_PER_STAR_LABEL).toBe('0.0100')
     expect(starsToMinor(0)).toBe(0)
     expect(starsToMinor(-5)).toBe(0)
   })
@@ -76,10 +76,10 @@ describe('DepositScreen (пополнение баланса)', () => {
     expect(submit).toBeDisabled()
 
     await user.type(screen.getByLabelText(/Количество Stars/), '350')
-    expect(screen.getByText(/Вы получите/)).toHaveTextContent('2 TON')
-    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.0057 TON')
+    expect(screen.getByText(/Вы получите/)).toHaveTextContent('3.5 TON')
+    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.0100 TON')
     await user.click(submit)
-    expect(useWalletStore.getState().getBalance()).toBe(102_000)
+    expect(useWalletStore.getState().getBalance()).toBe(103_500)
   })
 
   it('Stars: меньше 10 — кнопка недоступна', async () => {
@@ -96,11 +96,11 @@ describe('DepositScreen (пополнение баланса)', () => {
     expect(screen.getByRole('button', { name: 'Конвертировать' })).toBeDisabled()
 
     await user.type(screen.getByLabelText('Количество Stars'), '1050')
-    // курс обмена: 100 ★ = 1.6 TON → 1050 ★ = 16.8 TON
-    expect(screen.getByLabelText('Получите TON')).toHaveTextContent('16.8')
-    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.016 TON')
+    // курс обмена: 100 ★ = 1 TON → 1050 ★ = 10.5 TON
+    expect(screen.getByLabelText('Получите TON')).toHaveTextContent('10.5')
+    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.01 TON')
     await user.click(screen.getByRole('button', { name: 'Конвертировать' }))
-    expect(useWalletStore.getState().getBalance()).toBe(116_800)
+    expect(useWalletStore.getState().getBalance()).toBe(110_500)
     expect(useStarsBalanceStore.getState().stars).toBe(950)
   })
 

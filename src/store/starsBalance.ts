@@ -4,7 +4,7 @@ import { safeJsonStorage } from '../lib/persistStorage'
 import { exchangeStarsToMinor } from '../lib/stars'
 import { useWalletStore } from './wallet'
 
-/** Минимальный обмен — 1 звезда (курс 175 Stars = 1 TON). */
+/** Минимальный обмен — 1 звезда (курс 100 Stars = 1 TON). */
 export const EXCHANGE_MIN_STARS = 1
 
 interface StarsBalanceState {
@@ -13,7 +13,7 @@ interface StarsBalanceState {
   add: (amount: number) => void
   /** Списать звёзды (не больше, чем есть); возвращает сколько реально списано. */
   spend: (amount: number) => number
-  /** Обмен звёзд на TON по курсу 175 Stars = 1 TON (вниз); возвращает статус. */
+  /** Обмен звёзд на TON по курсу 100 Stars = 1 TON (вниз); возвращает статус. */
   exchange: (stars: number) => 'ok' | 'too_small' | 'insufficient'
 }
 

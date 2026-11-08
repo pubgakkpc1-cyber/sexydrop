@@ -360,3 +360,12 @@
   box-shadow: none;
   opacity: 1;
 }
+
+/* Отступ между переключателем «Подарки / TON» и быстрыми суммами */
+.segmented {
+  margin-bottom: 16px;
+}
+
+.gramTab {
+  gap: 16px;
+}

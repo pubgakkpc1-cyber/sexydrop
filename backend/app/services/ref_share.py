@@ -191,3 +191,93 @@ async def send_previews_to_admins_once(delay_s: float = 25.0) -> None:
                     log.info("ref photos sent to admin %s", admin.telegram_id)
     except Exception as exc:  # noqa: BLE001 — уведомление не должно ронять сервер
         log.warning("ref photos to admins failed: %s", exc)
+
+
+# ---------------------------------------------------------------- готовый пост про задание «ник в профиле»
+
+POST_VERSION = "2026-11-08-tag-v1"
+
+
+def task_post_caption(telegram_id: int) -> str:
+    """Готовый пост для канала/чата: ссылки спрятаны под текстом (HTML), фото — баннер задания."""
+    app = html.escape(ref_link(telegram_id), quote=True)
+    return (
+        "⭐ <b>10 звёзд каждый день — за одну строчку в профиле!</b>\n\n"
+        f'Поставь <b>@sexydropbot</b> в имя или в «О себе» — и забирай награду в '
+        f'<a href="{app}">приложении SEXY DROP</a> в разделе «Заработок».\n\n'
+        "<b>Как это работает</b>\n"
+        "1️⃣ Добавь <code>@sexydropbot</code> в имя, фамилию или в «О себе» в Telegram\n"
+        f'2️⃣ Открой <a href="{app}">задание</a> и нажми «Готово» — проверим профиль\n'
+        "3️⃣ Держи ник 24 часа\n"
+        "4️⃣ Через 24 часа у тебя 10 часов, чтобы забрать <b>10 ★</b> на баланс\n\n"
+        "<b>Что нельзя</b>\n"
+        "🚫 Убирать ник раньше времени — отсчёт сбросится, награда не начислится\n"
+        "🚫 Писать его с ошибками: нужно ровно <code>@sexydropbot</code>\n"
+        "🚫 Закрывать «О себе» в приватности, если ник стоит там: бот его не увидит. "
+        "Либо открой «О себе» всем, либо поставь ник в имя\n"
+        "🚫 Пропускать окно в 10 часов — тогда задание начнётся заново\n\n"
+        "Звёзды можно обменять на TON от 175 ★.\n\n"
+        f'👉 <a href="{app}">Играть и забирать звёзды</a>\n'
+        '💬 <a href="https://t.me/+hQUjqYtgmTA2NmQ0">Чат SEXY DROP</a> · '
+        '📣 <a href="https://t.me/SexyDrop_official">Канал</a> · '
+        '🛟 <a href="https://t.me/SexyDropOwner">Поддержка</a>'
+    )
+
+
+async def send_task_post(chat_id: int, telegram_id: int) -> bool:
+    """Присылает готовый пост (фото + текст со скрытыми ссылками) в чат бота с админом."""
+    if not get_settings().bot_token:
+        return False
+    path = next((d / "task-photo.jpg" for d in _GIF_DIRS if (d / "task-photo.jpg").is_file()), None)
+    if path is None:
+        log.warning("task photo not found")
+        return False
+    data = {
+        "chat_id": str(chat_id),
+        "caption": task_post_caption(telegram_id),
+        "parse_mode": "HTML",
+        "reply_markup": json.dumps(
+            {"inline_keyboard": [[{"text": "⭐ Забрать 10 звёзд", "url": ref_link(telegram_id)}]]}, ensure_ascii=False
+        ),
+    }
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Готовый пост</b> — перешлите или скопируйте в канал и чат 👇", "parse_mode": "HTML"},
+        )
+        body = (
+            await client.post(f"{_api()}/sendPhoto", data=data, files={"photo": ("task-photo.jpg", path.read_bytes(), "image/jpeg")})
+        ).json()
+    if not body.get("ok"):
+        log.warning("task post to %s failed: %s", chat_id, body.get("description"))
+    return bool(body.get("ok"))
+
+
+async def send_task_post_to_admins_once(delay_s: float = 40.0) -> None:
+    """После деплоя новой версии поста присылает его каждому админу один раз (отметка в UserMeta)."""
+    await asyncio.sleep(delay_s)
+    if not get_settings().bot_token:
+        return
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.core.db import get_session_factory
+    from app.models.economy import UserMeta
+    from app.models.user import User
+    from app.services.economy_core import ensure_account
+
+    try:
+        async with get_session_factory()() as session:
+            admins = (
+                await session.execute(select(User).where(func.lower(User.username).in_(sorted(ADMIN_USERNAMES))))
+            ).scalars().all()
+            for admin in admins:
+                await ensure_account(session, admin.id)
+                meta = await session.get(UserMeta, admin.id)
+                if meta is None or (meta.quests_claimed or {}).get("_taskpost") == POST_VERSION:
+                    continue
+                if await send_task_post(admin.telegram_id, admin.telegram_id):
+                    meta.quests_claimed = {**(meta.quests_claimed or {}), "_taskpost": POST_VERSION}
+                    await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("task post to admins failed: %s", exc)

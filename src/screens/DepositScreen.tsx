@@ -9,6 +9,7 @@ import {
   STARS_MAX,
   STARS_MIN,
   STARS_PER_TON,
+  exchangeStarsToMinor,
   TON_PER_STAR_LABEL,
   isValidStars,
   parseStars,
@@ -595,10 +596,10 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
   const [error, setError] = useState<string | null>(null)
   const stars = parseStars(input)
   const earned = useStarsBalanceStore((s) => s.stars)
-  // Минимум обмена совпадает с сервером (175 ★ = 1 TON); STARS_MIN относится к покупке Stars.
+  // Минимум обмена совпадает с сервером (1 ★); STARS_MIN относится к покупке Stars.
   const valid = stars !== null && stars >= EXCHANGE_MIN_STARS && stars <= STARS_MAX
   const enough = valid && stars <= earned
-  const payout = stars !== null ? starsToMinor(stars) : 0
+  const payout = stars !== null ? exchangeStarsToMinor(stars) : 0
 
   const submit = async () => {
     if (!enough || payout <= 0 || busy) return
@@ -672,9 +673,9 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
       </div>
 
       <p className={styles.rate}>
-        Курс: <strong>{STARS_PER_TON} Stars = 1 TON</strong> · 1 Star = <strong>{TON_PER_STAR_LABEL} TON</strong>
+        Курс: <strong>100 Stars = 1.6 TON</strong> · 1 Star = <strong>0.016 TON</strong>
         {' · '}
-        За 100 Stars получите <strong>{formatMinor(starsToMinor(100))} TON</strong>
+        За 100 Stars получите <strong>{formatMinor(exchangeStarsToMinor(100))} TON</strong>
       </p>
       <p className={styles.rate}>
         От {EXCHANGE_MIN_STARS} до {STARS_MAX.toLocaleString('ru-RU')} Stars за раз

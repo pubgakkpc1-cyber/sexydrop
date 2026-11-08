@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { safeJsonStorage } from '../lib/persistStorage'
-import { starsToMinor } from '../lib/stars'
+import { exchangeStarsToMinor } from '../lib/stars'
 import { useWalletStore } from './wallet'
 
 /** Минимальный обмен — 1 звезда (курс 175 Stars = 1 TON). */
@@ -34,7 +34,7 @@ export const useStarsBalanceStore = create<StarsBalanceState>()(
     if (amount < EXCHANGE_MIN_STARS) return 'too_small'
     if (get().stars < amount) return 'insufficient'
     set((s) => ({ stars: s.stars - amount }))
-    useWalletStore.getState().credit(starsToMinor(amount))
+    useWalletStore.getState().credit(exchangeStarsToMinor(amount))
     return 'ok'
   },
 }),

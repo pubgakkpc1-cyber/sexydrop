@@ -42,6 +42,13 @@ def stars_to_minor(stars: int) -> int:
     return (stars * 1000) // STARS_PER_TON
 
 
+EXCHANGE_MINOR_PER_STAR = 16  # обмен заработанных звёзд: 100 ★ = 1.6 TON
+
+
+def exchange_minor(stars: int) -> int:
+    return stars * EXCHANGE_MINOR_PER_STAR
+
+
 async def quest_metrics(session: AsyncSession, user_id: uuid.UUID) -> dict[str, int]:
     def count(*where: Any) -> Any:
         return select(func.count()).select_from(PlayRound).where(PlayRound.user_id == user_id, *where)
@@ -320,7 +327,7 @@ async def exchange_stars(session: AsyncSession, user_id: uuid.UUID, stars: int) 
     await sweep_referral_stars(session, user_id, meta)
     if meta.stars < stars:
         raise GameError("insufficient_stars", 409, "Недостаточно звёзд")
-    minor = stars_to_minor(stars)
+    minor = exchange_minor(stars)
     meta.stars = int(meta.stars) - stars
     new_balance = await post_ledger(
         session, user_id, type="stars_exchange", direction="credit", minor=minor,

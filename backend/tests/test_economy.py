@@ -443,9 +443,9 @@ async def test_quest_progress_is_server_side(client: AsyncClient, admin: dict, p
 
 
 async def test_stars_exchange_only_spends_server_stars(client: AsyncClient, player: dict) -> None:
-    small = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 100})
+    small = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 0})
     assert small.status_code == 400 and small.json()["code"] == "too_small"
-    poor = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 175})
+    poor = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 100})
     assert poor.status_code == 409 and poor.json()["code"] == "insufficient_stars"
     async with get_session_factory()() as session:
         await economy_core.ensure_account(session, uuid.UUID(player["_user"]["id"]))
@@ -453,7 +453,8 @@ async def test_stars_exchange_only_spends_server_stars(client: AsyncClient, play
         meta.stars = 400
         await session.commit()
     ok = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 350})
-    assert ok.status_code == 200 and ok.json()["credited_minor"] == 2000 and ok.json()["balance_minor"] == 2000
+    # курс обмена: 100 ★ = 1.6 TON, то есть 1 ★ = 16 minor
+    assert ok.status_code == 200 and ok.json()["credited_minor"] == 5600 and ok.json()["balance_minor"] == 5600
     assert (await state(client, player))["stars"] == 50
 
 

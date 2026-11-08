@@ -96,10 +96,11 @@ describe('DepositScreen (пополнение баланса)', () => {
     expect(screen.getByRole('button', { name: 'Конвертировать' })).toBeDisabled()
 
     await user.type(screen.getByLabelText('Количество Stars'), '1050')
-    expect(screen.getByLabelText('Получите TON')).toHaveTextContent('6')
-    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.0057 TON')
+    // курс обмена: 100 ★ = 1.6 TON → 1050 ★ = 16.8 TON
+    expect(screen.getByLabelText('Получите TON')).toHaveTextContent('16.8')
+    expect(screen.getByText(/1 Star =/)).toHaveTextContent('0.016 TON')
     await user.click(screen.getByRole('button', { name: 'Конвертировать' }))
-    expect(useWalletStore.getState().getBalance()).toBe(106_000)
+    expect(useWalletStore.getState().getBalance()).toBe(116_800)
     expect(useStarsBalanceStore.getState().stars).toBe(950)
   })
 

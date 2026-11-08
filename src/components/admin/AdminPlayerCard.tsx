@@ -5,7 +5,28 @@ import { PlayerAvatar } from './AdminAvatar'
 import { ago, dateTime, signedTon, ton } from './adminFormat'
 import styles from './AdminPanel.module.css'
 
+interface RefFriend {
+  id: string
+  name: string
+  username: string | null
+  at: number | null
+  premium: boolean
+  spun: boolean
+  not_in_chat: boolean
+}
+
+interface RefBlock {
+  bank: number
+  earned_total: number
+  friends_credited: number
+  friends_out_of_chat: number
+  history: Array<{ at: number; d: number; t: string }>
+  friends: RefFriend[]
+  tag_quest: { stage: number; started_at: number | null; ready_at: number | null; total_claimed: number }
+}
+
 interface PlayerDetail {
+  referral?: RefBlock
   profile: {
     id: string
     name: string
@@ -78,6 +99,7 @@ function normalize(raw: Partial<PlayerDetail> | null | undefined): PlayerDetail 
       paid: m.paid ?? 0,
       net: m.net ?? 0,
     },
+    referral: r.referral,
     games: r.games ?? [],
     cases: r.cases ?? [],
     items: { counts: r.items?.counts ?? [], list: r.items?.list ?? [], locked: r.items?.locked ?? [] },
@@ -187,6 +209,8 @@ function Body({ d, onOpen }: { d: PlayerDetail; onOpen: (id: string) => void }) 
           Пополнения: {m.deposits_by.map((x) => `${x.method} — ${x.count} шт. на ${ton(x.amount)}`).join('; ')}
         </p>
       )}
+
+      {d.referral && <ReferralBlock r={d.referral} stars={d.money.stars} onOpen={onOpen} />}
 
       <h3 className={styles.h3}>Друзья</h3>
       <div className={styles.statGrid}>
@@ -353,6 +377,72 @@ function Body({ d, onOpen }: { d: PlayerDetail; onOpen: (id: string) => void }) 
                 </span>
               </span>
               <span className={h.sign > 0 ? styles.good : styles.bad}>{signedTon(h.sign * h.amount)}</span>
+            </div>
+          ))}
+        </>
+      )}
+    </>
+  )
+}
+
+/** Рефералка игрока: банк, сколько друзей пришло и сколько звёзд накоплено, кто из друзей что сделал. */
+function ReferralBlock({ r, stars, onOpen }: { r: RefBlock; stars: number; onOpen: (id: string) => void }) {
+  const spun = r.friends.filter((f) => f.spun).length
+  return (
+    <>
+      <h3 className={styles.h3}>Рефералка</h3>
+      <div className={styles.statGrid}>
+        <Stat label="Друзей пришло" value={String(r.friends.length)} />
+        <Stat label="Прокрутили FREE" value={String(spun)} />
+        <Stat label="Накоплено в банке" value={`${r.bank} ★`} />
+        <Stat label="Заработано за друзей" value={`${r.earned_total} ★`} />
+        <Stat label="Звёзд на балансе" value={`${stars} ★`} />
+        <Stat label="Не в чате" value={String(r.friends_out_of_chat)} tone={r.friends_out_of_chat > 0 ? 'bad' : undefined} />
+      </div>
+      <p className={styles.note}>
+        Ник в профиле: {r.tag_quest.stage === 1 ? 'не начато' : r.tag_quest.stage === 2 ? 'держит 24 часа' : 'ждёт сбора награды'} ·
+        забрано раз: {r.tag_quest.total_claimed}
+      </p>
+      {r.friends.length > 0 && (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Друг</th>
+              <th>Пришёл</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody>
+            {r.friends.map((f) => (
+              <tr key={f.id}>
+                <td>
+                  <button type="button" className={styles.linkBtn} onClick={() => onOpen(f.id)}>
+                    {f.name}
+                  </button>
+                  {f.premium ? ' 💎' : ''}
+                </td>
+                <td>{ago(f.at)}</td>
+                <td className={f.not_in_chat ? styles.bad : f.spun ? styles.good : styles.muted}>
+                  {f.not_in_chat ? 'не в чате' : f.spun ? 'прокрутил FREE' : 'ждём FREE'}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      {r.history.length > 0 && (
+        <>
+          <p className={styles.note}>История банка:</p>
+          {r.history.slice(0, 10).map((h, i) => (
+            <div key={i} className={styles.sysRow}>
+              <span>
+                {h.t}
+                <br />
+                <span className={styles.muted}>{dateTime(h.at / 1000)}</span>
+              </span>
+              <span className={h.d > 0 ? styles.good : h.d < 0 ? styles.bad : styles.muted}>
+                {h.d > 0 ? `+${h.d} ★` : h.d < 0 ? `−${-h.d} ★` : '•'}
+              </span>
             </div>
           ))}
         </>

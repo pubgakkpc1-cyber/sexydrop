@@ -264,7 +264,52 @@ async def player_detail(session: AsyncSession, telegram_id: int) -> dict[str, An
             )
         )
     ).scalar_one()
+    claimed_meta = dict((meta.quests_claimed if meta else None) or {})
+    friend_rows = (
+        await session.execute(
+            select(
+                User.id,
+                User.telegram_id,
+                User.first_name,
+                User.username,
+                User.created_at,
+                func.coalesce(UserMeta.is_premium, False),
+                exists().where(
+                    PlayRound.user_id == User.id, PlayRound.game == "case", PlayRound.case_id.in_(("free", "free24"))
+                ),
+            )
+            .outerjoin(UserMeta, UserMeta.user_id == User.id)
+            .where(User.referred_by_id == uid)
+            .order_by(User.created_at.desc())
+            .limit(100)
+        )
+    ).all()
+    out_ids = set(claimed_meta.get("_bank_out", []))
+    friends_list = [
+        {
+            "id": str(tg),
+            "name": " ".join((fn or "").split()) or (f"@{un}" if un else f"ID {tg}"),
+            "username": un,
+            "at": _ts(created),
+            "premium": bool(prem),
+            "spun": bool(spun),
+            "not_in_chat": str(fid) in out_ids,
+        }
+        for fid, tg, fn, un, created, prem, spun in friend_rows
+    ]
+    from app.services import tag_quest
+
+    ref_block = {
+        "bank": int(claimed_meta.get("_bank", 0) or 0),
+        "earned_total": 2 * len(claimed_meta.get("_ref", [])),
+        "friends_credited": len(claimed_meta.get("_ref", [])),
+        "friends_out_of_chat": len(out_ids),
+        "history": list(claimed_meta.get("_ref_log") or [])[:20],
+        "friends": friends_list,
+        "tag_quest": tag_quest.view(claimed_meta.get("_tag")),
+    }
     return {
+        "referral": ref_block,
         "profile": {
             "id": str(user.telegram_id),
             "name": display_name(user),
@@ -368,7 +413,13 @@ async def overview_extra(session: AsyncSession) -> dict[str, Any]:
 
     users = select(func.count()).select_from(User)
     paid = DepositOrder.status == "paid"
+    metas = (await session.execute(select(UserMeta.quests_claimed))).scalars().all()
+    banks = sum(int((m or {}).get("_bank", 0) or 0) for m in metas)
+    credited = sum(len((m or {}).get("_ref", [])) for m in metas)
     return {
+        "ref_banks_total": banks,
+        "ref_friends_credited": credited,
+        "ref_stars_earned": 2 * credited,
         "users_7d": await count(users.where(User.updated_at >= now - timedelta(days=7))),
         "users_30d": await count(users.where(User.updated_at >= now - timedelta(days=30))),
         "users_new_7d": await count(users.where(User.created_at >= now - timedelta(days=7))),

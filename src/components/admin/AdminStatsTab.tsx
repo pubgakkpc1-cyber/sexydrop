@@ -61,6 +61,9 @@ interface Stats {
   withdrawals_done: number
   profit_since?: number | null
   locked_gifts?: number
+  ref_banks_total?: number
+  ref_friends_credited?: number
+  ref_stars_earned?: number
   locked_value?: number
 }
 
@@ -128,6 +131,9 @@ export function AdminStatsTab() {
         <Card label="Играли хоть раз" value={String(stats.users_played ?? 0)} hint="открыли кейс или сыграли в игру" />
         <Card label="Пополняли баланс" value={String(stats.users_paid ?? 0)} hint="платящие игроки" />
         <Card label="Пришли по рефке" value={String(stats.users_referred ?? 0)} hint="по ссылке друга" />
+        <Card label="Друзей засчитано" value={String(stats.ref_friends_credited ?? 0)} hint="прокрутили FREE и в чате" />
+        <Card label="Звёзд заработано на рефках" value={`${stats.ref_stars_earned ?? 0} ★`} hint="за всё время" />
+        <Card label="Лежит в банках рефералов" value={`${stats.ref_banks_total ?? 0} ★`} hint="ещё не забрали" />
         <Card label="С Telegram Premium" value={String(stats.users_premium ?? 0)} hint="у кого есть Premium" />
       </div>
 

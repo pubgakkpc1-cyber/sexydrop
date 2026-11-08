@@ -1,4 +1,4 @@
-"""Реферальные гифки: «Поделиться» из мини-аппа отправляет анимацию с подписью и текстовой ссылкой.
+"""Реферальные приглашения: «Поделиться» из мини-аппа отправляет анимацию с подписью и текстовой ссылкой.
 
 Для каждого места, где есть реферальная ссылка, своя гифка (public/brand/ref/<kind>.gif):
   invite   — экран «Пригласить»;
@@ -26,29 +26,29 @@ from app.core.config import get_settings
 log = logging.getLogger("sexydrop.refshare")
 
 BOT_USERNAME = "sexydropbot"
-GIF_W, GIF_H = 480, 300
+PHOTO_W, PHOTO_H = 1280, 720  # баннеры public/brand/ref/<kind>-photo.jpg
 # смена версии — админу снова придут все гифки после деплоя
-PREVIEW_VERSION = "2026-11-07-v1"
+PREVIEW_VERSION = "2026-11-08-photo-v1"
 
 KINDS: dict[str, dict[str, str]] = {
     "invite": {
         "place": "Экран «Пригласить друзей»",
-        "title": "🎁 <b>Залетай в SEXY DROP</b> — бесплатные кейсы с NFT-подарками!",
-        "body": "Сундук FREE 24 открывается бесплатно каждый день, а первый кейс — тоже бесплатно.",
+        "title": "🎁 <b>Бесплатные NFT-подарки в SEXY DROP</b>",
+        "body": "Сундук FREE 24 — каждый день бесплатно, а первый кейс с NFT тебе тоже ничего не стоит.",
         "link": "Тык — забрать бесплатный кейс",
         "button": "🎁 Забрать бесплатный кейс",
     },
     "unlock": {
         "place": "Окно задания бесплатного кейса (NFT под замком)",
-        "title": "🔓 <b>Помоги открыть NFT-подарок!</b>",
-        "body": "Зайди по ссылке и прокрути бесплатный кейс — для тебя он тоже бесплатный.",
+        "title": "🔓 <b>Друг ждёт тебя в SEXY DROP</b>",
+        "body": "Зайди по ссылке и прокрути бесплатный кейс — он твой. Вступи в чат, и вы оба в плюсе.",
         "link": "Тык — крутить бесплатно",
         "button": "🔓 Крутить бесплатно",
     },
     "roulette": {
         "place": "Подарок под замком в инвентаре",
-        "title": "🎰 <b>Рулетка NFT-подарков в SEXY DROP</b>",
-        "body": "Первый кейс — бесплатно, а сундук FREE 24 — каждый день.",
+        "title": "🎰 <b>Крути рулетку NFT в SEXY DROP</b>",
+        "body": "Редкие подарки падают каждый день. Первый кейс — бесплатно, FREE 24 — раз в сутки.",
         "link": "Тык — попробовать",
         "button": "🎰 Крутить рулетку",
     },
@@ -82,9 +82,9 @@ def _base_url() -> str:
     return (s.public_base_url or s.app_url).rstrip("/")
 
 
-def gif_path(kind: str) -> Path | None:
+def photo_path(kind: str) -> Path | None:
     for d in _GIF_DIRS:
-        p = d / f"{kind}.gif"
+        p = d / f"{kind}-photo.jpg"
         if p.is_file():
             return p
     return None
@@ -100,13 +100,12 @@ async def prepare_share(telegram_id: int, kind: str) -> str | None:
         return None
     base = _base_url()
     result = {
-        "type": "gif",
+        "type": "photo",
         "id": f"{kind}-{telegram_id}"[:64],
-        "gif_url": f"{base}/brand/ref/{kind}.gif",
-        "gif_width": GIF_W,
-        "gif_height": GIF_H,
-        "thumbnail_url": f"{base}/brand/ref/{kind}.jpg",
-        "thumbnail_mime_type": "image/jpeg",
+        "photo_url": f"{base}/brand/ref/{kind}-photo.jpg",
+        "thumbnail_url": f"{base}/brand/ref/{kind}-photo.jpg",
+        "photo_width": PHOTO_W,
+        "photo_height": PHOTO_H,
         "caption": caption(kind, telegram_id),
         "parse_mode": "HTML",
         "reply_markup": keyboard(kind, telegram_id),
@@ -136,32 +135,30 @@ async def send_previews(chat_id: int, telegram_id: int) -> int:
     if not get_settings().bot_token:
         return 0
     sent = 0
-    intro = "<b>Реферальные гифки SEXY DROP</b>\n\nКаждая уходит из своего места в приложении:\n" + "\n".join(
+    intro = "<b>Реферальные приглашения SEXY DROP</b>\n\nКаждая уходит из своего места в приложении:\n" + "\n".join(
         f"{i}. {html.escape(k['place'])}" for i, k in enumerate(KINDS.values(), start=1)
     )
     async with httpx.AsyncClient(timeout=60.0) as client:
         await client.post(f"{_api()}/sendMessage", json={"chat_id": chat_id, "text": intro, "parse_mode": "HTML"})
         for i, kind in enumerate(KINDS, start=1):
-            path = gif_path(kind)
+            path = photo_path(kind)
             if path is None:
-                log.warning("ref gif %s not found", kind)
+                log.warning("ref photo %s not found", kind)
                 continue
             data = {
                 "chat_id": str(chat_id),
                 "caption": f"<i>{i}. {html.escape(KINDS[kind]['place'])}</i>\n\n{caption(kind, telegram_id)}",
                 "parse_mode": "HTML",
-                "width": str(GIF_W),
-                "height": str(GIF_H),
                 "reply_markup": json.dumps(keyboard(kind, telegram_id), ensure_ascii=False),
             }
             res = await client.post(
-                f"{_api()}/sendAnimation", data=data, files={"animation": (f"{kind}.gif", path.read_bytes(), "image/gif")}
+                f"{_api()}/sendPhoto", data=data, files={"photo": (f"{kind}-photo.jpg", path.read_bytes(), "image/jpeg")}
             )
             body = res.json()
             if body.get("ok"):
                 sent += 1
             else:
-                log.warning("ref gif %s to %s failed: %s", kind, chat_id, body.get("description"))
+                log.warning("ref photo %s to %s failed: %s", kind, chat_id, body.get("description"))
     return sent
 
 
@@ -191,6 +188,6 @@ async def send_previews_to_admins_once(delay_s: float = 25.0) -> None:
                 if await send_previews(admin.telegram_id, admin.telegram_id) > 0:
                     meta.quests_claimed = {**(meta.quests_claimed or {}), "_refgifs": PREVIEW_VERSION}
                     await session.commit()
-                    log.info("ref gifs sent to admin %s", admin.telegram_id)
+                    log.info("ref photos sent to admin %s", admin.telegram_id)
     except Exception as exc:  # noqa: BLE001 — уведомление не должно ронять сервер
-        log.warning("ref gifs to admins failed: %s", exc)
+        log.warning("ref photos to admins failed: %s", exc)

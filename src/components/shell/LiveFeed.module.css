@@ -107,3 +107,9 @@
 @media (prefers-reduced-motion: reduce) {
   .dot, .fresh { animation: none; }
 }
+
+/* Подарок заполняет весь квадрат (с обводкой и скруглением у самой плитки) */
+.imgContain {
+  padding: 0;
+  object-fit: cover;
+}

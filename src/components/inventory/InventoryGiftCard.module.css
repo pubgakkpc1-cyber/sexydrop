@@ -259,3 +259,15 @@
 .locked .upgrade {
   background: #2b2b2f;
 }
+
+/* Подарок заполняет всю плитку */
+.imageContain {
+  padding: 0;
+  object-fit: cover;
+}
+
+.art {
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  border-radius: 18px;
+  overflow: hidden;
+}

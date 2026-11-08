@@ -633,8 +633,8 @@ function ConvertPanel({ onDone }: { onDone: (minor: Minor) => void }) {
   return (
     <div className={styles.panel}>
       <p className={styles.note}>
-        Конвертируются только заработанные звёзды (за задания и друзей): они списываются с вашего
-        звёздного баланса.
+        Конвертируются только заработанные звёзды (за задания и друзей): у вас их {earned.toLocaleString('ru-RU')} ★.
+        Большое число «Stars» в шапке — это ваш TON-баланс в пересчёте на звёзды, его конвертировать не нужно.
       </p>
 
       <div className={styles.convertCard}>

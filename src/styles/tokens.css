@@ -115,8 +115,9 @@
   --safe-right: env(safe-area-inset-right, 0px);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 600px) {
   :root {
-    --shell-max: 980px;
+    /* на ПК колонка занимает всё окно и растёт с каждым пикселем */
+    --shell-max: min(100vw, 1600px);
   }
 }

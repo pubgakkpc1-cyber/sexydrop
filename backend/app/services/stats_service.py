@@ -10,9 +10,15 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.economy import DepositOrder, NftItem, PlayRound
+from app.api.odds import ADMIN_USERNAMES
 from app.models.user import User
 
 _FINISHED = PlayRound.status != "active"
+# игры и деньги админа в статистику проекта не входят
+_NOT_ADMIN_ROUND = PlayRound.user_id.not_in(
+    select(User.id).where(func.lower(func.coalesce(User.username, "")).in_(sorted(ADMIN_USERNAMES)))
+)
+_NOT_ADMIN_USER = func.lower(func.coalesce(User.username, "")).not_in(sorted(ADMIN_USERNAMES))
 _METHOD = {"cryptobot": "crypto", "ton": "ton", "stars": "stars"}
 # подарки из FREE, которые игрок ещё не получил (задание «5 друзей» не выполнено или истекло)
 LOCKED_STATUSES = ("quest_pending", "expired")
@@ -60,12 +66,12 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
     reset_at = await get_profit_reset_at(session)
     since_reset = [PlayRound.created_at >= reset_at] if reset_at else []
 
-    users_total = (await session.execute(select(func.count()).select_from(User))).scalar_one()
+    users_total = (await session.execute(select(func.count()).select_from(User).where(_NOT_ADMIN_USER))).scalar_one()
     users_24h = (
-        await session.execute(select(func.count()).select_from(User).where(User.updated_at >= day_ago))
+        await session.execute(select(func.count()).select_from(User).where(_NOT_ADMIN_USER, User.updated_at >= day_ago))
     ).scalar_one()
     users_new_24h = (
-        await session.execute(select(func.count()).select_from(User).where(User.created_at >= day_ago))
+        await session.execute(select(func.count()).select_from(User).where(_NOT_ADMIN_USER, User.created_at >= day_ago))
     ).scalar_one()
 
     games_rows = (
@@ -77,7 +83,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
                 func.coalesce(func.sum(PlayRound.payout_minor), 0),
                 func.coalesce(func.sum(sql_case((PlayRound.payout_minor > PlayRound.bet_minor, 1), else_=0)), 0),
             )
-            .where(_FINISHED, PlayRound.game != "case", *since_reset)
+            .where(_FINISHED, _NOT_ADMIN_ROUND, PlayRound.game != "case", *since_reset)
             .group_by(PlayRound.game)
             .order_by(PlayRound.game)
         )
@@ -94,7 +100,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
                 func.coalesce(func.sum(PlayRound.bet_minor), 0),
                 func.coalesce(func.sum(PlayRound.payout_minor), 0),
             )
-            .where(PlayRound.game == "case", PlayRound.case_id.is_not(None), *since_reset)
+            .where(PlayRound.game == "case", _NOT_ADMIN_ROUND, PlayRound.case_id.is_not(None), *since_reset)
             .group_by(PlayRound.case_id)
             .order_by(func.count().desc())
         )
@@ -114,7 +120,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
     deposit_rows = (
         await session.execute(
             select(DepositOrder.provider, func.count(), func.coalesce(func.sum(DepositOrder.amount_minor), 0))
-            .where(DepositOrder.status == "paid")
+            .where(DepositOrder.status == "paid", DepositOrder.user_id.not_in(select(User.id).where(~_NOT_ADMIN_USER)))
             .group_by(DepositOrder.provider)
         )
     ).all()
@@ -128,7 +134,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
     day_rows = (
         await session.execute(
             select(day, func.count(), func.count(func.distinct(PlayRound.user_id)))
-            .where(PlayRound.created_at >= since)
+            .where(PlayRound.created_at >= since, _NOT_ADMIN_ROUND)
             .group_by(day)
             .order_by(day)
         )
@@ -157,7 +163,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
                 func.count(),
             )
             .join(PlayRound, PlayRound.user_id == User.id)
-            .where(_FINISHED)
+            .where(_FINISHED, _NOT_ADMIN_USER)
             .group_by(User.id)
             .order_by(func.sum(PlayRound.bet_minor).desc())
             .limit(10)

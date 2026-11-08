@@ -494,8 +494,8 @@
   .qBtnReady { animation: none; }
 }
 
-@media (min-width: 900px) {
+@media (min-width: 600px) {
   .rewardsGrid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   }
 }

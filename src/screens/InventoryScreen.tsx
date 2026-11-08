@@ -6,7 +6,7 @@ import { DiamondIcon, SearchIcon, ShareIcon } from '../components/shell/icons'
 import { InventoryGiftCard } from '../components/inventory/InventoryGiftCard'
 import { LockedGiftSheet, type LockedAction } from '../components/inventory/LockedGiftSheet'
 import { useFreeCasesStore } from '../store/freeCases'
-import { Button, Input } from '../components/ui'
+import { Button, Input, Modal } from '../components/ui'
 import { sellItemApi, withdrawItemApi } from '../services/gameApi'
 import { SERVER_MODE } from '../lib/serverMode'
 import { makeRequestId } from '../lib/requestId'
@@ -85,7 +85,12 @@ export function InventoryScreen() {
   }
 
   // Вывод: сервер блокирует подарок и заводит заявку, затем открывается чат с менеджером
-  const handleWithdraw = (gift: Gift, uid: string) => {
+  // Перед выводом — предупреждение: подарок передают вручную, до 72 часов
+  const [withdrawAsk, setWithdrawAsk] = useState<{ gift: Gift; uid: string } | null>(null)
+  const handleWithdraw = (gift: Gift, uid: string) => setWithdrawAsk({ gift, uid })
+
+  const confirmWithdraw = (gift: Gift, uid: string) => {
+    setWithdrawAsk(null)
     const open = () => openOwnerChat(buildWithdrawMessage(gift, uid))
     if (!SERVER_MODE) {
       open()
@@ -203,6 +208,24 @@ export function InventoryScreen() {
           )}
         </>
       )}
+
+      <Modal open={withdrawAsk !== null} onClose={() => setWithdrawAsk(null)} title="Вывод подарка">
+        {withdrawAsk && (
+          <div role="alertdialog" aria-label="Вывод подарка">
+            <p>
+              Подарок <b>{withdrawAsk.gift.name}</b> передаёт менеджер вручную. <b>Нужно подождать до 72 часов</b>{' '}
+              для передачи подарка. Он уйдёт из инвентаря сразу и появится у вас в Telegram после проверки.
+            </p>
+            <p>После нажатия откроется чат с менеджером {OWNER_HANDLE} с готовым сообщением.</p>
+            <Button fullWidth onClick={() => confirmWithdraw(withdrawAsk.gift, withdrawAsk.uid)}>
+              Понятно, вывести
+            </Button>
+            <Button fullWidth variant="secondary" onClick={() => setWithdrawAsk(null)}>
+              Отмена
+            </Button>
+          </div>
+        )}
+      </Modal>
 
       {lockedGift && pending && lockedAction && (
         <LockedGiftSheet

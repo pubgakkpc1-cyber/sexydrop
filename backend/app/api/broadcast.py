@@ -88,6 +88,16 @@ async def players(
     return await admin_players.players_list(session, q[:64], sort, limit)
 
 
+@router.get("/locked-gifts")
+async def locked_gifts(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> list[dict[str, Any]]:
+    """NFT под замком (задание: 5 друзей, пополнение, игры): у кого, какой, сколько стоит, прогресс."""
+    _admin(x_telegram_init_data)
+    return await admin_players.locked_gifts_list(session)
+
+
 @router.get("/players/{telegram_id}")
 async def player_card(
     telegram_id: int,

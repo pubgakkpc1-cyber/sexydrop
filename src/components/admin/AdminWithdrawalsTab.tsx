@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { giftById } from '../../data/catalog'
 import { authHeaders } from '../../lib/auth'
-import { ago, ton } from './adminFormat'
+import { adminFetch } from '../../lib/adminApi'
+import { ago, dateTime, ton } from './adminFormat'
 import styles from './AdminPanel.module.css'
 
 interface Withdrawal {
@@ -12,12 +13,30 @@ interface Withdrawal {
   created_at: string
 }
 
+interface LockedRow {
+  player: { id: string; name: string; username: string | null }
+  gift: string
+  price: number
+  at: number | null
+  expires_at: number | null
+  steps: {
+    friends: { done: number; target: number }
+    deposit: { done: number; target: number }
+    games: { done: number; target: number }
+  } | null
+}
+
 /** Заявки игроков на вывод подарков: выдали вручную — «Выдал», не получилось — «Вернуть» (подарок снова в инвентаре). */
 export function AdminWithdrawalsTab() {
   const [rows, setRows] = useState<Withdrawal[] | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState<string | null>(null)
   const [done, setDone] = useState<string | null>(null)
+  const [locked, setLocked] = useState<LockedRow[] | null>(null)
+
+  useEffect(() => {
+    void adminFetch<LockedRow[]>('/api/admin/locked-gifts').then((r) => r.ok && setLocked(Array.isArray(r.data) ? r.data : []))
+  }, [])
 
   const load = useCallback(async () => {
     try {
@@ -115,6 +134,35 @@ export function AdminWithdrawalsTab() {
           </div>
         )
       })}
+      {locked && locked.length > 0 && (
+        <>
+          <h3 className={styles.h3}>Под замком ({locked.length}) — ещё не выполнили задание</h3>
+          <p className={styles.note}>
+            Сумма NFT под замком: <b>{ton(locked.reduce((a, l) => a + l.price, 0))}</b>. Они не выданы и в прибыль не входят.
+          </p>
+          {locked.map((l, i) => (
+            <div key={i} className={styles.lockCard}>
+              <div className={styles.lockHead}>
+                <span className={styles.pName}>🔒 {l.gift}</span>
+                <span className={styles.pSub}>{ton(l.price)}</span>
+              </div>
+              <span className={styles.pSub}>
+                {l.player.name}
+                {l.player.username ? ` · @${l.player.username}` : ''} · получил {ago(l.at)}
+              </span>
+              {l.steps ? (
+                <span className={styles.pSub}>
+                  Друзья {l.steps.friends.done}/{l.steps.friends.target} · пополнение {l.steps.deposit.done / 1000}/
+                  {l.steps.deposit.target / 1000} TON · игры {l.steps.games.done}/{l.steps.games.target}
+                  {l.expires_at ? ` · до ${dateTime(l.expires_at)}` : ''}
+                </span>
+              ) : (
+                <span className={`${styles.pSub} ${styles.bad}`}>Срок задания истёк</span>
+              )}
+            </div>
+          ))}
+        </>
+      )}
       <button type="button" className={styles.refresh} onClick={() => void load()}>
         ↻ Обновить список
       </button>

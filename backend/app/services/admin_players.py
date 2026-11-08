@@ -442,3 +442,38 @@ async def overview_extra(session: AsyncSession) -> dict[str, Any]:
         ),
         "withdrawals_done": await count(select(func.count()).select_from(Withdrawal).where(Withdrawal.status == "done")),
     }
+
+
+async def locked_gifts_list(session: AsyncSession, limit: int = 100) -> list[dict[str, Any]]:
+    """Все NFT из FREE под замком: у кого, какой, сколько стоит и сколько шагов задания выполнено."""
+    from app.services import play_service
+
+    rows = (
+        await session.execute(
+            select(NftItem, User)
+            .join(User, User.id == NftItem.user_id)
+            .where(NftItem.source == "free-case", NftItem.status == "quest_pending")
+            .order_by(NftItem.created_at.desc())
+            .limit(min(max(limit, 1), 300))
+        )
+    ).all()
+    out: list[dict[str, Any]] = []
+    for item, user in rows:
+        meta = await session.get(UserMeta, user.id)
+        quest = ((meta.free_state if meta else None) or {}).get("quest") or {}
+        active = str(quest.get("item_id")) == str(item.id)
+        steps = None
+        if active:
+            joined = await play_service.friends_joined(session, user.id, int(quest.get("claimed_at", 0)))
+            steps = await play_service.quest_steps(session, user.id, int(quest["claimed_at"]), joined)
+        out.append(
+            {
+                "player": {"id": str(user.telegram_id), "name": display_name(user), "username": user.username},
+                "gift": _gift_name(item.gift_id),
+                "price": int(item.price_minor),
+                "at": _ts(item.created_at),
+                "expires_at": int(quest.get("expires_at", 0)) // 1000 if active else None,
+                "steps": steps,
+            }
+        )
+    return out

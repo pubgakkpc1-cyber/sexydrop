@@ -198,3 +198,22 @@
 @media (prefers-reduced-motion: reduce) {
   .viewportSpinning, .launchBurst { animation: none; }
 }
+
+/* Маркер: тонкая матовая линия без стрелок и свечения */
+.markerTop,
+.markerBottom {
+  display: none;
+}
+
+.markerWrapper {
+  justify-content: center;
+}
+
+.markerLine {
+  width: 3px;
+  flex: 1;
+  border-radius: 3px;
+  background: #ffffff;
+  opacity: 0.9;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.45);
+}

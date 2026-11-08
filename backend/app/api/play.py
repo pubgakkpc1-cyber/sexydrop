@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Annotated, Any, Optional
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.security import HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -79,6 +79,17 @@ async def withdraw(body: ItemBody, user: CurrentUser, session: Session) -> dict[
 @router.post("/me/stars/exchange")
 async def stars_exchange(body: StarsBody, user: CurrentUser, session: Session) -> dict[str, Any]:
     return await acct.exchange_stars(session, user.id, body.stars)
+
+
+@router.post("/me/tag/{action}")
+async def tag_quest_action(action: str, user: CurrentUser, session: Session) -> dict[str, Any]:
+    """Задание «@sexydropbot в имени/описании»: start | check | claim."""
+    from app.services import tag_quest
+
+    fn = {"start": tag_quest.start, "check": tag_quest.check, "claim": tag_quest.claim}.get(action)
+    if fn is None:
+        raise HTTPException(status_code=404, detail="Неизвестное действие")
+    return await fn(session, user)
 
 
 @router.post("/me/bank/claim")

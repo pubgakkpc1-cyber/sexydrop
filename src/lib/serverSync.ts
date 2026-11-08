@@ -2,6 +2,7 @@ import { apiGet } from './api'
 import { SERVER_MODE } from './serverMode'
 import { useWalletStore } from '../store/wallet'
 import { useInventoryStore, type InventoryItem, type InventorySource } from '../store/inventory'
+import { useTagQuestStore } from '../store/tagQuest'
 import { useQuestStepsStore } from '../store/questSteps'
 import { REF_CHAT_URL, useRefBankStore } from '../store/refBank'
 import { useStarsBalanceStore } from '../store/starsBalance'
@@ -35,6 +36,7 @@ export interface ServerState {
   free_used: { free: boolean }
   free_gate: { deposit_required: boolean }
   free_quest: FreeQuestServer
+  tag_quest?: import('../store/tagQuest').TagQuestState
   ref_bank?: { stars: number; min: number; per_friend: number; chat_url?: string; history?: Array<{ at: number; d: number; t: string }> }
   me: { id: number; username: string | null; name: string | null }
 }
@@ -117,6 +119,7 @@ export function applyServerState(state: ServerState): void {
     depositRequired: state.free_gate?.deposit_required ?? false,
   })
   applyFreeQuest(state.free_quest)
+  if (state.tag_quest) useTagQuestStore.setState({ quest: state.tag_quest })
   // задание выполнено, сервер уже выдал подарок: окно «Награда разблокирована» остаётся, пока игрок его не закроет
   if (prevPending && !state.free_quest.pending && state.items.some((i) => i.uid === prevPending.uid)) {
     const quest = useFreeCasesStore.getState().quest

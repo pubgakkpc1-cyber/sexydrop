@@ -13,7 +13,7 @@ from app.core import catalog
 from app.models.economy import DepositOrder, NftItem, PlayRound, UserMeta, Withdrawal
 from app.models.user import User
 from app.core.config import get_settings
-from app.services import play_service, ref_chat
+from app.services import play_service, ref_chat, tag_quest
 from app.services.economy_core import (
     GameError,
     balance_minor,
@@ -185,6 +185,7 @@ async def get_state(session: AsyncSession, user: User) -> dict[str, Any]:
             and not await play_service.has_unlock_deposit(session, user.id)
         },
         "free_quest": quest,
+        "tag_quest": tag_quest.view((meta.quests_claimed or {}).get("_tag")),
         "ref_bank": {
             "stars": bank_stars(meta),
             "min": BANK_MIN_CLAIM,

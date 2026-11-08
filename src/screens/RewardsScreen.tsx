@@ -7,6 +7,7 @@ import { starsToMinor } from '../lib/stars'
 import { formatMinor } from '../lib/money'
 import { CheckIcon, ConvertIcon, StarIcon, TonIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
+import { TagQuestCard } from '../components/rewards/TagQuestCard'
 import styles from './RewardsScreen.module.css'
 
 function fmtStars(stars: number): string {
@@ -58,6 +59,8 @@ export function RewardsScreen() {
     <div className={styles.screen}>
       <h1 className={styles.title}>Заработок</h1>
       <p className={styles.lead}>Выполняй задания, копи звёзды и обменивай их на TON</p>
+
+      <TagQuestCard />
 
       <section className={styles.earnHero} aria-label="Сводка заработка">
         <div className={styles.earnMain}>

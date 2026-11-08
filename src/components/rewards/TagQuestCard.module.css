@@ -1,0 +1,23 @@
+.card { display: flex; flex-direction: column; gap: 12px; padding: 16px; border-radius: 22px; background: #222020; border: 1px solid rgba(200, 106, 111, 0.35); }
+.head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.title { margin: 0; font-family: var(--font-display); font-size: 17px; line-height: 1.25; }
+.sub { margin: 4px 0 0; font-size: 13px; color: rgba(255, 255, 255, 0.55); }
+.reward { display: inline-flex; align-items: center; gap: 4px; flex-shrink: 0; padding: 8px 12px; border-radius: 14px; background: #3a2527; font-family: var(--font-display); font-size: 13px; font-weight: 700; white-space: nowrap; }
+.star { width: 14px; height: 14px; color: #ffc93c; }
+.steps { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.step { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 14px; background: rgba(255, 255, 255, 0.04); opacity: 0.6; }
+.cur { opacity: 1; background: rgba(184, 58, 63, 0.14); }
+.done { opacity: 0.85; }
+.num { display: grid; place-items: center; flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%; background: #3a3536; font-family: var(--font-display); font-size: 13px; font-weight: 800; }
+.cur .num { background: #b83a3f; }
+.done .num { background: #2f8f58; }
+.stepText { display: flex; flex-direction: column; gap: 2px; min-width: 0; font-size: 14px; }
+.stepText small { font-size: 12.5px; line-height: 1.35; color: rgba(255, 255, 255, 0.55); }
+.timer { font-family: var(--font-display); font-size: 34px; font-weight: 800; font-variant-numeric: tabular-nums; }
+.timerSm { font-size: 14px; color: rgba(255, 255, 255, 0.7); font-variant-numeric: tabular-nums; }
+.btn, .btnGhost { min-height: 50px; border: none; border-radius: 16px; font-family: var(--font-display); font-size: 16px; font-weight: 700; color: #fff; cursor: pointer; }
+.btn { background: #b83a3f; }
+.btnGhost { background: #2d2b2b; }
+.btn:disabled, .btnGhost:disabled { opacity: 0.55; cursor: wait; }
+.ok { margin: 0; font-size: 14px; font-weight: 600; color: #4fd18b; }
+.err { margin: 0; font-size: 14px; font-weight: 600; color: #ff7b82; }

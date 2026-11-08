@@ -101,3 +101,14 @@ def test_crash_payout_equal_to_nft_price_picks_a_gift() -> None:
     ids = catalog.gifts_priced(6400)
     assert ids and all(i.rsplit("-", 1)[-1].isdigit() for i in ids)
     assert catalog.gifts_priced(1) == []  # нет NFT с такой ценой — выплата в TON
+
+
+def test_tag_quest_stages() -> None:
+    from app.services import tag_quest as t
+
+    assert t.view(None, now=1000)["stage"] == 1
+    st = {"started_at": 1000}
+    assert t.view(st, now=1000 + 5)["stage"] == 2
+    assert t.view(st, now=1000 + t.HOLD_MS + 1)["stage"] == 3
+    assert t.view(st, now=1000 + t.HOLD_MS + t.CLAIM_WINDOW_MS + 5)["stage"] == 1  # не забрал вовремя
+    assert t.REWARD_STARS == 5

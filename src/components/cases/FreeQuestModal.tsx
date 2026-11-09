@@ -10,7 +10,8 @@ import { sellItemApi } from '../../services/gameApi'
 import { SERVER_MODE } from '../../lib/serverMode'
 import { useFreeCasesStore } from '../../store/freeCases'
 import { LockIcon, LockOpenIcon, TonIcon, UsersIcon, CheckIcon } from '../shell/icons'
-import { FREE_NFT_CASE_MAINTENANCE, NFT_LOCK_UNAVAILABLE_TEXT } from '../../lib/features'
+import { PauseNotice } from '../inventory/PauseNotice'
+import { FREE_NFT_CASE_MAINTENANCE } from '../../lib/features'
 import styles from './FreeQuestModal.module.css'
 
 interface FreeQuestModalProps {
@@ -141,11 +142,7 @@ export function FreeQuestModal({ onClose }: FreeQuestModalProps) {
           )}
         </div>
 
-        {FREE_NFT_CASE_MAINTENANCE && (
-          <p className={styles.subtitle} role="status" style={{ fontWeight: 700, color: '#ffb3b7' }}>
-            🛠 {NFT_LOCK_UNAVAILABLE_TEXT}
-          </p>
-        )}
+        {FREE_NFT_CASE_MAINTENANCE && <PauseNotice compact />}
         <p className={styles.subtitle}>
           {isCompleted
             ? 'Все задания выполнены! Вы можете забрать подарок в инвентарь или продать его за TON.'

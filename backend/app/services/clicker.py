@@ -316,3 +316,37 @@ async def _settle(session: AsyncSession, c: dict[str, Any]) -> bool:
         c["ref_pending"] = left
         changed = True
     return changed
+
+
+def admin_view(c: dict[str, Any] | None) -> dict[str, Any]:
+    """Данные кликалки одного игрока для админки: тапы, рефералы, подозрение на автокликер."""
+    c = c or {}
+    sus = c.get("sus") or {}
+    score = int(sus.get("score", 0))
+    mk = month_key()
+    return {
+        "total": int(c.get("total", 0)),
+        "month_clicks": int(c.get("month_clicks", 0)) if c.get("month") == mk else 0,
+        "ref_clicks_total": int(c.get("ref_clicks_total", 0)),
+        "ref_today": int(c.get("ref_today", 0)) if c.get("ref_day") == _msk_day() else 0,
+        "ref_waiting": len(c.get("ref_pending") or []),
+        "score": score,
+        "flagged": score >= SUS_THRESHOLD,
+        "reasons": list((sus.get("reasons") or {}).values()),
+        "over_cap": int(sus.get("over_cap", 0)),
+    }
+
+
+async def players_overview(session: AsyncSession, limit: int = 50) -> list[dict[str, Any]]:
+    """Все, кто кликал: тапы за всё время и за марафон, бонус за рефералов, подозрение на автокликер. По убыванию кликов."""
+    rows = (
+        await session.execute(select(UserMeta.quests_claimed, User.telegram_id, User.first_name, User.last_name, User.username).join(User, User.id == UserMeta.user_id))
+    ).all()
+    out = []
+    for q, tg, fn, ln, un in rows:
+        c = (q or {}).get(KEY) or {}
+        if int(c.get("total", 0)) <= 0:
+            continue
+        out.append({"telegram_id": int(tg), "name": _display(fn, ln), "username": un, **admin_view(c)})
+    out.sort(key=lambda r: -r["total"])
+    return out[:limit]

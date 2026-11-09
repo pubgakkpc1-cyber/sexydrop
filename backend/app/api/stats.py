@@ -157,3 +157,15 @@ async def admin_stars_purchases(
             for m, pa, fn, un in rows
         ],
     }
+
+
+@router.get("/admin/clicker/players")
+async def admin_clicker_players(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Кто сколько накликал, бонусы за рефералов и подозрение на автокликер (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import clicker
+
+    return {"threshold": clicker.SUS_THRESHOLD, "players": await clicker.players_overview(session)}

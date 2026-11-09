@@ -4,6 +4,8 @@ import { giftById, type Gift } from '../data/catalog'
 import { useInventoryStore } from '../store/inventory'
 import { DiamondIcon, SearchIcon, ShareIcon } from '../components/shell/icons'
 import { InventoryGiftCard } from '../components/inventory/InventoryGiftCard'
+import { PauseNotice } from '../components/inventory/PauseNotice'
+import { NFT_WITHDRAW_PAUSED } from '../lib/features'
 import { LockedGiftSheet, type LockedAction } from '../components/inventory/LockedGiftSheet'
 import { useFreeCasesStore } from '../store/freeCases'
 import { Button, Input, Modal } from '../components/ui'
@@ -106,6 +108,7 @@ export function InventoryScreen() {
   return (
     <div className={styles.screen}>
       <h1 className={styles.title}>Ваши подарки</h1>
+      {NFT_WITHDRAW_PAUSED && showLocked && <PauseNotice />}
       <p className={styles.lead}>
         {filtering
           ? `Показано ${visible.length} из ${items.length}`

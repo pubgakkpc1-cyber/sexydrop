@@ -308,7 +308,10 @@ async def player_detail(session: AsyncSession, telegram_id: int) -> dict[str, An
         "friends": friends_list,
         "tag_quest": tag_quest.view(claimed_meta.get("_tag")),
     }
+    from app.services import clicker as clicker_svc
+
     return {
+        "clicker": clicker_svc.admin_view(claimed_meta.get("_clicker")),
         "referral": ref_block,
         "profile": {
             "id": str(user.telegram_id),

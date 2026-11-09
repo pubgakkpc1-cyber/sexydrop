@@ -25,7 +25,20 @@ interface RefBlock {
   tag_quest: { stage: number; started_at: number | null; ready_at: number | null; total_claimed: number }
 }
 
+interface ClickerBlock {
+  total: number
+  month_clicks: number
+  ref_clicks_total: number
+  ref_today: number
+  ref_waiting: number
+  score: number
+  flagged: boolean
+  reasons: string[]
+  over_cap: number
+}
+
 interface PlayerDetail {
+  clicker?: ClickerBlock
   referral?: RefBlock
   profile: {
     id: string
@@ -105,6 +118,7 @@ function normalize(raw: Partial<PlayerDetail> | null | undefined): PlayerDetail 
     items: { counts: r.items?.counts ?? [], list: r.items?.list ?? [], locked: r.items?.locked ?? [] },
     withdrawals: r.withdrawals ?? [],
     deposits: r.deposits ?? [],
+    clicker: r.clicker,
     history: r.history ?? [],
   }
 }
@@ -208,6 +222,49 @@ function Body({ d, onOpen }: { d: PlayerDetail; onOpen: (id: string) => void }) 
         <p className={styles.note}>
           Пополнения: {m.deposits_by.map((x) => `${x.method} — ${x.count} шт. на ${ton(x.amount)}`).join('; ')}
         </p>
+      )}
+
+      <h3 className={styles.h3}>Платежи</h3>
+      {d.deposits.length === 0 ? (
+        <p className={styles.note}>Пополнений не было.</p>
+      ) : (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Способ</th>
+              <th>Сумма</th>
+              <th>Когда</th>
+            </tr>
+          </thead>
+          <tbody>
+            {d.deposits.map((x, i) => (
+              <tr key={`${x.at}-${i}`}>
+                <td>{x.method}</td>
+                <td>{x.method === 'Stars' ? `${Math.round(x.amount / 10)} ★ (≈ ${ton(x.amount)})` : ton(x.amount)}</td>
+                <td>{new Date(x.at * 1000).toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {d.clicker && (
+        <>
+          <h3 className={styles.h3}>Кликалка</h3>
+          <div className={styles.statGrid}>
+            <Stat label="Тапов всего" value={String(d.clicker.total)} />
+            <Stat label="Тапов за марафон" value={String(d.clicker.month_clicks)} />
+            <Stat label="Кликов за рефералов" value={String(d.clicker.ref_clicks_total)} />
+            <Stat label="Рефералов сегодня" value={`${d.clicker.ref_today} / 5`} />
+            <Stat label="Друзья ждут кейса" value={String(d.clicker.ref_waiting)} />
+            <Stat
+              label="Автокликер"
+              value={d.clicker.flagged ? `подозрение (${d.clicker.score})` : d.clicker.score > 0 ? `звоночки: ${d.clicker.score}` : 'чисто'}
+              tone={d.clicker.flagged ? 'bad' : undefined}
+            />
+          </div>
+          {d.clicker.reasons.length > 0 && <p className={styles.note}>Причины: {d.clicker.reasons.join('; ')}</p>}
+        </>
       )}
 
       {d.referral && <ReferralBlock r={d.referral} stars={d.money.stars} onOpen={onOpen} />}

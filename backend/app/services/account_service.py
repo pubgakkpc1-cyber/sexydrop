@@ -224,6 +224,9 @@ async def sell_item(session: AsyncSession, user_id: uuid.UUID, item_id: str) -> 
 async def withdraw_item(session: AsyncSession, user_id: uuid.UUID, item_id: str) -> dict[str, Any]:
     await ensure_account(session, user_id)
     item = await lock_item(session, user_id, item_id)
+    if get_settings().withdraw_paused and item.status == "quest_pending":
+        # подарок из кейса FREE с заданием: вывод и задание сейчас не работают, ждут обновления
+        raise GameError("paused", 503, "Подарки из кейса FREE сейчас нельзя вывести — вывод и задания ждут обновления. Ничего делать не нужно.")
     await play_service.check_quest_item(session, user_id, item, "вывести подарок")
     if item.status != "available":
         raise GameError("item_unavailable", 409, "Подарок недоступен для вывода")

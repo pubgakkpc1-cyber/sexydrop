@@ -13,6 +13,17 @@ interface SusPlayer {
   month_clicks: number
   last: number
 }
+interface ClickRow {
+  telegram_id: number
+  name: string
+  username: string | null
+  total: number
+  month_clicks: number
+  ref_clicks_total: number
+  ref_waiting: number
+  score: number
+  flagged: boolean
+}
 interface Stars {
   count: number
   stars_total: number
@@ -27,6 +38,7 @@ export function AdminWatchPanels() {
   const [sus, setSus] = useState<{ threshold: number; players: SusPlayer[] } | null>(null)
   const [stars, setStars] = useState<Stars | null>(null)
   const [err, setErr] = useState<string | null>(null)
+  const [all, setAll] = useState<ClickRow[] | null>(null)
 
   useEffect(() => {
     let dead = false
@@ -35,6 +47,11 @@ export function AdminWatchPanels() {
         if (dead || !r) return
         if (r.ok && Array.isArray(r.data?.players)) setSus(r.data)
         else if (!r.ok) setErr(r.error)
+      })
+      .catch(() => undefined)
+    void Promise.resolve(adminFetch<{ players: ClickRow[] }>('/api/admin/clicker/players'))
+      .then((r) => {
+        if (!dead && r?.ok && Array.isArray(r.data?.players)) setAll(r.data.players)
       })
       .catch(() => undefined)
     void Promise.resolve(adminFetch<Stars>('/api/admin/stars-purchases'))
@@ -49,6 +66,38 @@ export function AdminWatchPanels() {
 
   return (
     <>
+      <h3 className={styles.h3}>Кликалка: кто сколько накликал</h3>
+      {all && all.length === 0 && <p className={styles.note}>Пока никто не кликал.</p>}
+      {all && all.length > 0 && (
+        <table className={styles.table}>
+          <thead>
+            <tr>
+              <th>Игрок</th>
+              <th>Всего / марафон</th>
+              <th>Рефы</th>
+            </tr>
+          </thead>
+          <tbody>
+            {all.map((p) => (
+              <tr key={p.telegram_id}>
+                <td className={p.flagged ? styles.bad : undefined}>
+                  {p.name}
+                  {p.username ? ` @${p.username}` : ''}
+                  {p.flagged ? ' ⚠ автокликер?' : ''}
+                </td>
+                <td>
+                  {p.total} / {p.month_clicks}
+                </td>
+                <td>
+                  +{p.ref_clicks_total}
+                  {p.ref_waiting ? ` (ждут ${p.ref_waiting})` : ''}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
       <h3 className={styles.h3}>Кликалка: подозрение на автокликер</h3>
       {err && <p className={`${styles.note} ${styles.bad}`}>{err}</p>}
       {sus && sus.players.length === 0 && <p className={styles.note}>Подозрительных пока нет.</p>}

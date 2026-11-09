@@ -1,0 +1,27 @@
+.box,
+.compact {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #3a1f22;
+  border: 1.5px solid #d8545c;
+  text-align: left;
+}
+
+.compact {
+  padding: 10px 12px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 15px;
+  color: #ffb3b7;
+}
+
+.text {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #f4e6e6;
+}

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { freeCases, type FreeCaseId } from '../../data/catalog'
 import { useFreeCasesStore, getMsk23ResetInfo } from '../../store/freeCases'
+import { FREE_NFT_CASE_MAINTENANCE } from '../../lib/features'
 import { ClockIcon, SparkleIcon, LockIcon } from '../shell/icons'
 import { cx } from '../../lib/cx'
 import styles from './FreeCasesSection.module.css'
@@ -77,13 +78,13 @@ export function FreeCasesSection() {
                   aria-hidden
                 />
                 <img
-                  className={cx(styles.image, (hasPendingQuest || used) && styles.imageLocked)}
+                  className={cx(styles.image, (hasPendingQuest || used || (!isDaily && FREE_NFT_CASE_MAINTENANCE)) && styles.imageLocked)}
                   src={gameCase.image}
                   alt={gameCase.name}
                   loading="lazy"
                 />
                 {/* Замочек: кейс на «перерыве» — NFT из него ждёт задание с друзьями, новый открыть нельзя */}
-                {(hasPendingQuest || used) && (
+                {(hasPendingQuest || used || (!isDaily && FREE_NFT_CASE_MAINTENANCE)) && (
                   <span className={styles.lockBadge} aria-hidden>
                     <LockIcon className={styles.lockBadgeIcon} />
                   </span>
@@ -102,7 +103,12 @@ export function FreeCasesSection() {
 
               {/* Нижняя кнопка-статус (клик переходит на карточку кейса) */}
               <div className={styles.statusFooter}>
-                {hasPendingQuest ? (
+                {!isDaily && FREE_NFT_CASE_MAINTENANCE ? (
+                  <span className={cx(styles.actionPill, styles.pillLocked)}>
+                    <LockIcon className={styles.pillIcon} aria-hidden />
+                    <span>На переработке</span>
+                  </span>
+                ) : hasPendingQuest ? (
                   <span className={cx(styles.actionPill, styles.pillLocked)}>
                     <LockIcon className={styles.pillIcon} aria-hidden />
                     <span>Квест: 3 дня</span>

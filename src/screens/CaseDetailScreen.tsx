@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { FREE_NFT_CASE_MAINTENANCE } from '../lib/features'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CaseRoulette } from '../components/cases/CaseRoulette'
 import { CaseWinModal } from '../components/cases/CaseWinModal'
@@ -105,6 +106,10 @@ export function CaseDetailScreen() {
 
   const claimFree = async () => {
     if (!freeCaseId) return
+    if (freeCaseId === 'free' && FREE_NFT_CASE_MAINTENANCE) {
+      setError('Кейс на переработке — скоро вернётся')
+      return
+    }
     try {
       const result = await claimFreeCaseApi(freeCaseId, makeRequestId())
       if (result.status === 'ok') {
@@ -213,7 +218,9 @@ export function CaseDetailScreen() {
           {isDailyFree
             ? 'Ежедневный сундук · Доступно 1 раз в 24 часа (сброс в 23:00 МСК)'
             : isQuestFree
-            ? 'Фри кейс с заданием · Открывается один раз · Пригласите 5 друзей с TG Premium (3 дня на активацию)'
+            ? FREE_NFT_CASE_MAINTENANCE
+              ? '🛠 Кейс на переработке — пока недоступен, скоро вернётся'
+              : 'Фри кейс с заданием · Открывается один раз · Пригласите 5 друзей с TG Premium (3 дня на активацию)'
             : 'Официальные Telegram подарки · Мгновенный вывод или продажа за TON'}
         </p>
       </div>

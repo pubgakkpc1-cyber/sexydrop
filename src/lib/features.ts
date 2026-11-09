@@ -10,3 +10,6 @@ export const FEATURES = {
   spins: false,
   plinko: false,
 } as const
+
+/** Кейс FREE с NFT (за приглашения) временно на переработке: открыть нельзя. `false` — вернуть в работу. */
+export const FREE_NFT_CASE_MAINTENANCE = true

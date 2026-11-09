@@ -58,6 +58,8 @@ class Settings(BaseSettings):
     sub_private_url: str = "https://t.me/+YZoeECjxGmszNzZk"
     # Чат SEXY DROP: друг по рефке засчитывается, только если он в этом чате (бот — админ чата)
     ref_chat_id: str = "-1004442964935"
+    # Кейс FREE с NFT временно на переработке (FREE_NFT_CASE_MAINTENANCE=false — вернуть в работу)
+    free_nft_case_maintenance: bool = True
     ref_chat_url: str = "https://t.me/+hQUjqYtgmTA2NmQ0"
     # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
     stats_path: str = "/tmp/sexydrop_stats.json"

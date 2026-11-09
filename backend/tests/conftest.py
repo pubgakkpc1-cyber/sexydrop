@@ -7,6 +7,7 @@ os.environ.setdefault(
     "postgresql+asyncpg://gram:gram@127.0.0.1:5432/gram",
 )
 os.environ.setdefault("APP_ENV", "test")
+os.environ.setdefault("FREE_NFT_CASE_MAINTENANCE", "false")  # тесты проверяют сам кейс; на проде он на переработке
 
 from collections.abc import AsyncIterator
 

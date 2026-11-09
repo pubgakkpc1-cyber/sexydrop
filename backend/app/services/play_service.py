@@ -12,6 +12,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import catalog
+from app.core.config import get_settings
 from app.models.economy import NftItem, PlayRound, UserMeta
 from app.services import odds_service
 from app.services.economy_core import (
@@ -361,6 +362,10 @@ async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, re
     now = now_ms()
     state = dict(meta.free_state or {})
     last_at = int(state.get(case_id, {}).get("last_at", 0))
+    if case_id == "free" and get_settings().free_nft_case_maintenance:
+        # кейс FREE с NFT на переработке: пока недоступен
+        await session.rollback()
+        raise GameError("maintenance", 503, "Кейс на переработке — скоро вернётся")
     if case_id == "free":
         # дорогой FREE открывается ровно один раз за всё время
         if last_at > 0:

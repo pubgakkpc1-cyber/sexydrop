@@ -18,6 +18,7 @@ interface Preset {
   id: string
   label: string
   button: string
+  photo?: boolean
   text: string
 }
 interface Info {
@@ -68,6 +69,7 @@ export function AdminBroadcastTab() {
     return () => clearInterval(t)
   }, [running, refresh])
 
+  const presetHasPhoto = Boolean(info?.presets?.find((p) => p.id === preset)?.photo)
   const count = info?.audiences.find((a) => a.id === audience)?.count ?? 0
   const wrap = (tag: string) => {
     const el = area.current
@@ -115,8 +117,8 @@ export function AdminBroadcastTab() {
                 onClick={() => {
                   setPreset(p.id)
                   setText(p.text)
-                  setKind('app')
-                  setBtnText(p.button)
+                  setKind(p.button ? 'app' : 'none')
+                  setBtnText(p.button || 'Играть')
                   setConfirm(false)
                 }}
               >
@@ -129,7 +131,7 @@ export function AdminBroadcastTab() {
               </button>
             )}
           </div>
-          {preset && <p className={styles.note}>К сообщению прикрепится картинка. Если не менять текст, он уйдёт с премиум-эмодзи.</p>}
+          {preset && <p className={styles.note}>{presetHasPhoto ? 'К сообщению прикрепится картинка. ' : ''}Если не менять текст, он уйдёт с премиум-эмодзи.</p>}
         </>
       )}
 
@@ -162,7 +164,7 @@ export function AdminBroadcastTab() {
         ref={area}
         className={styles.textarea}
         rows={6}
-        maxLength={preset ? 1024 : 3500}
+        maxLength={presetHasPhoto ? 1024 : 3500}
         placeholder="Текст сообщения. Можно &lt;b&gt;жирный&lt;/b&gt;, &lt;i&gt;курсив&lt;/i&gt;"
         aria-label="Текст рассылки"
         value={text}
@@ -197,7 +199,7 @@ export function AdminBroadcastTab() {
         <>
           <h3 className={styles.h3}>Так увидит игрок</h3>
           <div className={styles.bubble}>
-            {preset && <img src="/brand/ref/clicker-photo.jpg" alt="" style={{ width: '100%', borderRadius: 10, marginBottom: 8 }} />}
+            {presetHasPhoto && <img src="/brand/ref/clicker-photo.jpg" alt="" style={{ width: '100%', borderRadius: 10, marginBottom: 8 }} />}
             {/* previewHtml экранирует всё, кроме b/i/u/s/code без атрибутов */}
             <div dangerouslySetInnerHTML={{ __html: previewHtml(text) }} />
             {kind !== 'none' && btnText.trim() && <div className={styles.bubbleBtn}>{btnText}</div>}

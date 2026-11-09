@@ -58,6 +58,18 @@ def create_app() -> FastAPI:
     )
     application.include_router(api_router)
 
+    _OPEN_DURING_WORKS = ("/api/health", "/api/maintenance", "/api/auth", "/api/telegram", "/api/admin", "/api/live")
+
+    @application.middleware("http")
+    async def _maintenance_gate(request: Request, call_next):  # type: ignore[no-untyped-def]
+        path = request.url.path
+        if path.startswith("/api/") and not path.startswith(_OPEN_DURING_WORKS) and request.method != "OPTIONS":
+            from app.services import maintenance
+
+            if await maintenance.is_on():
+                return JSONResponse(status_code=503, content={"detail": "Технические работы: бот временно не работает", "code": "maintenance"})
+        return await call_next(request)
+
     @application.exception_handler(GameError)
     async def _game_error(_request: Request, exc: GameError) -> JSONResponse:
         return JSONResponse(status_code=exc.status, content={"detail": exc.detail, "code": exc.code})

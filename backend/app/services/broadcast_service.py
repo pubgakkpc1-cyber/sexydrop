@@ -36,6 +36,7 @@ CAPTION_MAX = 1024  # лимит подписи к фото в Telegram
 # Готовые посты (картинка + текст): админ выбирает в рассылке одним нажатием.
 PRESETS: dict[str, dict[str, str]] = {
     "clicker": {"label": "Кликалка: запуск (картинка + пост)", "photo": "clicker-photo.jpg", "button": "🕹 Играть в Кликалку"},
+    "maintenance": {"label": "Технические работы: 1–2 дня (текст)", "photo": "", "button": ""},
 }
 
 
@@ -44,6 +45,10 @@ def preset_text(preset: str, premium: bool = False) -> str:
 
     if preset == "clicker":
         return ref_share.clicker_launch_caption(premium)
+    if preset == "maintenance":
+        from app.services import maintenance
+
+        return maintenance.notice_text(premium)
     return ""
 
 
@@ -51,6 +56,8 @@ def _photo_bytes(preset: str) -> bytes | None:
     from app.services import ref_share
 
     name = PRESETS[preset]["photo"]
+    if not name:
+        return None
     path = next((d / name for d in ref_share._GIF_DIRS if (d / name).is_file()), None)
     return path.read_bytes() if path else None
 
@@ -152,6 +159,15 @@ async def _send_preset(client: httpx.AsyncClient, chat_id: int, preset: str, tex
     return await _send_photo(client, chat_id, text, markup, photo, name)
 
 
+async def _send_text_preset(client: httpx.AsyncClient, chat_id: int, preset: str, text: str, markup: dict[str, Any] | None, premium: list[bool]) -> bool:
+    """Готовый текстовый пост: без правок — с премиум-эмодзи, при отказе Telegram — обычные."""
+    if text.strip() == preset_text(preset, False).strip() and premium[0]:
+        if await _send(client, chat_id, preset_text(preset, True), markup):
+            return True
+        premium[0] = False
+    return await _send(client, chat_id, text, markup)
+
+
 async def _run(ids: list[int], text: str, markup: dict[str, Any] | None, preset: str | None = None) -> None:
     photo = _photo_bytes(preset) if preset else None
     premium = [True]
@@ -159,6 +175,8 @@ async def _run(ids: list[int], text: str, markup: dict[str, Any] | None, preset:
         for chat_id in ids:
             if preset and photo:
                 ok = await _send_preset(client, chat_id, preset, text, markup, photo, premium)
+            elif preset:
+                ok = await _send_text_preset(client, chat_id, preset, text, markup, premium)
             else:
                 ok = await _send(client, chat_id, text, markup)
             _state["sent" if ok else "failed"] += 1
@@ -173,6 +191,8 @@ async def send_test(chat_id: int, text: str, args: MarkupArgs, preset: str | Non
         photo = _photo_bytes(preset) if preset else None
         if preset and photo:
             ok = await _send_preset(client, chat_id, preset, text, _markup(args), photo, [True])
+        elif preset:
+            ok = await _send_text_preset(client, chat_id, preset, text, _markup(args), [True])
         else:
             ok = await _send(client, chat_id, text, _markup(args))
     return ok, _state.get("last_error")

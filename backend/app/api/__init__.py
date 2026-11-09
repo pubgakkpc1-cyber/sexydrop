@@ -7,6 +7,7 @@ from app.api.clicker import router as clicker_router
 from app.api.deposits import router as deposits_router
 from app.api.health import router as health_router
 from app.api.live import router as live_router
+from app.api.maintenance import router as maintenance_router
 from app.api.odds import router as odds_router
 from app.api.play import router as play_router
 from app.api.referrals import router as referrals_router
@@ -30,3 +31,4 @@ api_router.include_router(play_router)
 api_router.include_router(broadcast_router)
 api_router.include_router(clicker_router)
 api_router.include_router(live_router)
+api_router.include_router(maintenance_router)

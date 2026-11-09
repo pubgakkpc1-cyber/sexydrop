@@ -401,6 +401,14 @@ async def handle_update(update: dict[str, Any]) -> bool:
         return False
     if await _admin_command(message, chat_id):
         return True
+    from app.services import maintenance
+
+    if await maintenance.is_on():
+        from app.api.odds import ADMIN_USERNAMES
+
+        if str((message.get("from") or {}).get("username") or "").lower().lstrip("@") not in ADMIN_USERNAMES:
+            await maintenance.send_notice(chat_id)  # идут технические работы: вместо приветствия — объяснение
+            return True
     await _set_menu_button(chat_id)
     await send_welcome(chat_id)
     return True

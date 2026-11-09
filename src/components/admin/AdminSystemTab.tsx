@@ -69,6 +69,7 @@ export function AdminSystemTab() {
         <Row key={id} label={title} ok value={id} />
       ))}
 
+      <MaintenanceSwitch />
       <ResetProfit />
       <ResetBalances />
     </div>
@@ -167,6 +168,60 @@ function ResetProfit() {
         </button>
       </div>
       {result && <p className={styles.note}>{result}</p>}
+    </>
+  )
+}
+
+
+/** Технические работы: включить — у всех игроков вместо приложения экран «1–2 дня», бот отвечает тем же. Админ проходит внутрь. */
+function MaintenanceSwitch() {
+  const [on, setOn] = useState<boolean | null>(null)
+  const [confirm, setConfirm] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [err, setErr] = useState<string | null>(null)
+
+  useEffect(() => {
+    void adminFetch<{ on: boolean }>('/api/maintenance').then((r) => (r.ok ? setOn(r.data.on) : setErr(r.error)))
+  }, [])
+
+  const toggle = async (next: boolean) => {
+    setBusy(true)
+    setErr(null)
+    const r = await adminFetch<{ on: boolean }>('/api/admin/maintenance', { method: 'POST', body: { on: next } })
+    setBusy(false)
+    setConfirm(false)
+    if (r.ok) setOn(r.data.on)
+    else setErr(r.error)
+  }
+
+  return (
+    <>
+      <h3 className={styles.h3}>Технические работы</h3>
+      <p className={styles.note}>
+        Сейчас: <b>{on === null ? '…' : on ? 'ВКЛЮЧЕНЫ — игроки видят экран работ' : 'выключены — всё работает'}</b>. Включение закрывает приложение
+        для всех, кроме админа, и бот на /start отвечает, что работы идут 1–2 дня. Готовый текст для канала есть в рассылке («Технические работы»).
+      </p>
+      {err && <p className={`${styles.note} ${styles.bad}`}>{err}</p>}
+      {on === false && !confirm && (
+        <button type="button" className={`${styles.refresh} ${styles.danger}`} onClick={() => setConfirm(true)}>
+          Включить технические работы
+        </button>
+      )}
+      {on === false && confirm && (
+        <>
+          <button type="button" className={`${styles.refresh} ${styles.danger}`} disabled={busy} onClick={() => void toggle(true)}>
+            Точно включить: бот перестанет работать
+          </button>
+          <button type="button" className={styles.refresh} onClick={() => setConfirm(false)}>
+            Отмена
+          </button>
+        </>
+      )}
+      {on === true && (
+        <button type="button" className={styles.refresh} disabled={busy} onClick={() => void toggle(false)}>
+          Выключить — вернуть бота в работу
+        </button>
+      )}
     </>
   )
 }

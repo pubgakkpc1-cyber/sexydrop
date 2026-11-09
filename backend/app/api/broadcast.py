@@ -49,7 +49,7 @@ async def broadcast_info(
     return {
         "audiences": [{"id": k, "label": v, "count": counts[k]} for k, v in svc.AUDIENCES.items()],
         "status": svc.status(),
-        "presets": [{"id": k, "label": v["label"], "button": v["button"], "text": svc.preset_text(k)} for k, v in svc.PRESETS.items()],
+        "presets": [{"id": k, "label": v["label"], "button": v["button"], "photo": bool(v["photo"]), "text": svc.preset_text(k)} for k, v in svc.PRESETS.items()],
     }
 
 
@@ -69,7 +69,7 @@ async def broadcast_send(
     if body.preset is not None:
         if body.preset not in svc.PRESETS:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестный готовый пост")
-        if len(body.text) > svc.CAPTION_MAX:
+        if svc.PRESETS[body.preset]["photo"] and len(body.text) > svc.CAPTION_MAX:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Подпись к картинке — не больше {svc.CAPTION_MAX} символов")
     args = (body.button_text, body.button_url, body.open_app)
     if body.test:

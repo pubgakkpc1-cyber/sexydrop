@@ -77,3 +77,17 @@ async def test_broadcast_presets_listed_and_validated(client: AsyncClient, monke
     monkeypatch.setattr(api, "get_settings", lambda: type("S", (), {"bot_token": "t"})())
     bad = await client.post("/api/admin/broadcast", json={"text": "hi", "audience": "all", "preset": "nope"}, headers=headers)
     assert bad.status_code == 400
+
+
+async def test_maintenance_gate_blocks_api_but_not_health(client: AsyncClient):
+    from app.services import maintenance
+
+    try:
+        await maintenance.set_on(True)
+        assert (await client.get("/health")).status_code == 200
+        blocked = await client.get("/api/me/inventory")
+        assert blocked.status_code == 503 and blocked.json()["code"] == "maintenance"
+        assert (await client.get("/api/maintenance")).json() == {"on": True, "admin": False}
+    finally:
+        await maintenance.set_on(False)
+    assert (await client.get("/api/maintenance")).json()["on"] is False

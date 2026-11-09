@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './App'
+import { MaintenanceGate } from './components/MaintenanceGate'
 import { getStartParam, getTelegramUser, initTelegram, isTelegramEnv } from './lib/telegram'
 import { parseReferrerId } from './lib/referral'
 import { useReferralsStore } from './store/referrals'
@@ -38,6 +39,8 @@ track({ type: 'open' })
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <MaintenanceGate>
+      <App />
+    </MaintenanceGate>
   </StrictMode>,
 )

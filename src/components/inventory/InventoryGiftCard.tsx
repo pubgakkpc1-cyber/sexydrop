@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { FREE_NFT_CASE_MAINTENANCE } from '../../lib/features'
 import type { Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { LockIcon, TonIcon } from '../shell/icons'
@@ -62,6 +63,9 @@ export function InventoryGiftCard({ gift, onSell, onWithdraw, selling = false, l
 
       <div className={styles.body}>
         <strong className={styles.name}>{gift.name}</strong>
+        {locked && FREE_NFT_CASE_MAINTENANCE && (
+          <span className={styles.tempUnavailable}>🛠 Временно недоступно</span>
+        )}
 
         <button
           type="button"

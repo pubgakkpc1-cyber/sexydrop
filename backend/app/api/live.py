@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from typing import Annotated, Any
 
 from fastapi import APIRouter, Depends
@@ -9,6 +10,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import catalog
 from app.core.db import get_session
 from app.models.economy import PlayRound
+
+_NFT_ID = re.compile(r"-\d$")  # NFT-подарок: id вида name-N
 
 router = APIRouter(prefix="/api/live", tags=["live"])
 
@@ -27,8 +30,8 @@ async def live_feed(session: Annotated[AsyncSession, Depends(get_session)]) -> d
     drops: list[dict[str, Any]] = []
     for r in rows:
         gid = (r.result or {}).get("gift_id")
-        if not gid or catalog.is_ton_prize(gid):
-            continue
+        if not gid or catalog.is_ton_prize(gid) or not _NFT_ID.search(gid):
+            continue  # обычные подарки (не NFT) в ленту не попадают
         drops.append({"id": str(r.id), "gift_id": gid, "case_id": r.case_id, "ts": int(r.created_at.timestamp())})
         if len(drops) >= 14:
             break

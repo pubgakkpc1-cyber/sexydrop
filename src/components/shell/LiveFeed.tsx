@@ -43,7 +43,7 @@ export function LiveFeed() {
 
   const items = drops
     .map((d) => ({ d, gift: giftById.get(d.gift_id), gameCase: paidCases.find((c) => c.id === d.case_id) }))
-    .filter((x) => x.gift)
+    .filter((x) => x.gift && /-\d$/.test(x.gift.id)) // только NFT (обычные подарки в ленте не показываем)
 
   return (
     <section className={styles.bar} aria-label="Live: последние дропы">
@@ -68,13 +68,13 @@ export function LiveFeed() {
           <div
             key={d.id}
             role="img"
-            className={cx(styles.item, gameCase && gift!.priceMinor >= gameCase.priceMinor * 3 && styles.hit, d.id === fresh && styles.fresh)}
+            className={cx(styles.item, d.id === fresh && styles.fresh)}
             aria-label={`${gift!.name}${gameCase ? ` из кейса ${gameCase.name}` : ''} — ${formatMinor(gift!.priceMinor)} TON`}
           >
             <img
               src={gift!.image}
               alt=""
-              className={/_\d\.webp$/.test(gift!.image) ? styles.imgFull : styles.imgContain}
+              className={styles.imgFull}
               loading="lazy"
             />
           </div>

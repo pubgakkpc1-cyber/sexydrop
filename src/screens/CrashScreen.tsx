@@ -27,7 +27,6 @@ import { GRAPHICS_PRESETS, useGraphicsStore } from '../store/graphics'
 import { GameTopBar } from '../components/shell/GameTopBar'
 import { RocketRewardSheet } from '../components/games/RocketRewardSheet'
 import { MULT_TIER_STYLE, multTier } from '../lib/multTier'
-import { tileGiftFor } from '../lib/crashTile'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
@@ -722,7 +721,8 @@ export function CrashScreen() {
             const isActive = !isWon && !isLost
             // Плитка живая: самый дорогой NFT, который не дороже текущей выплаты (меняется в полёте);
             // пока выплата ниже самого дешёвого NFT — значок TON; у проигравших — поставленный подарок.
-            const liveGift = isLost ? row.stakeGift : tileGiftFor(row.profitMinor, row.id, row.stakeGift)
+            // Ракетка платит только TON: у выигрыша всегда значок TON, подарок виден лишь у проигравшей ставки подарком
+            const liveGift = isLost ? row.stakeGift : undefined
             const displayGift = isWon ? (row.wonGift ?? (row.settled ? undefined : liveGift)) : liveGift
 
             return (

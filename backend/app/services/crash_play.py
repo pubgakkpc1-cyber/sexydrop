@@ -78,8 +78,8 @@ async def _pay(session: AsyncSession, user_id: uuid.UUID, row: PlayRound, mult: 
     mult_h = _mult_h(mult)
     payout = row.bet_minor * mult_h // 100
     result: dict[str, Any] = {"status": "ok", "multiplier": mult_h / 100, "won_minor": payout}
-    # выплата ровно равна цене NFT — выдаём подарок в инвентарь (как в правилах Ракетки), иначе TON
-    options = catalog.gifts_priced(payout) if payout > 0 else []
+    # Ракетка платит только TON: NFT за выигрыш не выдаётся (решение владельца)
+    options: list[str] = []  # NFT за выигрыш в Ракетке отключены
     if options:
         staked = (row.state or {}).get("gift_id")
         gift_id = staked if staked in options else options[int(uuid.UUID(str(row.id)).int % len(options))]

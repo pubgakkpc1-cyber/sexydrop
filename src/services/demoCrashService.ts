@@ -1,11 +1,10 @@
 import type { Minor } from '../lib/money'
 import { mulByMultiplier, formatMinor } from '../lib/money'
-import { gifts, giftById, type Gift } from '../data/catalog'
+import { giftById, type Gift } from '../data/catalog'
 import { useInventoryStore } from '../store/inventory'
 import { useWalletStore } from '../store/wallet'
 import { useGamesHistoryStore } from '../store/gamesHistory'
 import { createRequestMemo } from '../lib/requestMemo'
-import { nftPriceFor } from '../lib/crashTile'
 import { MAX_BET_MINOR } from '../lib/gameConfig'
 import { recentCrashPoints, roundInfo, scheduleAt, sharedNow, syncClock } from './crashSchedule'
 import { SERVER_MODE } from '../lib/serverMode'
@@ -711,19 +710,8 @@ function cashoutAt(multiplier: number): CashoutResult {
       return { status: 'ok', wonMinor, multiplier } as const
     }
 
-    // Выплата: если выигрыш в точности равен цене NFT — NFT уходит в инвентарь; иначе всё идёт в TON на баланс.
-    const nftPrice = nftPriceFor(wonMinor)
-    const matchingGift =
-      nftPrice === undefined
-        ? undefined
-        : gifts.find((g) => /-\d$/.test(g.id) && g.priceMinor === nftPrice)
-    if (matchingGift) {
-      useInventoryStore.getState().addGifts([matchingGift.id], 'crash-win')
-      const rest = wonMinor - matchingGift.priceMinor
-      if (rest > 0) useWalletStore.getState().credit(rest)
-    } else {
-      useWalletStore.getState().credit(wonMinor)
-    }
+    // Ракетка платит только TON: NFT за выигрыш не выдаётся
+    useWalletStore.getState().credit(wonMinor)
 
     // 4.3: успешный кешаут — запись в общей истории ставок (чистый дельта).
     useGamesHistoryStore.getState().push({
@@ -732,7 +720,7 @@ function cashoutAt(multiplier: number): CashoutResult {
       stakeMinor: s.myBet.valueMinor,
       outcome: 'won',
       deltaMinor: wonMinor - s.myBet.valueMinor,
-      detail: matchingGift ? `NFT ${matchingGift.name}` : `x${multiplier.toFixed(2)}`,
+      detail: `x${multiplier.toFixed(2)}`,
     })
     useCrashStore.setState({
       myBet: {
@@ -740,10 +728,9 @@ function cashoutAt(multiplier: number): CashoutResult {
         status: 'won',
         cashedMultiplier: multiplier,
         wonMinor,
-        wonGift: matchingGift,
       },
     })
-    return { status: 'ok', wonMinor, multiplier, wonGift: matchingGift } as const
+    return { status: 'ok', wonMinor, multiplier } as const
   }
 }
 

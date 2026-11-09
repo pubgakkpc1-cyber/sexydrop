@@ -24,6 +24,7 @@ class BroadcastBody(BaseModel):
     open_app: bool = False
     button_text: str | None = Field(default=None, max_length=40)
     button_url: str | None = Field(default=None, max_length=300)
+    preset: str | None = None  # готовый пост с картинкой (см. broadcast_service.PRESETS)
 
 
 def _admin(init_data: str | None) -> dict[str, Any]:
@@ -48,6 +49,7 @@ async def broadcast_info(
     return {
         "audiences": [{"id": k, "label": v, "count": counts[k]} for k, v in svc.AUDIENCES.items()],
         "status": svc.status(),
+        "presets": [{"id": k, "label": v["label"], "button": v["button"], "text": svc.preset_text(k)} for k, v in svc.PRESETS.items()],
     }
 
 
@@ -64,15 +66,20 @@ async def broadcast_send(
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестная аудитория")
     if body.button_url and not body.button_url.startswith(("https://", "http://", "tg://")):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Ссылка кнопки должна начинаться с https://")
+    if body.preset is not None:
+        if body.preset not in svc.PRESETS:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Неизвестный готовый пост")
+        if len(body.text) > svc.CAPTION_MAX:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Подпись к картинке — не больше {svc.CAPTION_MAX} символов")
     args = (body.button_text, body.button_url, body.open_app)
     if body.test:
-        ok, err = await svc.send_test(int(user["id"]), body.text, args)
+        ok, err = await svc.send_test(int(user["id"]), body.text, args, body.preset)
         if not ok:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Не отправилось: {err or 'ошибка Telegram'}")
         return {"ok": True, "test": True}
     if svc.is_running():
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail="Предыдущая рассылка ещё идёт")
-    return {"ok": True, "total": svc.start(body.audience, await svc.audience_ids(session, body.audience), body.text, args)}
+    return {"ok": True, "total": svc.start(body.audience, await svc.audience_ids(session, body.audience), body.text, args, body.preset)}
 
 
 @router.get("/players")

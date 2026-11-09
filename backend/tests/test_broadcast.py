@@ -66,3 +66,14 @@ async def test_endpoints_admin_only(client: AsyncClient, monkeypatch):
     get_settings.cache_clear()
     bad = await client.post("/api/admin/broadcast", json={"text": "hi", "audience": "zzz"}, headers=headers)
     assert bad.status_code == 400
+
+
+async def test_broadcast_presets_listed_and_validated(client: AsyncClient, monkeypatch):
+    await login(client)
+    monkeypatch.setattr(api, "validate_telegram_init_data", lambda raw: {"user": {"id": 1, "username": "zapixxgarant"}})
+    headers = {"X-Telegram-Init-Data": "x"}
+    info = (await client.get("/api/admin/broadcast", headers=headers)).json()
+    assert any(p["id"] == "clicker" and "Кликалка" in p["text"] for p in info["presets"])
+    monkeypatch.setattr(api, "get_settings", lambda: type("S", (), {"bot_token": "t"})())
+    bad = await client.post("/api/admin/broadcast", json={"text": "hi", "audience": "all", "preset": "nope"}, headers=headers)
+    assert bad.status_code == 400

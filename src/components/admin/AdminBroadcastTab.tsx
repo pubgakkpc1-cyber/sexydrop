@@ -14,9 +14,16 @@ interface Progress {
   failed?: number
   last_error?: string
 }
+interface Preset {
+  id: string
+  label: string
+  button: string
+  text: string
+}
 interface Info {
   audiences: Audience[]
   status: Progress
+  presets?: Preset[]
 }
 
 type ButtonKind = 'none' | 'app' | 'link'
@@ -39,6 +46,7 @@ export function AdminBroadcastTab() {
   const [btnText, setBtnText] = useState('Играть')
   const [btnUrl, setBtnUrl] = useState('')
   const [confirm, setConfirm] = useState(false)
+  const [preset, setPreset] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [msg, setMsg] = useState<{ ok: boolean; text: string } | null>(null)
   const area = useRef<HTMLTextAreaElement>(null)
@@ -77,6 +85,7 @@ export function AdminBroadcastTab() {
         text,
         audience,
         test,
+        preset,
         open_app: kind === 'app',
         button_text: kind === 'none' ? null : btnText.trim() || null,
         button_url: kind === 'link' ? btnUrl.trim() || null : null,
@@ -94,6 +103,36 @@ export function AdminBroadcastTab() {
 
   return (
     <div className={styles.tab}>
+      {(info?.presets ?? []).length > 0 && (
+        <>
+          <h3 className={styles.h3}>Готовые посты</h3>
+          <div className={styles.chips}>
+            {(info?.presets ?? []).map((p) => (
+              <button
+                key={p.id}
+                type="button"
+                className={`${styles.chip} ${preset === p.id ? styles.chipOn : ''}`}
+                onClick={() => {
+                  setPreset(p.id)
+                  setText(p.text)
+                  setKind('app')
+                  setBtnText(p.button)
+                  setConfirm(false)
+                }}
+              >
+                {p.label}
+              </button>
+            ))}
+            {preset && (
+              <button type="button" className={styles.chip} onClick={() => setPreset(null)}>
+                Убрать картинку
+              </button>
+            )}
+          </div>
+          {preset && <p className={styles.note}>К сообщению прикрепится картинка. Если не менять текст, он уйдёт с премиум-эмодзи.</p>}
+        </>
+      )}
+
       <h3 className={styles.h3}>1. Кому</h3>
       <div className={styles.chips} role="radiogroup" aria-label="Аудитория">
         {(info?.audiences ?? []).map((a) => (
@@ -123,7 +162,7 @@ export function AdminBroadcastTab() {
         ref={area}
         className={styles.textarea}
         rows={6}
-        maxLength={3500}
+        maxLength={preset ? 1024 : 3500}
         placeholder="Текст сообщения. Можно &lt;b&gt;жирный&lt;/b&gt;, &lt;i&gt;курсив&lt;/i&gt;"
         aria-label="Текст рассылки"
         value={text}
@@ -158,6 +197,7 @@ export function AdminBroadcastTab() {
         <>
           <h3 className={styles.h3}>Так увидит игрок</h3>
           <div className={styles.bubble}>
+            {preset && <img src="/brand/ref/clicker-photo.jpg" alt="" style={{ width: '100%', borderRadius: 10, marginBottom: 8 }} />}
             {/* previewHtml экранирует всё, кроме b/i/u/s/code без атрибутов */}
             <div dangerouslySetInnerHTML={{ __html: previewHtml(text) }} />
             {kind !== 'none' && btnText.trim() && <div className={styles.bubbleBtn}>{btnText}</div>}

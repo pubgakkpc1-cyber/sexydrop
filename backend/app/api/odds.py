@@ -6,6 +6,7 @@ from typing import Annotated
 from fastapi import APIRouter, Header, HTTPException, status
 from pydantic import BaseModel, Field
 
+from app.core import catalog
 from app.core.security import validate_telegram_init_data
 from app.services import odds_service
 
@@ -39,7 +40,14 @@ def _check_case(case_id: str) -> None:
 async def get_odds() -> dict[str, dict[str, int]]:
     """Шансы, выставленные админом (веса призов по кейсам). Пусто — действуют дефолтные."""
     await odds_service.ensure_loaded()
-    return odds_service.get_all()
+    out = {k: dict(v) for k, v in odds_service.get_all().items()}
+    if catalog.rtp_pct() > 0:
+        # платные кейсы: веса с учётом целевого RTP, как их применяет сервер при розыгрыше
+        for case_id in catalog.case_ids():
+            case = catalog.get_case(case_id)
+            if case is not None and not case.is_free:
+                out[case_id] = dict(catalog.effective_entries(case))
+    return out
 
 
 @router.put("/admin/odds/{case_id}")

@@ -65,6 +65,10 @@ def gift_name(gift_id: str) -> str:
     return gift["name"] if gift else gift_id
 
 
+def case_ids() -> list[str]:
+    return list(_raw()["cases"].keys())
+
+
 def get_case(case_id: str) -> CaseDef | None:
     raw = _raw()["cases"].get(case_id)
     if raw is None:
@@ -79,7 +83,67 @@ def get_case(case_id: str) -> CaseDef | None:
     )
 
 
+def rtp_pct() -> int:
+    from app.core.config import get_settings
+
+    return int(get_settings().case_rtp_pct)
+
+
+def _cost(item_id: str) -> int:
+    return ton_prize_minor(item_id) if is_ton_prize(item_id) else (gift_price(item_id) or 0)
+
+
+def tilt_to_rtp(entries: list[tuple[str, int]], price: int, target_pct: float) -> list[tuple[str, int]]:
+    """Сдвигает шансы так, чтобы средний возврат (RTP) кейса был target_pct % от цены.
+
+    Веса домножаются на exp(-λ·цена_приза/цена_кейса): дорогие призы становятся реже, дешёвые чаще, порядок редкости сохраняется.
+    Если самый дешёвый приз сам дороже цели, получится минимально возможный RTP (почти всё на самый дешёвый приз).
+    """
+    import math
+
+    if price <= 0 or not entries:
+        return list(entries)
+    xs = [_cost(i) / price for i, _w in entries]
+    ws = [float(w) for _i, w in entries]
+    x0 = min(xs)
+    target = target_pct / 100.0
+
+    def rtp(lam: float) -> float:
+        t = [w * math.exp(max(-700.0, min(700.0, -lam * (x - x0)))) for w, x in zip(ws, xs)]
+        return sum(a * x for a, x in zip(t, xs)) / sum(t)
+
+    lo, hi = -5.0, 600.0
+    if rtp(lo) <= target:
+        lam = lo
+    elif rtp(hi) >= target:
+        lam = hi
+    else:
+        for _ in range(80):
+            mid = (lo + hi) / 2
+            if rtp(mid) > target:
+                lo = mid
+            else:
+                hi = mid
+        lam = (lo + hi) / 2
+    t = [w * math.exp(max(-700.0, min(700.0, -lam * (x - x0)))) for w, x in zip(ws, xs)]
+    scale = 1_000_000 / sum(t)
+    out = [(i, int(round(a * scale))) for (i, _w), a in zip(entries, t)]
+    cheapest = min(range(len(out)), key=lambda k: xs[k])
+    if out[cheapest][1] <= 0:
+        out[cheapest] = (out[cheapest][0], 1)
+    return [(i, w) for i, w in out if w > 0]
+
+
 def effective_entries(case: CaseDef) -> list[tuple[str, int]]:
+    """Шансы кейса: переопределения админа, затем (для платных кейсов) подгонка под целевой RTP."""
+    base = _admin_entries(case)
+    pct = rtp_pct()
+    if pct > 0 and not case.is_free:
+        return tilt_to_rtp(base, case.price, pct)
+    return base
+
+
+def _admin_entries(case: CaseDef) -> list[tuple[str, int]]:
     """Шансы кейса с учётом переопределений админа (так же, как это делает клиент: нулевые призы убираются)."""
     override = odds_service.get_all().get(case.id)
     if not override:

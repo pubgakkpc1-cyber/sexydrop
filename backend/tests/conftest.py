@@ -7,6 +7,7 @@ os.environ.setdefault(
     "postgresql+asyncpg://gram:gram@127.0.0.1:5432/gram",
 )
 os.environ.setdefault("APP_ENV", "test")
+os.environ.setdefault("CASE_RTP_PCT", "0")  # RTP кейсов проверяется отдельным тестом
 os.environ.setdefault("PRIZE_BANK_ENABLED", "false")  # банк призов проверяется отдельным тестом
 os.environ.setdefault("WITHDRAW_PAUSED", "false")  # тесты проверяют вывод; на проде он на паузе
 os.environ.setdefault("FREE_NFT_CASE_MAINTENANCE", "false")  # тесты проверяют сам кейс; на проде он на переработке

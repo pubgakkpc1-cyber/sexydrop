@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import secrets
 import time
 import uuid
 from typing import Any
@@ -436,10 +437,10 @@ async def upgrade(
     if item.status != "available":
         raise GameError("item_unavailable", 409)
     source_price = item.price_minor
-    if not await prize_bank.ensure_can_afford(session, target_price):
-        raise GameError("bank_low", 409, "Банк призов сейчас не позволяет апгрейд на этот подарок — выберите подарок подешевле")
+    # банк призов: подарок дороже банка выпасть не может — такой апгрейд «сливается»; иначе шанс как обычно
+    can_afford = await prize_bank.ensure_can_afford(session, target_price)
     # шанс p = min(1, s/t · 0.98): выигрыш, если randrange(100·t) < 98·s
-    won = GAME_RTP_PCT * source_price >= 100 * target_price or randrange(100 * target_price) < GAME_RTP_PCT * source_price
+    won = can_afford and (GAME_RTP_PCT * source_price >= 100 * target_price or randrange(100 * target_price) < GAME_RTP_PCT * source_price)
     chance = min(1.0, GAME_RTP_PCT * source_price / (100 * target_price))
     item.status = "burned"
     round_.bet_minor = source_price
@@ -550,6 +551,11 @@ async def mines_start(
         deck[i], deck[j] = deck[j], deck[i]
     mines = sorted(deck[:mines_count])
     round_.state = {"mines": mines, "picked": [], "mines_count": mines_count}
+    if prize_bank.enabled():
+        # банк призов: ставка больше банка — сольют на иксе 1.00–1.30; иначе играем как обычно, но выплата не выше банка
+        bank = await prize_bank.available(session)
+        cap_h = 100 + secrets.randbelow(31) if bet_minor > bank else max(100, bank * 100 // bet_minor)
+        round_.state = {**round_.state, "bank_cap_h": cap_h}
     result = {"status": "ok", "round_id": str(round_.id), "mines_count": mines_count, "bet_minor": bet_minor}
     round_.result = result
     await session.commit()
@@ -583,7 +589,15 @@ async def mines_pick(session: AsyncSession, user_id: uuid.UUID, round_id: str, t
     picked: list[int] = list(state["picked"])
     if tile in picked:
         raise GameError("tile_picked", 409)
-    if tile in state["mines"]:
+    hit = tile in state["mines"]
+    cap_h = state.get("bank_cap_h")
+    if not hit and cap_h and mines_multiplier_hundredths(int(state["mines_count"]), len(picked) + 1) > int(cap_h):
+        # этот ход дал бы выплату выше банка: под клеткой оказывается мина (одну из мин переносим сюда)
+        moved = list(state["mines"])
+        moved.pop(randrange(len(moved)))
+        state["mines"] = sorted([*moved, tile])
+        hit = True
+    if hit:
         round_.state = state
         finished = await _finish_mines(session, user_id, round_, "lost")
         finished.update(status="ok", event="lost", picked_count=len(picked), multiplier_hundredths=0, payout_minor=0)

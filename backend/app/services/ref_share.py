@@ -421,3 +421,93 @@ async def run_boost_broadcast(ids: list[int], state: dict[str, Any]) -> None:
             await asyncio.sleep(0.05)
     state["state"] = "done"
     state["finished"] = int(_t.time())
+
+
+# ---------------------------------------------------------------- опрос чата: делаем ли кликер в боте
+
+POLL_VERSION = "2026-11-09-clicker-v1"
+
+
+def clicker_text(premium: bool = True) -> str:
+    """Текст-вопрос для чата про бесплатную кликалку; премиум-эмодзи, обычные при отказе Telegram."""
+    from app.services.telegram_bot import em
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('spark')} <b>Делаем кликалку в боте?</b>\n\n"
+        f"{e('dot')} Играть <b>бесплатно</b>, прямо в @sexydropbot\n"
+        f"{e('dot')} Тапаешь — копишь очки\n"
+        f"{e('nft')} Кто за неделю натапает больше всех — получает <b>NFT-подарок</b>\n"
+        f"{e('dot')} Участие бесплатное, ничего вкладывать не нужно\n\n"
+        "Это пока вопрос к вам, не обещание. Проголосуйте ниже 👇"
+    )
+
+
+async def send_clicker_poll(chat_id: int) -> bool:
+    """Присылает админу готовый пост и опрос — переслать в чат/канал. Опрос неанонимный, чтобы видеть, кто «за»."""
+    if not get_settings().bot_token:
+        return False
+    ok = False
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        for premium in (True, False):
+            body = (
+                await client.post(
+                    f"{_api()}/sendMessage",
+                    json={"chat_id": chat_id, "text": clicker_text(premium), "parse_mode": "HTML", "disable_web_page_preview": True},
+                )
+            ).json()
+            if body.get("ok"):
+                break
+            log.warning("clicker text (premium=%s) failed: %s", premium, body.get("description"))
+        poll = (
+            await client.post(
+                f"{_api()}/sendPoll",
+                json={
+                    "chat_id": chat_id,
+                    "question": "Делаем бесплатную кликалку в боте? Кто больше натапает — получает NFT",
+                    "options": [
+                        {"text": "Да, делаем!"},
+                        {"text": "Да, но с призом в TON"},
+                        {"text": "Не интересно"},
+                    ],
+                    "is_anonymous": False,
+                    "allows_multiple_answers": False,
+                },
+            )
+        ).json()
+        ok = bool(poll.get("ok"))
+        if not ok:
+            log.warning("clicker poll to %s failed: %s", chat_id, poll.get("description"))
+    return ok
+
+
+async def send_clicker_poll_to_admins_once(delay_s: float = 70.0) -> None:
+    """После деплоя присылает админам пост и опрос про кликалку (один раз на версию)."""
+    await asyncio.sleep(delay_s)
+    if not get_settings().bot_token:
+        return
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.core.db import get_session_factory
+    from app.models.economy import UserMeta
+    from app.models.user import User
+    from app.services.economy_core import ensure_account
+
+    try:
+        async with get_session_factory()() as session:
+            admins = (
+                await session.execute(select(User).where(func.lower(User.username).in_(sorted(ADMIN_USERNAMES))))
+            ).scalars().all()
+            for admin in admins:
+                await ensure_account(session, admin.id)
+                meta = await session.get(UserMeta, admin.id)
+                if meta is None or (meta.quests_claimed or {}).get("_clickerpoll") == POLL_VERSION:
+                    continue
+                if await send_clicker_poll(admin.telegram_id):
+                    meta.quests_claimed = {**(meta.quests_claimed or {}), "_clickerpoll": POLL_VERSION}
+                    await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("clicker poll to admins failed: %s", exc)

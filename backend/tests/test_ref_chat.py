@@ -128,3 +128,11 @@ def test_broadcast_must_be_armed_by_a_test_first() -> None:
     r.arm_broadcast(777)
     assert r.is_broadcast_armed(777)
     assert "+2 ★" in r.broadcast_caption(1) and "100 ★ = 1 TON" in r.broadcast_caption(1)
+
+
+def test_clicker_post_is_a_question_not_a_promise() -> None:
+    from app.services import ref_share as r
+
+    t = r.clicker_text(False)
+    assert "не обещание" in t and "бесплатно" in t and "tg-emoji" not in t
+    assert "tg-emoji" in r.clicker_text(True)

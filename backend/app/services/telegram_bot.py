@@ -331,7 +331,7 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
     """Команды админа в личке бота. /gifs — прислать все реферальные гифки."""
     text = str(message.get("text") or "").strip()
     command = text.split()[0].split("@")[0].lower() if text.startswith("/") else ""
-    if command not in ("/gifs", "/post", "/rassylka", "/rassylka_vsem"):
+    if command not in ("/gifs", "/post", "/rassylka", "/rassylka_vsem", "/opros"):
         return False
     from app.api.odds import ADMIN_USERNAMES
     from app.services import ref_share
@@ -341,6 +341,9 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
         return False  # не админ — обычное приветствие
     if command in ("/rassylka", "/rassylka_vsem"):
         return await _admin_broadcast(command, int(sender.get("id") or chat_id), chat_id)
+    if command == "/opros":
+        await ref_share.send_clicker_poll(chat_id)
+        return True
     if command == "/post":
         await ref_share.send_task_post(chat_id, int(sender.get("id") or chat_id))
         await ref_share.send_boost_post(chat_id, int(sender.get("id") or chat_id))

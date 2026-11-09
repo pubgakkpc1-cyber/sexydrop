@@ -91,3 +91,19 @@ async def test_maintenance_gate_blocks_api_but_not_health(client: AsyncClient):
     finally:
         await maintenance.set_on(False)
     assert (await client.get("/api/maintenance")).json()["on"] is False
+
+
+async def test_admin_token_passes_maintenance_gate(client: AsyncClient):
+    from app.services import maintenance
+
+    admin = await login(client, username="zapixxgarant")
+    other = await login(client)
+    maintenance._admin_tokens.clear()
+    try:
+        await maintenance.set_on(True)
+        ok = await client.get("/api/me/state", headers={"Authorization": admin["Authorization"]})
+        assert ok.status_code != 503
+        blocked = await client.get("/api/me/state", headers={"Authorization": other["Authorization"]})
+        assert blocked.status_code == 503
+    finally:
+        await maintenance.set_on(False)

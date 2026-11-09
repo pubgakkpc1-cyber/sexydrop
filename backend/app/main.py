@@ -66,7 +66,7 @@ def create_app() -> FastAPI:
         if path.startswith("/api/") and not path.startswith(_OPEN_DURING_WORKS) and request.method != "OPTIONS":
             from app.services import maintenance
 
-            if await maintenance.is_on():
+            if await maintenance.is_on() and not await maintenance.token_is_admin(request.headers.get("authorization")):
                 return JSONResponse(status_code=503, content={"detail": "Технические работы: бот временно не работает", "code": "maintenance"})
         return await call_next(request)
 

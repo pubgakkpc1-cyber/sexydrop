@@ -87,3 +87,36 @@ async def send_notice(chat_id: int) -> bool:
                 return True
             log.warning("maintenance notice (premium=%s) failed: %s", premium, body.get("description"))
     return False
+
+
+_admin_tokens: dict[str, tuple[bool, float]] = {}
+
+
+async def token_is_admin(authorization: str | None) -> bool:
+    """Админ ли владелец Bearer-токена (кэш на минуту): админ пользуется приложением и во время технических работ."""
+    if not authorization or not authorization.lower().startswith("bearer "):
+        return False
+    token = authorization[7:].strip()
+    hit = _admin_tokens.get(token)
+    now = time.monotonic()
+    if hit and now - hit[1] < 60:
+        return hit[0]
+    ok = False
+    try:
+        import uuid
+
+        from app.api.odds import ADMIN_USERNAMES
+        from app.core.security import decode_access_token
+        from app.models.user import User
+
+        sub = decode_access_token(token).get("sub")
+        if sub:
+            async with get_session_factory()() as session:
+                user = await session.get(User, uuid.UUID(str(sub)))
+            ok = bool(user and user.username and user.username.lower().lstrip("@") in ADMIN_USERNAMES)
+    except Exception:  # noqa: BLE001 — плохой токен: не админ
+        ok = False
+    if len(_admin_tokens) > 200:
+        _admin_tokens.clear()
+    _admin_tokens[token] = (ok, now)
+    return ok

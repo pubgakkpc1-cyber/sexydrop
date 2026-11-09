@@ -46,7 +46,10 @@ def gift_price(gift_id: str) -> int | None:
     gift = _raw()["gifts"].get(gift_id)
     if gift is None or not gift.get("available", True):
         return None
-    return int(gift["price"])
+    from app.services import market_prices  # цены по рынку (если админ включил обновление)
+
+    live = market_prices.live_price(gift_id)
+    return live if live is not None else int(gift["price"])
 
 
 def gifts_priced(minor: int) -> list[str]:

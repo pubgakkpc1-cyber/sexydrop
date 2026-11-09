@@ -232,9 +232,25 @@ async def withdraw_item(session: AsyncSession, user_id: uuid.UUID, item_id: str)
         raise GameError("item_unavailable", 409, "Подарок недоступен для вывода")
     item.status = "withdraw_pending"
     row = Withdrawal(id=uuid.uuid4(), user_id=user_id, item_id=item.id, gift_id=item.gift_id)
+    # контрольная проверка цены на рынке: резкий рост выше банка призов — заявка уходит админу на ручную проверку
+    from app.services import market_prices
+
+    check = await market_prices.check_withdraw(session, item.gift_id, item.price_minor)
+    review = None
+    if check:
+        row.market_minor = check["market_minor"]
+        review = check["review"]
+        row.review_reason = review
     session.add(row)
     await session.commit()
-    return {"status": "ok", "withdrawal_id": str(row.id), "gift_id": item.gift_id, "name": catalog.gift_name(item.gift_id)}
+    if review:
+        from app.services.telegram_bot import notify_admins_text
+
+        await notify_admins_text(session, f"⚠️ <b>Вывод на ручную проверку</b>\n{catalog.gift_name(item.gift_id)}: {review}")
+    return {
+        "status": "ok", "withdrawal_id": str(row.id), "gift_id": item.gift_id, "name": catalog.gift_name(item.gift_id),
+        "review": bool(review),
+    }
 
 
 async def list_withdrawals(session: AsyncSession, status: str = "pending") -> list[dict[str, Any]]:
@@ -254,6 +270,8 @@ async def list_withdrawals(session: AsyncSession, status: str = "pending") -> li
             "name": catalog.gift_name(w.gift_id),
             "user": {"id": u.telegram_id, "username": u.username, "name": u.first_name},
             "created_at": w.created_at.isoformat(),
+            "review_reason": w.review_reason,
+            "market_minor": w.market_minor,
         }
         for w, u in rows
     ]

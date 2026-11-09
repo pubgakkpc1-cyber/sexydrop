@@ -70,6 +70,7 @@ export function AdminSystemTab() {
       ))}
 
       <PrizeBankPanel />
+      <MarketPricesPanel />
       <MaintenanceSwitch />
       <ResetProfit />
       <ResetBalances />
@@ -260,7 +261,7 @@ function PrizeBankPanel() {
       <h3 className={styles.h3}>Банк призов</h3>
       <p className={styles.note}>
         Сейчас в банке: <b>{minor === null ? '…' : `${safeAmount(minor)} TON`}</b>. Подарок или выигрыш дороже банка выпасть не может; когда банк пуст, в кейсах
-        падают два самых дешёвых приза. Стоимость выпавшего приза списывается из банка сразу. Ракета и Мины не платят сверх ставки больше, чем есть в банке.
+        падают два самых дешёвых приза. Стоимость выпавшего приза списывается из банка сразу. Работает только для кейсов.
       </p>
       <input
         className={styles.search}
@@ -273,6 +274,93 @@ function PrizeBankPanel() {
       <button type="button" className={styles.refresh} disabled={busy || value.trim() === ''} onClick={() => void save()}>
         Поставить банк
       </button>
+      {msg && <p className={styles.note}>{msg}</p>}
+    </>
+  )
+}
+
+interface MarketReport {
+  ok: number
+  failed: number
+  collections: number
+  changed?: number
+  top?: Array<{ gift_id: string; name: string; old: number; new: number }>
+}
+interface MarketStatus {
+  markup_pct: number
+  updated_at: number | null
+  interval_min: number
+  floors: number
+  collections: number
+  active: boolean
+  report?: MarketReport
+}
+
+/** Цены подарков по рынку: наценка на цену маркета (%) и кнопка «Проверить и поставить по цене». */
+function MarketPricesPanel() {
+  const [st, setSt] = useState<MarketStatus | null>(null)
+  const [markup, setMarkup] = useState('')
+  const [busy, setBusy] = useState<'save' | 'refresh' | null>(null)
+  const [msg, setMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    void adminFetch<MarketStatus>('/api/admin/market-prices').then((r) => (r.ok ? setSt(r.data) : setMsg(r.error)))
+  }, [])
+
+  const saveMarkup = async () => {
+    const pct = Number(markup.replace(',', '.'))
+    if (!Number.isFinite(pct) || pct < 0 || pct > 100) return setMsg('Введите наценку от 0 до 100, например 12')
+    setBusy('save')
+    setMsg(null)
+    const r = await adminFetch<MarketStatus>('/api/admin/market-prices/markup', { method: 'POST', body: { markup_pct: pct } })
+    setBusy(null)
+    if (r.ok) {
+      setSt(r.data)
+      setMarkup('')
+      setMsg(`Наценка ${r.data.markup_pct}% сохранена, цены пересчитаны`)
+    } else setMsg(r.error)
+  }
+
+  const refresh = async () => {
+    setBusy('refresh')
+    setMsg('Проверяем цены на маркете, это до минуты…')
+    const r = await adminFetch<MarketStatus & { report: MarketReport }>('/api/admin/market-prices/refresh', { method: 'POST' })
+    setBusy(null)
+    if (!r.ok) return setMsg(r.error)
+    setSt(r.data)
+    const rep = r.data.report
+    const top = (rep.top ?? []).map((c) => `${c.name}: ${safeAmount(c.old)} → ${safeAmount(c.new)} TON`).join('; ')
+    setMsg(
+      `Готово: коллекций с ценой ${rep.ok} из ${rep.collections}` +
+        (rep.failed ? `, не ответило ${rep.failed} (у них осталась прежняя цена)` : '') +
+        `. Изменилась цена у ${rep.changed ?? 0} подарков${top ? `. Больше всего: ${top}` : ''}`,
+    )
+  }
+
+  const when = st?.updated_at ? new Date(st.updated_at * 1000).toLocaleString('ru-RU') : 'ещё не обновлялись'
+  return (
+    <>
+      <h3 className={styles.h3}>Цены подарков по рынку</h3>
+      <p className={styles.note}>
+        Сервер сам, без подтверждения, обновляет цены раз в час по Fragment: у каждого подарка одна цена на все модели и фоны = самый дешёвый лот коллекции + наценка (фон Black оценивается отдельно по своим лотам). Последнее обновление: <b>{when}</b>.
+        Наценка сейчас: <b>{st ? `${st.markup_pct}%` : '…'}</b>. При выводе бот проверяет цену заново: если подарок резко подорожал и разница больше банка призов, заявка помечается «ручная проверка» и приходит вам в бот. Tonnel и Getgems не подключены (нужны ключи доступа).
+      </p>
+      <input
+        className={styles.search}
+        inputMode="decimal"
+        aria-label="Наценка на цену маркета, %"
+        placeholder="Наценка на цену маркета, % (например 12)"
+        value={markup}
+        onChange={(e) => setMarkup(e.target.value)}
+      />
+      <div className={styles.actions}>
+        <button type="button" className={styles.refresh} disabled={busy !== null || markup.trim() === ''} onClick={() => void saveMarkup()}>
+          Сохранить наценку
+        </button>
+        <button type="button" className={styles.refresh} disabled={busy !== null} onClick={() => void refresh()}>
+          {busy === 'refresh' ? 'Проверяем…' : 'Проверить и поставить по цене'}
+        </button>
+      </div>
       {msg && <p className={styles.note}>{msg}</p>}
     </>
   )

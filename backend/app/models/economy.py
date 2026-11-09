@@ -117,3 +117,6 @@ class Withdrawal(Base):
     status: Mapped[str] = mapped_column(String(12), nullable=False, default="pending")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     done_at: Mapped[Optional[datetime]] = mapped_column(DateTime(timezone=True), nullable=True)
+    # контрольная проверка цены при выводе: причина ручной проверки и рыночная цена на тот момент
+    review_reason: Mapped[Optional[str]] = mapped_column(String(300), nullable=True)
+    market_minor: Mapped[Optional[int]] = mapped_column(BigInteger, nullable=True)

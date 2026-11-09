@@ -200,3 +200,42 @@ async def admin_prize_bank_set(
     from app.services import prize_bank
 
     return {"minor": await prize_bank.set_balance(session, round(body.ton * 1000))}
+
+
+class MarkupBody(BaseModel):
+    markup_pct: float = Field(ge=0, le=100)
+
+
+@router.get("/admin/market-prices")
+async def admin_market_prices(x_telegram_init_data: Annotated[str | None, Header()] = None) -> dict[str, Any]:
+    """Состояние автообновления цен подарков по рынку (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import market_prices
+
+    return await market_prices.status()
+
+
+@router.post("/admin/market-prices/markup")
+async def admin_market_markup(
+    body: MarkupBody,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Наценка на цену маркета, % (страховка сверху). Цены пересчитываются сразу (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import market_prices
+
+    await market_prices.load(session)
+    await market_prices.set_markup(session, body.markup_pct)
+    return await market_prices.status()
+
+
+@router.post("/admin/market-prices/refresh")
+async def admin_market_refresh(x_telegram_init_data: Annotated[str | None, Header()] = None) -> dict[str, Any]:
+    """«Проверить и поставить по цене»: забрать актуальные флоры сейчас и применить цены (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import market_prices
+
+    await market_prices.load()
+    report = await market_prices.refresh(trigger="admin")
+    return {"report": report, **await market_prices.status()}

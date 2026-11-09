@@ -11,6 +11,8 @@ interface Withdrawal {
   name: string
   user: { id: number; username: string | null; name: string | null }
   created_at: string
+  review_reason?: string | null
+  market_minor?: number | null
 }
 
 interface LockedRow {
@@ -124,6 +126,11 @@ export function AdminWithdrawalsTab() {
                 </span>
               </div>
             </div>
+            {w.review_reason && (
+              <p className={`${styles.note} ${styles.bad}`} role="alert">
+                ⚠ Ручная проверка: {w.review_reason}
+              </p>
+            )}
             <div className={styles.wActions}>
               <button
                 type="button"

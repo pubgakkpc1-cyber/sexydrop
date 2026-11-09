@@ -8,6 +8,7 @@ import { useReferralsStore } from './store/referrals'
 import { track } from './lib/telemetry'
 import { startReferralSync } from './lib/referralSync'
 import { loadCaseOdds } from './lib/caseOdds'
+import { loadMarketPrices } from './lib/marketPrices'
 import { startServerSync } from './lib/serverSync'
 import { normalizeStartRoute } from './lib/startRoute'
 import { startCrashEngine } from './services/demoCrashService'
@@ -30,6 +31,7 @@ startReferralSync()
 // Баланс, подарки и задания — с сервера (в production исходы решает только он)
 startServerSync()
 void loadCaseOdds()
+void loadMarketPrices()
 // Открытие приложения — всегда главная, кнопка «Главная» активна
 normalizeStartRoute(isTelegramEnv())
 // Ракетка всегда активна (глобальный непрерывный цикл раундов 24/7)

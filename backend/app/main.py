@@ -34,6 +34,10 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         from app.services.tag_quest import recheck_loop
 
         asyncio.create_task(recheck_loop())
+        # цены подарков по рынку: обновление раз в час, само
+        from app.services import market_prices
+
+        asyncio.create_task(market_prices.loop())
     try:
         yield
     finally:

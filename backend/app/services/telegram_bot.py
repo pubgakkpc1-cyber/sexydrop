@@ -210,6 +210,26 @@ async def notify_admins_new_user(
         log.warning("admin notify failed: %s", exc)
 
 
+async def notify_admins_text(session, text: str) -> None:
+    """Короткое сообщение (HTML) всем админам в бота. Ошибки только логируются."""
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.models.user import User
+
+    if not get_settings().bot_token:
+        return
+    try:
+        ids = {int(x) for x in get_settings().admin_notify_chat_ids.split(",") if x.strip().lstrip("-").isdigit()}
+        rows = await session.execute(select(User.telegram_id).where(func.lower(User.username).in_(ADMIN_USERNAMES)))
+        ids.update(int(r[0]) for r in rows.all())
+        async with httpx.AsyncClient(timeout=10.0) as client:
+            for cid in sorted(ids):
+                await client.post(f"{_api_url()}/sendMessage", json={"chat_id": cid, "text": text, "parse_mode": "HTML"})
+    except Exception as exc:  # noqa: BLE001
+        log.warning("admin text notify failed: %s", exc)
+
+
 async def _set_menu_button(chat_id: int) -> None:
     settings = get_settings()
     try:

@@ -36,6 +36,16 @@ def _check_case(case_id: str) -> None:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Некорректный кейс")
 
 
+@router.get("/market-prices")
+async def market_prices_public() -> dict[str, int]:
+    """Цены подарков по рынку, отличающиеся от каталожных (клиент показывает те же цены, что считает сервер)."""
+    from app.services import market_prices
+
+    if not market_prices._live:
+        await market_prices.load()
+    return market_prices.public_prices()
+
+
 @router.get("/odds")
 async def get_odds() -> dict[str, dict[str, int]]:
     """Шансы, выставленные админом (веса призов по кейсам). Пусто — действуют дефолтные."""

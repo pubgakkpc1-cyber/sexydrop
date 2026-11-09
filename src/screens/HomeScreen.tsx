@@ -1,4 +1,5 @@
 import { Banners } from '../components/home/Banners'
+import { ClickerBanner } from '../components/home/ClickerBanner'
 import { CasesGrid } from '../components/home/CasesGrid'
 import { FreeCasesSection } from '../components/home/FreeCasesSection'
 import styles from './screens.module.css'
@@ -13,6 +14,7 @@ export function HomeScreen() {
       <section className={styles.panel} aria-label="Игры">
         <h2 className={styles.panelTitle}>Игры</h2>
         <Banners />
+        <ClickerBanner />
       </section>
       <section className={styles.panel} aria-label="Бесплатные кейсы">
         <FreeCasesSection />

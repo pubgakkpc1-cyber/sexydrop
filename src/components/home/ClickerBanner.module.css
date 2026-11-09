@@ -1,0 +1,57 @@
+/* Матовый фон, как у баннеров Ракетка / Play Hub (без глянца и свечения). */
+.clicker {
+  background: linear-gradient(118deg, #c99a3a 0%, #96691d 100%);
+}
+
+.wrap {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  bottom: 10px;
+  width: 52%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(160deg, #1c1b1e 0%, #2a2214 100%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 0 22px rgba(0, 0, 0, 0.5);
+  -webkit-mask: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+  mask: linear-gradient(to right, transparent 0, #000 14%, #000 86%, transparent 100%);
+}
+
+.strip {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: flex;
+  gap: 8px;
+  transform: translateY(-50%);
+  animation: gemRun 22s linear infinite;
+  will-change: transform;
+}
+
+.card {
+  flex: none;
+  display: block;
+  width: 56px;
+  height: 56px;
+}
+
+@keyframes gemRun {
+  to {
+    transform: translate(-50%, -50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .strip {
+    animation: none;
+  }
+}

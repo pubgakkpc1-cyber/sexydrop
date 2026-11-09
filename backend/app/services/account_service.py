@@ -394,6 +394,9 @@ async def join_referral(session: AsyncSession, user: User, inviter_telegram_id: 
         if inviter is not None and user.created_at >= datetime.now(timezone.utc) - timedelta(days=1):
             user.referred_by_id = inviter.id
             registered = True
+            from app.services import clicker  # бонусные клики в Кликалке придут, когда друг откроет бесплатный кейс
+
+            await clicker.add_pending_referral(session, inviter.id, user.id)
     await session.commit()
     return registered
 

@@ -365,7 +365,7 @@ async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, re
     if case_id == "free" and get_settings().free_nft_case_maintenance:
         # кейс FREE с NFT на переработке: пока недоступен
         await session.rollback()
-        raise GameError("maintenance", 503, "Кейс на переработке — скоро вернётся")
+        raise GameError("maintenance", 503, "Кейс на технической паузе — скоро вернётся")
     if case_id == "free":
         # дорогой FREE открывается ровно один раз за всё время
         if last_at > 0:

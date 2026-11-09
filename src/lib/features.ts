@@ -15,4 +15,4 @@ export const FEATURES = {
 export const FREE_NFT_CASE_MAINTENANCE = true
 
 /** Текст для игроков с NFT под замком, пока кейс FREE на переработке. */
-export const NFT_LOCK_UNAVAILABLE_TEXT = 'Технически на данный момент недоступно'
+export const NFT_LOCK_UNAVAILABLE_TEXT = 'Кейс на технической паузе — пока недоступно'

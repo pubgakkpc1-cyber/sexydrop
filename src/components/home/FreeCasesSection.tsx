@@ -68,7 +68,7 @@ export function FreeCasesSection() {
 
               {/* Верхняя строка бейджей */}
               <div className={styles.topBadgesRow}>
-                <span className={styles.freeZeroBadge}>0 TON</span>
+                <span className={styles.freeZeroBadge}>{!isDaily && FREE_NFT_CASE_MAINTENANCE ? 'ПАУЗА' : '0 TON'}</span>
               </div>
 
               {/* 3D Арт кейса с эффектом левитации и радиальным свечением */}
@@ -97,7 +97,7 @@ export function FreeCasesSection() {
                   {isDaily ? 'FREE 24' : 'FREE'}
                 </span>
                 <span className={styles.caseSubtext}>
-                  {isDaily ? 'Ежедневный сундук' : 'Дроп до 100 TON'}
+                  {isDaily ? 'Ежедневный сундук' : FREE_NFT_CASE_MAINTENANCE ? 'Кейс на технической паузе, открыть пока нельзя' : 'Дроп до 100 TON'}
                 </span>
               </div>
 
@@ -106,7 +106,7 @@ export function FreeCasesSection() {
                 {!isDaily && FREE_NFT_CASE_MAINTENANCE ? (
                   <span className={cx(styles.actionPill, styles.pillLocked)}>
                     <LockIcon className={styles.pillIcon} aria-hidden />
-                    <span>На переработке</span>
+                    <span>Техническая пауза</span>
                   </span>
                 ) : hasPendingQuest ? (
                   <span className={cx(styles.actionPill, styles.pillLocked)}>

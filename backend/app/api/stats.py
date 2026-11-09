@@ -97,3 +97,63 @@ async def admin_stats(
     from app.services import admin_players
 
     return {**await stats_service.snapshot(session), **await admin_players.overview_extra(session)}
+
+
+def _require_admin(init_data: str | None) -> None:
+    if not init_data:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нужен запуск из Telegram")
+    name = str(_user(init_data).get("username") or "").lower().lstrip("@")
+    if name not in ADMIN_USERNAMES:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещён")
+
+
+@router.get("/admin/clicker/suspicious")
+async def admin_clicker_suspicious(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Подозрительные на автокликер игроки Кликалки (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import clicker
+
+    return {"threshold": clicker.SUS_THRESHOLD, "players": (await clicker.suspicious(session))[:50]}
+
+
+@router.get("/admin/stars-purchases")
+async def admin_stars_purchases(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Покупки за Telegram Stars отдельно от TON: итог и последние 30 (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from sqlalchemy import desc, func, select
+
+    from app.models.economy import DepositOrder
+    from app.models.user import User
+
+    stars_per_ton = 100
+    base = (DepositOrder.provider == "stars", DepositOrder.status == "paid")
+    cnt, minor = (
+        await session.execute(select(func.count(), func.coalesce(func.sum(DepositOrder.amount_minor), 0)).where(*base))
+    ).one()
+    rows = (
+        await session.execute(
+            select(DepositOrder.amount_minor, DepositOrder.paid_at, User.first_name, User.username)
+            .join(User, User.id == DepositOrder.user_id)
+            .where(*base)
+            .order_by(desc(DepositOrder.paid_at))
+            .limit(30)
+        )
+    ).all()
+    return {
+        "count": int(cnt),
+        "stars_total": round(int(minor) * stars_per_ton / 1000),
+        "ton_equivalent_minor": int(minor),
+        "recent": [
+            {
+                "name": (fn or "Игрок")[:30], "username": un, "stars": round(int(m) * stars_per_ton / 1000), "ton_minor": int(m),
+                "paid_at": int(pa.timestamp()) if pa else 0,
+            }
+            for m, pa, fn, un in rows
+        ],
+    }

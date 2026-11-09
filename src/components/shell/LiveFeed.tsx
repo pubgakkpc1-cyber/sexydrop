@@ -1,30 +1,49 @@
-import { useEffect, useState } from 'react'
-import { currentSlot, liveFeed, msToNextSlot } from '../../services/liveFeed'
+import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
+import { apiGet } from '../../lib/api'
+import { giftById, paidCases } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { cx } from '../../lib/cx'
 import styles from './LiveFeed.module.css'
 
+interface ApiDrop {
+  id: string
+  gift_id: string
+  case_id: string
+  ts: number
+}
+
 /**
- * Лента «Live» под шапкой: последние дропы из кейсов, у всех пользователей одинаковые и
- * сменяются в один и тот же момент (по серверно-независимому расписанию — см. services/liveFeed).
- * Новый дроп выезжает слева, остальные сдвигаются.
+ * Лента «Live» под шапкой: НАСТОЯЩИЕ последние дропы NFT из платных кейсов (с сервера, у всех одинаковые).
+ * Если дропов ещё не было — показываем пустую ленту, ничего не выдумываем. Новый дроп выезжает слева.
  */
 export function LiveFeed() {
-  const [now, setNow] = useState(() => Date.now())
+  const [drops, setDrops] = useState<ApiDrop[]>([])
+  const seen = useRef<Set<string> | null>(null)
+  const [fresh, setFresh] = useState<string | null>(null)
 
   useEffect(() => {
-    let timer: number
-    const tick = () => {
-      const t = Date.now()
-      setNow(t)
-      timer = window.setTimeout(tick, msToNextSlot(t) + 20)
+    let dead = false
+    const load = () =>
+      apiGet<{ drops: ApiDrop[] }>('/api/live')
+        .then((r) => {
+          if (dead) return
+          if (seen.current && r.drops[0] && !seen.current.has(r.drops[0].id)) setFresh(r.drops[0].id)
+          seen.current = new Set(r.drops.map((d) => d.id))
+          setDrops(r.drops)
+        })
+        .catch(() => undefined)
+    void load()
+    const timer = window.setInterval(load, 5000)
+    return () => {
+      dead = true
+      window.clearInterval(timer)
     }
-    timer = window.setTimeout(tick, msToNextSlot(Date.now()) + 20)
-    return () => window.clearTimeout(timer)
   }, [])
 
-  const drops = liveFeed(now)
-  const slot = currentSlot(now)
+  const items = drops
+    .map((d) => ({ d, gift: giftById.get(d.gift_id), gameCase: paidCases.find((c) => c.id === d.case_id) }))
+    .filter((x) => x.gift)
 
   return (
     <section className={styles.bar} aria-label="Live: последние дропы">
@@ -33,17 +52,29 @@ export function LiveFeed() {
         <span className={styles.labelText}>Live</span>
       </span>
       <div className={styles.track}>
-        {drops.map((drop) => (
+        <Link to="/games/clicker" className={styles.promo} aria-label="Новая игра: Кликалка. Тапай и борись за NFT и TON">
+          <span className={styles.promoRun}>
+            <span>НОВОЕ · КЛИКАЛКА · тапай, копи клики, топ 30 дней · NFT и TON за места · </span>
+            <span aria-hidden>НОВОЕ · КЛИКАЛКА · тапай, копи клики, топ 30 дней · NFT и TON за места · </span>
+          </span>
+        </Link>
+        <Link to="/rewards" className={`${styles.promo} ${styles.promoTag}`} aria-label="Поставь @sexydropbot в ник и получай 10 звёзд каждый день">
+          <span className={styles.promoRun} style={{ animationDuration: '16s' }}>
+            <span>★ ПОСТАВЬ @sexydropbot В НИК — 10 ЗВЁЗД КАЖДЫЙ ДЕНЬ · </span>
+            <span aria-hidden>★ ПОСТАВЬ @sexydropbot В НИК — 10 ЗВЁЗД КАЖДЫЙ ДЕНЬ · </span>
+          </span>
+        </Link>
+        {items.map(({ d, gift, gameCase }) => (
           <div
-            key={drop.slot}
+            key={d.id}
             role="img"
-            className={cx(styles.item, drop.isHit && styles.hit, drop.slot === slot && styles.fresh)}
-            aria-label={`${drop.gift.name} из кейса ${drop.caseName} — ${formatMinor(drop.gift.priceMinor)} TON`}
+            className={cx(styles.item, gameCase && gift!.priceMinor >= gameCase.priceMinor * 3 && styles.hit, d.id === fresh && styles.fresh)}
+            aria-label={`${gift!.name}${gameCase ? ` из кейса ${gameCase.name}` : ''} — ${formatMinor(gift!.priceMinor)} TON`}
           >
             <img
-              src={drop.gift.image}
+              src={gift!.image}
               alt=""
-              className={/_\d\.webp$/.test(drop.gift.image) ? styles.imgFull : styles.imgContain}
+              className={/_\d\.webp$/.test(gift!.image) ? styles.imgFull : styles.imgContain}
               loading="lazy"
             />
           </div>

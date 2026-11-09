@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getWebApp } from '../../lib/telegram'
 import { safeAmount, signedTon, ton } from './adminFormat'
+import { AdminWatchPanels } from './AdminWatchPanels'
 import styles from './AdminPanel.module.css'
 
 interface GameRow {
@@ -117,6 +118,9 @@ export function AdminStatsTab() {
   if (error) return <p className={`${styles.note} ${styles.bad}`}>{error}</p>
   if (!stats) return <p className={styles.note}>Загружаем…</p>
 
+  const depStarsMinor = (stats.deposits ?? []).filter((d) => d.method === 'stars').reduce((a, d) => a + d.amount, 0)
+  const depTon = (stats.deposited_total ?? 0) - depStarsMinor
+  const depStars = Math.round(depStarsMinor / 10)
   const maxEvents = Math.max(1, ...(stats.series ?? []).map((s) => s.events))
   const since = new Date(stats.since * 1000).toLocaleString('ru-RU')
 
@@ -145,7 +149,9 @@ export function AdminStatsTab() {
         NFT под замком не считаются выданными, пока игрок не пригласит друзей.
       </p>
       <div className={styles.statGrid}>
-        <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} hint="TON, Stars и CryptoBot вместе" />
+        <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} hint="TON и Stars вместе" />
+        <Card label="Пополнено в TON" value={ton(depTon)} hint="кошелёк и CryptoBot, без Stars" />
+        <Card label="Куплено за Stars" value={`${depStars} ★`} hint="отдельно от TON" />
         <Card label="Пополнено за сутки" value={ton(stats.deposited_24h ?? 0)} hint="за последние 24 часа" />
         <Card label="Оборот ставок" value={ton(stats.wagered)} hint="сколько всего поставили" />
         <Card
@@ -250,6 +256,8 @@ export function AdminStatsTab() {
           ))}
         </tbody>
       </table>
+
+      <AdminWatchPanels />
 
       <h3 className={styles.h3}>Топ игроков по обороту</h3>
       <table className={styles.table}>

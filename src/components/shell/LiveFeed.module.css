@@ -113,3 +113,12 @@
   padding: 0;
   object-fit: cover;
 }
+
+/* Бегущая кликабельная плашка про новую игру */
+.promo { position: relative; flex: 0 0 auto; width: 150px; height: 52px; border-radius: 14px; background: linear-gradient(118deg, #c99a3a 0%, #96691d 100%); border: 1.5px solid rgba(255, 255, 255, 0.18); overflow: hidden; display: flex; align-items: center; text-decoration: none; color: #2a1d02; }
+.promo:active { transform: scale(0.96); }
+.promoRun { display: inline-flex; white-space: nowrap; font-family: var(--font-display); font-size: 11px; font-weight: 800; letter-spacing: 0.4px; animation: promoRun 14s linear infinite; will-change: transform; }
+@keyframes promoRun { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .promoRun { animation: none; } }
+
+.promoTag { background: linear-gradient(118deg, #c86b6f 0%, #ae4146 100%); color: #fff; }

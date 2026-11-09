@@ -474,3 +474,52 @@ export function playMinesBoom(): void {
     1400,
   )
 }
+
+
+/**
+ * Приятный «клик клавиатуры» (ASMR, как у тактильных свичей): мягкий низкий «тук» + короткий пластиковый щелчок.
+ * Высота слегка плавает, чтобы быстрая серия не звучала как одинаковый сэмпл.
+ */
+export function playKeyThock(): void {
+  if (isSoundMuted) return
+  try {
+    const ctx = getAudioContext()
+    if (!ctx) return
+    const now = ctx.currentTime
+    const jitter = 0.94 + Math.random() * 0.14
+
+    // низкий «тук» корпуса
+    const body = ctx.createOscillator()
+    const bodyGain = ctx.createGain()
+    body.type = 'sine'
+    body.frequency.setValueAtTime(190 * jitter, now)
+    body.frequency.exponentialRampToValueAtTime(95 * jitter, now + 0.07)
+    bodyGain.gain.setValueAtTime(0.0001, now)
+    bodyGain.gain.exponentialRampToValueAtTime(0.32, now + 0.004)
+    bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.085)
+    body.connect(bodyGain)
+    bodyGain.connect(ctx.destination)
+    body.start(now)
+    body.stop(now + 0.1)
+
+    // короткий щелчок: фильтрованный шум
+    const len = Math.floor(ctx.sampleRate * 0.02)
+    const buf = ctx.createBuffer(1, len, ctx.sampleRate)
+    const data = buf.getChannelData(0)
+    for (let i = 0; i < len; i += 1) data[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2
+    const noise = ctx.createBufferSource()
+    noise.buffer = buf
+    const band = ctx.createBiquadFilter()
+    band.type = 'bandpass'
+    band.frequency.value = 2400 * jitter
+    band.Q.value = 0.9
+    const noiseGain = ctx.createGain()
+    noiseGain.gain.value = 0.22
+    noise.connect(band)
+    band.connect(noiseGain)
+    noiseGain.connect(ctx.destination)
+    noise.start(now)
+  } catch {
+    /* без Web Audio просто тихо */
+  }
+}

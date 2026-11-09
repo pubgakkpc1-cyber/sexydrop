@@ -117,6 +117,19 @@ export function GamesScreen() {
         </button>
 )}
 
+        {/* Кликалка → /games/clicker: бесплатная, недельный топ */}
+        <button
+          type="button"
+          className={`${styles.tile} ${styles.tileMuted}`}
+          onClick={() => navigate('/games/clicker')}
+          aria-label="Кликалка — тапай и поднимайся в топе"
+        >
+          <span className={styles.bannerInfo}>
+            <span className={styles.tileName}>Кликалка</span>
+            <span className={styles.tileSubtitle}>Бесплатно · недельный топ</span>
+          </span>
+        </button>
+
         {/* Мины → /games/mines (4.8) */}
         <button
           type="button"

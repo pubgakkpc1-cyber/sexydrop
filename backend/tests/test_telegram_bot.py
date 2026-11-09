@@ -8,7 +8,7 @@ from app.services import telegram_bot
 
 def test_caption_and_keyboard_have_play_button_and_links():
     caption = telegram_bot.build_caption(premium=False)
-    assert "Добро пожаловать в SEXY DROP" in caption
+    assert "SEXY DROP" in caption and "NFT-подарки" in caption
     assert "2 ★" in caption
     kb = telegram_bot.build_keyboard("https://example.test/app", premium=False)
     rows = kb["inline_keyboard"]

@@ -64,7 +64,7 @@ async def test_foundation_objects_exist() -> None:
             revision = (
                 await conn.execute(text("SELECT version_num FROM alembic_version"))
             ).scalar_one()
-            assert revision == "0008_economy"
+            assert revision == "0009_app_settings"
             await conn.execute(text("SELECT CAST(0.009 AS gram_amount)"))
     finally:
         await engine.dispose()
@@ -85,5 +85,5 @@ async def test_health_reports_migration(client: AsyncClient) -> None:
     payload = response.json()
     assert payload["status"] == "ok"
     assert payload["database"] == "up"
-    assert payload["alembic_revision"] == "0008_economy"
+    assert payload["alembic_revision"] == "0009_app_settings"
     assert payload["postgres_version"]

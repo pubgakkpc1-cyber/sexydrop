@@ -344,6 +344,9 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
     if command == "/opros":
         await ref_share.send_clicker_poll(chat_id)
         return True
+    if command == "/klikalka":
+        await ref_share.send_clicker_launch(chat_id)
+        return True
     if command == "/post":
         await ref_share.send_task_post(chat_id, int(sender.get("id") or chat_id))
         await ref_share.send_boost_post(chat_id, int(sender.get("id") or chat_id))

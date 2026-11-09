@@ -163,3 +163,19 @@ async def resolve_withdrawal(
     if action not in ("done", "reject"):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="action: done | reject")
     return await account_service.resolve_withdrawal(session, withdrawal_id, done=action == "done")
+
+
+@router.post("/clicker/pay-season")
+async def clicker_pay_season(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    _admin_name: Annotated[str, Depends(verify_admin)],
+    season: Optional[str] = None,
+) -> dict:
+    """Начислить TON призёрам завершённого сезона Кликалки (повтор безопасен). NFT первому месту — выдать вручную."""
+    from app.services import clicker
+
+    target = season or clicker.last_finished_season()
+    if not target:
+        raise HTTPException(status_code=400, detail="Первый сезон ещё не закончился")
+    paid = await clicker.pay_season(session, target)
+    return {"season": target, "winners": [{"place": w["place"], "name": w["name"], "username": w["username"], "ton_minor": w["ton_minor"], "nft": w["nft"]} for w in paid]}

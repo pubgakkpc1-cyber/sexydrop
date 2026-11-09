@@ -1,0 +1,109 @@
+.box {
+  display: block;
+  position: relative;
+  flex: none;
+}
+
+.key {
+  --lift: 18px;
+  --w: 196px;
+  --h: 190px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: var(--w);
+  height: calc(var(--h) + 4px);
+  transform-origin: 0 0;
+  display: block;
+}
+
+.side {
+  position: absolute;
+  left: 6px;
+  right: 6px;
+  bottom: 0;
+  height: calc(var(--h) - 10px);
+  border-radius: 30px 30px 38px 38px;
+  background: linear-gradient(180deg, var(--wall-hi), var(--wall-lo));
+  box-shadow: 0 10px 14px rgba(0, 0, 0, 0.55);
+}
+
+.cap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: var(--lift);
+  height: calc(var(--h) - 20px);
+  border-radius: 34px;
+  background: linear-gradient(180deg, var(--rim-hi), var(--rim-lo));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22);
+  transition: bottom 0.05s ease-out;
+}
+
+.down .cap {
+  bottom: 4px;
+}
+
+.face {
+  position: absolute;
+  inset: 14px 16px 18px;
+  border-radius: 24px;
+  background-color: var(--face);
+  background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0) 38%, rgba(255, 255, 255, 0.07));
+  box-shadow:
+    inset 0 5px 8px rgba(0, 0, 0, 0.28),
+    inset 0 -2px 3px rgba(255, 255, 255, 0.16),
+    0 0 0 2px var(--ring),
+    0 1px 0 rgba(0, 0, 0, 0.35);
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.face::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>");
+}
+
+.legend {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-shadow: 0 1px 0 var(--ink-hi), 0 -1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.bolt {
+  width: 52px;
+  height: 52px;
+  fill: currentColor;
+  display: block;
+  filter: drop-shadow(0 1px 0 var(--ink-hi)) drop-shadow(0 -1px 0 rgba(0, 0, 0, 0.35));
+}
+
+.tap {
+  font-size: 18px;
+  letter-spacing: 4px;
+  margin-top: 2px;
+}
+
+/* ---------- Объёмная клавиша (3D) ---------- */
+.k3 { position: relative; display: block; width: 190px; height: 190px; transform-style: preserve-3d; }
+.k3shadow { position: absolute; inset: 6px; border-radius: 40px; background: rgba(0, 0, 0, 0.55); filter: blur(16px); transform: translateZ(-2px) translateY(14px); }
+.slice { position: absolute; inset: 0; border-radius: 36px; background: color-mix(in srgb, var(--wall-lo) calc(100% - var(--t) * 100%), var(--wall-hi)); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.18); transition: opacity 0.05s; }
+.k3down .slice:nth-child(n + 8) { opacity: 0; }
+.k3top { position: absolute; inset: 0; border-radius: 36px; background: linear-gradient(180deg, var(--rim-hi), var(--rim-lo)); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25); transform: translateZ(var(--press)); transition: transform 0.05s ease-out; transform-style: flat; }
+.k3face { position: absolute; inset: 13px; border-radius: 26px; background-color: var(--face); background-image: linear-gradient(180deg, rgba(0, 0, 0, 0.16), rgba(0, 0, 0, 0) 38%, rgba(255, 255, 255, 0.07)); box-shadow: inset 0 5px 8px rgba(0, 0, 0, 0.28), inset 0 -2px 3px rgba(255, 255, 255, 0.16), 0 0 0 2px var(--ring), 0 1px 0 rgba(0, 0, 0, 0.35); display: grid; place-items: center; overflow: hidden; }
+.k3face::after { content: ''; position: absolute; inset: 0; opacity: 0.5; mix-blend-mode: soft-light; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.1' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .5  0 0 0 0 .5  0 0 0 0 .5  0 0 0 .9 0'/></filter><rect width='120' height='120' filter='url(%23n)'/></svg>"); }
+
+.slice { transform: translateZ(min(calc(var(--i) * 1px), calc(var(--press) - 1px))); transition: transform 0.08s ease-out; }
+.k3down .slice:nth-child(n + 8) { opacity: 1; }
+.k3top { transition: transform 0.08s ease-out; }

@@ -425,7 +425,7 @@ async def run_boost_broadcast(ids: list[int], state: dict[str, Any]) -> None:
 
 # ---------------------------------------------------------------- опрос чата: делаем ли кликер в боте
 
-POLL_VERSION = "2026-11-09-clicker-v1"
+POLL_VERSION = "2026-11-09-clicker-launch-v1"
 
 
 def clicker_text(premium: bool = True) -> str:
@@ -506,8 +506,55 @@ async def send_clicker_poll_to_admins_once(delay_s: float = 70.0) -> None:
                 meta = await session.get(UserMeta, admin.id)
                 if meta is None or (meta.quests_claimed or {}).get("_clickerpoll") == POLL_VERSION:
                     continue
-                if await send_clicker_poll(admin.telegram_id):
+                if await send_clicker_launch(admin.telegram_id):
                     meta.quests_claimed = {**(meta.quests_claimed or {}), "_clickerpoll": POLL_VERSION}
                     await session.commit()
     except Exception as exc:  # noqa: BLE001
         log.warning("clicker poll to admins failed: %s", exc)
+
+
+def clicker_launch_caption() -> str:
+    """Готовый пост для канала: кликалка запущена, награды и условия (до 1024 символов для подписи к фото)."""
+    return (
+        "🕹 <b>В SEXY DROP появилась Кликалка!</b>\n\n"
+        "Тапай по клавише бесплатно, расти по рангам и борись за топ.\n\n"
+        "🏆 <b>Марафон 30 дней</b>, топ-30 виден всем:\n"
+        "🥇 1 место — NFT-подарок + 5 TON на баланс\n"
+        "🥈 2 место — 5 TON на баланс\n"
+        "🥉 3 место — 3 TON на баланс\n\n"
+        "📋 <b>Условия</b>\n"
+        "• участие бесплатное, ничего вкладывать не нужно\n"
+        "• клики считает сервер, не быстрее 8 в секунду; автокликеры не засчитываются и проверяются\n"
+        "• пригласи друга: +200 кликов, с Premium +300 (друг должен открыть бесплатный кейс, до 5 друзей в день)\n"
+        "• ранги растут с кликами: от 5 000 до 3 000 000\n\n"
+        "👉 @sexydropbot — «Игры» → «Кликалка»"
+    )
+
+
+async def send_clicker_launch(chat_id: int) -> bool:
+    """Присылает админу готовый пост про запуск кликалки (картинка + текст) — переслать в канал."""
+    if not get_settings().bot_token:
+        return False
+    path = next((d / "clicker-photo.jpg" for d in _GIF_DIRS if (d / "clicker-photo.jpg").is_file()), None)
+    if path is None:
+        log.warning("clicker photo not found")
+        return False
+    data = {
+        "chat_id": str(chat_id),
+        "caption": clicker_launch_caption(),
+        "parse_mode": "HTML",
+        "reply_markup": json.dumps(
+            {"inline_keyboard": [[{"text": "🕹 Играть в Кликалку", "url": "https://t.me/sexydropbot"}]]}, ensure_ascii=False
+        ),
+    }
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Готовый пост про Кликалку</b> — скопируйте или перешлите в канал 👇", "parse_mode": "HTML"},
+        )
+        body = (
+            await client.post(f"{_api()}/sendPhoto", data=data, files={"photo": ("clicker-photo.jpg", path.read_bytes(), "image/jpeg")})
+        ).json()
+    if not body.get("ok"):
+        log.warning("clicker launch post to %s failed: %s", chat_id, body.get("description"))
+    return bool(body.get("ok"))

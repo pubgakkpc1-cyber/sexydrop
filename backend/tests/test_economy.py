@@ -425,7 +425,22 @@ async def test_free_case_nft_is_locked_until_five_premium_friends(client: AsyncC
         await session.execute(update(UserMeta).where(UserMeta.user_id.in_(ids)).values(is_premium=True))
         await session.commit()
     quest = (await client.get("/api/play/free/quest", headers=h(owner))).json()
-    assert quest["joined"] == 5 and quest["completed"] is True
+    # 5 друзей — только первый из трёх видимых шагов: нужны ещё пополнение 5 TON и 5 игр
+    assert quest["joined"] == 5 and quest["completed"] is False
+    assert quest["steps"]["deposit"]["target"] == 5000 and quest["steps"]["games"]["target"] == 5
+    assert len((await state(client, owner))["items"]) == 0
+    from datetime import datetime, timezone
+
+    from app.models.economy import DepositOrder, PlayRound
+
+    owner_id = uuid.UUID(owner["_user"]["id"])
+    async with get_session_factory()() as session:
+        session.add(DepositOrder(user_id=owner_id, provider="ton", secret=uuid.uuid4().hex, amount_minor=5000, status="paid", paid_at=datetime.now(timezone.utc)))
+        for i in range(5):
+            session.add(PlayRound(user_id=owner_id, game="mines", request_id=f"q-{i}", bet_minor=100, payout_minor=0, status="lost"))
+        await session.commit()
+    quest = (await client.get("/api/play/free/quest", headers=h(owner))).json()
+    assert quest["completed"] is True
     assert len((await state(client, owner))["items"]) == 1  # подарок выдан
 
 
@@ -444,7 +459,7 @@ async def test_quest_progress_is_server_side(client: AsyncClient, admin: dict, p
 
 async def test_stars_exchange_only_spends_server_stars(client: AsyncClient, player: dict) -> None:
     small = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 0})
-    assert small.status_code == 400 and small.json()["code"] == "too_small"
+    assert small.status_code == 422  # минимум — 1 звезда: ноль отклоняет валидация
     poor = await client.post("/api/me/stars/exchange", headers=h(player), json={"stars": 100})
     assert poor.status_code == 409 and poor.json()["code"] == "insufficient_stars"
     async with get_session_factory()() as session:
@@ -507,7 +522,7 @@ async def test_stars_payment_credits_balance_via_webhook_handler(client: AsyncCl
     payment = {"invoice_payload": payload, "currency": "XTR", "total_amount": 350, "telegram_payment_charge_id": "ch-" + secret + uuid.uuid4().hex[:8]}
     await telegram_bot._record_payment(payment)
     await telegram_bot._record_payment(payment)  # повтор вебхука
-    assert (await state(client, player))["balance_minor"] == 2_000
+    assert (await state(client, player))["balance_minor"] == 3_500  # 350 Stars × 10 minor (100 ★ = 1 TON)
     status = await client.get(f"/api/deposits/stars/status?secret={secret}", headers=h(player))
     assert status.json()["status"] == "paid"
 

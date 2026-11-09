@@ -14,6 +14,7 @@ const GamesScreen = lazy(() => import('./screens/GamesScreen').then((m) => ({ de
 import { HomeScreen } from './screens/HomeScreen'
 const InventoryScreen = lazy(() => import('./screens/InventoryScreen').then((m) => ({ default: m.InventoryScreen })))
 const InviteScreen = lazy(() => import('./screens/InviteScreen').then((m) => ({ default: m.InviteScreen })))
+const ClickerScreen = lazy(() => import('./screens/ClickerScreen').then((m) => ({ default: m.ClickerScreen })))
 const MinesScreen = lazy(() => import('./screens/MinesScreen').then((m) => ({ default: m.MinesScreen })))
 const PlinkoScreen = lazy(() => import('./screens/PlinkoScreen').then((m) => ({ default: m.PlinkoScreen })))
 const SpinsScreen = lazy(() => import('./screens/SpinsScreen').then((m) => ({ default: m.SpinsScreen })))
@@ -49,6 +50,7 @@ function App() {
           <Route path="games/plinko" element={FEATURES.plinko ? <PlinkoScreen /> : <Navigate to="/" replace />} />
           <Route path="games/dice" element={FEATURES.dice ? <DiceScreen /> : <Navigate to="/" replace />} />
           <Route path="games/mines" element={<MinesScreen />} />
+          <Route path="games/clicker" element={<ClickerScreen />} />
           <Route path="games/spins" element={FEATURES.spins ? <SpinsScreen /> : <Navigate to="/" replace />} />
           <Route path="pvp" element={FEATURES.pvp ? <PvpScreen /> : <Navigate to="/" replace />} />
           <Route path="pvp/jackpot" element={FEATURES.pvp ? <JackpotScreen /> : <Navigate to="/" replace />} />

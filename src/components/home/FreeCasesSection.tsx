@@ -77,11 +77,17 @@ export function FreeCasesSection() {
                   aria-hidden
                 />
                 <img
-                  className={styles.image}
+                  className={cx(styles.image, (hasPendingQuest || used) && styles.imageLocked)}
                   src={gameCase.image}
                   alt={gameCase.name}
                   loading="lazy"
                 />
+                {/* Замочек: кейс на «перерыве» — NFT из него ждёт задание с друзьями, новый открыть нельзя */}
+                {(hasPendingQuest || used) && (
+                  <span className={styles.lockBadge} aria-hidden>
+                    <LockIcon className={styles.lockBadgeIcon} />
+                  </span>
+                )}
               </div>
 
               {/* Название и статус */}

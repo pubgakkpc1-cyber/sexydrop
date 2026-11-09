@@ -411,3 +411,29 @@
 /* Качество графики: без бегущего блика на средней и минимальной */
 :global(html[data-gfx='medium']) .shimmerEffect::after,
 :global(html[data-gfx='low']) .shimmerEffect::after { display: none; }
+
+/* Замочек на кейсе FREE, пока NFT из него ждёт задание (перерыв) */
+.imageLocked {
+  filter: grayscale(0.85) brightness(0.55);
+  animation: none;
+}
+
+.lockBadge {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #b83a3f;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
+}
+
+.lockBadgeIcon {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}

@@ -12,6 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import catalog
 from app.core.config import get_settings
+from app.services import prize_bank
 from app.games.crash_schedule import BETTING_MS, TICK_MS, Schedule
 from app.models.economy import PlayRound
 from app.services.economy_core import (
@@ -76,7 +77,7 @@ async def _active_bets(session: AsyncSession, user_id: uuid.UUID, *, lock: bool 
 
 async def _pay(session: AsyncSession, user_id: uuid.UUID, row: PlayRound, mult: float) -> None:
     mult_h = _mult_h(mult)
-    payout = row.bet_minor * mult_h // 100
+    payout = await prize_bank.cap_payout(session, row.bet_minor, row.bet_minor * mult_h // 100)
     result: dict[str, Any] = {"status": "ok", "multiplier": mult_h / 100, "won_minor": payout}
     # Ракетка платит только TON: NFT за выигрыш не выдаётся (решение владельца)
     options: list[str] = []  # NFT за выигрыш в Ракетке отключены

@@ -14,7 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core import catalog
 from app.core.config import get_settings
 from app.models.economy import NftItem, PlayRound, UserMeta
-from app.services import odds_service
+from app.services import odds_service, prize_bank
 from app.services.economy_core import (
     GAME_RTP_PCT,
     MAX_BET_MINOR,
@@ -113,7 +113,7 @@ async def open_case(session: AsyncSession, user_id: uuid.UUID, case_id: str, req
         session, user_id, type="case_bet", direction="debit", minor=case.price, key=f"{round_.id}:bet",
         description=f"Кейс {case.name}",
     )
-    prize = pick_weighted(catalog.effective_entries(case))
+    prize = await prize_bank.pick(session, catalog.effective_entries(case))
     result: dict[str, Any] = {"status": "ok", "gift_id": prize, "uid": ""}
     if catalog.is_ton_prize(prize):
         win = catalog.ton_prize_minor(prize)
@@ -384,7 +384,7 @@ async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, re
                 "Чтобы продолжить бесплатные прокруты, пополните баланс на 50 Stars или 0.25 TON",
             )
 
-    prize = pick_weighted(catalog.effective_entries(case))
+    prize = await prize_bank.pick(session, catalog.effective_entries(case))
     result: dict[str, Any] = {"status": "ok", "gift_id": prize, "uid": ""}
     if catalog.is_ton_prize(prize):
         win = catalog.ton_prize_minor(prize)
@@ -436,6 +436,8 @@ async def upgrade(
     if item.status != "available":
         raise GameError("item_unavailable", 409)
     source_price = item.price_minor
+    if not await prize_bank.ensure_can_afford(session, target_price):
+        raise GameError("bank_low", 409, "Банк призов сейчас не позволяет апгрейд на этот подарок — выберите подарок подешевле")
     # шанс p = min(1, s/t · 0.98): выигрыш, если randrange(100·t) < 98·s
     won = GAME_RTP_PCT * source_price >= 100 * target_price or randrange(100 * target_price) < GAME_RTP_PCT * source_price
     chance = min(1.0, GAME_RTP_PCT * source_price / (100 * target_price))
@@ -451,6 +453,7 @@ async def upgrade(
         "uid": "",
     }
     if won:
+        await prize_bank.spend(session, target_price)
         new_item = await add_item(session, user_id, target_gift_id, target_price, "upgrade")
         result["uid"] = str(new_item.id)
         round_.payout_minor = target_price
@@ -492,7 +495,7 @@ async def _finish_mines(session: AsyncSession, user_id: uuid.UUID, round_: PlayR
     mult_h = mines_multiplier_hundredths(int(state["mines_count"]), picked) if picked else 0
     payout = 0
     if status in ("cashed", "cleared") and picked:
-        payout = _payout(round_.bet_minor, mult_h)
+        payout = await prize_bank.cap_payout(session, round_.bet_minor, _payout(round_.bet_minor, mult_h))
         await post_ledger(
             session, user_id, type="mines_win", direction="credit", minor=payout, key=f"{round_.id}:win",
             description="Мины: выплата",

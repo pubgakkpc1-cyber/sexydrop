@@ -69,6 +69,7 @@ export function AdminSystemTab() {
         <Row key={id} label={title} ok value={id} />
       ))}
 
+      <PrizeBankPanel />
       <MaintenanceSwitch />
       <ResetProfit />
       <ResetBalances />
@@ -222,6 +223,57 @@ function MaintenanceSwitch() {
           Выключить — вернуть бота в работу
         </button>
       )}
+    </>
+  )
+}
+
+
+/** Банк призов: админ ставит число вручную, сервер считает его настоящим (приз дороже банка не выпадает). */
+function PrizeBankPanel() {
+  const [minor, setMinor] = useState<number | null>(null)
+  const [value, setValue] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
+
+  useEffect(() => {
+    void adminFetch<{ minor: number }>('/api/admin/prize-bank').then((r) => (r.ok ? setMinor(r.data.minor) : setMsg(r.error)))
+  }, [])
+
+  const save = async () => {
+    const ton = Number(value.replace(',', '.'))
+    if (!Number.isFinite(ton) || ton < 0) return setMsg('Введите число TON, например 10 или 0')
+    setBusy(true)
+    setMsg(null)
+    const r = await adminFetch<{ minor: number }>('/api/admin/prize-bank', { method: 'POST', body: { ton } })
+    setBusy(false)
+    if (r.ok) {
+      setMinor(r.data.minor)
+      setValue('')
+      setMsg('Банк призов обновлён')
+    } else {
+      setMsg(r.error)
+    }
+  }
+
+  return (
+    <>
+      <h3 className={styles.h3}>Банк призов</h3>
+      <p className={styles.note}>
+        Сейчас в банке: <b>{minor === null ? '…' : `${safeAmount(minor)} TON`}</b>. Подарок или выигрыш дороже банка выпасть не может; когда банк пуст, в кейсах
+        падают два самых дешёвых приза. Стоимость выпавшего приза списывается из банка сразу. Ракета и Мины не платят сверх ставки больше, чем есть в банке.
+      </p>
+      <input
+        className={styles.search}
+        inputMode="decimal"
+        aria-label="Банк призов, TON"
+        placeholder="Новое значение, TON (0 — пустой банк)"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+      />
+      <button type="button" className={styles.refresh} disabled={busy || value.trim() === ''} onClick={() => void save()}>
+        Поставить банк
+      </button>
+      {msg && <p className={styles.note}>{msg}</p>}
     </>
   )
 }

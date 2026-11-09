@@ -62,6 +62,8 @@ class Settings(BaseSettings):
     free_nft_case_maintenance: bool = True
     # Вывод подарков из кейса FREE (под замком) и задания на них временно не работают, ждут обновления (WITHDRAW_PAUSED=false — вернуть)
     withdraw_paused: bool = True
+    # Банк призов: призы и выигрыши дороже банка не выпадают (PRIZE_BANK_ENABLED=false — выключить ограничение)
+    prize_bank_enabled: bool = True
     ref_chat_url: str = "https://t.me/+hQUjqYtgmTA2NmQ0"
     # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
     stats_path: str = "/tmp/sexydrop_stats.json"

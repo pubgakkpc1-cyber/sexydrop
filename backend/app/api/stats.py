@@ -169,3 +169,34 @@ async def admin_clicker_players(
     from app.services import clicker
 
     return {"threshold": clicker.SUS_THRESHOLD, "players": await clicker.players_overview(session)}
+
+
+class PrizeBankBody(BaseModel):
+    ton: float = Field(ge=0, le=10_000_000)
+
+
+@router.get("/admin/prize-bank")
+async def admin_prize_bank(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Сколько сейчас в банке призов (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import prize_bank
+
+    minor = await prize_bank.available(session)
+    await session.commit()
+    return {"minor": minor, "enabled": prize_bank.enabled()}
+
+
+@router.post("/admin/prize-bank")
+async def admin_prize_bank_set(
+    body: PrizeBankBody,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    x_telegram_init_data: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    """Поставить банк призов вручную (TON). Сервер сразу считает его настоящим (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import prize_bank
+
+    return {"minor": await prize_bank.set_balance(session, round(body.ton * 1000))}

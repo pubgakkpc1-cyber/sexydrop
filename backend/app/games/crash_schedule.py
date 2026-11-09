@@ -67,24 +67,12 @@ class Schedule:
     def __init__(self, secret: bytes) -> None:
         self._secret = secret
         self._cache: dict[int, RoundInfo] = {}
-        self._override: dict[int, float] = {}  # точки краша, сниженные «Банком призов» (решение принимается в начале полёта)
-
-    def natural_crash_point(self, round_id: int) -> float:
-        return crash_point_for_round(round_id, self._secret)
-
-    def set_override(self, round_id: int, crash_point: float) -> bool:
-        """Запоминает сниженную точку краша раунда; возвращает True, если что-то изменилось."""
-        if self._override.get(round_id) == crash_point:
-            return False
-        self._override[round_id] = crash_point
-        self._cache.clear()
-        return True
 
     def round_info(self, round_id: int) -> RoundInfo:
         cached = self._cache.get(round_id)
         if cached is not None:
             return cached
-        crash_point = self._override.get(round_id) or crash_point_for_round(round_id, self._secret)
+        crash_point = crash_point_for_round(round_id, self._secret)
         curve = _curve_for(crash_point)
         info = RoundInfo(
             id=round_id,

@@ -3,21 +3,16 @@
 from __future__ import annotations
 
 import hashlib
-import json
-import math
-import secrets
-import time
 import uuid
 from functools import lru_cache
 from typing import Any
 
-from sqlalchemy import select, text
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import catalog
 from app.core.config import get_settings
-from app.services import prize_bank
-from app.games.crash_schedule import BETTING_MS, TICK_MS, WINDOW_MS, Schedule
+from app.games.crash_schedule import BETTING_MS, TICK_MS, Schedule
 from app.models.economy import PlayRound
 from app.services.economy_core import (
     MAX_BET_MINOR,
@@ -46,99 +41,8 @@ def schedule() -> Schedule:
     return _schedule()
 
 
-_decided: set[int] = set()
-_loaded_at: dict[int, float] = {}
-BANK_FORCED_MAX = 30  # ставка больше банка: раунд «сливается» на иксах 1.00–1.30
-
-
 def reset_for_tests() -> None:
     _schedule.cache_clear()
-    _decided.clear()
-    _loaded_at.clear()
-
-
-def _floor2(x: float) -> float:
-    return math.floor(x * 100) / 100
-
-
-async def load_overrides(session: AsyncSession, round_id: int) -> None:
-    """Подтягивает из базы точки краша, сниженные банком, для окна этого раунда (кэш ~1 с, общий для всех экземпляров сервера)."""
-    w = round_id // 1000
-    now = time.monotonic()
-    if now - _loaded_at.get(w, -10.0) < 1.0:
-        return
-    rows = (await session.execute(text("SELECT key, value FROM app_settings WHERE key LIKE :p"), {"p": f"crash_cp:{w}%"})).all()
-    for key, raw in rows:
-        data = json.loads(raw) if isinstance(raw, str) else raw
-        cp = (data or {}).get("cp")
-        if cp is not None:
-            schedule().set_override(int(key.split(":")[1]), float(cp))
-    _loaded_at[w] = now
-
-
-async def ensure_decided(session: AsyncSession, round_id: int) -> None:
-    """В начале полёта раунда решает, до какого икса он может дойти с учётом ставок и «Банка призов».
-
-    - ставок нет или банк выключен — раунд как обычно;
-    - ставки в сумме не больше банка — раунд как обычно, но не выше икса банк / сумма ставок (выплата не превысит банк);
-    - ставки в сумме больше банка — раунд «сливается» на иксах 1.00–1.30.
-    Решение сохраняется (одно на раунд, под блокировкой банка), чтобы все экземпляры сервера видели одно и то же.
-    """
-    if round_id in _decided or not prize_bank.enabled():
-        return
-    sch = schedule()
-    total, count = (
-        await session.execute(
-            text("SELECT COALESCE(SUM(bet_minor), 0), COUNT(*) FROM play_rounds WHERE game = 'crash' AND (state->>'round_id') = :r"),
-            {"r": str(round_id)},
-        )
-    ).one()
-    if not count:
-        _decided.add(round_id)
-        return
-    bank = await prize_bank.available(session)  # блокировка банка: решения и выплаты идут по очереди
-    key = f"crash_cp:{round_id}"
-    raw = (await session.execute(text("SELECT value FROM app_settings WHERE key = :k"), {"k": key})).scalar_one_or_none()
-    if raw is not None:
-        data = json.loads(raw) if isinstance(raw, str) else raw
-        if data.get("cp") is not None:
-            sch.set_override(round_id, float(data["cp"]))
-        _decided.add(round_id)
-        return
-    natural = sch.natural_crash_point(round_id)
-    total = int(total)
-    if total > bank:
-        cp = min(natural, 1.0 + secrets.randbelow(BANK_FORCED_MAX + 1) / 100)
-    else:
-        cp = min(natural, max(1.0, _floor2(bank / total)))
-    await session.execute(
-        text("INSERT INTO app_settings (key, value) VALUES (:k, CAST(:v AS jsonb)) ON CONFLICT (key) DO NOTHING"),
-        {"k": key, "v": json.dumps({"cp": cp if cp < natural else None, "natural": natural, "bank": bank, "bets": total})},
-    )
-    if cp < natural:
-        sch.set_override(round_id, cp)
-    _decided.add(round_id)
-
-
-async def sync_schedule(session: AsyncSession, now: int) -> None:
-    """Перед любым чтением расписания: подтянуть сниженные точки краша и принять решения по раундам с начавшимся полётом."""
-    sch = schedule()
-    for _ in range(3):
-        cur = sch.at(now)
-        await load_overrides(session, cur["round_id"])
-        cur = sch.at(now)
-        pending = (
-            await session.execute(
-                text("SELECT DISTINCT (state->>'round_id')::bigint FROM play_rounds WHERE game = 'crash' AND status = 'active'")
-            )
-        ).scalars().all()
-        todo = [int(r) for r in pending if int(r) not in _decided and (int(r) < cur["round_id"] or (int(r) == cur["round_id"] and cur["phase"] != "betting"))]
-        if cur["phase"] != "betting" and cur["round_id"] not in _decided:
-            todo.append(cur["round_id"])
-        if not todo:
-            return
-        for rid in sorted(set(todo)):
-            await ensure_decided(session, rid)
 
 
 def _mult_h(mult: float) -> int:
@@ -172,7 +76,7 @@ async def _active_bets(session: AsyncSession, user_id: uuid.UUID, *, lock: bool 
 
 async def _pay(session: AsyncSession, user_id: uuid.UUID, row: PlayRound, mult: float) -> None:
     mult_h = _mult_h(mult)
-    payout = await prize_bank.cap_payout(session, row.bet_minor, row.bet_minor * mult_h // 100)
+    payout = row.bet_minor * mult_h // 100
     result: dict[str, Any] = {"status": "ok", "multiplier": mult_h / 100, "won_minor": payout}
     # Ракетка платит только TON: NFT за выигрыш не выдаётся (решение владельца)
     options: list[str] = []  # NFT за выигрыш в Ракетке отключены
@@ -194,7 +98,6 @@ async def _pay(session: AsyncSession, user_id: uuid.UUID, row: PlayRound, mult: 
 async def settle(session: AsyncSession, user_id: uuid.UUID, now: int | None = None) -> None:
     """Закрывает ставки игрока: авто-вывод, проигрыш после краша. Коммит — на вызывающем."""
     now = now if now is not None else now_ms()
-    await sync_schedule(session, now)
     rows = await _active_bets(session, user_id, lock=True)
     if not rows:
         return
@@ -220,7 +123,6 @@ async def state(session: AsyncSession, user_id: uuid.UUID | None) -> dict[str, A
     """Расписание на сейчас + ставка игрока (если есть)."""
     now = now_ms()
     sch = schedule()
-    await sync_schedule(session, now)
     out = sch.at(now)
     out["recent"] = sch.recent_crash_points(now, 12)
     out["tick_ms"] = TICK_MS
@@ -257,7 +159,6 @@ async def place_bet(
         raise GameError("invalid_auto", 400)
     await ensure_account(session, user_id)
     now = now_ms()
-    await sync_schedule(session, now)
     cur = schedule().at(now)
     if cur["phase"] != "betting":
         raise GameError("phase", 409, "Ставки принимаются только в окне ставок")
@@ -299,7 +200,6 @@ async def cashout(session: AsyncSession, user_id: uuid.UUID) -> dict[str, Any]:
     await ensure_account(session, user_id)
     now = now_ms()
     await settle(session, user_id, now)
-    await sync_schedule(session, now)
     cur = schedule().at(now)
     rows = [r for r in await _active_bets(session, user_id, lock=True) if (r.state or {}).get("round_id") == cur["round_id"]]
     if not rows:

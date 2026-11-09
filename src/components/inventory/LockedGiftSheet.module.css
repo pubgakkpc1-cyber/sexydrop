@@ -151,3 +151,15 @@
   font-variant-numeric: tabular-nums;
   color: #ffffff;
 }
+
+.unavailable {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(184, 58, 63, 0.16);
+  border: 1px solid rgba(184, 58, 63, 0.5);
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffb3b7;
+  text-align: center;
+}

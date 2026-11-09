@@ -13,3 +13,6 @@ export const FEATURES = {
 
 /** Кейс FREE с NFT (за приглашения) временно на переработке: открыть нельзя. `false` — вернуть в работу. */
 export const FREE_NFT_CASE_MAINTENANCE = true
+
+/** Текст для игроков с NFT под замком, пока кейс FREE на переработке. */
+export const NFT_LOCK_UNAVAILABLE_TEXT = 'Технически на данный момент недоступно'

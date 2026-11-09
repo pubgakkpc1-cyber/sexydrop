@@ -6,6 +6,7 @@ import { syncReferrals } from '../../lib/referralSync'
 import { BottomSheet, Button } from '../ui'
 import { LockIcon, UsersIcon } from '../shell/icons'
 import { useQuestStepsStore } from '../../store/questSteps'
+import { FREE_NFT_CASE_MAINTENANCE, NFT_LOCK_UNAVAILABLE_TEXT } from '../../lib/features'
 import styles from './LockedGiftSheet.module.css'
 
 export type LockedAction = 'withdraw' | 'sell' | 'upgrade'
@@ -75,6 +76,12 @@ export function LockedGiftSheet({ gift, action, joined, target, expiresAt, onClo
           </span>
         </span>
         <strong className={styles.titleGift}>{gift.name}</strong>
+
+        {FREE_NFT_CASE_MAINTENANCE && (
+          <p className={styles.unavailable} role="status">
+            🛠 {NFT_LOCK_UNAVAILABLE_TEXT}
+          </p>
+        )}
 
         <p className={styles.message}>
           {left > 0

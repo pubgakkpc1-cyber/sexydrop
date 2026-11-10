@@ -64,8 +64,8 @@ class Settings(BaseSettings):
     withdraw_paused: bool = True
     # Банк призов: призы и выигрыши дороже банка не выпадают (PRIZE_BANK_ENABLED=false — выключить ограничение)
     prize_bank_enabled: bool = True
-    # RTP платных кейсов, % (возврат игрокам в среднем). 0 — не менять шансы (сейчас 40; 0 — выключить). FREE-кейсы не трогаются.
-    case_rtp_pct: int = 40
+    # RTP платных кейсов, % (возврат игрокам в среднем). 0 — не менять шансы (сейчас 55; 0 — выключить). FREE-кейсы не трогаются.
+    case_rtp_pct: int = 55
     ref_chat_url: str = "https://t.me/+hQUjqYtgmTA2NmQ0"
     # Файл статистики для админки (события игроков). Без постоянного тома сбрасывается при деплое.
     stats_path: str = "/tmp/sexydrop_stats.json"

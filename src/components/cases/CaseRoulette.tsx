@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type TransitionEvent } from 'react'
 import { giftById, type CaseDefinition } from '../../data/catalog'
 import { buildCaseStrip } from '../../lib/caseStrip'
 import { hapticImpact, hapticNotify } from '../../lib/telegram'
@@ -10,7 +10,7 @@ const TARGET_INDEX = 40
 const TILE_WIDTH = 80
 const TILE_MARGIN = 5 // margin left and right = 10px total
 const STRIDE = TILE_WIDTH + TILE_MARGIN * 2 // 90px
-const DURATION_MS = 4200
+const DURATION_MS = 7200 // долгий прокрут: быстрый старт и очень медленный «ледяной» хвост (интрига до последнего)
 const WINDUP_MS = 300 // «замах»: лента чуть откатывается назад перед рывком
 
 interface CaseRouletteProps {
@@ -25,13 +25,13 @@ function generateInitialStrip(caseDefinition: CaseDefinition): string[] {
 }
 
 /**
- * Аналитический расчет cubic-bezier(0.08, 0.82, 0.12, 1) без тяжелых вызовов getBoundingClientRect.
+ * Аналитический расчет cubic-bezier(0.1, 0.55, 0.04, 1) без тяжелых вызовов getBoundingClientRect.
  * Устраняет микрофризы (layout thrashing) и обеспечивает 120 FPS анимацию.
  */
 function evaluateCubicBezier(t: number): number {
-  const x1 = 0.08
-  const y1 = 0.82
-  const x2 = 0.12
+  const x1 = 0.1
+  const y1 = 0.55
+  const x2 = 0.04
   const y2 = 1.0
 
   let u = t
@@ -61,6 +61,7 @@ export function CaseRoulette({
   const lastTileIndexRef = useRef<number>(-1)
   const animationFrameRef = useRef<number | null>(null)
   const isFinishedRef = useRef(false)
+  const launchedRef = useRef(false) // основной прокрут начался (замах не считается)
 
   // Начальное центрирование ленты в покое
   useEffect(() => {
@@ -95,6 +96,7 @@ export function CaseRoulette({
     if (!isSpinning || !targetGiftId) return
 
     isFinishedRef.current = false
+    launchedRef.current = false
     setWinningIndex(null)
 
     // Формируем новую ленту с целевым подарком на TARGET_INDEX
@@ -107,8 +109,8 @@ export function CaseRoulette({
     setTranslateX(startOffset)
     setTransitionStyle('none')
 
-    // Естественный разброс остановки внутри карточки (±14px от центра)
-    const jitter = Math.floor((Math.random() - 0.5) * 28)
+    // Лента еле-еле доползает и замирает у самого края карточки (байт: кажется, что вот-вот поедет дальше)
+    const jitter = Math.floor((Math.random() - 0.5) * 68)
     const targetOffset = vpWidth / 2 - (TARGET_INDEX * STRIDE + STRIDE / 2) + jitter
 
     let safetyTimer: ReturnType<typeof setTimeout> | null = null
@@ -123,7 +125,8 @@ export function CaseRoulette({
 
     const launchTimer = setTimeout(() => {
       // Включаем аппаратное ускорение и CSS transition
-      setTransitionStyle(`transform ${DURATION_MS}ms cubic-bezier(0.08, 0.82, 0.12, 1)`)
+      launchedRef.current = true
+      setTransitionStyle(`transform ${DURATION_MS}ms cubic-bezier(0.1, 0.55, 0.04, 1)`)
       setTranslateX(targetOffset)
 
       lastTileIndexRef.current = -1
@@ -173,7 +176,9 @@ export function CaseRoulette({
     }
   }, [isSpinning, targetGiftId, caseDefinition])
 
-  const handleTransitionEnd = () => {
+  const handleTransitionEnd = (e: TransitionEvent<HTMLDivElement>) => {
+    // конец «замаха» и анимации плиток не считаются: завершаем только когда лента сама доехала до выигрыша
+    if (e.target !== e.currentTarget || e.propertyName !== 'transform' || !launchedRef.current) return
     if (isSpinning) {
       finishSpin()
     }
@@ -209,11 +214,10 @@ export function CaseRoulette({
           {strip.map((giftId, index) => {
             const gift = giftById.get(giftId)
             if (!gift) return null
-            const isWinner = winningIndex === index
-            return (
+                        return (
               <div
                 key={`${giftId}-${index}`}
-                className={`${styles.tile} ${isWinner ? styles.tileWinning : ''}`}
+                className={styles.tile}
                 data-rarity={gift.rarity}
               >
                 <img decoding="async" className={styles.tileImage} src={gift.image} alt={gift.name} />

@@ -43,8 +43,40 @@ export interface ServerState {
 
 const SOURCES: readonly InventorySource[] = ['case-open', 'free-case', 'upgrade', 'craft', 'raffle', 'crash-drop', 'crash-win']
 
+/**
+ * Пока идёт прокрут кейса, ответ сервера (баланс, новый подарок) не показываем: результат узнают, когда рулетка остановится.
+ * Обновления копятся в очереди и применяются при `releaseServerUpdates` (или сами через 15 секунд — страховка).
+ */
+let holdDepth = 0
+let holdTimer: ReturnType<typeof setTimeout> | null = null
+let queued: Array<() => void> = []
+
+export function holdServerUpdates(): void {
+  holdDepth = 1
+  if (holdTimer) clearTimeout(holdTimer)
+  holdTimer = setTimeout(releaseServerUpdates, 15_000)
+}
+
+export function releaseServerUpdates(): void {
+  if (holdTimer) clearTimeout(holdTimer)
+  holdTimer = null
+  if (holdDepth === 0 && queued.length === 0) return
+  holdDepth = 0
+  const run = queued
+  queued = []
+  for (const fn of run) fn()
+  if (run.length > 0) void hydrateFromServer()
+}
+
+function deferred(fn: () => void): boolean {
+  if (holdDepth === 0) return false
+  queued.push(fn)
+  return true
+}
+
 /** Баланс — только то, что сказал сервер (локально его изменить нельзя: любое действие проверяется там). */
 export function setServerBalance(minor: number): void {
+  if (deferred(() => setServerBalance(minor))) return
   useWalletStore.setState((s) => ({ balances: { ...s.balances, [s.mode]: minor } }))
 }
 
@@ -60,6 +92,7 @@ export function setServerItems(items: readonly ServerItem[]): void {
 
 export function addServerItem(uid: string, giftId: string, source: InventorySource): void {
   if (!uid) return
+  if (deferred(() => addServerItem(uid, giftId, source))) return
   useInventoryStore.setState((s) =>
     s.items.some((i) => i.uid === uid) ? s : { items: [...s.items, { uid, giftId, acquiredAt: Date.now(), source }] },
   )
@@ -86,6 +119,7 @@ function applyFreeQuest(q: FreeQuestServer): void {
 }
 
 export function applyServerState(state: ServerState): void {
+  if (deferred(() => applyServerState(state))) return
   const prevPending = useFreeCasesStore.getState().quest.pendingReward
   setServerBalance(state.balance_minor)
   setServerItems(state.items)

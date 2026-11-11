@@ -21,6 +21,7 @@ import { displayProbabilityBps } from '../lib/caseMath'
 import { formatMinor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import { claimFreeCaseApi, errorText, openCaseApi } from '../services/gameApi'
+import { holdServerUpdates, releaseServerUpdates } from '../lib/serverSync'
 import { hapticImpact } from '../lib/telegram'
 import { useFreeCasesStore, getMsk23ResetInfo } from '../store/freeCases'
 import { useWalletStore } from '../store/wallet'
@@ -110,10 +111,13 @@ export function CaseDetailScreen() {
       setError('Кейс на переработке — скоро вернётся')
       return
     }
+    holdServerUpdates() // баланс и подарок покажем, когда рулетка остановится
     try {
       const result = await claimFreeCaseApi(freeCaseId, makeRequestId())
+      if (result.status !== 'ok') releaseServerUpdates()
       if (result.status === 'ok') {
         const gift = giftById.get(result.giftId)
+        if (!gift) releaseServerUpdates()
         if (gift) {
           setTargetGiftId(result.giftId)
           setSpinResult({ gift, uid: result.uid })
@@ -129,6 +133,7 @@ export function CaseDetailScreen() {
         setError('Кейс пока на кулдауне (сброс в 23:00 МСК)')
       }
     } catch (e) {
+      releaseServerUpdates()
       setError(errorText(e))
     }
   }
@@ -155,10 +160,13 @@ export function CaseDetailScreen() {
         return
       }
       setOpening(true)
+      holdServerUpdates() // баланс и подарок покажем, когда рулетка остановится
       void openCaseApi(gameCase.id, makeRequestId())
         .then((result) => {
+          if (result.status !== 'ok') releaseServerUpdates()
           if (result.status === 'ok') {
             const gift = giftById.get(result.giftId)
+            if (!gift) releaseServerUpdates()
             if (gift) {
               setTargetGiftId(result.giftId)
               setSpinResult({ gift, uid: result.uid })
@@ -168,13 +176,17 @@ export function CaseDetailScreen() {
             setError('Недостаточно средств')
           }
         })
-        .catch((e) => setError(errorText(e)))
+        .catch((e) => {
+          releaseServerUpdates()
+          setError(errorText(e))
+        })
         .finally(() => setOpening(false))
     }
   }
 
   const handleSpinComplete = () => {
     setIsSpinning(false)
+    releaseServerUpdates()
     if (isQuestFree) {
       setQuestModalOpen(true)
     } else {

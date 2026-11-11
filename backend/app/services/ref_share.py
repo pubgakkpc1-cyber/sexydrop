@@ -560,3 +560,83 @@ async def send_clicker_launch(chat_id: int) -> bool:
                 break
             log.warning("clicker launch post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
     return bool(body.get("ok"))
+
+
+# ---------------------------------------------------------------- пост «бот снова работает»
+
+BACK_ONLINE_VERSION = "2026-11-11-back-online-v1"
+
+
+def back_online_caption(premium: bool = True) -> str:
+    """Готовый пост для канала: бот снова работает, напоминание про ник (10 звёзд) и рефералов."""
+    from app.services.telegram_bot import em
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('check')} <b>SEXY DROP снова работает и доступен!</b>\n\n"
+        "Заходи в бота и играй: кейсы, Ракета, Мины, Апгрейд и Кликалка.\n\n"
+        f"{e('spark')} <b>Не забудь про бонусы</b>\n"
+        f"{e('dot')} поставь <b>@sexydropbot</b> в ник — получай <b>10 звёзд каждый день</b>\n"
+        f"{e('friends')} приглашай друзей: <b>2 звезды</b> за каждого, кто откроет бесплатный кейс\n"
+        f"{e('play')} в Кликалке за друга <b>+200 кликов</b>, с Premium +300 (до 5 друзей в день)\n\n"
+        f"{e('free')} Первый кейс — бесплатно!\n"
+        f"{e('check')} @sexydropbot"
+    )
+
+
+async def send_back_online(chat_id: int) -> bool:
+    """Присылает админу готовый пост (картинка + текст) — переслать в канал."""
+    if not get_settings().bot_token:
+        return False
+    path = photo_path("back-online")
+    if path is None:
+        log.warning("back-online photo not found")
+        return False
+    markup = json.dumps({"inline_keyboard": [[{"text": "🎮 Играть", "url": "https://t.me/sexydropbot"}]]}, ensure_ascii=False)
+    body: dict = {}
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Готовый пост: бот снова работает</b> — скопируйте или перешлите в канал 👇", "parse_mode": "HTML"},
+        )
+        for premium in (True, False):  # премиум-эмодзи; если Telegram не принял — обычные
+            data = {"chat_id": str(chat_id), "caption": back_online_caption(premium), "parse_mode": "HTML", "reply_markup": markup}
+            body = (
+                await client.post(f"{_api()}/sendPhoto", data=data, files={"photo": ("back-online.jpg", path.read_bytes(), "image/jpeg")})
+            ).json()
+            if body.get("ok"):
+                break
+            log.warning("back-online post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
+    return bool(body.get("ok"))
+
+
+async def send_back_online_to_admins_once(delay_s: float = 90.0) -> None:
+    """После деплоя присылает админам пост «бот снова работает» (один раз на версию)."""
+    await asyncio.sleep(delay_s)
+    if not get_settings().bot_token:
+        return
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.core.db import get_session_factory
+    from app.models.economy import UserMeta
+    from app.models.user import User
+    from app.services.economy_core import ensure_account
+
+    try:
+        async with get_session_factory()() as session:
+            admins = (
+                await session.execute(select(User).where(func.lower(User.username).in_(sorted(ADMIN_USERNAMES))))
+            ).scalars().all()
+            for admin in admins:
+                await ensure_account(session, admin.id)
+                meta = await session.get(UserMeta, admin.id)
+                if meta is None or (meta.quests_claimed or {}).get("_backonline") == BACK_ONLINE_VERSION:
+                    continue
+                if await send_back_online(admin.telegram_id):
+                    meta.quests_claimed = {**(meta.quests_claimed or {}), "_backonline": BACK_ONLINE_VERSION}
+                    await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("back-online post to admins failed: %s", exc)

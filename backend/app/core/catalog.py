@@ -96,10 +96,14 @@ def _cost(item_id: str) -> int:
     return ton_prize_minor(item_id) if is_ton_prize(item_id) else (gift_price(item_id) or 0)
 
 
-def tilt_to_rtp(entries: list[tuple[str, int]], price: int, target_pct: float) -> list[tuple[str, int]]:
-    """Сдвигает шансы так, чтобы средний возврат (RTP) кейса был target_pct % от цены.
+MAX_WIN_PCT = 10.0  # шанс выпасть призу дороже цены кейса — не больше 10%
+
+
+def tilt_to_rtp(entries: list[tuple[str, int]], price: int, target_pct: float, max_win_pct: float = MAX_WIN_PCT) -> list[tuple[str, int]]:
+    """Сдвигает шансы так, чтобы средний возврат (RTP) кейса был target_pct % от цены, а шанс «в плюс» не превышал max_win_pct %.
 
     Веса домножаются на exp(-λ·цена_приза/цена_кейса): дорогие призы становятся реже, дешёвые чаще, порядок редкости сохраняется.
+    Если суммарный шанс призов дороже кейса выше max_win_pct, их веса уменьшаются до этого предела (и RTP подгоняется уже с ним).
     Если самый дешёвый приз сам дороже цели, получится минимально возможный RTP (почти всё на самый дешёвый приз).
     """
     import math
@@ -110,9 +114,19 @@ def tilt_to_rtp(entries: list[tuple[str, int]], price: int, target_pct: float) -
     ws = [float(w) for _i, w in entries]
     x0 = min(xs)
     target = target_pct / 100.0
+    cap = max_win_pct / 100.0
+
+    def weights(lam: float) -> list[float]:
+        t = [w * math.exp(max(-700.0, min(700.0, -lam * (x - x0)))) for w, x in zip(ws, xs)]
+        win = sum(a for a, x in zip(t, xs) if x > 1)
+        rest = sum(t) - win
+        if win > 0 and rest > 0 and win / (win + rest) > cap:
+            k = cap * rest / ((1 - cap) * win)
+            t = [a * k if x > 1 else a for a, x in zip(t, xs)]
+        return t
 
     def rtp(lam: float) -> float:
-        t = [w * math.exp(max(-700.0, min(700.0, -lam * (x - x0)))) for w, x in zip(ws, xs)]
+        t = weights(lam)
         return sum(a * x for a, x in zip(t, xs)) / sum(t)
 
     lo, hi = -5.0, 600.0
@@ -128,7 +142,7 @@ def tilt_to_rtp(entries: list[tuple[str, int]], price: int, target_pct: float) -
             else:
                 hi = mid
         lam = (lo + hi) / 2
-    t = [w * math.exp(max(-700.0, min(700.0, -lam * (x - x0)))) for w, x in zip(ws, xs)]
+    t = weights(lam)
     scale = 1_000_000 / sum(t)
     out = [(i, int(round(a * scale))) for (i, _w), a in zip(entries, t)]
     cheapest = min(range(len(out)), key=lambda k: xs[k])

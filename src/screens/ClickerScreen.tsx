@@ -5,6 +5,11 @@ import { playKeyThock } from '../lib/sound'
 import { TgAvatar } from '../components/ui/TgAvatar'
 import { cx } from '../lib/cx'
 import { KEY_LEVELS, KeyCap3D } from './KeyCap'
+import { useStarsBalanceStore } from '../store/starsBalance'
+import { useWalletStore } from '../store/wallet'
+import { formatMinor } from '../lib/money'
+import { hydrateFromServer } from '../lib/serverSync'
+import { ApiError } from '../lib/api'
 import styles from './ClickerScreen.module.css'
 
 interface TopRow {
@@ -26,6 +31,7 @@ export interface ClickerState {
   prizes?: { place: number; ton_minor: number; nft: boolean }[]
   max_cps: number
   me_outside?: TopRow | null
+  boost?: { mult: number; options: { mult: number; stars: number; ton_minor: number }[] }
   referral?: { clicks: number; clicks_premium: number; daily_max: number; today: number; earned: number; waiting?: number }
 }
 
@@ -138,6 +144,11 @@ export function ClickerScreen() {
   const [cps, setCps] = useState(0)
   const [combo, setCombo] = useState(0)
   const [now, setNow] = useState(() => Date.now())
+  const [buying, setBuying] = useState<string | null>(null)
+  const [boostMsg, setBoostMsg] = useState<string | null>(null)
+  const stars = useStarsBalanceStore((st) => st.stars)
+  const tonBalance = useWalletStore((st) => st.balances[st.mode])
+  const multRef = useRef(1)
 
   const pending = useRef(0)
   const sending = useRef(false)
@@ -151,8 +162,9 @@ export function ClickerScreen() {
     try {
       const s = await apiGet<ClickerState>('/api/clicker/state')
       setState(s)
-      setMonth(s.month_clicks + pending.current)
-      setTotal(s.total + pending.current)
+      multRef.current = s.boost?.mult ?? 1
+      setMonth(s.month_clicks + pending.current * multRef.current)
+      setTotal(s.total + pending.current * multRef.current)
       setError(null)
     } catch {
       setError('Нет связи с сервером. Тапы сохранятся, когда связь появится.')
@@ -165,9 +177,10 @@ export function ClickerScreen() {
     const batch = pending.current
     pending.current = 0
     try {
-      const res = await apiPost<{ accepted: number; total: number; month_clicks: number }>('/api/clicker/tap', { taps: batch })
-      setMonth(res.month_clicks + pending.current)
-      setTotal(res.total + pending.current)
+      const res = await apiPost<{ accepted: number; mult?: number; total: number; month_clicks: number }>('/api/clicker/tap', { taps: batch })
+      if (res.mult) multRef.current = res.mult
+      setMonth(res.month_clicks + pending.current * multRef.current)
+      setTotal(res.total + pending.current * multRef.current)
     } catch {
       pending.current += batch
     } finally {
@@ -215,8 +228,9 @@ export function ClickerScreen() {
       setTilt({ x: Math.max(-1, Math.min(1, -ny)) * 12, y: Math.max(-1, Math.min(1, nx)) * 12 })
     }
     pending.current += 1
-    setMonth((v) => v + 1)
-    setTotal((v) => v + 1)
+    const mult = multRef.current
+    setMonth((v) => v + mult)
+    setTotal((v) => v + mult)
     const t = Date.now()
     stamps.current.push(t)
     hapticImpact('light')
@@ -233,7 +247,7 @@ export function ClickerScreen() {
     const milestone = [10, 25, 50, 100, 200].includes(c.n)
     if (milestone) hapticNotify('success')
     const id = (popId.current += 1)
-    const text = milestone ? `КОМБО ×${c.n}!` : '+1'
+    const text = milestone ? `КОМБО ×${c.n}!` : `+${mult}`
     setPops((p) => [...p.slice(-9), { id, x: Math.round((Math.random() - 0.5) * 130), text, big: milestone }])
     window.setTimeout(() => setPops((p) => p.filter((x) => x.id !== id)), milestone ? 1100 : 750)
   }, [])
@@ -247,6 +261,23 @@ export function ClickerScreen() {
       setTilt({ x: 0, y: 0 })
     }, 90)
   }, [])
+
+  const buyBoost = async (level: number, currency: 'stars' | 'ton') => {
+    if (buying) return
+    setBuying(`${level}-${currency}`)
+    setBoostMsg(null)
+    try {
+      await apiPost('/api/clicker/boost', { level, currency })
+      hapticNotify('success')
+      setBoostMsg(`Усиление x${level} включено до конца марафона`)
+      await Promise.all([load(), hydrateFromServer()])
+    } catch (e) {
+      hapticNotify('error')
+      setBoostMsg(e instanceof ApiError ? e.message : 'Не удалось купить усиление')
+    } finally {
+      setBuying(null)
+    }
+  }
 
   const endsIn = state ? state.month_ends_at * 1000 - now : 0
   const myRank = useMemo(() => {
@@ -316,6 +347,44 @@ export function ClickerScreen() {
           
         </div>
       </section>
+
+      {state?.boost && (
+        <section className={styles.boost} aria-label="Усиление тапа">
+          <div className={styles.boostHead}>
+            <h2 className={styles.boostTitle}>Усиление тапа</h2>
+            <span className={styles.boostNow}>{state.boost.mult > 1 ? `сейчас x${state.boost.mult}` : 'сейчас x1'}</span>
+          </div>
+          {state.boost.options.length === 0 && <p className={styles.boostHint}>Максимальное усиление x3 действует до конца марафона.</p>}
+          {state.boost.options.map((o) => (
+            <div key={o.mult} className={styles.boostRow}>
+              <span className={styles.boostMult}>
+                x{o.mult}
+                <small>за каждый тап</small>
+              </span>
+              <button
+                type="button"
+                className={styles.boostBtn}
+                disabled={buying !== null || stars < o.stars}
+                onClick={() => void buyBoost(o.mult, 'stars')}
+              >
+                {o.stars} ★
+              </button>
+              <button
+                type="button"
+                className={styles.boostBtn}
+                disabled={buying !== null || tonBalance < o.ton_minor}
+                onClick={() => void buyBoost(o.mult, 'ton')}
+              >
+                {formatMinor(o.ton_minor)} TON
+              </button>
+            </div>
+          ))}
+          <p className={styles.boostHint}>
+            У вас: {stars} ★ · {formatMinor(tonBalance)} TON. Усиление действует до конца текущего марафона.
+          </p>
+          {boostMsg && <p className={styles.boostMsg} role="status">{boostMsg}</p>}
+        </section>
+      )}
 
       {error && (
         <p className={styles.error} role="alert">

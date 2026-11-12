@@ -610,3 +610,92 @@
 .gap { text-align: center; color: rgba(255, 255, 255, 0.4); letter-spacing: 4px; list-style: none; }
 .rowMe { background: linear-gradient(90deg, rgba(224, 168, 48, 0.28), rgba(224, 168, 48, 0.1)); border: 1.5px solid #e0a830; box-shadow: 0 0 0 3px rgba(224, 168, 48, 0.12); }
 .rowMe .name { color: #ffe9a8; font-weight: 700; }
+
+/* ===== Усиление тапа: покупка за звёзды или TON ===== */
+.boost {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+}
+
+.boostHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.boostTitle {
+  margin: 0;
+  font-size: 15px;
+}
+
+.boostNow {
+  padding: 3px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #f2c542;
+  background: rgba(242, 197, 66, 0.12);
+  border: 1px solid rgba(242, 197, 66, 0.35);
+  border-radius: 999px;
+}
+
+.boostRow {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.boostMult {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.boostMult small {
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.boostBtn {
+  min-width: 82px;
+  height: 40px;
+  padding: 0 12px;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--surface);
+  border: 1px solid var(--border-strong, rgba(255, 255, 255, 0.18));
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.boostBtn:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.boostBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.boostHint,
+.boostMsg {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.boostMsg {
+  color: #4fd18b;
+}

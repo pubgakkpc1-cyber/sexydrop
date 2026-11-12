@@ -20,6 +20,20 @@ class TapBody(BaseModel):
     taps: int = Field(ge=0, le=1000)
 
 
+class BoostBody(BaseModel):
+    level: int = Field(ge=2, le=3)
+    currency: str = Field(pattern="^(stars|ton)$")
+
+
+@router.post("/boost")
+async def clicker_boost(body: BoostBody, user: CurrentUser, session: Session) -> dict[str, Any]:
+    """Купить усиление тапа (x2 / x3) на сезон за звёзды или TON."""
+    res = await clicker.buy_boost(session, user, body.level, body.currency)
+    from app.services.economy_core import balance_minor
+
+    return {**res, "balance_minor": await balance_minor(session, user.id)}
+
+
 @router.get("/state")
 async def clicker_state(user: CurrentUser, session: Session) -> dict[str, Any]:
     """Мои клики, недельный топ-20 и моё место."""

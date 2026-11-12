@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.economy import UserMeta
 from app.models.user import User
-from app.services.economy_core import ensure_account
+from app.services.economy_core import GameError, ensure_account, post_ledger
 
 MAX_CPS = 8  # человек физически не тапает быстрее; выше — автокликер, лишнее отбрасываем
 MAX_BATCH = 60
@@ -26,6 +26,22 @@ REF_CLICKS = 200  # клики инвайтеру за друга без Premium
 REF_CLICKS_PREMIUM = 300  # за друга с Premium
 REF_DAILY_MAX = 5  # сколько рефералов в день дают клики
 KEY = "_clicker"
+
+# Усиления тапа на сезон (30 дней): x2 за 50 ★ или 0.5 TON, x3 за 100 ★ или 1 TON (TON — в minor: 1 TON = 1000)
+BOOSTS: dict[int, dict[str, int]] = {2: {"stars": 50, "minor": 500}, 3: {"stars": 100, "minor": 1000}}
+
+
+def active_mult(c: dict[str, Any]) -> int:
+    """Во сколько раз усилен тап в текущем сезоне (1 — без усиления)."""
+    b = c.get("boost") or {}
+    return int(b.get("mult", 1)) if b.get("season") == month_key() else 1
+
+
+def boost_price(current: int, level: int) -> dict[str, int]:
+    """Цена усиления; если уже есть x2, до x3 доплачивается только разница."""
+    base = BOOSTS[level]
+    paid = BOOSTS.get(current, {"stars": 0, "minor": 0})
+    return {"stars": base["stars"] - paid["stars"], "minor": base["minor"] - paid["minor"]}
 
 
 def _now_ms() -> int:
@@ -147,13 +163,45 @@ async def tap(session: AsyncSession, user: User, taps: int) -> dict[str, Any]:
     gap = now - last if last else None
     ok = allowed_taps(taps, gap)
     _watch(c, now, requested=max(0, min(int(taps), MAX_BATCH)), accepted=ok, gap=gap)
-    c["total"] = int(c.get("total", 0)) + ok
-    c["month_clicks"] = int(c.get("month_clicks", 0)) + ok
+    mult = active_mult(c)
+    gain = ok * mult  # купленное усиление умножает очки за каждый засчитанный тап (скорость тапов по-прежнему режется)
+    c["total"] = int(c.get("total", 0)) + gain
+    c["month_clicks"] = int(c.get("month_clicks", 0)) + gain
     c["last_ms"] = now
     claimed[KEY] = c
     meta.quests_claimed = claimed
     await session.commit()
-    return {"accepted": ok, "total": c["total"], "month_clicks": c["month_clicks"]}
+    return {"accepted": ok, "gain": gain, "mult": mult, "total": c["total"], "month_clicks": c["month_clicks"]}
+
+
+async def buy_boost(session: AsyncSession, user: User, level: int, currency: str) -> dict[str, Any]:
+    """Купить усиление тапа на текущий сезон за звёзды или TON (списание на сервере, без повторов)."""
+    if level not in BOOSTS or currency not in ("stars", "ton"):
+        raise GameError("bad_boost", 400, "Такого усиления нет")
+    meta = await _meta(session, user)
+    claimed = dict(meta.quests_claimed or {})
+    c = dict(claimed.get(KEY) or {})
+    mk = month_key()
+    current = active_mult(c)
+    if current >= level:
+        raise GameError("boost_active", 409, f"Усиление x{current} уже действует до конца сезона")
+    price = boost_price(current, level)
+    if currency == "stars":
+        if int(meta.stars) < price["stars"]:
+            raise GameError("insufficient_stars", 409, f"Не хватает звёзд: нужно {price['stars']} ★")
+        meta.stars = int(meta.stars) - price["stars"]
+    else:
+        await post_ledger(
+            session, user.id, type="clicker_boost", direction="debit", minor=price["minor"],
+            key=f"clicker-boost:{user.id}:{mk}:{level}", description=f"Кликалка: усиление x{level}",
+        )
+    if c.get("month") != mk:
+        c["month"], c["month_clicks"] = mk, 0
+    c["boost"] = {"mult": level, "season": mk}
+    claimed[KEY] = c
+    meta.quests_claimed = claimed
+    await session.commit()
+    return {"status": "ok", "mult": level, "stars": int(meta.stars), "ends_at": month_ends_at()}
 
 
 async def state(session: AsyncSession, user: User) -> dict[str, Any]:
@@ -197,6 +245,14 @@ async def state(session: AsyncSession, user: User) -> dict[str, Any]:
         "season_days": SEASON_DAYS,
         "prizes": PRIZES,
         "max_cps": MAX_CPS,
+        "boost": {
+            "mult": active_mult(mine),
+            "options": [
+                {"mult": m, "stars": boost_price(active_mult(mine), m)["stars"], "ton_minor": boost_price(active_mult(mine), m)["minor"]}
+                for m in BOOSTS
+                if m > active_mult(mine)
+            ],
+        },
         "referral": {
             "clicks": REF_CLICKS, "clicks_premium": REF_CLICKS_PREMIUM, "daily_max": REF_DAILY_MAX,
             "today": int(mine.get("ref_today", 0)) if mine.get("ref_day") == _msk_day() else 0,

@@ -318,9 +318,6 @@ export function UpgradeScreen() {
           {error}
         </p>
       )}
-      <p className={styles.note}>
-        Улучшайте свои предметы до легендарных NFT.
-      </p>
 
       <GiftPickerSheet
         open={pickerOpen}

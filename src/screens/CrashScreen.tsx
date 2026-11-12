@@ -26,7 +26,7 @@ import { BetSheet } from '../components/games/BetSheet'
 import { GRAPHICS_PRESETS, useGraphicsStore } from '../store/graphics'
 import { GameTopBar } from '../components/shell/GameTopBar'
 import { RocketRewardSheet } from '../components/games/RocketRewardSheet'
-import { MULT_TIER_STYLE, multTier } from '../lib/multTier'
+import { bigMultColor, historyChip, liveChip } from '../lib/crashPalette'
 import { Rocket3DCanvas } from '../components/games/Rocket3DCanvas'
 import { CrashMiniAdminModal } from '../components/admin/CrashMiniAdminModal'
 import {
@@ -95,17 +95,7 @@ function AmountSplit({ text }: { text: string }) {
   )
 }
 
-const TIER_CLASS: Record<'bad' | 'amber' | 'green' | 'cyan' | 'violet', string | undefined> = {
-  bad: styles.tierBad,
-  amber: styles.tierAmber,
-  green: styles.tierGreen,
-  cyan: styles.tierCyan,
-  violet: styles.tierViolet,
-}
 
-function tierCls(tier: keyof typeof TIER_CLASS): string {
-  return TIER_CLASS[tier] ?? ''
-}
 
 function fmtMult(value: number): string {
   return (Math.floor(value * 100 + 1e-7) / 100).toFixed(2)
@@ -269,8 +259,8 @@ export function CrashScreen() {
   }, [phase, multiplier])
 
   // Цвет и свечение множителя по «качеству» икса (серый → жёлтый → зелёный → голубой → фиолетовый)
-  const multColor = MULT_TIER_STYLE[multTier(multiplier)].color
-  const multGlow = MULT_TIER_STYLE[multTier(multiplier)].glow
+  const multColor = bigMultColor(multiplier) // матовые цвета как в эталоне
+  const multGlow = 'none'
 
   const [showMoneyRain, setShowMoneyRain] = useState(false)
   const prevMyBetStatusRef = useRef(myBet?.status)
@@ -552,7 +542,9 @@ export function CrashScreen() {
         {/* ФАЗА 3: Краш — слева */}
         {phase === 'crashed' && (
           <div className={styles.crashedLeft}>
-            <span className={styles.multiplierCrashed}>x{fmtMult(multiplier)}</span>
+            <span className={styles.multiplierCrashed} style={{ color: bigMultColor(multiplier), textShadow: 'none' }}>
+              x{fmtMult(multiplier)}
+            </span>
             <span className={styles.crashedLabel}>Улетел!</span>
           </div>
         )}
@@ -567,7 +559,10 @@ export function CrashScreen() {
           </span>
         )}
         {phase === 'flying' && (
-          <span className={cx(styles.historyPill, styles.activeLivePill, tierCls(multTier(multiplier)))}>
+          <span
+            className={cx(styles.historyPill, styles.activeLivePill)}
+            style={{ borderColor: liveChip(multiplier).border, background: liveChip(multiplier).fill, color: liveChip(multiplier).text, boxShadow: 'none' }}
+          >
             <span className={styles.activeLiveDot} />
             x{fmtMult(multiplier)}
           </span>
@@ -575,16 +570,13 @@ export function CrashScreen() {
 
         {/* Предыдущие 7 раундов с цветными рамками по величине (не скроллятся) */}
         {history.slice(0, 7).map((val, idx) => {
-          const tierClass = tierCls(multTier(val))
+          const chip = historyChip(val)
 
           return (
             <span
               key={`${idx}-${val}`}
-              className={cx(
-                styles.historyPill,
-                tierClass,
-                phase === 'crashed' && idx === 0 && styles.activeLivePill,
-              )}
+              className={cx(styles.historyPill, phase === 'crashed' && idx === 0 && styles.activeLivePill)}
+              style={{ borderColor: chip.border, background: chip.fill, color: chip.text, boxShadow: 'none' }}
             >
               {phase === 'crashed' && idx === 0 && <span className={styles.activeLiveDot} />}
               x{fmtMult(val)}
@@ -836,11 +828,6 @@ export function CrashScreen() {
           })}
         </div>
       </div>
-
-      <p className={styles.note}>
-        Честная игра: множитель растёт плавно, вывод доступен в любой момент до краша.
-        Ставки других игроков раунда обновляются в реальном времени.
-      </p>
 
       {/* Шит ставки (Dual Betting: GRAM или Подарок) */}
       <BetSheet open={betSheetOpen} onClose={() => setBetSheetOpen(false)} />

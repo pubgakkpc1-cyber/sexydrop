@@ -44,7 +44,7 @@ describe('MinesScreen (4.8: доска 5×5, забор, честные исхо
     expect(screen.getByRole('button', { name: '3', pressed: true })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: '24' })).toBeInTheDocument()
     expect(screen.getByText('Выбери клетку')).toBeInTheDocument()
-    expect(screen.getByText(/Забирайте выигрыш в любой момент/)).toBeInTheDocument()
+    expect(screen.queryByText(/Забирайте выигрыш в любой момент/)).not.toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Начать · 1 TON' })).toBeEnabled()
   })
 

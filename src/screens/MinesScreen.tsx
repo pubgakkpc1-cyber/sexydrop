@@ -251,15 +251,6 @@ export function MinesScreen() {
       </div>
 
       <h1 className={styles.title}>Мины</h1>
-      <div className={styles.badges}>
-        <span className={styles.badge}>
-          <DropBombIcon className={styles.badgeIcon} aria-hidden /> {minesCount}
-        </span>
-        <span className={styles.badge}>
-          <TonIcon className={styles.badgeIcon} aria-hidden /> до x{minesMultiplier(minesCount, MINES_TILES - minesCount).toFixed(2)}
-        </span>
-      </div>
-
       <div className={styles.canvas}>
         <div className={styles.minesRow}>
           <span className={styles.minesLabel}>Мин на поле:</span>
@@ -416,8 +407,6 @@ export function MinesScreen() {
           </>
         )}
       </div>
-
-      <p className={styles.note}>Забирайте выигрыш в любой момент до взрыва мины.</p>
     </div>
   )
 }

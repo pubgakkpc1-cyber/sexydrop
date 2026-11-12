@@ -58,7 +58,7 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     renderScreen()
     expect(screen.getByRole('button', { name: 'Сделать ставку' })).toBeInTheDocument()
     expect(screen.getByText(/Старт через/)).toBeInTheDocument()
-    expect(screen.getByText(/множитель растёт плавно/i)).toBeInTheDocument()
+    expect(screen.queryByText(/множитель растёт плавно/i)).not.toBeInTheDocument()
   })
 
   it('CTA открывает шит ставки с переключателем Подарки / TON', async () => {
@@ -118,6 +118,6 @@ describe('CrashScreen (4.2: UI и состояния раунда)', () => {
     advanceEngine(5000)
 
     expect(screen.getByText(/Поставить на след. раунд/)).toBeInTheDocument()
-    expect(screen.getByText(/Ставки других игроков раунда обновляются/i)).toBeInTheDocument()
+    expect(screen.queryByText(/Ставки других игроков раунда обновляются/i)).not.toBeInTheDocument()
   })
 })

@@ -1,6 +1,7 @@
 import { GRAPHICS_PRESETS, useGraphicsStore } from '../../store/graphics'
 import { useEffect, useRef } from 'react'
 import type { CrashPhase } from '../../store/crash'
+import { trailRgb } from '../../lib/crashPalette'
 
 interface Star {
   x: number
@@ -83,37 +84,99 @@ function headRefUp(x: number): number {
   return x < 90 ? 0 : 8.3 * Math.exp(0.0275 * (x - 171)) - 0.35
 }
 
-/** Цвет следа по множителю: зелёный → бирюзовый → синий → фиолетовый → розовый → оранжевый (замер эталона). */
-const TRAIL_STOPS: ReadonlyArray<readonly [number, readonly [number, number, number]]> = [
-  [1.0, [38, 167, 108]],
-  [1.3, [39, 158, 128]],
-  [1.6, [45, 145, 161]],
-  [2.2, [52, 121, 199]],
-  [3.2, [71, 107, 217]],
-  [4.3, [92, 93, 211]],
-  [5.6, [115, 80, 202]],
-  [7.0, [148, 92, 164]],
-  [8.2, [177, 115, 98]],
-  [9.4, [191, 125, 36]],
-  [12, [197, 129, 20]],
-]
+const rgbStr = (c: readonly number[], a: number) => `rgba(${Math.round(c[0]!)}, ${Math.round(c[1]!)}, ${Math.round(c[2]!)}, ${a})`
+const CRASH_RED: readonly [number, number, number] = [220, 60, 60] // красный как у плашки краша в эталоне
 
-function trailRgb(mult: number): [number, number, number] {
-  const st = TRAIL_STOPS
-  if (mult <= st[0]![0]) return [...st[0]![1]]
-  for (let i = 1; i < st.length; i += 1) {
-    const [m1, c1] = st[i]!
-    if (mult <= m1) {
-      const [m0, c0] = st[i - 1]!
-      const k = (mult - m0) / (m1 - m0)
-      return [c0[0] + (c1[0] - c0[0]) * k, c0[1] + (c1[1] - c0[1]) * k, c0[2] + (c1[2] - c0[2]) * k]
-    }
+/** Неровный многолучевой «взрыв»: чередуются длинные и короткие лучи. */
+const BLAST_JITTER = [1, 0.82, 1.14, 0.9, 1.06, 0.78, 1.1, 0.88, 1.0, 0.84, 1.08, 0.92]
+
+function spikePath(ctx: CanvasRenderingContext2D, x: number, y: number, r: number, n: number, rot: number, inner: number) {
+  ctx.beginPath()
+  for (let i = 0; i < n * 2; i += 1) {
+    const outer = i % 2 === 0
+    const k = outer ? BLAST_JITTER[(i / 2) % BLAST_JITTER.length]! : 1
+    const rr = outer ? r * k : r * inner
+    const a = rot + (i * Math.PI) / n
+    const px = x + Math.cos(a) * rr
+    const py = y + Math.sin(a) * rr
+    if (i === 0) ctx.moveTo(px, py)
+    else ctx.lineTo(px, py)
   }
-  return [...st[st.length - 1]![1]]
+  ctx.closePath()
 }
 
-const rgbStr = (c: readonly number[], a: number) => `rgba(${Math.round(c[0]!)}, ${Math.round(c[1]!)}, ${Math.round(c[2]!)}, ${a})`
-const CRASH_RED: readonly [number, number, number] = [224, 64, 64]
+/**
+ * Взрыв по эталону (кадр за кадром): 1) оранжево-красная звезда → 2) бледно-жёлтая вспышка →
+ * 3) колесо: кольцо со спицами и засечками → 4) кольцо расширяется и гаснет. t — секунды с момента взрыва, R — базовый радиус.
+ */
+function drawBlast(ctx: CanvasRenderingContext2D, x: number, y: number, t: number, R: number) {
+  ctx.save()
+  ctx.lineJoin = 'round'
+  ctx.lineCap = 'round'
+  if (t < 0.1) {
+    const k = t / 0.1
+    const r = R * (0.5 + 0.55 * k)
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r)
+    g.addColorStop(0, '#fff2c2')
+    g.addColorStop(0.35, '#ffb43a')
+    g.addColorStop(0.75, '#f06a2c')
+    g.addColorStop(1, '#d93a2b')
+    spikePath(ctx, x, y, r, 11, -0.3, 0.52)
+    ctx.fillStyle = g
+    ctx.fill()
+    ctx.strokeStyle = '#b3261e'
+    ctx.lineWidth = Math.max(1.5, R * 0.05)
+    ctx.stroke()
+    spikePath(ctx, x, y, r * 0.55, 9, 0.2, 0.5)
+    ctx.fillStyle = '#ffe9a6'
+    ctx.fill()
+  } else if (t < 0.2) {
+    const k = (t - 0.1) / 0.1
+    const r = R * (1.05 + 0.1 * k)
+    spikePath(ctx, x, y, r, 9, 0.1, 0.6)
+    ctx.fillStyle = `rgba(255, ${Math.round(226 - 20 * k)}, ${Math.round(160 - 30 * k)}, ${1 - 0.15 * k})`
+    ctx.fill()
+    spikePath(ctx, x, y, r * 0.5, 8, -0.2, 0.55)
+    ctx.fillStyle = '#fff6d6'
+    ctx.fill()
+  } else {
+    const wheelT = Math.min(1, (t - 0.2) / 0.22)
+    const fadeT = t < 0.42 ? 0 : Math.min(1, (t - 0.42) / 0.2)
+    if (fadeT >= 1) {
+      ctx.restore()
+      return
+    }
+    const ringR = R * (0.72 + 0.18 * wheelT + 0.28 * fadeT)
+    ctx.globalAlpha = 1 - fadeT
+    ctx.strokeStyle = '#ffd66b'
+    ctx.lineWidth = Math.max(2, R * 0.075)
+    ctx.beginPath()
+    ctx.arc(x, y, ringR, 0, Math.PI * 2)
+    ctx.stroke()
+    // спицы колеса
+    ctx.strokeStyle = '#ffe7a0'
+    ctx.lineWidth = Math.max(1.2, R * 0.045)
+    for (let i = 0; i < 12; i += 1) {
+      const a = (i * Math.PI) / 6 + wheelT * 0.25
+      ctx.beginPath()
+      ctx.moveTo(x + Math.cos(a) * ringR * 0.12, y + Math.sin(a) * ringR * 0.12)
+      ctx.lineTo(x + Math.cos(a) * ringR, y + Math.sin(a) * ringR)
+      ctx.stroke()
+    }
+    // засечки снаружи кольца
+    ctx.strokeStyle = '#ffcf5a'
+    ctx.lineWidth = Math.max(1.6, R * 0.06)
+    for (let i = 0; i < 12; i += 1) {
+      const a = (i * Math.PI) / 6 + 0.26 + wheelT * 0.25
+      const r0 = ringR + R * 0.06 + R * 0.25 * fadeT
+      ctx.beginPath()
+      ctx.moveTo(x + Math.cos(a) * r0, y + Math.sin(a) * r0)
+      ctx.lineTo(x + Math.cos(a) * (r0 + R * 0.17), y + Math.sin(a) * (r0 + R * 0.17))
+      ctx.stroke()
+    }
+  }
+  ctx.restore()
+}
 
 function safeRoundRect(
   ctx: CanvasRenderingContext2D,
@@ -716,44 +779,6 @@ export const ROCKET_SKINS: RocketSkinConfig[] = [
 ]
 
 /* --- Запуск: площадка, зарядка перед стартом и ударная волна с дымом при старте --- */
-function drawIgnition(ctx: CanvasRenderingContext2D, x: number, y: number, t: number, accent: string) {
-  const k = Math.min(1, t / 1.2)
-  ctx.save()
-  // вспышка зажигания
-  if (t < 0.3) {
-    const a = (1 - t / 0.3) * 0.55
-    const g = ctx.createRadialGradient(x, y, 0, x, y, 90)
-    g.addColorStop(0, `rgba(255, 255, 255, ${a})`)
-    g.addColorStop(1, 'rgba(255, 255, 255, 0)')
-    ctx.fillStyle = g
-    ctx.fillRect(x - 90, y - 90, 180, 180)
-  }
-  // три кольца ударной волны (приплюснутые — идут «по земле»)
-  ctx.lineWidth = 3
-  for (let i = 0; i < 3; i++) {
-    const tt = t - i * 0.12
-    if (tt <= 0) continue
-    const r = tt * 175
-    ctx.globalAlpha = Math.max(0, 1 - tt / 0.9) * 0.7
-    ctx.strokeStyle = i === 0 ? '#ffffff' : accent
-    ctx.beginPath()
-    ctx.ellipse(x, y, r, r * 0.28, 0, 0, Math.PI * 2)
-    ctx.stroke()
-  }
-  // клубы дыма разлетаются в стороны и тают
-  ctx.fillStyle = '#c9ccd3'
-  for (let i = 0; i < 9; i++) {
-    const dir = (i / 8) * 2 - 1
-    const px = x + dir * (30 + t * 95)
-    const py = y - Math.abs(dir) * 6 - t * (10 + (i % 3) * 10)
-    const rr = 8 + t * (20 + (i % 3) * 6)
-    ctx.globalAlpha = Math.max(0, 0.5 * (1 - k))
-    ctx.beginPath()
-    ctx.arc(px, py, rr, 0, Math.PI * 2)
-    ctx.fill()
-  }
-  ctx.restore()
-}
 
 interface Rocket3DCanvasProps {
   phase: CrashPhase
@@ -812,6 +837,8 @@ export function Rocket3DCanvas({
     chart: { x: number; y: number }[]
     chartT: number
     crashT: number
+    /** секунды с начала взрыва; -1 — взрыва нет */
+    blastT: number
     burstFn?: () => void
   }>({
     time: 0,
@@ -837,6 +864,7 @@ export function Rocket3DCanvas({
     chart: [],
     chartT: 0,
     crashT: 0,
+    blastT: -1,
   })
 
   // Инициализация фоновых звёзд по всему экрану (Starfield)
@@ -864,6 +892,7 @@ export function Rocket3DCanvas({
       state.chart = []
       state.chartT = 0
       state.crashT = 0
+      state.blastT = -1
       state.trail = []
       state.speedStreaks = []
       state.explosion = []
@@ -878,12 +907,12 @@ export function Rocket3DCanvas({
       state.chart = []
       state.chartT = 0
       state.crashT = 0
+      state.blastT = -1
       state.flightSeconds = 0
       state.trail = []
       state.speedStreaks = []
       state.explosion = []
       state.debris = []
-      state.shake = 9 // толчок зажигания
       state.rocketSmooth = { x: 0, y: 0, angle: 0 }
       state.swellT = -1
       state.burstFn = undefined
@@ -892,146 +921,11 @@ export function Rocket3DCanvas({
       state.crashT = 0
       state.swellT = 0
       state.burstFn = () => {
-        const rx = state.rocketPos.x > 0 ? state.rocketPos.x : (typeof window !== 'undefined' ? window.innerWidth * 0.52 : 200)
-        const ry = state.rocketPos.y > 0 ? state.rocketPos.y : (typeof window !== 'undefined' ? window.innerHeight * 0.36 : 100)
-
-        state.shake = 7 // мягкая тряска (раньше 22 — вызывала лаги и дёргание)
-        state.flashAlpha = 0.55 // вспышка взрыва
-        state.shockwaveRadius = 16
-        state.shockwaveAlpha = 1.0
-
-        // 1. Создаём частицы огненного взрыва
-        const exp: ExplosionParticle[] = []
-        const colors = ['#ffffff', '#c7696d', '#d3878b', '#c35c61', '#ce6565', '#c96e72']
-        const expCount = GRAPHICS_PRESETS[useGraphicsStore.getState().quality].explosion
-        for (let i = 0; i < expCount; i++) {
-          const angle = Math.random() * Math.PI * 2
-          const speed = 2.5 + Math.random() * 9
-          const maxLife = 20 + Math.floor(Math.random() * 16)
-          exp.push({
-            x: rx,
-            y: ry,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            size: 3 + Math.random() * 7,
-            alpha: 1,
-            color: colors[Math.floor(Math.random() * colors.length)] ?? '#c35c61',
-            life: 0,
-            maxLife,
-            spin: (Math.random() - 0.5) * 0.35,
-            angle: Math.random() * Math.PI * 2,
-          })
-        }
-        state.explosion = exp
-
-        // 2. Создаём РАЗЛЕТАЮЩИЕСЯ КУСКИ РАКЕТЫ (Debris Shards):
-        // Носовой конус, дельта-крылья, стекло кабины, сопло, обшивка с надписью SEXY, и капсула с Пепе!
-        const debris: DebrisShard[] = [
-          // Носовой конус — летит вперед и вверх
-          {
-            type: 'nose',
-            x: rx + 25,
-            y: ry - 4,
-            vx: 4.5 + Math.random() * 2.5,
-            vy: -5.5 - Math.random() * 2.5,
-            angle: 0.2,
-            spin: 0.14,
-            alpha: 1,
-            life: 0,
-            maxLife: 80,
-          },
-          // Верхнее крыло — взлетает вверх
-          {
-            type: 'wing_top',
-            x: rx - 10,
-            y: ry - 18,
-            vx: -2 + Math.random() * 2,
-            vy: -7 - Math.random() * 2.5,
-            angle: -0.4,
-            spin: -0.16,
-            alpha: 1,
-            life: 0,
-            maxLife: 75,
-          },
-          // Нижнее крыло — отлетает вниз
-          {
-            type: 'wing_bot',
-            x: rx - 10,
-            y: ry + 16,
-            vx: -1.5 + Math.random() * 2,
-            vy: 6 + Math.random() * 3,
-            angle: 0.5,
-            spin: 0.18,
-            alpha: 1,
-            life: 0,
-            maxLife: 75,
-          },
-          // Осколок стекла фонаря кабины
-          {
-            type: 'canopy',
-            x: rx + 8,
-            y: ry - 10,
-            vx: 2.2 + Math.random() * 2.5,
-            vy: -4 - Math.random() * 2,
-            angle: 0.1,
-            spin: 0.22,
-            alpha: 1,
-            life: 0,
-            maxLife: 70,
-          },
-          // Титановое сопло двигателя — отлетает назад
-          {
-            type: 'nozzle',
-            x: rx - 35,
-            y: ry,
-            vx: -6.5 - Math.random() * 2.5,
-            vy: -1 + Math.random() * 3,
-            angle: -0.2,
-            spin: -0.12,
-            alpha: 1,
-            life: 0,
-            maxLife: 85,
-          },
-          // Обломки обшивки фюзеляжа с маркировкой
-          {
-            type: 'fuselage_shard',
-            x: rx - 5,
-            y: ry + 5,
-            vx: -3 + Math.random() * 3,
-            vy: -3.5 + Math.random() * 4,
-            angle: 0,
-            spin: 0.15,
-            alpha: 1,
-            life: 0,
-            maxLife: 70,
-          },
-          {
-            type: 'fuselage_shard',
-            x: rx - 15,
-            y: ry - 5,
-            vx: 3 + Math.random() * 2,
-            vy: 3 + Math.random() * 3,
-            angle: 0.8,
-            spin: -0.2,
-            alpha: 1,
-            life: 0,
-            maxLife: 70,
-          },
-          // Спасательная капсула с картунным Пепе!
-          {
-            type: 'pepe_bubble',
-            x: rx,
-            y: ry - 14,
-            vx: 1.2 + Math.random() * 2,
-            vy: -6 - Math.random() * 2,
-            angle: 0,
-            spin: 0.08,
-            alpha: 1,
-            life: 0,
-            maxLife: 95,
-          },
-        ]
-        state.debris = debris
+        // взрыв по эталону рисуется кодом (drawBlast), без частиц и обломков
+        state.blastT = 0
+        state.shake = 0
+        state.explosion = []
+        state.debris = []
       }
     }
     prevPhaseRef.current = phase
@@ -1072,7 +966,9 @@ export function Rocket3DCanvas({
         ? window.innerHeight
         : (canvas.clientHeight || 280)
       const dprRaw = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1
-      const wantDpr = stateRef.current.lowQ ? 1 : Math.min(GRAPHICS_PRESETS[useGraphicsStore.getState().quality].dpr, dprRaw)
+      const q = useGraphicsStore.getState().quality
+      const dprCap = q === 'high' ? 3 : q === 'medium' ? 2 : 1
+      const wantDpr = stateRef.current.emaDt > 0.034 ? Math.min(1.5, dprRaw) : Math.min(dprCap, dprRaw)
       // на широких окнах (ПК) холст на весь экран огромный — ограничиваем число пикселей (~1 млн), иначе не держит 60 FPS
       const dpr = Math.max(0.6, Math.min(wantDpr, Math.sqrt(1_000_000 / Math.max(1, width * height))))
 
@@ -1155,9 +1051,7 @@ export function Rocket3DCanvas({
         const launchAngle = -28
 
         // Эффекты зажигания: вспышка, ударные кольца и дым у площадки
-        if (currentPhase === 'flying' && state.flightSeconds < 1.2) {
-          drawIgnition(ctx, launchX, launchY + 40, state.flightSeconds, skin.accentColor)
-        }
+        // (пыль и дым при взлёте убраны по просьбе владельца)
 
         // Точка круизного барьера (центр/верх арены — ракета доходит сюда и ОСТАНАВЛИВАЕТСЯ)
         const barrierX = width * 0.54
@@ -1229,54 +1123,44 @@ export function Rocket3DCanvas({
             const base = trailRgb(currentMult)
             const fadeLen = Math.min(70, width * 0.2)
             const x0 = pts[0]!.x
-            const trailPath = (from: number, to: number) => {
+            const lw = Math.max(3, width / 110)
+            // плавная кривая через середины отрезков (без «лесенки» ломаной)
+            const smoothPath = (from: number, to: number) => {
               ctx.beginPath()
               ctx.moveTo(pts[from]!.x, pts[from]!.y)
-              for (let i = from + 1; i <= to; i += 1) ctx.lineTo(pts[i]!.x, pts[i]!.y)
+              for (let i = from + 1; i < to; i += 1) {
+                const mx = (pts[i]!.x + pts[i + 1]!.x) / 2
+                const my = (pts[i]!.y + pts[i + 1]!.y) / 2
+                ctx.quadraticCurveTo(pts[i]!.x, pts[i]!.y, mx, my)
+              }
+              ctx.lineTo(pts[to]!.x, pts[to]!.y)
             }
             ctx.save()
             ctx.lineCap = 'round'
             ctx.lineJoin = 'round'
-            // левый хвост плавно проявляется
+            // красная волна идёт от головы к хвосту за 0.3 c
+            const waveK = currentPhase === 'crashed' ? Math.min(1, state.crashT / 0.3) : 0
+            const redFrom = Math.max(1, Math.floor((pts.length - 1) * (1 - waveK)))
+            const calmTo = waveK > 0 ? redFrom : pts.length - 1
             const grad = ctx.createLinearGradient(x0, 0, x0 + fadeLen, 0)
             grad.addColorStop(0, rgbStr(base, 0.05))
             grad.addColorStop(1, rgbStr(base, 1))
-            // красная волна идёт от головы к хвосту за 0.3 c
-            const waveK = currentPhase === 'crashed' ? Math.min(1, state.crashT / 0.3) : 0
-            const redFrom = Math.max(0, Math.floor((pts.length - 1) * (1 - waveK)))
-            const calmTo = waveK > 0 ? redFrom : pts.length - 1
-            if (!state.lowQ) {
-              ctx.strokeStyle = rgbStr(base, 0.22)
-              ctx.lineWidth = 9
-              trailPath(0, calmTo)
-              ctx.stroke()
-            }
             ctx.strokeStyle = grad
-            ctx.lineWidth = 3.2
-            trailPath(0, calmTo)
+            ctx.lineWidth = lw
+            smoothPath(0, calmTo)
             ctx.stroke()
             if (waveK > 0 && redFrom < pts.length - 1) {
-              if (!state.lowQ) {
-                ctx.strokeStyle = rgbStr(CRASH_RED, 0.25)
-                ctx.lineWidth = 9
-                trailPath(redFrom, pts.length - 1)
-                ctx.stroke()
-              }
               ctx.strokeStyle = rgbStr(CRASH_RED, 1)
-              ctx.lineWidth = 3.2
-              trailPath(redFrom, pts.length - 1)
+              ctx.lineWidth = lw
+              smoothPath(redFrom - 1, pts.length - 1)
               ctx.stroke()
             }
-            // светящаяся голова
+            // матовая голова: ровная точка без свечения
             const head = pts[pts.length - 1]!
             if (currentPhase === 'flying' && head.y > -10) {
-              ctx.fillStyle = rgbStr(base, 0.35)
-              ctx.beginPath()
-              ctx.arc(head.x, head.y, 7, 0, Math.PI * 2)
-              ctx.fill()
               ctx.fillStyle = '#ffffff'
               ctx.beginPath()
-              ctx.arc(head.x, head.y, 3.2, 0, Math.PI * 2)
+              ctx.arc(head.x, head.y, lw * 1.05, 0, Math.PI * 2)
               ctx.fill()
             }
             ctx.restore()
@@ -1358,7 +1242,7 @@ export function Rocket3DCanvas({
       state.inflate += (inflateTarget - state.inflate) * Math.min(1, dt * 2.5)
 
       // Предвзрывное раздувание: ракета пухнет и лопается
-      const SWELL_DURATION = 0.16
+      const SWELL_DURATION = 0.02
       let swelling = false
       if (currentPhase === 'crashed' && state.swellT >= 0) {
         state.swellT += dt
@@ -1381,7 +1265,7 @@ export function Rocket3DCanvas({
         const breathe = 1.0 + Math.sin(state.time * 6.5) * 0.035
         // Медленный вдох-выдох + рост «надува»; перед взрывом корпус раздувается до ×1.5
         const puff = state.inflate * (1 + Math.sin(state.time * 2.2) * 0.022)
-        const swellK = swelling ? 1 + Math.pow(state.swellT / SWELL_DURATION, 2) * 0.5 : 1
+        const swellK = 1
         // Появление после отсчёта: масштаб 0.55 → перелёт 1.12 → 1.0 за ~0.7 c
         const enterT = currentPhase === 'flying' ? Math.min(1, state.flightSeconds / 0.7) : 1
         const c1 = 1.70158
@@ -1399,34 +1283,11 @@ export function Rocket3DCanvas({
         const rx = state.rocketPos.x || width / 2
         const ry = state.rocketPos.y || (currentProps.fullscreen ? Math.min(height * 0.35, 240) : height / 2)
 
-        // Мягкая радиальная вспышка взрыва (БЕЗ прямоугольных рамок и границ холста!)
-        if (state.flashAlpha > 0.01) {
-          ctx.save()
-          // два простых круга вместо градиента на каждый кадр (дешевле для телефона)
-          ctx.fillStyle = `rgba(255, 140, 140, ${state.flashAlpha * 0.28})`
-          ctx.beginPath()
-          ctx.arc(rx, ry, 70 + (1 - state.flashAlpha) * 60, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.fillStyle = `rgba(255, 255, 255, ${state.flashAlpha * 0.7})`
-          ctx.beginPath()
-          ctx.arc(rx, ry, 30, 0, Math.PI * 2)
-          ctx.fill()
-          ctx.restore()
-          state.flashAlpha *= 0.8
-        }
-
-        // Ударная волна взрыва (Shockwave Ring)
-        if (state.shockwaveAlpha > 0.02) {
-          ctx.save()
-          ctx.strokeStyle = `rgba(239, 68, 68, ${state.shockwaveAlpha})`
-          ctx.lineWidth = 3
-          ctx.beginPath()
-          ctx.arc(rx, ry, state.shockwaveRadius, 0, Math.PI * 2)
-          ctx.stroke()
-          ctx.restore()
-
-          state.shockwaveRadius += 5
-          state.shockwaveAlpha *= 0.88
+        // Взрыв как на эталоне: звезда → вспышка → колесо → гаснущее кольцо
+        if (state.blastT >= 0) {
+          state.blastT += dt
+          drawBlast(ctx, rx, ry, state.blastT, Math.min(width, height) * 0.17)
+          if (state.blastT > 0.7) state.blastT = -1
         }
 
         // 4.1. Отрисовка разлетающихся обломков ракеты (Debris Shatter)

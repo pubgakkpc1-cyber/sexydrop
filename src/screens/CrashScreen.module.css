@@ -2778,3 +2778,17 @@
 .activeLiveDot {
   left: 9px;
 }
+
+/* ===== ПК: арена полёта на всю ширину сверху, история и ставки под ней ===== */
+@media (min-width: 900px) {
+  .screen {
+    width: 100%;
+    max-width: 980px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .arena {
+    height: 420px;
+  }
+}

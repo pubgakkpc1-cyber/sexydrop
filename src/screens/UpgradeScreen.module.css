@@ -488,3 +488,56 @@
   border-color: rgba(224, 72, 79, 0.7);
   box-shadow: 0 0 12px rgba(224, 72, 79, 0.25);
 }
+
+/* ===== ПК: большое кольцо сверху по центру, под ним предмет и цель, ниже иксы и кнопка ===== */
+@media (min-width: 900px) {
+  .screen {
+    width: 100%;
+    max-width: 860px;
+    margin: 0 auto;
+    gap: var(--space-4);
+  }
+
+  .board {
+    padding: 28px 24px 24px;
+  }
+
+  .duel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .duel .ringWrap {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    width: 300px;
+    height: 300px;
+    margin-bottom: 8px;
+  }
+
+  .duel .ringCenter {
+    inset: 46px;
+  }
+
+  .duel .chanceValue {
+    font-size: 38px;
+  }
+
+  .duel .chanceLabel {
+    font-size: 12px;
+  }
+
+  .slot {
+    min-height: 190px;
+  }
+
+  .multChip {
+    height: 46px;
+    font-size: 15px;
+  }
+
+  .placeBet {
+    height: 60px;
+  }
+}

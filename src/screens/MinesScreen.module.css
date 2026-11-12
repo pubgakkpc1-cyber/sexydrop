@@ -482,3 +482,21 @@
 @media (prefers-reduced-motion: reduce) {
   .tilePicked, .tileMine, .tileBoom, .gemIcon, .bombIcon, .shock, .boardShake, .resultPop { animation: none; }
 }
+
+/* ===== ПК: доска по центру крупно, ставка под ней ===== */
+@media (min-width: 900px) {
+  .screen {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    gap: var(--space-4);
+  }
+
+  .board {
+    gap: 10px;
+  }
+
+  .tile {
+    font-size: 28px;
+  }
+}

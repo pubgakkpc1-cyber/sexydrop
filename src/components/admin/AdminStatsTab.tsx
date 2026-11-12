@@ -2,7 +2,9 @@ import { useEffect, useState } from 'react'
 import { getWebApp } from '../../lib/telegram'
 import { safeAmount, signedTon, ton } from './adminFormat'
 import { AdminWatchPanels } from './AdminWatchPanels'
+import { AreaChart, DonutChart, HBars, type ChartPoint } from './AdminCharts'
 import styles from './AdminPanel.module.css'
+import { cx } from '../../lib/cx'
 
 interface GameRow {
   game: string
@@ -34,6 +36,8 @@ interface SeriesRow {
   events: number
   users: number
   new: number
+  wagered?: number
+  deposited?: number
 }
 interface Stats {
   since: number
@@ -69,8 +73,16 @@ interface Stats {
 }
 
 const GAME_LABEL: Record<string, string> = { crash: 'Ракета', mines: 'Мины', upgrade: 'Апгрейд', case: 'Кейсы' }
+const METHOD_LABEL: Record<string, string> = { ton: 'TON-кошелёк', crypto: 'CryptoBot', stars: 'Telegram Stars', demo: 'Демо' }
+const METHOD_COLOR: Record<string, string> = { ton: '#4a8fd6', crypto: '#43ab6e', stars: '#e0a830', demo: '#8791a8' }
 
-const METHOD_LABEL: Record<string, string> = { ton: 'TON-кошелёк', crypto: 'CryptoBot', stars: 'Stars', demo: 'Демо' }
+type Tab = 'overview' | 'money' | 'deposits' | 'games'
+const TABS: ReadonlyArray<{ id: Tab; label: string }> = [
+  { id: 'overview', label: 'Обзор' },
+  { id: 'money', label: 'Деньги' },
+  { id: 'deposits', label: 'Пополнения' },
+  { id: 'games', label: 'Игры' },
+]
 
 function Card({ label, value, tone, hint }: { label: string; value: string; tone?: 'good' | 'bad'; hint?: string }) {
   return (
@@ -82,12 +94,19 @@ function Card({ label, value, tone, hint }: { label: string; value: string; tone
   )
 }
 
+const tonShort = (minor: number) => {
+  const v = minor / 1000
+  return v >= 1000 ? `${(v / 1000).toFixed(1)}K` : v.toFixed(v < 10 ? 1 : 0)
+}
 
-/** Сводка по всем игрокам: пользователи, обороты, прибыль, игры, кейсы, пополнения, динамика. */
+const dayLabel = (day: string) => `${day.slice(8)}.${day.slice(5, 7)}`
+
+/** Сводка по игрокам, деньгам, пополнениям и играм: вкладки, графики, детали выбранной категории. */
 export function AdminStatsTab() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [tick, setTick] = useState(0)
+  const [tab, setTab] = useState<Tab>('overview')
 
   useEffect(() => {
     let dead = false
@@ -118,179 +137,134 @@ export function AdminStatsTab() {
   if (error) return <p className={`${styles.note} ${styles.bad}`}>{error}</p>
   if (!stats) return <p className={styles.note}>Загружаем…</p>
 
-  const depStarsMinor = (stats.deposits ?? []).filter((d) => d.method === 'stars').reduce((a, d) => a + d.amount, 0)
+  const series = stats.series ?? []
+  const deposits = stats.deposits ?? []
+  const depStarsMinor = deposits.filter((d) => d.method === 'stars').reduce((a, d) => a + d.amount, 0)
   const depTon = (stats.deposited_total ?? 0) - depStarsMinor
   const depStars = Math.round(depStarsMinor / 10)
-  const maxEvents = Math.max(1, ...(stats.series ?? []).map((s) => s.events))
-  const since = new Date(stats.since * 1000).toLocaleString('ru-RU')
+  const toPoints = (pick: (s: SeriesRow) => number): ChartPoint[] => series.map((s) => ({ label: dayLabel(s.day), value: pick(s) }))
+  const totalPayments = deposits.reduce((a, d) => a + d.count, 0)
 
   return (
     <div className={styles.tab}>
-      <h3 className={styles.h3}>Пользователи</h3>
-      <div className={styles.statGrid}>
-        <Card label="Всего в боте" value={String(stats.users_total)} hint="все, кто хоть раз открыл приложение" />
-        <Card label="Новых: сутки / неделя" value={`${stats.users_new_24h} / ${stats.users_new_7d ?? 0}`} hint="впервые открыли приложение" />
-        <Card label="Заходили за сутки" value={String(stats.users_24h)} hint="были в приложении за 24 часа" />
-        <Card label="Заходили: неделя / месяц" value={`${stats.users_7d ?? 0} / ${stats.users_30d ?? 0}`} hint="активные за 7 и 30 дней" />
-        <Card label="Играли хоть раз" value={String(stats.users_played ?? 0)} hint="открыли кейс или сыграли в игру" />
-        <Card label="Пополняли баланс" value={String(stats.users_paid ?? 0)} hint="платящие игроки" />
-        <Card label="Пришли по рефке" value={String(stats.users_referred ?? 0)} hint="по ссылке друга" />
-        <Card label="Друзей засчитано" value={String(stats.ref_friends_credited ?? 0)} hint="прокрутили FREE и в чате" />
-        <Card label="Звёзд заработано на рефках" value={`${stats.ref_stars_earned ?? 0} ★`} hint="за всё время" />
-        <Card label="Лежит в банках рефералов" value={`${stats.ref_banks_total ?? 0} ★`} hint="ещё не забрали" />
-        <Card label="С Telegram Premium" value={String(stats.users_premium ?? 0)} hint="у кого есть Premium" />
-      </div>
-
-      <h3 className={styles.h3}>Деньги</h3>
-      <p className={styles.note}>
-        {stats.profit_since
-          ? `Прибыль, игры и кейсы считаются с ${new Date(stats.profit_since * 1000).toLocaleString('ru-RU')} (сброс в «Системе»).`
-          : 'Прибыль, игры и кейсы — за всё время.'}{' '}
-        NFT под замком не считаются выданными, пока игрок не пригласит друзей.
-      </p>
-      <div className={styles.statGrid}>
-        <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} hint="TON и Stars вместе" />
-        <Card label="Пополнено в TON" value={ton(depTon)} hint="кошелёк и CryptoBot, без Stars" />
-        <Card label="Куплено за Stars" value={`${depStars} ★`} hint="отдельно от TON" />
-        <Card label="Пополнено за сутки" value={ton(stats.deposited_24h ?? 0)} hint="за последние 24 часа" />
-        <Card label="Оборот ставок" value={ton(stats.wagered)} hint="сколько всего поставили" />
-        <Card
-          label="Прибыль казино"
-          value={`${stats.house_profit >= 0 ? '+' : '−'}${ton(Math.abs(stats.house_profit))}`}
-          tone={stats.house_profit >= 0 ? 'good' : 'bad'}
-          hint="поставили минус выиграли"
-        />
-        <Card label="Лежит у игроков" value={ton(stats.balances_total ?? 0)} hint="TON на балансах сейчас" />
-        <Card label="Звёзд у игроков" value={`${stats.stars_total ?? 0} ★`} hint="можно обменять на TON" />
-        <Card label="Выводов ждут" value={String(stats.withdrawals_pending ?? 0)} tone={(stats.withdrawals_pending ?? 0) > 0 ? 'bad' : undefined} hint="раздел «Выводы»" />
-        <Card label="Подарков выдано" value={String(stats.withdrawals_done ?? 0)} hint="отмечены «Выдал»" />
-        <Card label="NFT под замком" value={`${stats.locked_gifts ?? 0} · ${ton(stats.locked_value ?? 0)}`} hint="ждут 5 друзей, ещё не выданы" />
-      </div>
-
-      <h3 className={styles.h3}>Активность за 14 дней</h3>
-      <div className={styles.bars} aria-label="Активность по дням">
-        {(stats.series ?? []).length === 0 && <span className={styles.muted}>Данных пока нет</span>}
-        {(stats.series ?? []).map((s) => (
-          <div key={s.day} className={styles.barCol} title={`${s.day}: ${s.users} игроков, ${s.events} событий`}>
-            <span className={styles.bar} style={{ height: `${Math.max(6, (s.events / maxEvents) * 100)}%` }} />
-            <span className={styles.barLabel}>{s.day.slice(8)}</span>
-          </div>
+      <div className={styles.segment} role="tablist" aria-label="Категории статистики">
+        {TABS.map((t) => (
+          <button key={t.id} type="button" role="tab" aria-selected={tab === t.id} className={cx(styles.segBtn, tab === t.id && styles.segBtnOn)} onClick={() => setTab(t.id)}>
+            {t.label}
+          </button>
         ))}
+        <button type="button" className={styles.segRefresh} aria-label="Обновить" onClick={() => setTick((n) => n + 1)}>
+          ↻
+        </button>
       </div>
 
-      <h3 className={styles.h3}>Игры</h3>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Игра</th>
-            <th>Раунды</th>
-            <th>Оборот</th>
-            <th>Итог игроков</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(stats.games ?? []).length === 0 && (
-            <tr>
-              <td colSpan={4} className={styles.muted}>Раундов ещё не было</td>
-            </tr>
-          )}
-          {(stats.games ?? []).map((g) => (
-            <tr key={g.game}>
-              <td>{GAME_LABEL[g.game] ?? g.game}</td>
-              <td>{g.rounds}</td>
-              <td>{safeAmount(g.wagered)}</td>
-              <td className={g.delta >= 0 ? styles.bad : styles.good}>{signedTon(g.delta)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {tab === 'overview' && (
+        <>
+          <div className={styles.statGrid}>
+            <Card label="Всего в боте" value={String(stats.users_total)} hint="все, кто открывал приложение" />
+            <Card label="Заходили за сутки" value={String(stats.users_24h)} hint="были в приложении за 24 часа" />
+            <Card label="Новых: сутки / неделя" value={`${stats.users_new_24h} / ${stats.users_new_7d ?? 0}`} hint="впервые открыли приложение" />
+            <Card label="Заходили: неделя / месяц" value={`${stats.users_7d ?? 0} / ${stats.users_30d ?? 0}`} hint="активные за 7 и 30 дней" />
+            <Card label="Играли хоть раз" value={String(stats.users_played ?? 0)} />
+            <Card label="Пополняли баланс" value={String(stats.users_paid ?? 0)} />
+            <Card label="Пришли по рефке" value={String(stats.users_referred ?? 0)} />
+            <Card label="С Telegram Premium" value={String(stats.users_premium ?? 0)} />
+          </div>
+          <h3 className={styles.h3}>Игроки по дням</h3>
+          <AreaChart points={toPoints((s) => s.users)} color="#4a8fd6" />
+          <h3 className={styles.h3}>Новые игроки по дням</h3>
+          <AreaChart points={toPoints((s) => s.new)} color="#43ab6e" />
+          <AdminWatchPanels />
+        </>
+      )}
 
-      <h3 className={styles.h3}>Кейсы</h3>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Кейс</th>
-            <th>Открытий</th>
-            <th>Потрачено</th>
-            <th>Выдано</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(stats.cases ?? []).length === 0 && (
-            <tr>
-              <td colSpan={4} className={styles.muted}>Открытий ещё не было</td>
-            </tr>
-          )}
-          {(stats.cases ?? []).map((c) => (
-            <tr key={c.case}>
-              <td>{c.case}</td>
-              <td>{c.opens}</td>
-              <td>{safeAmount(c.spent)}</td>
-              <td>{safeAmount(c.prize)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {tab === 'money' && (
+        <>
+          <div className={styles.statGrid}>
+            <Card label="Оборот ставок" value={ton(stats.wagered)} hint="сколько всего поставили" />
+            <Card
+              label="Прибыль казино"
+              value={signedTon(stats.house_profit)}
+              tone={stats.house_profit >= 0 ? 'good' : 'bad'}
+              hint={stats.profit_since ? `с ${new Date(stats.profit_since * 1000).toLocaleDateString('ru-RU')}` : 'за всё время'}
+            />
+            <Card label="Лежит у игроков" value={ton(stats.balances_total ?? 0)} hint="TON на балансах" />
+            <Card label="Звёзд у игроков" value={`${stats.stars_total ?? 0} ★`} />
+            <Card label="Выводов ждут" value={String(stats.withdrawals_pending ?? 0)} tone={(stats.withdrawals_pending ?? 0) > 0 ? 'bad' : undefined} hint={`выдано ${stats.withdrawals_done ?? 0}`} />
+            <Card label="NFT под замком" value={`${stats.locked_gifts ?? 0}`} hint={ton(stats.locked_value ?? 0)} />
+          </div>
+          <h3 className={styles.h3}>Оборот по дням, TON</h3>
+          <AreaChart points={toPoints((s) => (s.wagered ?? 0) / 1000)} color="#c35c61" format={(v) => v.toFixed(v < 10 ? 1 : 0)} />
+          <h3 className={styles.h3}>Пополнения по дням, TON</h3>
+          <AreaChart points={toPoints((s) => (s.deposited ?? 0) / 1000)} color="#e0a830" format={(v) => v.toFixed(v < 10 ? 1 : 0)} />
+        </>
+      )}
 
-      <h3 className={styles.h3}>Пополнения</h3>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Способ</th>
-            <th>Платежей</th>
-            <th>Сумма, TON</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(stats.deposits ?? []).length === 0 && (
-            <tr>
-              <td colSpan={3} className={styles.muted}>Пополнений ещё не было</td>
-            </tr>
-          )}
-          {(stats.deposits ?? []).map((d) => (
-            <tr key={d.method}>
-              <td>{METHOD_LABEL[d.method] ?? d.method}</td>
-              <td>{d.count}</td>
-              <td>{safeAmount(d.amount)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {tab === 'deposits' && (
+        <>
+          <div className={styles.statGrid}>
+            <Card label="Пополнено всего" value={ton(stats.deposited_total ?? 0)} hint="TON и Stars вместе" />
+            <Card label="За сутки" value={ton(stats.deposited_24h ?? 0)} hint="последние 24 часа" />
+            <Card label="В TON" value={ton(depTon)} hint="кошелёк и CryptoBot" />
+            <Card label="За Stars" value={`${depStars} ★`} hint={ton(depStarsMinor)} />
+            <Card label="Платежей" value={String(totalPayments)} />
+            <Card label="Платящих игроков" value={String(stats.users_paid ?? 0)} />
+          </div>
+          <h3 className={styles.h3}>Как пополняют</h3>
+          <DonutChart
+            slices={deposits.filter((d) => d.amount > 0).map((d) => ({ label: METHOD_LABEL[d.method] ?? d.method, value: d.amount, color: METHOD_COLOR[d.method] ?? '#8791a8', sub: `${d.count} платежей` }))}
+            center={tonShort(stats.deposited_total ?? 0)}
+            centerNote="TON всего"
+            format={(v) => `${tonShort(v)} TON`}
+          />
+          <h3 className={styles.h3}>По дням, TON</h3>
+          <AreaChart points={toPoints((s) => (s.deposited ?? 0) / 1000)} color="#e0a830" format={(v) => v.toFixed(v < 10 ? 1 : 0)} />
+        </>
+      )}
 
-      <AdminWatchPanels />
-
-      <h3 className={styles.h3}>Топ игроков по обороту</h3>
-      <table className={styles.table}>
-        <thead>
-          <tr>
-            <th>Игрок</th>
-            <th>Оборот</th>
-            <th>Итог</th>
-          </tr>
-        </thead>
-        <tbody>
-          {(stats.top ?? []).length === 0 && (
-            <tr>
-              <td colSpan={3} className={styles.muted}>Пока пусто</td>
-            </tr>
-          )}
-          {(stats.top ?? []).map((u) => (
-            <tr key={u.id}>
-              <td>{u.name ? `@${u.name}` : u.id}</td>
-              <td>{safeAmount(u.wagered)}</td>
-              <td className={u.delta >= 0 ? styles.good : styles.bad}>{signedTon(u.delta)}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <p className={styles.note}>
-        Данные из базы с {since}. «Итог игроков» — сколько игроки выиграли минус поставили: минус
-        значит, что в плюсе казино. Подробности по каждому игроку — в разделе «Игроки».
-      </p>
-      <button type="button" className={styles.refresh} onClick={() => setTick((t) => t + 1)}>
-        Обновить
-      </button>
+      {tab === 'games' && (
+        <>
+          <h3 className={styles.h3}>Оборот по играм</h3>
+          <HBars
+            rows={(stats.games ?? []).map((g) => ({ label: GAME_LABEL[g.game] ?? g.game, value: g.wagered, note: `${g.rounds} раундов · итог игроков ${signedTon(g.delta)}` }))}
+            format={(v) => `${tonShort(v)} TON`}
+          />
+          <h3 className={styles.h3}>Кейсы: потрачено и выдано</h3>
+          <HBars
+            rows={(stats.cases ?? []).flatMap((c) => [
+              { label: `${c.case} · потрачено`, value: c.spent, color: '#c35c61', note: `${c.opens} открытий` },
+              { label: `${c.case} · выдано`, value: c.prize, color: '#43ab6e' },
+            ])}
+            format={(v) => `${tonShort(v)} TON`}
+          />
+          <h3 className={styles.h3}>Топ по обороту</h3>
+          <div className={styles.tableWrap}>
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th>Игрок</th>
+                  <th>Оборот</th>
+                  <th>Итог</th>
+                </tr>
+              </thead>
+              <tbody>
+                {(stats.top ?? []).length === 0 && (
+                  <tr>
+                    <td colSpan={3} className={styles.muted}>Пока пусто</td>
+                  </tr>
+                )}
+                {(stats.top ?? []).map((u) => (
+                  <tr key={u.id}>
+                    <td>{u.name ? `@${u.name}` : u.id}</td>
+                    <td>{safeAmount(u.wagered)}</td>
+                    <td className={u.delta >= 0 ? styles.good : styles.bad}>{signedTon(u.delta)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
     </div>
   )
 }

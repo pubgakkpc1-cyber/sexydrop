@@ -91,7 +91,7 @@ export function AdminGiveTab() {
           placeholder="@username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          hint="Игрок должен хотя бы один раз запустить бота"
+          
         />
 
         <Input
@@ -120,8 +120,7 @@ export function AdminGiveTab() {
 
         {username.trim().replace(/^@/, '') && Number(amount.replace(',', '.')) > 0 && (
           <div className={styles.statusMessage}>
-            Будет начислено <b>{amount.replace(',', '.')} TON</b> игроку <b>@{username.trim().replace(/^@/, '')}</b>.
-            Проверьте ник — отменить начисление нельзя.
+            {amount.replace(',', '.')} TON · <b>@{username.trim().replace(/^@/, '')}</b>
           </div>
         )}
 

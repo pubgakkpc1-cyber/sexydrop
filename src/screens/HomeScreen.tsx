@@ -13,8 +13,10 @@ export function HomeScreen() {
     <div className={styles.screen}>
       <section className={styles.panel} aria-label="Игры">
         <h2 className={styles.panelTitle}>Игры</h2>
-        <Banners />
-        <ClickerBanner />
+        <div className={styles.gamesGrid}>
+          <Banners />
+          <ClickerBanner />
+        </div>
       </section>
       <section className={styles.panel} aria-label="Бесплатные кейсы">
         <FreeCasesSection />

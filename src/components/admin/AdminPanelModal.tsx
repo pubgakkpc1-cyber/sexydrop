@@ -38,7 +38,7 @@ const SECTIONS: readonly Section[] = [
     id: 'stats',
     group: 'people',
     title: 'Обзор',
-    hint: 'Сколько людей, денег и прибыли',
+    hint: 'Игроки, деньги, графики',
     intro:
       'Общая картина проекта: сколько людей пришло и играет, сколько пополнили, сколько заработало казино. Зелёное — хорошо для казино, красное — казино в минусе.',
     icon: icon('M4 20V10M10 20V4M16 20v-7M22 20H2'),
@@ -48,7 +48,7 @@ const SECTIONS: readonly Section[] = [
     id: 'players',
     group: 'people',
     title: 'Игроки',
-    hint: 'Найти игрока и посмотреть всё о нём',
+    hint: 'Поиск и карточка игрока',
     intro:
       'Список всех, кто открывал приложение. Найдите игрока по имени, @юзернейму или ID и нажмите на него: увидите баланс, пополнения, ставки, выигрыши, подарки и друзей.',
     icon: icon('M16 11a4 4 0 1 0-8 0 4 4 0 0 0 8 0ZM4 21c0-4 3.6-6 8-6s8 2 8 6'),
@@ -58,7 +58,7 @@ const SECTIONS: readonly Section[] = [
     id: 'withdrawals',
     group: 'people',
     title: 'Выводы',
-    hint: 'Кто ждёт свой подарок',
+    hint: 'Заявки на подарки',
     intro:
       'Игроки, которые нажали «Вывести» на подарке. Отправьте подарок в Telegram и нажмите «Выдал». Если отправить не получилось — «Вернуть»: подарок снова появится у игрока.',
     icon: icon('M12 3v12M7 10l5 5 5-5M5 21h14'),
@@ -68,7 +68,7 @@ const SECTIONS: readonly Section[] = [
     id: 'give',
     group: 'people',
     title: 'Выдача TON',
-    hint: 'Начислить TON игроку',
+    hint: 'Начислить или вычесть TON',
     intro:
       'Начислить TON на баланс игрока по его @юзернейму. Игрок должен хотя бы раз открыть приложение. Деньги появятся у него сразу.',
     icon: icon('M12 3v18M17 7H9.5a2.5 2.5 0 0 0 0 5h5a2.5 2.5 0 0 1 0 5H7'),
@@ -88,7 +88,7 @@ const SECTIONS: readonly Section[] = [
     id: 'broadcast',
     group: 'settings',
     title: 'Рассылка',
-    hint: 'Написать всем от имени бота',
+    hint: 'Рассылка от бота',
     intro:
       'Сообщение от бота всем игрокам или части. Сначала отправьте тест себе, проверьте, как выглядит, потом — всем.',
     icon: icon('M3 11l18-8-8 18-2-8-8-2Z'),
@@ -98,7 +98,7 @@ const SECTIONS: readonly Section[] = [
     id: 'system',
     group: 'settings',
     title: 'Система',
-    hint: 'Бот, оплаты, сбросы',
+    hint: 'Банк, цены, технические',
     intro:
       'Работает ли бот и способы пополнения. Здесь же опасные кнопки: сброс прибыли и обнуление балансов — они спрашивают подтверждение.',
     icon: icon('M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM19 12a7 7 0 0 0-.1-1.2l2-1.5-2-3.4-2.3.9a7 7 0 0 0-2-1.2L14 3h-4l-.6 2.6a7 7 0 0 0-2 1.2l-2.3-.9-2 3.4 2 1.5a7 7 0 0 0 0 2.4l-2 1.5 2 3.4 2.3-.9a7 7 0 0 0 2 1.2L10 21h4l.6-2.6a7 7 0 0 0 2-1.2l2.3.9 2-3.4-2-1.5c.1-.4.1-.8.1-1.2Z'),
@@ -198,25 +198,22 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
     <div className={styles.screen} role="dialog" aria-modal="true" aria-label="Панель администратора">
       <header className={styles.bar}>
         {current ? (
-          <button type="button" className={styles.barBtn} onClick={() => setSection(null)} aria-label="Назад к разделам">
-            ‹ Назад
+          <button type="button" className={cx(styles.barBtn, styles.barBtnBack)} onClick={() => setSection(null)} aria-label="Назад к разделам">
+            <span aria-hidden>‹</span> Назад
           </button>
         ) : (
-          <span className={styles.badge}>👑 @zapixxgarant</span>
+          <span className={styles.badge}>Админ</span>
         )}
         <h2 className={styles.titleBar}>{current ? current.title : 'Админка'}</h2>
-        <button type="button" className={styles.barBtn} onClick={onClose} aria-label="Закрыть админку">
-          Закрыть
+        <button type="button" className={cx(styles.barBtn, styles.barBtnClose)} onClick={onClose} aria-label="Закрыть админку">
+          <span aria-hidden>✕</span>
+          <span className={styles.barBtnText}>Закрыть</span>
         </button>
       </header>
 
       <main className={styles.content}>
         {current ? (
           <>
-            <div className={styles.intro}>
-              <span className={styles.introIcon}>{current.icon}</span>
-              <p className={styles.introText}>{current.intro}</p>
-            </div>
             <AdminErrorBoundary resetKey={current.id} onBack={() => setSection(null)}>
               {current.view()}
             </AdminErrorBoundary>
@@ -229,10 +226,7 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
                 ↻ Обновить
               </button>
             </div>
-            <p className={styles.helloSub}>
-              {loadedAt ? `Цифры обновлены ${ago(loadedAt)}.` : 'Загружаем цифры…'} Нажмите на раздел ниже, чтобы
-              посмотреть подробнее.
-            </p>
+            <p className={styles.helloSub}>{loadedAt ? `Обновлено ${ago(loadedAt)}` : 'Загружаем…'}</p>
 
             {quickError && <div className={cx(styles.alert, styles.alertBad)}>Не удалось загрузить цифры: {quickError}</div>}
 
@@ -240,8 +234,7 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
               <button type="button" className={cx(styles.alert, styles.alertBad)} onClick={() => setSection('withdrawals')}>
                 <span className={styles.alertIcon}>!</span>
                 <span className={styles.alertText}>
-                  <b>{pending} {playersWait(pending)} вывод подарка.</b> Отправьте подарки и
-                  отметьте «Выдал».
+                  <b>{pending} {playersWait(pending)} вывод подарка</b>
                 </span>
                 <span className={styles.alertGo}>Открыть ›</span>
               </button>
@@ -250,7 +243,7 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
               <button type="button" className={cx(styles.alert, styles.alertWarn)} onClick={() => setSection('stats')}>
                 <span className={styles.alertIcon}>↓</span>
                 <span className={styles.alertText}>
-                  <b>Казино в минусе на {ton(-profit)}.</b> Игроки выиграли больше, чем поставили. Посмотрите шансы кейсов.
+                  <b>Казино в минусе на {ton(-profit)}</b>
                 </span>
                 <span className={styles.alertGo}>Обзор ›</span>
               </button>
@@ -258,21 +251,21 @@ export function AdminPanelModal({ open, onClose }: AdminPanelModalProps) {
 
             {quick && (
               <div className={styles.kpiGrid}>
-                <Kpi label="Пользователей в боте" value={String(quick.users_total)} note="все, кто открывал приложение" />
-                <Kpi label="Новых за сутки" value={`+${quick.users_new_24h}`} note="впервые зашли за 24 часа" />
-                <Kpi label="Заходили за сутки" value={String(quick.users_24h)} note="были в приложении за 24 часа" />
-                <Kpi label="Пополнили за сутки" value={ton(quick.deposited_24h ?? 0)} note={`всего пополнено ${ton(quick.deposited_total ?? 0)}`} />
+                <Kpi label="Пользователей" value={String(quick.users_total)} note="всего в боте" />
+                <Kpi label="Новых за сутки" value={`+${quick.users_new_24h}`} note="за 24 часа" />
+                <Kpi label="Заходили за сутки" value={String(quick.users_24h)} note="были в приложении" />
+                <Kpi label="Пополнили за сутки" value={ton(quick.deposited_24h ?? 0)} note={`всего ${ton(quick.deposited_total ?? 0)}`} />
                 <Kpi
                   label="Прибыль казино"
                   value={signedTon(profit)}
                   tone={profit > 0 ? 'good' : profit < 0 ? 'bad' : undefined}
                   note={
                     quick.profit_since
-                      ? `с ${new Date(quick.profit_since * 1000).toLocaleDateString('ru-RU')} (после сброса)`
+                      ? `с ${new Date(quick.profit_since * 1000).toLocaleDateString('ru-RU')}`
                       : 'за всё время'
                   }
                 />
-                <Kpi label="Лежит у игроков" value={ton(quick.balances_total ?? 0)} note="TON на балансах, могут потратить" />
+                <Kpi label="Лежит у игроков" value={ton(quick.balances_total ?? 0)} note="TON на балансах" />
               </div>
             )}
 

@@ -147,9 +147,43 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
             )
         ).all()
     )
+    # оборот и пополнения по дням (без админов) — для графиков
+    wday = func.date_trunc("day", PlayRound.created_at).label("d")
+    wager_by_day = dict(
+        (
+            await session.execute(
+                select(wday, func.coalesce(func.sum(PlayRound.bet_minor), 0))
+                .where(PlayRound.created_at >= since, _FINISHED, _NOT_ADMIN_ROUND)
+                .group_by(wday)
+            )
+        ).all()
+    )
+    dday = func.date_trunc("day", DepositOrder.paid_at).label("d")
+    dep_by_day = dict(
+        (
+            await session.execute(
+                select(dday, func.coalesce(func.sum(DepositOrder.amount_minor), 0))
+                .where(
+                    DepositOrder.status == "paid",
+                    DepositOrder.paid_at >= since,
+                    DepositOrder.user_id.not_in(select(User.id).where(~_NOT_ADMIN_USER)),
+                )
+                .group_by(dday)
+            )
+        ).all()
+    )
+    days = sorted({*(d for d, _n, _u in day_rows), *wager_by_day.keys(), *dep_by_day.keys()})
+    base_rows = {d: (n, u) for d, n, u in day_rows}
     series = [
-        {"day": d.strftime("%Y-%m-%d"), "events": int(n), "users": int(u), "new": int(new_rows.get(d, 0))}
-        for d, n, u in day_rows
+        {
+            "day": d.strftime("%Y-%m-%d"),
+            "events": int(base_rows.get(d, (0, 0))[0]),
+            "users": int(base_rows.get(d, (0, 0))[1]),
+            "new": int(new_rows.get(d, 0)),
+            "wagered": int(wager_by_day.get(d, 0)),
+            "deposited": int(dep_by_day.get(d, 0)),
+        }
+        for d in days
     ]
 
     top_rows = (

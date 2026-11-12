@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { AdminStatsTab } from './AdminStatsTab'
 
 afterEach(() => {
@@ -29,7 +30,9 @@ describe('AdminStatsTab (обзор)', () => {
     expect(screen.getByText('57 / 300')).toBeInTheDocument()
     expect(screen.getByText('впервые открыли приложение')).toBeInTheDocument()
     expect(screen.getByText('Пополняли баланс').nextSibling).toHaveTextContent('95')
+    await userEvent.click(screen.getByRole('tab', { name: 'Пополнения' }))
     expect(screen.getByText('Пополнено всего').nextSibling).toHaveTextContent('1830 TON')
+    await userEvent.click(screen.getByRole('tab', { name: 'Игры' }))
     expect(screen.getByText('Ракета')).toBeInTheDocument()
   })
 })

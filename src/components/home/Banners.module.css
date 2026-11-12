@@ -344,3 +344,14 @@
 .playTileUpgrade {
   background: #4a4d55;
 }
+
+/* ПК: баннеры становятся ячейками общей сетки главной (три в ряд) */
+@media (min-width: 1000px) {
+  .section {
+    display: contents;
+  }
+
+  .banner {
+    min-height: 168px;
+  }
+}

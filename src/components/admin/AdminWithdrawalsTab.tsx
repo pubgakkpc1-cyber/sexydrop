@@ -97,13 +97,12 @@ export function AdminWithdrawalsTab() {
         <div className={styles.emptyBox}>
           <span className={styles.emptyBig}>✓</span>
           <strong>Заявок нет</strong>
-          <span className={styles.muted}>Все подарки выданы. Новые заявки появятся здесь.</span>
+          
         </div>
       )}
       {rows !== null && rows.length > 0 && (
         <p className={styles.note}>
-          Ждут вывода: <b>{rows.length}</b>. Порядок: сначала отправьте подарок игроку в Telegram, потом нажмите
-          «Выдал».
+          Ждут вывода: <b>{rows.length}</b>
         </p>
       )}
       {rows?.map((w) => {

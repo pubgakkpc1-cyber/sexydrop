@@ -121,6 +121,12 @@ async def stars_invoice(payload: StarsRequest, user: CurrentUser, session: Sessi
 @router.get("/stars/status")
 async def stars_status(secret: SecretQuery, user: CurrentUser, session: Session) -> dict[str, Any]:
     order = await _order(session, user, "stars", svc.stars_payload(secret))
+    if order.status != "paid":
+        # оплата могла не дойти уведомлением — быстрая сверка с Telegram (не чаще раза в 15 секунд)
+        from app.services import stars_reconcile
+
+        if await stars_reconcile.reconcile(min_interval_s=15.0):
+            await session.refresh(order)
     if order.status == "paid":
         return {"status": "paid", "amount_minor": order.amount_minor, "balance_minor": await balance_minor(session, user.id)}
     return {"status": "pending"}

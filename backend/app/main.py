@@ -41,6 +41,10 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         from app.services import market_prices
 
         asyncio.create_task(market_prices.loop())
+        # сверка оплат Stars с Telegram: пропущенные оплаты зачисляются сами
+        from app.services import stars_reconcile
+
+        asyncio.create_task(stars_reconcile.loop())
     try:
         yield
     finally:

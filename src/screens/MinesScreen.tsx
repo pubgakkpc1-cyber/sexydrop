@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type CSSProperties } from 'react'
+import { memo, useCallback, useMemo, useRef, useState, type CSSProperties } from 'react'
 import { useNavigate } from 'react-router-dom'
 import {
   MINES_TILES,
@@ -19,12 +19,10 @@ import {
   playMinesCashout,
   playMinesGem,
   playMinesStart,
-  playUiTap,
 } from '../lib/sound'
 import { cx } from '../lib/cx'
 import styles from './MinesScreen.module.css'
 
-const PRESETS: readonly Minor[] = [100, 500, 1000, 5000] // 0.1 / 0.5 / 1 / 5 GRAM
 const MINES_PRESETS: readonly number[] = [1, 3, 5, 10, 24]
 
 interface RoundView {
@@ -36,6 +34,46 @@ interface RoundView {
   /** Клетка, на которой подорвались (для эффекта взрыва). */
   boomIndex: number | null
 }
+
+interface TileProps {
+  index: number
+  picked: boolean
+  isMine: boolean
+  isBoom: boolean
+  dim: boolean
+  pending: boolean
+  disabled: boolean
+  revealDelay: number
+  showDot: boolean
+  onPick: (index: number) => void
+}
+
+/** Одна клетка: перерисовывается только когда меняется она сама, а не всё поле. */
+const Tile = memo(function Tile({ index, picked, isMine, isBoom, dim, pending, disabled, revealDelay, showDot, onPick }: TileProps) {
+  return (
+    <button
+      type="button"
+      className={cx(styles.tile, picked && styles.tilePicked, isMine && styles.tileMine, isBoom && styles.tileBoom, dim && styles.tileDim, pending && styles.tilePending)}
+      style={isMine && !isBoom ? ({ '--d': `${revealDelay}s` } as CSSProperties) : undefined}
+      aria-label={`Клетка ${index + 1}`}
+      disabled={disabled}
+      onClick={() => onPick(index)}
+    >
+      {isMine ? (
+        <span data-testid="bomb-icon" className={styles.iconBox}>
+          <DropBombIcon className={styles.bombIcon} style={{ width: '30px', height: '30px', color: '#e0484f' }} />
+        </span>
+      ) : picked ? (
+        <span data-testid="gem-icon" className={styles.iconBox}>
+          <TonIcon className={styles.gemIcon} style={{ width: '26px', height: '26px' }} />
+        </span>
+      ) : showDot ? (
+        '·'
+      ) : null}
+      {isBoom && <span className={styles.shock} aria-hidden />}
+    </button>
+  )
+})
 
 /**
  * Мины (4.8). Доска 5×5; раскладку генерирует demo-сервис при старте и держит
@@ -50,6 +88,7 @@ export function MinesScreen() {
   const [amountInput, setAmountInput] = useState('1')
   const [round, setRound] = useState<RoundView | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [pendingTile, setPendingTile] = useState<number | null>(null) // клетка нажата, ждём ответ сервера
 
   const amountMinor: Minor | null = useMemo(() => {
     try {
@@ -100,10 +139,16 @@ export function MinesScreen() {
     hapticImpact('light')
   }
 
-  const pick = async (tileIndex: number) => {
-    if (!playing || round.picked.includes(tileIndex) || busy.current) return
+  const roundRef = useRef<RoundView | null>(null)
+  roundRef.current = round
+
+  const pick = useCallback(async (tileIndex: number) => {
+    const round = roundRef.current
+    if (round === null || round.phase !== 'playing' || round.picked.includes(tileIndex) || busy.current) return
     setError(null)
     busy.current = true
+    setPendingTile(tileIndex) // мгновенная реакция на нажатие, не дожидаясь сети
+    hapticImpact('light')
     let result
     try {
       result = await pickMinesApi(tileIndex, makeRequestId())
@@ -112,6 +157,7 @@ export function MinesScreen() {
       return
     } finally {
       busy.current = false
+      setPendingTile(null)
     }
     if (result.status !== 'ok') {
       setError('Ход не принят — попробуйте ещё раз')
@@ -122,7 +168,6 @@ export function MinesScreen() {
         current ? { ...current, picked: [...current.picked, tileIndex] } : current,
       )
       playMinesGem(round.picked.length + 1)
-      hapticImpact('light')
       return
     }
     if (result.event === 'lost') {
@@ -140,7 +185,7 @@ export function MinesScreen() {
       payoutMinor: result.payoutMinor,
       boomIndex: result.event === 'lost' ? tileIndex : null,
     })
-  }
+  }, [])
 
   const take = async () => {
     if (!playing || round.picked.length === 0 || busy.current) return
@@ -173,7 +218,7 @@ export function MinesScreen() {
 
   /** Случайная закрытая клетка — для быстрой игры одним пальцем. */
   const pickRandom = () => {
-    if (!playing) return
+    if (!playing || pendingTile !== null) return
     const closed = Array.from({ length: MINES_TILES }, (_, i) => i).filter((i) => !round.picked.includes(i))
     if (closed.length === 0) return
     pick(closed[Math.floor(Math.random() * closed.length)]!)
@@ -196,26 +241,6 @@ export function MinesScreen() {
     [minesCount, maxSteps],
   )
   const nextMult = openedCount < maxSteps ? minesMultiplierHundredths(minesCount, openedCount + 1) / 100 : null
-
-  const tileContent = (index: number) => {
-    if (round === null) return null
-    const mines = round.minePositions ?? []
-    if (mines.includes(index)) {
-      return (
-        <span data-testid="bomb-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-          <DropBombIcon className={styles.bombIcon} style={{ width: '30px', height: '30px', color: '#e0484f' }} />
-        </span>
-      )
-    }
-    if (round.picked.includes(index)) {
-      return (
-        <span data-testid="gem-icon" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
-          <TonIcon className={styles.gemIcon} style={{ width: '26px', height: '26px' }} />
-        </span>
-      )
-    }
-    return finished ? '·' : null
-  }
 
   return (
     <div className={styles.screen}>
@@ -256,27 +281,23 @@ export function MinesScreen() {
 
         <div className={cx(styles.board, round?.phase === 'lost' && styles.boardShake)} role="group" aria-label={`Поле ${MINES_TILES} клеток`}>
           {Array.from({ length: MINES_TILES }, (_, index) => {
-            const isMine = round?.minePositions?.includes(index) === true
-            const revealOrder = isMine ? (round?.minePositions?.indexOf(index) ?? 0) : 0
+            const minePositions = round?.minePositions ?? null
+            const isMine = minePositions?.includes(index) === true
+            const picked = round?.picked.includes(index) === true
             return (
-              <button
+              <Tile
                 key={index}
-                type="button"
-                className={cx(
-                  styles.tile,
-                  round?.picked.includes(index) && styles.tilePicked,
-                  isMine && styles.tileMine,
-                  round?.boomIndex === index && styles.tileBoom,
-                  finished && !round.picked.includes(index) && !isMine ? styles.tileDim : '',
-                )}
-                style={isMine && round?.boomIndex !== index ? ({ '--d': `${0.25 + revealOrder * 0.07}s` } as CSSProperties) : undefined}
-                aria-label={`Клетка ${index + 1}`}
-                disabled={!playing || round?.picked.includes(index) === true}
-                onClick={() => pick(index)}
-              >
-                {tileContent(index)}
-                {round?.boomIndex === index && <span className={styles.shock} aria-hidden />}
-              </button>
+                index={index}
+                picked={picked}
+                isMine={isMine}
+                isBoom={round?.boomIndex === index}
+                dim={finished && !picked && !isMine}
+                pending={pendingTile === index}
+                disabled={!playing || picked || pendingTile !== null}
+                revealDelay={isMine ? 0.12 + Math.min(minePositions!.indexOf(index), 12) * 0.035 : 0}
+                showDot={finished}
+                onPick={pick}
+              />
             )
           })}
         </div>
@@ -319,23 +340,6 @@ export function MinesScreen() {
       <div className={styles.betPanel}>
         {!playing && (
           <>
-            <div className={styles.presets} role="group" aria-label="Быстрые суммы">
-              {PRESETS.map((preset) => (
-                <button
-                  key={preset}
-                  type="button"
-                  className={cx(styles.preset, amountMinor === preset && styles.presetActive)}
-                  aria-pressed={amountMinor === preset}
-                  onClick={() => setAmountInput(formatMinor(preset))}
-                >
-                  {formatMinor(preset)}
-                </button>
-              ))}
-              <button type="button" className={styles.preset} onClick={() => { playUiTap(); setAmountInput(formatMinor(Math.max(100, Math.floor((amountMinor ?? 1000) / 2)))) }}>½</button>
-              <button type="button" className={styles.preset} onClick={() => { playUiTap(); setAmountInput(formatMinor(Math.min(balance, (amountMinor ?? 1000) * 2))) }}>×2</button>
-              <button type="button" className={styles.preset} onClick={() => { playUiTap(); setAmountInput(formatMinor(balance)) }}>Макс</button>
-            </div>
-
             <Input
               label="Сумма ставки"
               inputMode="decimal"

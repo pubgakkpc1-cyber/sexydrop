@@ -128,7 +128,7 @@
   border: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: var(--radius-md);
   cursor: pointer;
-  transition: transform var(--transition-fast), background var(--transition-fast), border-color var(--transition-fast);
+  transition: transform 0.12s ease-out, opacity 0.12s ease-out;
 }
 
 .tile:not(:disabled):active {
@@ -169,31 +169,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-}
-
-.presets {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-2);
-}
-
-.preset {
-  padding: 9px 4px;
-  font-family: inherit;
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--text);
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  font-variant-numeric: tabular-nums;
-  transition: border-color var(--transition-fast), background var(--transition-fast);
-}
-
-.presetActive {
-  background: rgba(209, 129, 133, 0.16);
-  border-color: rgba(209, 129, 133, 0.55);
 }
 
 .betError {
@@ -306,15 +281,26 @@
   color: #e0484f;
 }
 
-.board {
-  perspective: 700px;
-}
-
 .tile {
   position: relative;
   overflow: hidden;
+  contain: layout paint;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   background: linear-gradient(160deg, #353336 0%, #262426 100%);
   box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.35);
+}
+
+.iconBox {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* нажали — клетка сразу «вдавливается», пока сервер отвечает */
+.tilePending {
+  transform: scale(0.94);
+  opacity: 0.8;
 }
 
 /* фирменный водяной знак: капля на закрытой клетке */
@@ -327,14 +313,7 @@
   height: 18px;
   margin: -9px 0 0 -7px;
   background: rgba(255, 255, 255, 0.08);
-  clip-path: path('M7 0 C11 5 14 9 14 12 A7 7 0 0 1 0 12 C0 9 3 5 7 0 Z');
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-.tile:not(:disabled):hover::before {
-  opacity: 1;
-  background: rgba(224, 72, 79, 0.45);
-  transform: scale(1.15);
+  border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%;
 }
 
 .tilePicked::before,
@@ -345,56 +324,44 @@
 .tilePicked {
   background: linear-gradient(160deg, #1f4636 0%, #16271f 100%);
   border-color: rgba(79, 209, 139, 0.55);
-  box-shadow: 0 0 14px rgba(79, 209, 139, 0.28), inset 0 -3px 0 rgba(0, 0, 0, 0.3);
-  animation: tileFlip 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.3);
+  animation: tileFlip 0.28s ease-out;
 }
 
 .tileMine {
   background: linear-gradient(160deg, #4a2023 0%, #2a1416 100%);
   border-color: rgba(224, 72, 79, 0.6);
-  animation: tileFlip 0.5s cubic-bezier(0.2, 1, 0.3, 1) both;
+  animation: tileFlip 0.28s ease-out both;
   animation-delay: var(--d, 0s);
 }
 
 .tileBoom {
   background: linear-gradient(160deg, #7a2327 0%, #3b1517 100%);
-  box-shadow: 0 0 22px rgba(224, 72, 79, 0.7);
-  animation: tileFlip 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+  box-shadow: inset 0 0 0 2px rgba(255, 138, 143, 0.8);
+  animation: tileFlip 0.25s ease-out;
 }
 
 @keyframes tileFlip {
-  0% { transform: rotateY(90deg) scale(0.8); opacity: 0.4; }
-  100% { transform: rotateY(0) scale(1); opacity: 1; }
+  0% { transform: scale(0.82); opacity: 0.5; }
+  100% { transform: scale(1); opacity: 1; }
 }
 
 .gemIcon {
-  filter: drop-shadow(0 0 7px rgba(90, 200, 255, 0.75));
-  animation: gemPop 0.55s cubic-bezier(0.2, 1.6, 0.4, 1) both;
+  animation: gemPop 0.32s ease-out both;
 }
 
 @keyframes gemPop {
-  0% { transform: scale(0.2) rotate(-60deg); }
-  100% { transform: scale(1) rotate(0); }
+  0% { transform: scale(0.4); }
+  100% { transform: scale(1); }
 }
 
 .bombIcon {
-  filter: drop-shadow(0 0 6px rgba(224, 72, 79, 0.7));
-  animation: bombDrop 0.5s cubic-bezier(0.3, 1.4, 0.5, 1) both;
+  animation: bombDrop 0.3s ease-out both;
 }
 
 @keyframes bombDrop {
-  0% { transform: translateY(-16px) scale(0.6); }
+  0% { transform: translateY(-10px) scale(0.7); }
   100% { transform: translateY(0) scale(1); }
-}
-
-.bombIcon :global(.dropbomb-spark) {
-  transform-origin: 30.6px 6.4px;
-  animation: sparkTwinkle 0.6s ease-in-out infinite alternate;
-}
-
-@keyframes sparkTwinkle {
-  from { opacity: 0.4; transform: scale(0.7) rotate(0); }
-  to { opacity: 1; transform: scale(1.15) rotate(35deg); }
 }
 
 /* взрыв: ударная волна и тряска поля */
@@ -408,25 +375,23 @@
   border-radius: 50%;
   border: 3px solid #ff8a8f;
   pointer-events: none;
-  animation: shockOut 0.7s ease-out forwards;
+  animation: shockOut 0.5s ease-out forwards;
 }
 
 @keyframes shockOut {
-  from { opacity: 0.95; transform: scale(0.3); }
-  to { opacity: 0; transform: scale(5); }
+  from { opacity: 0.9; transform: scale(0.3); }
+  to { opacity: 0; transform: scale(4); }
 }
 
 .boardShake {
-  animation: boardQuake 0.5s ease-out;
+  animation: boardQuake 0.35s ease-out;
 }
 
 @keyframes boardQuake {
   0%, 100% { transform: translate(0, 0); }
-  15% { transform: translate(-6px, 3px); }
-  30% { transform: translate(5px, -4px); }
-  45% { transform: translate(-4px, -2px); }
-  60% { transform: translate(3px, 3px); }
-  80% { transform: translate(-1px, 1px); }
+  25% { transform: translate(-4px, 2px); }
+  50% { transform: translate(3px, -2px); }
+  75% { transform: translate(-2px, 1px); }
 }
 
 /* лестница шагов */
@@ -477,12 +442,6 @@
 .rungNext {
   color: #fff;
   border-color: rgba(255, 255, 255, 0.7);
-  animation: rungPulse 1.2s ease-in-out infinite;
-}
-
-@keyframes rungPulse {
-  0%, 100% { box-shadow: 0 0 0 rgba(255, 255, 255, 0); }
-  50% { box-shadow: 0 0 12px rgba(255, 255, 255, 0.35); }
 }
 
 .nextHint {
@@ -507,7 +466,7 @@
 .randomBtn:active { transform: scale(0.98); }
 
 .resultPop {
-  animation: resultPopIn 0.5s cubic-bezier(0.2, 1.4, 0.4, 1);
+  animation: resultPopIn 0.3s ease-out;
 }
 
 @keyframes resultPopIn {
@@ -521,6 +480,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .tilePicked, .tileMine, .tileBoom, .gemIcon, .bombIcon, .shock, .boardShake, .rungNext, .resultPop,
-  .bombIcon :global(.dropbomb-spark) { animation: none; }
+  .tilePicked, .tileMine, .tileBoom, .gemIcon, .bombIcon, .shock, .boardShake, .resultPop { animation: none; }
 }

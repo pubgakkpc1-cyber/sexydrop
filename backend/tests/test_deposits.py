@@ -153,3 +153,28 @@ async def test_subscription_check_and_discovery(monkeypatch):
 def test_subscription_check_requires_valid_init_data(client):
     res = client.post("/api/subscriptions/check", json={"init_data": "bogus"})
     assert res.status_code == 401
+
+
+async def test_stars_reconcile_credits_missed_payment(client):
+    """Оплата Stars дошла до Telegram, но не до сервера: сверка зачисляет её один раз, даже без заказа."""
+    from app.services import stars_reconcile
+    from tests.test_economy import h, login
+
+    user = await login(client)
+    payload = "sd-stars-" + "ab" * 12
+    tx = {"id": "tx-test-1", "amount": 50, "source": {"type": "user", "user": {"id": user["_tg"]}, "invoice_payload": payload}}
+
+    async def fake():
+        return [tx]
+
+    real = stars_reconcile._fetch_transactions
+    stars_reconcile._force_in_test = True
+    stars_reconcile._fetch_transactions = fake
+    try:
+        assert await stars_reconcile.reconcile() == 1
+        assert await stars_reconcile.reconcile() == 0  # повтор ничего не зачисляет
+    finally:
+        stars_reconcile._force_in_test = False
+        stars_reconcile._fetch_transactions = real
+    state = (await client.get("/api/me/state", headers=h(user))).json()
+    assert state["balance_minor"] == 500  # 50 Stars = 0.5 TON

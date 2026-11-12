@@ -300,12 +300,12 @@ async def _record_payment(payment: dict[str, Any]) -> None:
                 )
             ).scalar_one_or_none()
             if order is None:
-                log.warning("stars payment without order: %s", payload)
+                log.warning("stars payment without order: %s (сверка найдёт игрока по Telegram ID)", payload)
                 return
             await account_service.credit_deposit(session, order.id, deposit_service.stars_to_minor(total), charge)
         log.info("stars payment credited: %s stars", total)
-    except Exception as exc:  # noqa: BLE001
-        log.warning("stars payment credit failed: %s", exc)
+    except Exception:  # noqa: BLE001
+        log.exception("stars payment credit failed (сверка зачислит позже)")
 
 
 async def _admin_broadcast(command: str, admin_id: int, chat_id: int) -> bool:

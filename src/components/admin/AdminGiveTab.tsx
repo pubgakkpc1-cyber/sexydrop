@@ -15,7 +15,7 @@ export function AdminGiveTab() {
   const credit = useWalletStore((s) => s.credit)
   const myName = (getTelegramUser()?.username ?? '').replace(/^@/, '')
 
-  const handleGiveTon = async () => {
+  const handleGiveTon = async (take = false) => {
     const cleanUser = username.trim().replace(/^@/, '')
     const numAmount = parseFloat(amount.replace(',', '.'))
 
@@ -33,7 +33,7 @@ export function AdminGiveTab() {
     setStatus(null)
 
     try {
-      const res = await fetch('/api/admin/give-ton', {
+      const res = await fetch(take ? '/api/admin/take-ton' : '/api/admin/give-ton', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -42,7 +42,7 @@ export function AdminGiveTab() {
         body: JSON.stringify({
           username: cleanUser,
           amount_ton: numAmount,
-          description: 'Выдача через панель администратора @zapixxgarant',
+          description: take ? 'Списание через панель администратора' : 'Выдача через панель администратора @zapixxgarant',
         }),
       })
 
@@ -51,13 +51,15 @@ export function AdminGiveTab() {
       if (res.ok && data.ok) {
         setStatus({
           type: 'success',
-          text: `Успешно! Пользователю @${cleanUser} начислено ${numAmount} TON. Текущий баланс: ${data.new_balance} TON.`,
+          text: take
+            ? `Готово: у @${cleanUser} списано ${numAmount} TON. Текущий баланс: ${data.new_balance} TON.`
+            : `Успешно! Пользователю @${cleanUser} начислено ${numAmount} TON. Текущий баланс: ${data.new_balance} TON.`,
         })
 
         // Локально зачисляем только если выдача подтверждена сервером и получатель — сам админ
         const tgUser = getTelegramUser()
         const currentActiveUsername = (tgUser?.username || '').toLowerCase().replace(/^@/, '')
-        if (currentActiveUsername !== '' && currentActiveUsername === cleanUser.toLowerCase()) {
+        if (!take && currentActiveUsername !== '' && currentActiveUsername === cleanUser.toLowerCase()) {
           credit(Math.round(numAmount * 1000))
         }
 
@@ -65,12 +67,12 @@ export function AdminGiveTab() {
       } else {
         setStatus({
           type: 'error',
-          text: data.detail || 'Ошибка при начислении TON.',
+          text: data.detail || (take ? 'Ошибка при списании TON.' : 'Ошибка при начислении TON.'),
         })
       }
     } catch {
       // Без ответа сервера деньги не создаются
-      setStatus({ type: 'error', text: 'Сервер недоступен — выдача не выполнена, баланс не изменён.' })
+      setStatus({ type: 'error', text: 'Сервер недоступен — операция не выполнена, баланс не изменён.' })
     } finally {
       setLoading(false)
     }
@@ -132,10 +134,18 @@ export function AdminGiveTab() {
         <Button
           fullWidth
           className={styles.submitBtn}
-          onClick={handleGiveTon}
+          onClick={() => void handleGiveTon(false)}
           disabled={loading}
         >
-          {loading ? 'Начисление...' : '🚀 Выдать TON'}
+          {loading ? 'Подождите...' : '🚀 Выдать TON'}
+        </Button>
+        <Button
+          fullWidth
+          variant="secondary"
+          onClick={() => void handleGiveTon(true)}
+          disabled={loading}
+        >
+          {loading ? 'Подождите...' : '➖ Вычесть TON у игрока'}
         </Button>
       </div>
   )

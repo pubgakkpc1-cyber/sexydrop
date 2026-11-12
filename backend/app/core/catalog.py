@@ -151,12 +151,36 @@ def tilt_to_rtp(entries: list[tuple[str, int]], price: int, target_pct: float, m
     return [(i, w) for i, w in out if w > 0]
 
 
+MAX_LOSING_ITEMS = 4  # в платном кейсе не больше 4 призов дешевле цены кейса (не окупают прокрут)
+TON_PRIZE_MAX_CASE = 15_000  # TON-призы остаются только в кейсах дешевле 15 TON
+
+
+def shape_entries(entries: list[tuple[str, int]], price: int) -> list[tuple[str, int]]:
+    """Состав платного кейса: TON-призы только в мелких кейсах, не больше MAX_LOSING_ITEMS призов дешевле цены кейса.
+
+    - в кейсе от 15 TON TON-призы убираются, если в нём остаётся хотя бы один неокупающий подарок (иначе кейс нельзя
+      свести к нужному возврату, и TON-призы остаются как «дешёвая» часть);
+    - из неокупающих призов остаются до 4: те, что ближе всего к 45% цены кейса, — так среднюю отдачу можно свести к целевому RTP;
+    - окупающие призы (дороже или равные цене кейса) остаются все, их суммарный шанс ограничивается отдельно.
+    """
+    ents = list(entries)
+    if price >= TON_PRIZE_MAX_CASE:
+        no_ton = [(i, w) for i, w in ents if not is_ton_prize(i)]
+        if any(_cost(i) < price for i, _w in no_ton):
+            ents = no_ton
+    losing = [e for e in ents if _cost(e[0]) < price]
+    if len(losing) > MAX_LOSING_ITEMS:
+        keep = {i for i, _w in sorted(losing, key=lambda e: abs(_cost(e[0]) - 0.45 * price))[:MAX_LOSING_ITEMS]}
+        ents = [(i, w) for i, w in ents if _cost(i) >= price or i in keep]
+    return ents
+
+
 def effective_entries(case: CaseDef) -> list[tuple[str, int]]:
-    """Шансы кейса: переопределения админа, затем (для платных кейсов) подгонка под целевой RTP."""
+    """Шансы кейса: переопределения админа, затем (для платных кейсов) состав и подгонка под целевой RTP."""
     base = _admin_entries(case)
     pct = rtp_pct()
     if pct > 0 and not case.is_free:
-        return tilt_to_rtp(base, case.price, pct)
+        return tilt_to_rtp(shape_entries(base, case.price), case.price, pct)
     return base
 
 

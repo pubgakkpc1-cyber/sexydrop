@@ -1,9 +1,13 @@
 import { useState, type CSSProperties } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { RARITY_LABELS, isTonPrize, type Gift } from '../../data/catalog'
 import { formatMinor } from '../../lib/money'
 import { makeRequestId } from '../../lib/requestId'
 import { hapticNotify } from '../../lib/telegram'
-import { sellItemApi } from '../../services/gameApi'
+import { sellItemApi, withdrawItemApi } from '../../services/gameApi'
+import { SERVER_MODE } from '../../lib/serverMode'
+import { openOwnerChat } from '../../lib/telegram'
+import { buildWithdrawMessage } from '../../lib/withdraw'
 import { SparkleIcon, TonIcon } from '../shell/icons'
 import styles from './CaseWinModal.module.css'
 
@@ -18,7 +22,32 @@ const SPARKS = Array.from({ length: 12 }, (_, i) => ({ a: i * 30 + (i % 2) * 9, 
 export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
   const [sold, setSold] = useState(false)
   const [selling, setSelling] = useState(false)
+  const [withdrawing, setWithdrawing] = useState(false)
   const isTon = isTonPrize(gift)
+  const navigate = useNavigate()
+
+  const handleWithdraw = () => {
+    if (withdrawing || selling || sold) return
+    setWithdrawing(true)
+    const open = () => openOwnerChat(buildWithdrawMessage(gift, uid))
+    if (!SERVER_MODE) {
+      open()
+      onClose()
+      return
+    }
+    void withdrawItemApi(uid)
+      .then(() => {
+        open()
+        onClose()
+      })
+      .catch(() => setWithdrawing(false))
+  }
+
+  const handleUpgrade = () => {
+    if (selling || sold || withdrawing) return
+    onClose()
+    navigate('/games/upgrade')
+  }
 
   const handleSell = () => {
     if (selling || sold) return
@@ -78,26 +107,32 @@ export function CaseWinModal({ gift, uid, onClose }: CaseWinModalProps) {
         </div>
 
         <div className={styles.actions}>
-          <button
-            type="button"
-            className={styles.keepButton}
-            onClick={onClose}
-            disabled={selling || sold}
-          >
-            {isTon ? 'Отлично!' : 'Забрать в инвентарь'}
-          </button>
-
-          {!isTon && (
-            <button
-              type="button"
-              className={`${styles.sellButton} ${sold ? styles.sellButtonSold : ''}`}
-              onClick={handleSell}
-              disabled={selling || sold}
-            >
-              {sold
-                ? `Продано! +${formatMinor(gift.priceMinor)} TON`
-                : `Продать за ${formatMinor(gift.priceMinor)} TON`}
+          {isTon ? (
+            <button type="button" className={styles.keepButton} onClick={onClose}>
+              Отлично!
             </button>
+          ) : (
+            <>
+              <button type="button" className={styles.keepButton} onClick={onClose} disabled={selling || sold || withdrawing}>
+                Получить в инвентарь
+              </button>
+              <div className={styles.actionGrid}>
+                <button
+                  type="button"
+                  className={`${styles.sellButton} ${sold ? styles.sellButtonSold : ''}`}
+                  onClick={handleSell}
+                  disabled={selling || sold || withdrawing}
+                >
+                  {sold ? `Продано +${formatMinor(gift.priceMinor)}` : `Продать ${formatMinor(gift.priceMinor)} TON`}
+                </button>
+                <button type="button" className={styles.sellButton} onClick={handleUpgrade} disabled={selling || sold || withdrawing}>
+                  Улучшить
+                </button>
+              </div>
+              <button type="button" className={styles.sellButton} onClick={handleWithdraw} disabled={selling || sold || withdrawing}>
+                {withdrawing ? 'Оформляем…' : 'Вывести'}
+              </button>
+            </>
           )}
         </div>
       </div>

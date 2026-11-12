@@ -414,9 +414,15 @@ async def overview_extra(session: AsyncSession) -> dict[str, Any]:
     async def count(stmt: Any) -> int:
         return int((await session.execute(stmt)).scalar_one() or 0)
 
-    users = select(func.count()).select_from(User)
-    paid = DepositOrder.status == "paid"
-    metas = (await session.execute(select(UserMeta.quests_claimed))).scalars().all()
+    from app.api.odds import ADMIN_USERNAMES
+
+    # деньги, игры и друзья админов в статистику не входят
+    admin_ids = select(User.id).where(func.lower(func.coalesce(User.username, "")).in_(sorted(ADMIN_USERNAMES)))
+    users = select(func.count()).select_from(User).where(User.id.not_in(admin_ids))
+    paid = (DepositOrder.status == "paid") & DepositOrder.user_id.not_in(admin_ids)
+    metas = (
+        await session.execute(select(UserMeta.quests_claimed).where(UserMeta.user_id.not_in(admin_ids)))
+    ).scalars().all()
     banks = sum(int((m or {}).get("_bank", 0) or 0) for m in metas)
     credited = sum(len((m or {}).get("_ref", [])) for m in metas)
     return {
@@ -426,8 +432,12 @@ async def overview_extra(session: AsyncSession) -> dict[str, Any]:
         "users_7d": await count(users.where(User.updated_at >= now - timedelta(days=7))),
         "users_30d": await count(users.where(User.updated_at >= now - timedelta(days=30))),
         "users_new_7d": await count(users.where(User.created_at >= now - timedelta(days=7))),
-        "users_premium": await count(select(func.count()).select_from(UserMeta).where(UserMeta.is_premium.is_(True))),
-        "users_played": await count(select(func.count(func.distinct(PlayRound.user_id)))),
+        "users_premium": await count(
+            select(func.count()).select_from(UserMeta).where(UserMeta.is_premium.is_(True), UserMeta.user_id.not_in(admin_ids))
+        ),
+        "users_played": await count(
+            select(func.count(func.distinct(PlayRound.user_id))).where(PlayRound.user_id.not_in(admin_ids))
+        ),
         "users_paid": await count(select(func.count(func.distinct(DepositOrder.user_id))).where(paid)),
         "users_referred": await count(users.where(User.referred_by_id.is_not(None))),
         "deposited_total": await count(select(func.coalesce(func.sum(DepositOrder.amount_minor), 0)).where(paid)),
@@ -437,13 +447,21 @@ async def overview_extra(session: AsyncSession) -> dict[str, Any]:
             )
         ),
         "balances_total": gram_to_minor(
-            (await session.execute(select(func.coalesce(func.sum(Account.balance), 0)))).scalar_one()
+            (
+                await session.execute(
+                    select(func.coalesce(func.sum(Account.balance), 0)).where(Account.user_id.not_in(admin_ids))
+                )
+            ).scalar_one()
         ),
-        "stars_total": await count(select(func.coalesce(func.sum(cast(UserMeta.stars, Integer)), 0))),
+        "stars_total": await count(
+            select(func.coalesce(func.sum(cast(UserMeta.stars, Integer)), 0)).where(UserMeta.user_id.not_in(admin_ids))
+        ),
         "withdrawals_pending": await count(
             select(func.count()).select_from(Withdrawal).where(Withdrawal.status == "pending")
         ),
-        "withdrawals_done": await count(select(func.count()).select_from(Withdrawal).where(Withdrawal.status == "done")),
+        "withdrawals_done": await count(
+            select(func.count()).select_from(Withdrawal).where(Withdrawal.status == "done", Withdrawal.user_id.not_in(admin_ids))
+        ),
     }
 
 

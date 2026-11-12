@@ -143,7 +143,7 @@ async def snapshot(session: AsyncSession) -> dict[str, Any]:
     new_rows = dict(
         (
             await session.execute(
-                select(new_day, func.count()).where(User.created_at >= since).group_by(new_day)
+                select(new_day, func.count()).where(User.created_at >= since, _NOT_ADMIN_USER).group_by(new_day)
             )
         ).all()
     )

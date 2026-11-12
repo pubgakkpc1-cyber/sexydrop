@@ -184,6 +184,12 @@
   gap: 10px;
 }
 
+.actionGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
 .keepButton {
   width: 100%;
   padding: 13px;

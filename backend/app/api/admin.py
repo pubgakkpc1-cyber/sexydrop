@@ -68,6 +68,52 @@ async def verify_admin(
     )
 
 
+class TakeTonRequest(BaseModel):
+    username: str
+    amount_ton: Decimal = Field(..., gt=0, le=1000000)
+    description: Optional[str] = None
+
+
+@router.post("/take-ton", response_model=GiveTonResponse)
+async def take_ton(
+    body: TakeTonRequest,
+    session: Annotated[AsyncSession, Depends(get_session)],
+    admin_name: Annotated[str, Depends(verify_admin)],
+) -> GiveTonResponse:
+    """Списать TON с баланса игрока (проводка в журнале). Больше, чем есть на балансе, списать нельзя."""
+    clean_username = body.username.lstrip("@").strip().lower()
+    target_user = (
+        await session.execute(select(User).where(func.lower(User.username) == clean_username))
+    ).scalar_one_or_none()
+    if target_user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Пользователь @{clean_username} не найден в базе данных.")
+    balance_before, _ = await get_user_balance(session, target_user.id)
+    if Decimal(balance_before) < body.amount_ton:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail=f"У @{clean_username} на балансе только {balance_before} TON — больше списать нельзя.",
+        )
+    await execute_balance_operation(
+        session,
+        user_id=target_user.id,
+        type="admin_debit",
+        direction="debit",
+        amount_gram=body.amount_ton,
+        description=body.description or f"Списание администратором @{admin_name}",
+        metadata={"admin": admin_name, "recipient_username": target_user.username},
+    )
+    await session.commit()
+    balance_gram, _ = await get_user_balance(session, target_user.id)
+    return GiveTonResponse(
+        ok=True,
+        username=target_user.username or clean_username,
+        telegram_id=target_user.telegram_id,
+        amount_credited=str(-body.amount_ton),
+        new_balance=str(balance_gram),
+        currency="TON",
+    )
+
+
 @router.post("/give-ton", response_model=GiveTonResponse)
 async def give_ton(
     body: GiveTonRequest,

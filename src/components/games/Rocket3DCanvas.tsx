@@ -53,6 +53,68 @@ interface DebrisShard {
 }
 
 
+/**
+ * Траектория «головы» следа по времени полёта (секунды от старта) в долях ширины экрана.
+ * Снято с эталонной записи: резкий старт, затем ровно ~21 px/с, у правого края лента упирается в потолок.
+ */
+const HEAD_X_TABLE: ReadonlyArray<readonly [number, number]> = [
+  [0, 14], [0.2, 19.4], [0.5, 22], [1, 28.5], [2, 45.5], [3, 65.8], [4, 88.5], [5, 110], [6, 131], [7, 151],
+  [8, 171], [10, 208], [12, 243], [14, 262], [15, 268], [16, 272], [60, 280],
+]
+const SPARK_TRAIL = false // старые частицы из сопла отключены: след теперь линия-график
+const REF_W = 370
+const REF_H = 175
+
+function headRefX(t: number): number {
+  const tb = HEAD_X_TABLE
+  if (t <= 0) return tb[0]![1]
+  for (let i = 1; i < tb.length; i += 1) {
+    const [t1, x1] = tb[i]!
+    if (t <= t1) {
+      const [t0, x0] = tb[i - 1]!
+      return x0 + ((x1 - x0) * (t - t0)) / (t1 - t0)
+    }
+  }
+  return tb[tb.length - 1]![1]
+}
+
+/** Подъём линии над полом: почти плоско, затем экспонента (как на эталоне). */
+function headRefUp(x: number): number {
+  return x < 90 ? 0 : 8.3 * Math.exp(0.0275 * (x - 171)) - 0.35
+}
+
+/** Цвет следа по множителю: зелёный → бирюзовый → синий → фиолетовый → розовый → оранжевый (замер эталона). */
+const TRAIL_STOPS: ReadonlyArray<readonly [number, readonly [number, number, number]]> = [
+  [1.0, [38, 167, 108]],
+  [1.3, [39, 158, 128]],
+  [1.6, [45, 145, 161]],
+  [2.2, [52, 121, 199]],
+  [3.2, [71, 107, 217]],
+  [4.3, [92, 93, 211]],
+  [5.6, [115, 80, 202]],
+  [7.0, [148, 92, 164]],
+  [8.2, [177, 115, 98]],
+  [9.4, [191, 125, 36]],
+  [12, [197, 129, 20]],
+]
+
+function trailRgb(mult: number): [number, number, number] {
+  const st = TRAIL_STOPS
+  if (mult <= st[0]![0]) return [...st[0]![1]]
+  for (let i = 1; i < st.length; i += 1) {
+    const [m1, c1] = st[i]!
+    if (mult <= m1) {
+      const [m0, c0] = st[i - 1]!
+      const k = (mult - m0) / (m1 - m0)
+      return [c0[0] + (c1[0] - c0[0]) * k, c0[1] + (c1[1] - c0[1]) * k, c0[2] + (c1[2] - c0[2]) * k]
+    }
+  }
+  return [...st[st.length - 1]![1]]
+}
+
+const rgbStr = (c: readonly number[], a: number) => `rgba(${Math.round(c[0]!)}, ${Math.round(c[1]!)}, ${Math.round(c[2]!)}, ${a})`
+const CRASH_RED: readonly [number, number, number] = [224, 64, 64]
+
 function safeRoundRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -746,6 +808,10 @@ export function Rocket3DCanvas({
     lowQ: boolean
     /** секунды с начала предвзрывного раздувания; -1 — не идёт */
     swellT: number
+    /** след-график: точки головы в экранных координатах, время полёта, время с момента взрыва */
+    chart: { x: number; y: number }[]
+    chartT: number
+    crashT: number
     burstFn?: () => void
   }>({
     time: 0,
@@ -768,6 +834,9 @@ export function Rocket3DCanvas({
     emaDt: 0.016,
     lowQ: false,
     swellT: -1,
+    chart: [],
+    chartT: 0,
+    crashT: 0,
   })
 
   // Инициализация фоновых звёзд по всему экрану (Starfield)
@@ -792,6 +861,9 @@ export function Rocket3DCanvas({
   useEffect(() => {
     const state = stateRef.current
     if (phase === 'betting') {
+      state.chart = []
+      state.chartT = 0
+      state.crashT = 0
       state.trail = []
       state.speedStreaks = []
       state.explosion = []
@@ -803,6 +875,9 @@ export function Rocket3DCanvas({
       state.burstFn = undefined
       state.inflate = 1
     } else if (prevPhaseRef.current !== 'flying' && phase === 'flying') {
+      state.chart = []
+      state.chartT = 0
+      state.crashT = 0
       state.flightSeconds = 0
       state.trail = []
       state.speedStreaks = []
@@ -814,6 +889,7 @@ export function Rocket3DCanvas({
       state.burstFn = undefined
     } else if (prevPhaseRef.current !== 'crashed' && phase === 'crashed') {
       // Сначала ракета «надувается» (0.16 c), затем лопается: взрыв запускается из цикла отрисовки
+      state.crashT = 0
       state.swellT = 0
       state.burstFn = () => {
         const rx = state.rocketPos.x > 0 ? state.rocketPos.x : (typeof window !== 'undefined' ? window.innerWidth * 0.52 : 200)
@@ -1084,8 +1160,8 @@ export function Rocket3DCanvas({
         }
 
         // Точка круизного барьера (центр/верх арены — ракета доходит сюда и ОСТАНАВЛИВАЕТСЯ)
-        const barrierX = width * 0.5
-        const barrierY = height * 0.4
+        const barrierX = width * 0.54
+        const barrierY = height * 0.5
         const barrierAngle = -6
 
         // Взлёт по дуге за 2 c, затем ракета без остановок плывёт по большой плавной восьмёрке
@@ -1096,16 +1172,19 @@ export function Rocket3DCanvas({
 
         const t = state.flightSeconds
         const cruise = riseProgress >= 1 ? Math.min(1, (t - riseDuration) / 1.5) : 0
-        const ampX = width * 0.26
-        const ampY = height * 0.19
-        const driftX = Math.sin(t * 0.62) * ampX * cruise
-        const driftY = Math.sin(t * 1.24 + 0.8) * ampY * cruise
+        // «байт»: ракета не пляшет по экрану, а почти висит на месте — по ней не угадать момент взрыва
+        const ampX = 3.2
+        const ampY = 3.2
+        const jitterX = (Math.sin(t * 9.1) * 0.55 + Math.sin(t * 5.3 + 1.2) * 0.45) * ampX * cruise
+        const jitterY = (Math.sin(t * 7.7 + 0.6) * 0.55 + Math.sin(t * 4.1) * 0.45) * ampY * cruise
+        const creep = (1 - Math.exp(-Math.max(0, t - riseDuration) / 9)) * height * 0.05 // медленный дрейф вверх
+        const driftX = jitterX
+        const driftY = jitterY - creep
         const targetX = launchX + (barrierX - launchX) * easeRise + driftX
         const targetY = launchY + (barrierY - launchY) * easeRise - arcLift + driftY
         // Угол следует за вертикальной скоростью (крен в поворот), всегда носом вперёд
-        const vy = Math.cos(t * 1.24 + 0.8) * ampY * 1.24 * cruise
-        const targetAngle =
-          launchAngle + (barrierAngle - launchAngle) * easeRise + (Math.atan2(vy, 150) * 180) / Math.PI
+        const wobble = (Math.sin(t * 6.2) * 0.6 + Math.sin(t * 3.4 + 0.9) * 0.4) * 3.5 * cruise
+        const targetAngle = launchAngle + (barrierAngle - launchAngle) * easeRise + wobble
 
         const hoverY = 0
         const hoverAngle = 0
@@ -1128,6 +1207,82 @@ export function Rocket3DCanvas({
 
         state.rocketPos = { x: currentX, y: currentY, angle: currentAngle }
 
+        // --- 1.5. След-график: линия с цветом по множителю, светящаяся голова, при взрыве краснеет волной от головы ---
+        if (currentPhase === 'flying' || currentPhase === 'crashed') {
+          if (currentPhase === 'flying') {
+            state.chartT += dt
+            const rx = headRefX(state.chartT)
+            const sxk = width / REF_W
+            const syk = height / REF_H
+            const hx = rx * sxk
+            const hy = height * 0.91 - headRefUp(rx) * syk
+            const last = state.chart[state.chart.length - 1]
+            if (!last || Math.hypot(hx - last.x, hy - last.y) > 2.5) {
+              state.chart.push({ x: hx, y: hy })
+              if (state.chart.length > 700) state.chart.shift()
+            }
+          } else {
+            state.crashT += dt
+          }
+          const pts = state.chart
+          if (pts.length > 2) {
+            const base = trailRgb(currentMult)
+            const fadeLen = Math.min(70, width * 0.2)
+            const x0 = pts[0]!.x
+            const trailPath = (from: number, to: number) => {
+              ctx.beginPath()
+              ctx.moveTo(pts[from]!.x, pts[from]!.y)
+              for (let i = from + 1; i <= to; i += 1) ctx.lineTo(pts[i]!.x, pts[i]!.y)
+            }
+            ctx.save()
+            ctx.lineCap = 'round'
+            ctx.lineJoin = 'round'
+            // левый хвост плавно проявляется
+            const grad = ctx.createLinearGradient(x0, 0, x0 + fadeLen, 0)
+            grad.addColorStop(0, rgbStr(base, 0.05))
+            grad.addColorStop(1, rgbStr(base, 1))
+            // красная волна идёт от головы к хвосту за 0.3 c
+            const waveK = currentPhase === 'crashed' ? Math.min(1, state.crashT / 0.3) : 0
+            const redFrom = Math.max(0, Math.floor((pts.length - 1) * (1 - waveK)))
+            const calmTo = waveK > 0 ? redFrom : pts.length - 1
+            if (!state.lowQ) {
+              ctx.strokeStyle = rgbStr(base, 0.22)
+              ctx.lineWidth = 9
+              trailPath(0, calmTo)
+              ctx.stroke()
+            }
+            ctx.strokeStyle = grad
+            ctx.lineWidth = 3.2
+            trailPath(0, calmTo)
+            ctx.stroke()
+            if (waveK > 0 && redFrom < pts.length - 1) {
+              if (!state.lowQ) {
+                ctx.strokeStyle = rgbStr(CRASH_RED, 0.25)
+                ctx.lineWidth = 9
+                trailPath(redFrom, pts.length - 1)
+                ctx.stroke()
+              }
+              ctx.strokeStyle = rgbStr(CRASH_RED, 1)
+              ctx.lineWidth = 3.2
+              trailPath(redFrom, pts.length - 1)
+              ctx.stroke()
+            }
+            // светящаяся голова
+            const head = pts[pts.length - 1]!
+            if (currentPhase === 'flying' && head.y > -10) {
+              ctx.fillStyle = rgbStr(base, 0.35)
+              ctx.beginPath()
+              ctx.arc(head.x, head.y, 7, 0, Math.PI * 2)
+              ctx.fill()
+              ctx.fillStyle = '#ffffff'
+              ctx.beginPath()
+              ctx.arc(head.x, head.y, 3.2, 0, Math.PI * 2)
+              ctx.fill()
+            }
+            ctx.restore()
+          }
+        }
+
         // --- 2. След: у каждого корабля свой (дым / золотые искры / капли), без лент и теней ---
         if (currentPhase === 'flying') {
           const ship = Math.abs(skin.id) % 3
@@ -1139,7 +1294,7 @@ export function Rocket3DCanvas({
 
           state.ribbonAcc += dt
           const interval = state.lowQ ? 0.14 : 0.1
-          if (state.ribbonAcc >= interval && state.trail.length < 10) {
+          if (SPARK_TRAIL && state.ribbonAcc >= interval && state.trail.length < 10) {
             state.ribbonAcc = 0
             const r = Math.random()
             if (ship === 0) {

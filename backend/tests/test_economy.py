@@ -647,3 +647,14 @@ async def test_expensive_free_case_can_be_spun_only_once(client: AsyncClient, mo
         again = await client.post("/api/play/free/free/claim", headers=h(user), json={"client_request_id": f"again{days}"})
         assert again.json()["status"] == "used"
     assert (await state(client, user))["free_used"]["free"] is True
+
+
+async def test_admin_can_take_ton_but_not_more_than_balance(client: AsyncClient, admin: dict, player: dict) -> None:
+    await give(client, admin, player, "5")
+    res = await client.post("/api/admin/take-ton", headers=h(admin), json={"username": player["_user"]["username"], "amount_ton": "2"})
+    assert res.status_code == 200, res.text
+    assert (await state(client, player))["balance_minor"] == 3000
+    over = await client.post("/api/admin/take-ton", headers=h(admin), json={"username": player["_user"]["username"], "amount_ton": "10"})
+    assert over.status_code == 409
+    forbidden = await client.post("/api/admin/take-ton", headers=h(player), json={"username": player["_user"]["username"], "amount_ton": "1"})
+    assert forbidden.status_code == 403

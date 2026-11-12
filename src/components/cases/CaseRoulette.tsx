@@ -55,7 +55,6 @@ export function CaseRoulette({
   const [translateX, setTranslateX] = useState<number>(0)
   const [transitionStyle, setTransitionStyle] = useState<string>('none')
   const [winningIndex, setWinningIndex] = useState<number | null>(null)
-  const [burstKey, setBurstKey] = useState(0)
 
   const viewportRef = useRef<HTMLDivElement>(null)
   const lastTileIndexRef = useRef<number>(-1)
@@ -117,7 +116,6 @@ export function CaseRoulette({
 
     // Замах: короткий откат ленты назад + вспышка у маркера
     const windupTimer = setTimeout(() => {
-      setBurstKey((k) => k + 1)
       setTransitionStyle(`transform ${WINDUP_MS}ms cubic-bezier(0.3, 0, 0.3, 1)`)
       setTranslateX(startOffset + 38)
       hapticImpact('medium')
@@ -190,7 +188,6 @@ export function CaseRoulette({
         className={`${styles.rouletteViewport} ${isSpinning ? styles.viewportSpinning : ''}`}
         ref={viewportRef}
       >
-        {burstKey > 0 && <div key={burstKey} className={styles.launchBurst} aria-hidden />}
         {/* Боковые маски затемнения */}
         <div className={styles.fadeMaskLeft} aria-hidden />
         <div className={styles.fadeMaskRight} aria-hidden />

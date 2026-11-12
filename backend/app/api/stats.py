@@ -239,3 +239,14 @@ async def admin_market_refresh(x_telegram_init_data: Annotated[str | None, Heade
     await market_prices.load()
     report = await market_prices.refresh(trigger="admin")
     return {"report": report, **await market_prices.status()}
+
+
+@router.post("/admin/stars-reconcile")
+async def admin_stars_reconcile(x_telegram_init_data: Annotated[str | None, Header()] = None) -> dict[str, Any]:
+    """Сверить оплаты Stars с Telegram сейчас и показать по каждой, что с ней произошло (только админ)."""
+    _require_admin(x_telegram_init_data)
+    from app.services import stars_reconcile
+
+    stars_reconcile._force_in_test = False
+    credited = await stars_reconcile.reconcile()
+    return {"credited": credited, "rows": list(stars_reconcile.LAST_REPORT)}

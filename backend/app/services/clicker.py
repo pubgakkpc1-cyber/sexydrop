@@ -37,6 +37,19 @@ def active_mult(c: dict[str, Any]) -> int:
     return int(b.get("mult", 1)) if b.get("season") == month_key() else 1
 
 
+BOOST_PAYLOAD = "sd-boost-"  # payload счёта Telegram Stars на усиление: sd-boost-{уровень}-{случайный хвост}
+
+
+def boost_level_from_payload(payload: str) -> int | None:
+    if not payload.startswith(BOOST_PAYLOAD):
+        return None
+    try:
+        level = int(payload[len(BOOST_PAYLOAD):].split("-", 1)[0])
+    except ValueError:
+        return None
+    return level if level in BOOSTS else None
+
+
 def boost_price(current: int, level: int) -> dict[str, int]:
     """Цена усиления; если уже есть x2, до x3 доплачивается только разница."""
     base = BOOSTS[level]
@@ -174,9 +187,83 @@ async def tap(session: AsyncSession, user: User, taps: int) -> dict[str, Any]:
     return {"accepted": ok, "gain": gain, "mult": mult, "total": c["total"], "month_clicks": c["month_clicks"]}
 
 
+async def create_boost_invoice(session: AsyncSession, user: User, level: int) -> dict[str, Any]:
+    """Счёт на настоящие Telegram Stars за усиление (доплата до x3 с x2 — только разница)."""
+    import secrets
+
+    import httpx
+
+    from app.core.config import get_settings
+
+    if level not in BOOSTS:
+        raise GameError("bad_boost", 400, "Такого усиления нет")
+    meta = await _meta(session, user)
+    current = active_mult(dict((meta.quests_claimed or {}).get(KEY) or {}))
+    await session.commit()
+    if current >= level:
+        raise GameError("boost_active", 409, f"Усиление x{current} уже куплено — выше или такое же")
+    token = get_settings().bot_token
+    if not token:
+        raise GameError("stars_off", 503, "Оплата Stars не настроена")
+    stars = boost_price(current, level)["stars"]
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            res = await client.post(
+                f"https://api.telegram.org/bot{token}/createInvoiceLink",
+                json={
+                    "title": f"Кликалка: усиление x{level}",
+                    "description": f"Каждый тап даёт x{level} очков до конца марафона",
+                    "payload": f"{BOOST_PAYLOAD}{level}-{secrets.token_hex(8)}",
+                    "currency": "XTR",
+                    "prices": [{"label": "Stars", "amount": stars}],
+                },
+            )
+        body = res.json()
+    except Exception as exc:  # noqa: BLE001
+        raise GameError("telegram_down", 502, "Telegram недоступен, попробуйте ещё раз") from exc
+    if not body.get("ok"):
+        raise GameError("telegram_rejected", 502, "Telegram отклонил счёт")
+    return {"invoice_url": body["result"], "stars": stars}
+
+
+async def apply_paid_boost(session: AsyncSession, telegram_id: int, level: int, stars_paid: int, charge: str) -> bool:
+    """Оплата Stars дошла: включает усиление. Повтор по тому же платежу ничего не делает. Возвращает True, если включено."""
+    import logging
+
+    log = logging.getLogger(__name__)
+    user = (await session.execute(select(User).where(User.telegram_id == telegram_id))).scalar_one_or_none()
+    if user is None or level not in BOOSTS:
+        return False
+    meta = await _meta(session, user)
+    claimed = dict(meta.quests_claimed or {})
+    c = dict(claimed.get(KEY) or {})
+    charges = list(c.get("boost_charges") or [])
+    if charge in charges:
+        await session.rollback()
+        return False
+    current = active_mult(c)
+    ok = False
+    if current >= level:
+        log.warning("boost paid but already owned: user %s level %s charge %s", telegram_id, level, charge[:10])
+    elif stars_paid < boost_price(current, level)["stars"]:
+        log.warning("boost underpaid: user %s level %s paid %s", telegram_id, level, stars_paid)
+    else:
+        mk = month_key()
+        if c.get("month") != mk:
+            c["month"], c["month_clicks"] = mk, 0
+        c["boost"] = {"mult": level, "season": mk}
+        ok = True
+    charges.append(charge)
+    c["boost_charges"] = charges[-30:]
+    claimed[KEY] = c
+    meta.quests_claimed = claimed
+    await session.commit()
+    return ok
+
+
 async def buy_boost(session: AsyncSession, user: User, level: int, currency: str) -> dict[str, Any]:
-    """Купить усиление тапа на текущий сезон за звёзды или TON (списание на сервере, без повторов)."""
-    if level not in BOOSTS or currency not in ("stars", "ton"):
+    """Купить усиление тапа на текущий сезон за TON (списание на сервере, без повторов). Звёзды — через счёт Telegram."""
+    if level not in BOOSTS or currency != "ton":
         raise GameError("bad_boost", 400, "Такого усиления нет")
     meta = await _meta(session, user)
     claimed = dict(meta.quests_claimed or {})
@@ -184,17 +271,12 @@ async def buy_boost(session: AsyncSession, user: User, level: int, currency: str
     mk = month_key()
     current = active_mult(c)
     if current >= level:
-        raise GameError("boost_active", 409, f"Усиление x{current} уже действует до конца сезона")
+        raise GameError("boost_active", 409, f"Усиление x{current} уже куплено — выше или такое же")
     price = boost_price(current, level)
-    if currency == "stars":
-        if int(meta.stars) < price["stars"]:
-            raise GameError("insufficient_stars", 409, f"Не хватает звёзд: нужно {price['stars']} ★")
-        meta.stars = int(meta.stars) - price["stars"]
-    else:
-        await post_ledger(
-            session, user.id, type="clicker_boost", direction="debit", minor=price["minor"],
-            key=f"clicker-boost:{user.id}:{mk}:{level}", description=f"Кликалка: усиление x{level}",
-        )
+    await post_ledger(
+        session, user.id, type="clicker_boost", direction="debit", minor=price["minor"],
+        key=f"clicker-boost:{user.id}:{mk}:{level}", description=f"Кликалка: усиление x{level}",
+    )
     if c.get("month") != mk:
         c["month"], c["month_clicks"] = mk, 0
     c["boost"] = {"mult": level, "season": mk}
@@ -247,10 +329,15 @@ async def state(session: AsyncSession, user: User) -> dict[str, Any]:
         "max_cps": MAX_CPS,
         "boost": {
             "mult": active_mult(mine),
-            "options": [
-                {"mult": m, "stars": boost_price(active_mult(mine), m)["stars"], "ton_minor": boost_price(active_mult(mine), m)["minor"]}
+            # все уровни всегда на виду: куплено / куплено выше / можно купить (с доплатой разницы)
+            "levels": [
+                {
+                    "mult": m,
+                    "status": "owned" if m == active_mult(mine) else "above" if m < active_mult(mine) else "available",
+                    "stars": boost_price(active_mult(mine), m)["stars"] if m > active_mult(mine) else BOOSTS[m]["stars"],
+                    "ton_minor": boost_price(active_mult(mine), m)["minor"] if m > active_mult(mine) else BOOSTS[m]["minor"],
+                }
                 for m in BOOSTS
-                if m > active_mult(mine)
             ],
         },
         "referral": {

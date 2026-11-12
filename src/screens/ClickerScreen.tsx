@@ -5,11 +5,11 @@ import { playKeyThock } from '../lib/sound'
 import { TgAvatar } from '../components/ui/TgAvatar'
 import { cx } from '../lib/cx'
 import { KEY_LEVELS, KeyCap3D } from './KeyCap'
-import { useStarsBalanceStore } from '../store/starsBalance'
 import { useWalletStore } from '../store/wallet'
 import { formatMinor } from '../lib/money'
 import { hydrateFromServer } from '../lib/serverSync'
 import { ApiError } from '../lib/api'
+import { getWebApp } from '../lib/telegram'
 import styles from './ClickerScreen.module.css'
 
 interface TopRow {
@@ -31,7 +31,7 @@ export interface ClickerState {
   prizes?: { place: number; ton_minor: number; nft: boolean }[]
   max_cps: number
   me_outside?: TopRow | null
-  boost?: { mult: number; options: { mult: number; stars: number; ton_minor: number }[] }
+  boost?: { mult: number; levels: { mult: number; status: 'owned' | 'above' | 'available'; stars: number; ton_minor: number }[] }
   referral?: { clicks: number; clicks_premium: number; daily_max: number; today: number; earned: number; waiting?: number }
 }
 
@@ -146,7 +146,6 @@ export function ClickerScreen() {
   const [now, setNow] = useState(() => Date.now())
   const [buying, setBuying] = useState<string | null>(null)
   const [boostMsg, setBoostMsg] = useState<string | null>(null)
-  const stars = useStarsBalanceStore((st) => st.stars)
   const tonBalance = useWalletStore((st) => st.balances[st.mode])
   const multRef = useRef(1)
 
@@ -262,18 +261,69 @@ export function ClickerScreen() {
     }, 90)
   }, [])
 
-  const buyBoost = async (level: number, currency: 'stars' | 'ton') => {
+  const afterPurchase = async (level: number) => {
+    hapticNotify('success')
+    setBoostMsg(`Усиление x${level} включено до конца марафона`)
+    await Promise.all([load(), hydrateFromServer()])
+  }
+
+  /** Покупка за TON с баланса: списывает сервер. */
+  const buyBoostTon = async (level: number) => {
     if (buying) return
-    setBuying(`${level}-${currency}`)
+    setBuying(`${level}-ton`)
     setBoostMsg(null)
     try {
-      await apiPost('/api/clicker/boost', { level, currency })
-      hapticNotify('success')
-      setBoostMsg(`Усиление x${level} включено до конца марафона`)
-      await Promise.all([load(), hydrateFromServer()])
+      await apiPost('/api/clicker/boost', { level, currency: 'ton' })
+      await afterPurchase(level)
     } catch (e) {
       hapticNotify('error')
       setBoostMsg(e instanceof ApiError ? e.message : 'Не удалось купить усиление')
+    } finally {
+      setBuying(null)
+    }
+  }
+
+  /** Покупка за настоящие Telegram Stars: счёт от бота, усиление включается, когда придёт оплата. */
+  const buyBoostStars = async (level: number) => {
+    if (buying) return
+    const webApp = getWebApp()
+    if (!webApp?.openInvoice) {
+      setBoostMsg('Оплата Stars работает внутри Telegram. Откройте приложение через @sexydropbot.')
+      return
+    }
+    setBuying(`${level}-stars`)
+    setBoostMsg(null)
+    try {
+      const { invoice_url } = await apiPost<{ invoice_url: string }>('/api/clicker/boost-invoice', { level })
+      webApp.openInvoice(invoice_url, (status) => {
+        if (status !== 'paid') {
+          if (status === 'failed') setBoostMsg('Оплата не прошла')
+          return
+        }
+        setBoostMsg('Оплата получена, включаем усиление…')
+        // усиление включает сервер, когда Telegram подтвердит оплату: проверяем несколько раз
+        let tries = 0
+        const poll = window.setInterval(async () => {
+          tries += 1
+          try {
+            const st = await apiGet<ClickerState>('/api/clicker/state')
+            if ((st.boost?.mult ?? 1) >= level) {
+              window.clearInterval(poll)
+              await afterPurchase(level)
+              return
+            }
+          } catch {
+            /* повторим */
+          }
+          if (tries >= 20) {
+            window.clearInterval(poll)
+            setBoostMsg('Оплата прошла, усиление включится в течение пары минут (если нет — напишите в поддержку)')
+          }
+        }, 3000)
+      })
+    } catch (e) {
+      hapticNotify('error')
+      setBoostMsg(e instanceof ApiError ? e.message : 'Не удалось создать счёт')
     } finally {
       setBuying(null)
     }
@@ -352,35 +402,35 @@ export function ClickerScreen() {
         <section className={styles.boost} aria-label="Усиление тапа">
           <div className={styles.boostHead}>
             <h2 className={styles.boostTitle}>Усиление тапа</h2>
-            <span className={styles.boostNow}>{state.boost.mult > 1 ? `сейчас x${state.boost.mult}` : 'сейчас x1'}</span>
+            <span className={styles.boostNow}>сейчас x{state.boost.mult}</span>
           </div>
-          {state.boost.options.length === 0 && <p className={styles.boostHint}>Максимальное усиление x3 действует до конца марафона.</p>}
-          {state.boost.options.map((o) => (
+          {state.boost.levels.map((o) => (
             <div key={o.mult} className={styles.boostRow}>
               <span className={styles.boostMult}>
                 x{o.mult}
                 <small>за каждый тап</small>
               </span>
-              <button
-                type="button"
-                className={styles.boostBtn}
-                disabled={buying !== null || stars < o.stars}
-                onClick={() => void buyBoost(o.mult, 'stars')}
-              >
-                {o.stars} ★
-              </button>
-              <button
-                type="button"
-                className={styles.boostBtn}
-                disabled={buying !== null || tonBalance < o.ton_minor}
-                onClick={() => void buyBoost(o.mult, 'ton')}
-              >
-                {formatMinor(o.ton_minor)} TON
-              </button>
+              {o.status === 'owned' && <span className={styles.boostOwned}>Куплено ✓</span>}
+              {o.status === 'above' && <span className={styles.boostOwned}>Куплено выше: x{state.boost!.mult}</span>}
+              {o.status === 'available' && (
+                <>
+                  <button type="button" className={styles.boostBtn} disabled={buying !== null} onClick={() => void buyBoostStars(o.mult)}>
+                    {o.stars} ★
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.boostBtn}
+                    disabled={buying !== null || tonBalance < o.ton_minor}
+                    onClick={() => void buyBoostTon(o.mult)}
+                  >
+                    {formatMinor(o.ton_minor)} TON
+                  </button>
+                </>
+              )}
             </div>
           ))}
           <p className={styles.boostHint}>
-            У вас: {stars} ★ · {formatMinor(tonBalance)} TON. Усиление действует до конца текущего марафона.
+            ★ — оплата настоящими Telegram Stars, TON — с баланса. Усиление действует до конца текущего марафона. Если куплен x2, до x3 доплачивается только разница.
           </p>
           {boostMsg && <p className={styles.boostMsg} role="status">{boostMsg}</p>}
         </section>

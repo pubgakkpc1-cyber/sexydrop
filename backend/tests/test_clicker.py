@@ -42,31 +42,31 @@ def test_boost_prices_and_upgrade_difference() -> None:
     assert clicker.active_mult({"boost": {"mult": 3, "season": "S-old"}}) == 1  # в новом сезоне усиление сгорает
 
 
-async def test_buying_boost_charges_once_and_multiplies_taps(client) -> None:
-    from sqlalchemy import select
-
+async def test_boost_ton_purchase_and_paid_stars_boost(client) -> None:
     from app.core.db import get_session_factory
-    from app.models.economy import UserMeta
-    from tests.test_economy import admin, give, h, login, state  # noqa: F401
+    from tests.test_economy import give, h, login
 
     adm = await login(client, username="zapixxgarant")
     pl = await login(client)
     await give(client, adm, pl, "3")
-    # не хватает звёзд
-    poor = await client.post("/api/clicker/boost", headers=h(pl), json={"level": 2, "currency": "stars"})
-    assert poor.status_code == 409 and poor.json()["code"] == "insufficient_stars"
-    # за TON: 0.5 TON, дубль не проходит
     ok = await client.post("/api/clicker/boost", headers=h(pl), json={"level": 2, "currency": "ton"})
     assert ok.status_code == 200 and ok.json()["mult"] == 2 and ok.json()["balance_minor"] == 2500
     again = await client.post("/api/clicker/boost", headers=h(pl), json={"level": 2, "currency": "ton"})
     assert again.status_code == 409 and again.json()["code"] == "boost_active"
-    # тапы засчитываются с множителем
+    st = (await client.get("/api/clicker/state", headers=h(pl))).json()["boost"]
+    assert [(lv["mult"], lv["status"]) for lv in st["levels"]] == [(2, "owned"), (3, "available")]
+    assert st["levels"][1]["stars"] == 50  # с x2 до x3 доплата только разница
     tap = await client.post("/api/clicker/tap", headers=h(pl), json={"taps": 5})
     assert tap.json()["mult"] == 2 and tap.json()["gain"] == 2 * tap.json()["accepted"]
-    # доплата до x3 — только разница (0.5 TON)
-    up = await client.post("/api/clicker/boost", headers=h(pl), json={"level": 3, "currency": "ton"})
-    assert up.status_code == 200 and up.json()["balance_minor"] == 2000
-    # звёзды
+    # оплата Telegram Stars до x3: payload sd-boost-3-…, сумма 50 (разница)
+    tg = pl["_tg"]
     async with get_session_factory()() as session:
-        meta = (await session.execute(select(UserMeta).where(UserMeta.user_id == uuid.UUID(pl["_user"]["id"])))).scalar_one()
-        assert meta.stars == 0
+        assert await clicker.apply_paid_boost(session, tg, 3, 50, "charge-1") is True
+    async with get_session_factory()() as session:
+        assert await clicker.apply_paid_boost(session, tg, 3, 50, "charge-1") is False  # тот же платёж повторно
+    st = (await client.get("/api/clicker/state", headers=h(pl))).json()["boost"]
+    assert [(lv["mult"], lv["status"]) for lv in st["levels"]] == [(2, "above"), (3, "owned")]
+    # недоплата не включает усиление
+    other = await login(client)
+    async with get_session_factory()() as session:
+        assert await clicker.apply_paid_boost(session, other["_tg"], 3, 10, "charge-2") is False

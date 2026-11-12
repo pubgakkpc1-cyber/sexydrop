@@ -699,3 +699,15 @@
 .boostMsg {
   color: #4fd18b;
 }
+
+.boostOwned {
+  grid-column: 2 / 4;
+  justify-self: end;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #4fd18b;
+  background: rgba(79, 209, 139, 0.1);
+  border: 1px solid rgba(79, 209, 139, 0.3);
+  border-radius: 12px;
+}

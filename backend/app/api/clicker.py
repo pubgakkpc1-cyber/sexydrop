@@ -22,7 +22,17 @@ class TapBody(BaseModel):
 
 class BoostBody(BaseModel):
     level: int = Field(ge=2, le=3)
-    currency: str = Field(pattern="^(stars|ton)$")
+    currency: str = Field(pattern="^ton$")
+
+
+class BoostInvoiceBody(BaseModel):
+    level: int = Field(ge=2, le=3)
+
+
+@router.post("/boost-invoice")
+async def clicker_boost_invoice(body: BoostInvoiceBody, user: CurrentUser, session: Session) -> dict[str, Any]:
+    """Счёт Telegram Stars на усиление тапа; усиление включится, когда придёт оплата."""
+    return await clicker.create_boost_invoice(session, user, body.level)
 
 
 @router.post("/boost")

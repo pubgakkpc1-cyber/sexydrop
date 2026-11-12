@@ -28,6 +28,7 @@ PAYLOAD_PREFIX = "sd-stars-"
 PAGE = 100
 MAX_PAGES = 10
 _lock = asyncio.Lock()
+LAST_REPORT: list[dict[str, Any]] = []  # итог последней сверки по каждой оплате (для диагностики в админке)
 _last_run = 0.0
 
 
@@ -67,6 +68,7 @@ async def reconcile(*, min_interval_s: float = 0.0) -> int:
             log.warning("stars reconcile: telegram unavailable: %s", exc)
             return 0
         credited = 0
+        LAST_REPORT.clear()
         from app.services import account_service, deposit_service
 
         for tx in txs:
@@ -74,7 +76,25 @@ async def reconcile(*, min_interval_s: float = 0.0) -> int:
             payload = str(src.get("invoice_payload") or "")
             user = src.get("user") or {}
             stars, charge = tx.get("amount"), str(tx.get("id") or "")
+            if src.get("type") == "user" and payload.startswith("sd-boost-") and isinstance(stars, int) and stars > 0 and charge:
+                try:
+                    from app.services import clicker
+
+                    level = clicker.boost_level_from_payload(payload)
+                    if level is not None and isinstance(user.get("id"), int):
+                        async with get_session_factory()() as session:
+                            if await clicker.apply_paid_boost(session, int(user["id"]), level, stars, charge):
+                                credited += 1
+                                _note(tx, "boost_applied", f"x{level}")
+                                log.warning("clicker boost recovered: x%s (tx %s)", level, charge[:10])
+                            else:
+                                _note(tx, "boost_skipped", f"x{level}: уже учтён / уже куплено / недоплата")
+                except Exception as exc:  # noqa: BLE001
+                    _note(tx, "error", f"boost: {type(exc).__name__}: {exc}")
+                    log.exception("stars reconcile: boost failed for tx %s", charge[:10])
+                continue
             if src.get("type") != "user" or not payload.startswith(PAYLOAD_PREFIX) or not isinstance(stars, int) or stars <= 0 or not charge:
+                _note(tx, "ignored", "не наш платёж")
                 continue
             try:
                 async with get_session_factory()() as session:
@@ -84,12 +104,14 @@ async def reconcile(*, min_interval_s: float = 0.0) -> int:
                         )
                     ).scalar_one_or_none()
                     if order is not None and order.status == "paid":
+                        _note(tx, "already_paid", f"заказ оплачен, баланс зачислен ({order.amount_minor / 1000:g} TON)")
                         continue
                     if order is None:
                         owner = (
                             await session.execute(select(User).where(User.telegram_id == user.get("id")))
                         ).scalar_one_or_none()
                         if owner is None:
+                            _note(tx, "player_not_found", f"в базе нет игрока с Telegram ID {user.get('id')}")
                             log.warning("stars payment %s: player %s not found", charge[:10], user.get("id"))
                             continue
                         order = await account_service.create_deposit_order(
@@ -97,13 +119,25 @@ async def reconcile(*, min_interval_s: float = 0.0) -> int:
                         )
                     await account_service.credit_deposit(session, order.id, deposit_service.stars_to_minor(stars), charge)
                     credited += 1
+                    _note(tx, "credited", f"зачислено {deposit_service.stars_to_minor(stars) / 1000:g} TON")
                     log.warning("stars payment recovered: %s stars (tx %s)", stars, charge[:10])
-            except Exception:  # noqa: BLE001
+            except Exception as exc:  # noqa: BLE001
+                _note(tx, "error", f"{type(exc).__name__}: {exc}")
                 log.exception("stars reconcile: credit failed for tx %s", charge[:10])
         return credited
 
 
 _force_in_test = False
+
+
+def _note(tx: dict[str, Any], status: str, info: str = "") -> None:
+    src = tx.get("source") or {}
+    LAST_REPORT.append(
+        {
+            "at": tx.get("date"), "stars": tx.get("amount"), "user": (src.get("user") or {}).get("id"),
+            "kind": str(src.get("invoice_payload") or "")[:9], "status": status, "info": info[:200],
+        }
+    )
 
 
 async def loop() -> None:

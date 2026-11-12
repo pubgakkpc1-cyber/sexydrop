@@ -71,6 +71,7 @@ export function AdminSystemTab() {
 
       <PrizeBankPanel />
       <MarketPricesPanel />
+      <StarsReconcilePanel />
       <MaintenanceSwitch />
       <ResetProfit />
       <ResetBalances />
@@ -362,6 +363,62 @@ function MarketPricesPanel() {
         </button>
       </div>
       {msg && <p className={styles.note}>{msg}</p>}
+    </>
+  )
+}
+
+interface ReconRow {
+  at: number | null
+  stars: number | null
+  user: number | null
+  kind: string
+  status: string
+  info: string
+}
+
+const RECON_LABEL: Record<string, string> = {
+  credited: 'зачислено сейчас',
+  already_paid: 'уже было зачислено',
+  boost_applied: 'усиление включено',
+  boost_skipped: 'усиление уже учтено',
+  player_not_found: 'игрок не найден',
+  ignored: 'не наш платёж',
+  error: 'ОШИБКА',
+}
+
+/** Сверка оплат Telegram Stars: что пришло боту и что с каждой оплатой стало (зачислена, уже была, ошибка). */
+function StarsReconcilePanel() {
+  const [rows, setRows] = useState<ReconRow[] | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [msg, setMsg] = useState<string | null>(null)
+
+  const run = async () => {
+    setBusy(true)
+    setMsg(null)
+    const r = await adminFetch<{ credited: number; rows: ReconRow[] }>('/api/admin/stars-reconcile', { method: 'POST' })
+    setBusy(false)
+    if (!r.ok) return setMsg(r.error)
+    setRows([...r.data.rows].reverse())
+    setMsg(r.data.credited > 0 ? `Зачислено пропущенных оплат: ${r.data.credited}` : 'Пропущенных оплат нет')
+  }
+
+  return (
+    <>
+      <h3 className={styles.h3}>Оплаты Stars</h3>
+      <p className={styles.note}>
+        Если игрок оплатил Stars, а баланс не пополнился, нажмите «Сверить»: сервер возьмёт список платежей из Telegram, зачислит пропущенные и покажет по каждому, что с ним случилось.
+      </p>
+      <button type="button" className={styles.refresh} disabled={busy} onClick={() => void run()}>
+        {busy ? 'Сверяем…' : 'Сверить оплаты Stars'}
+      </button>
+      {msg && <p className={styles.note}>{msg}</p>}
+      {rows?.map((r, i) => (
+        <p key={i} className={styles.note}>
+          {r.at ? new Date(r.at * 1000).toLocaleString('ru-RU') : '—'} · {r.stars} ★ · ID {r.user ?? '—'} ·{' '}
+          <b>{RECON_LABEL[r.status] ?? r.status}</b>
+          {r.info ? ` (${r.info})` : ''}
+        </p>
+      ))}
     </>
   )
 }

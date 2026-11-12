@@ -267,7 +267,8 @@ def _remember_chat(update: dict[str, Any]) -> None:
 
 async def _answer_pre_checkout(query: dict[str, Any]) -> bool:
     """Подтверждает оплату Stars только для наших счетов (payload «sd-stars-…», валюта XTR)."""
-    ok = str(query.get("invoice_payload", "")).startswith("sd-stars-") and query.get("currency") == "XTR"
+    payload = str(query.get("invoice_payload", ""))
+    ok = payload.startswith(("sd-stars-", "sd-boost-")) and query.get("currency") == "XTR"
     body: dict[str, Any] = {"pre_checkout_query_id": query.get("id"), "ok": ok}
     if not ok:
         body["error_message"] = "Неизвестный счёт"
@@ -279,11 +280,24 @@ async def _answer_pre_checkout(query: dict[str, Any]) -> bool:
     return ok
 
 
-async def _record_payment(payment: dict[str, Any]) -> None:
-    """Оплата Stars: находит заказ по payload счёта и зачисляет TON на баланс игрока (один раз)."""
+async def _record_payment(payment: dict[str, Any], from_id: int | None = None) -> None:
+    """Оплата Stars: пополнение — зачисляет TON на баланс по заказу; усиление Кликалки — включает его (один раз)."""
     payload = str(payment.get("invoice_payload", ""))
     total = payment.get("total_amount")
     charge = str(payment.get("telegram_payment_charge_id") or "")
+    if payload.startswith("sd-boost-"):
+        from app.core.db import get_session_factory
+        from app.services import clicker
+
+        level = clicker.boost_level_from_payload(payload)
+        if level is not None and isinstance(total, int) and charge and isinstance(from_id, int):
+            try:
+                async with get_session_factory()() as session:
+                    done = await clicker.apply_paid_boost(session, from_id, level, total, charge)
+                log.warning("clicker boost x%s paid by %s: applied=%s", level, from_id, done)
+            except Exception:  # noqa: BLE001
+                log.exception("clicker boost apply failed (сверка включит позже)")
+        return
     if not (payload.startswith("sd-stars-") and payment.get("currency") == "XTR" and isinstance(total, int) and charge):
         return
     from sqlalchemy import select
@@ -408,7 +422,7 @@ async def handle_update(update: dict[str, Any]) -> bool:
         return False
     payment = message.get("successful_payment")
     if isinstance(payment, dict):
-        await _record_payment(payment)
+        await _record_payment(payment, (message.get("from") or {}).get("id"))
         return True
     chat = message.get("chat") or {}
     if chat.get("type") not in (None, "private"):

@@ -22,8 +22,8 @@ MAX_CPS = 8  # человек физически не тапает быстре�
 MAX_BATCH = 60
 BURST_ALLOWANCE = 8  # первая пачка / после паузы
 TOP_SIZE = 30
-REF_CLICKS = 200  # клики инвайтеру за друга без Premium
-REF_CLICKS_PREMIUM = 300  # за друга с Premium
+REF_CLICKS = 5000  # клики инвайтеру за друга без Premium
+REF_CLICKS_PREMIUM = 10000  # за друга с Premium
 REF_DAILY_MAX = 5  # сколько рефералов в день дают клики
 KEY = "_clicker"
 

@@ -530,7 +530,7 @@ def clicker_launch_caption(premium: bool = True) -> str:
         f"{e('spark')} <b>Условия</b>\n"
         f"{e('dot')} участие бесплатное, ничего вкладывать не нужно\n"
         f"{e('shield')} клики считает сервер, не быстрее 8 в секунду; автокликеры не засчитываются\n"
-        f"{e('friends')} пригласи друга: +200 кликов, с Premium +300 (друг должен открыть бесплатный кейс, до 5 друзей в день)\n"
+        f"{e('friends')} пригласи друга: +5 000 кликов, с Premium +10 000 (друг должен открыть бесплатный кейс, до 5 друзей в день)\n"
         f"{e('bolt')} ранги растут с кликами: от 5 000 до 3 000 000\n\n"
         f"{e('check')} @sexydropbot — «Игры» → «Кликалка»"
     )
@@ -580,7 +580,7 @@ def back_online_caption(premium: bool = True) -> str:
         f"{e('spark')} <b>Не забудь про бонусы</b>\n"
         f"{e('dot')} поставь <b>@sexydropbot</b> в ник — получай <b>10 звёзд каждый день</b>\n"
         f"{e('friends')} приглашай друзей: <b>2 звезды</b> за каждого, кто откроет бесплатный кейс\n"
-        f"{e('play')} в Кликалке за друга <b>+200 кликов</b>, с Premium +300 (до 5 друзей в день)\n\n"
+        f"{e('play')} в Кликалке за друга <b>+5 000 кликов</b>, с Premium +10 000 (до 5 друзей в день)\n\n"
         f"{e('free')} Первый кейс — бесплатно!\n"
         f"{e('check')} @sexydropbot"
     )
@@ -718,3 +718,79 @@ async def send_update_to_admins_once(delay_s: float = 110.0) -> None:
                     await session.commit()
     except Exception as exc:  # noqa: BLE001
         log.warning("update post to admins failed: %s", exc)
+
+
+# ---------------------------------------------------------------- пост «награды за друга в Кликалке»
+
+INVITE_CLICKS_VERSION = "2026-11-13-invite-clicks-v1"
+
+
+def invite_clicks_caption(premium: bool = True) -> str:
+    """Готовый пост для канала: за друга в Кликалке 5 000 кликов, с Premium 10 000."""
+    from app.services.telegram_bot import em
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('play')} <b>Кликалка: награды за друзей выросли!</b>\n\n"
+        f"{e('friends')} Пригласи друга и получи:\n"
+        f"{e('dot')} <b>5 000 кликов</b>: друг без Premium\n"
+        f"{e('spark')} <b>10 000 кликов</b>: друг с Premium\n\n"
+        f"{e('check')} Друг должен открыть бесплатный кейс, до 5 друзей в день\n"
+        f"{e('trophy')} Клики идут в топ марафона: 1 место NFT + 5 TON\n\n"
+        f"{e('bolt')} @sexydropbot, «Игры» → «Кликалка»"
+    )
+
+
+async def send_invite_clicks_post(chat_id: int) -> bool:
+    if not get_settings().bot_token:
+        return False
+    path = photo_path("invite-clicks")
+    if path is None:
+        log.warning("invite-clicks photo not found")
+        return False
+    markup = json.dumps({"inline_keyboard": [[{"text": "🕹 Играть в Кликалку", "url": "https://t.me/sexydropbot"}]]}, ensure_ascii=False)
+    body: dict = {}
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Готовый пост: награды за друзей в Кликалке</b> — скопируйте или перешлите в канал 👇", "parse_mode": "HTML"},
+        )
+        for premium in (True, False):
+            data = {"chat_id": str(chat_id), "caption": invite_clicks_caption(premium), "parse_mode": "HTML", "reply_markup": markup}
+            body = (await client.post(f"{_api()}/sendPhoto", data=data, files={"photo": ("invite.jpg", path.read_bytes(), "image/jpeg")})).json()
+            if body.get("ok"):
+                break
+            log.warning("invite-clicks post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
+    return bool(body.get("ok"))
+
+
+async def send_invite_clicks_to_admins_once(delay_s: float = 130.0) -> None:
+    """После деплоя присылает админам пост про награды за друзей (один раз на версию)."""
+    await asyncio.sleep(delay_s)
+    if not get_settings().bot_token:
+        return
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.core.db import get_session_factory
+    from app.models.economy import UserMeta
+    from app.models.user import User
+    from app.services.economy_core import ensure_account
+
+    try:
+        async with get_session_factory()() as session:
+            admins = (
+                await session.execute(select(User).where(func.lower(User.username).in_(sorted(ADMIN_USERNAMES))))
+            ).scalars().all()
+            for admin in admins:
+                await ensure_account(session, admin.id)
+                meta = await session.get(UserMeta, admin.id)
+                if meta is None or (meta.quests_claimed or {}).get("_inviteclicks") == INVITE_CLICKS_VERSION:
+                    continue
+                if await send_invite_clicks_post(admin.telegram_id):
+                    meta.quests_claimed = {**(meta.quests_claimed or {}), "_inviteclicks": INVITE_CLICKS_VERSION}
+                    await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("invite-clicks post to admins failed: %s", exc)

@@ -450,7 +450,7 @@ export function ClickerScreen() {
         {state?.referral && (
           <div className={styles.invite}>
             <p className={styles.inviteText}>
-              Пригласи друга: <b>+{state.referral.clicks} кликов</b> (с Premium <b>+{state.referral.clicks_premium}</b>). Друг должен открыть бесплатный кейс, иначе
+              Пригласи друга: <b>+{fmt(state.referral.clicks)} кликов</b> (с Premium <b>+{fmt(state.referral.clicks_premium)}</b>). Друг должен открыть бесплатный кейс, иначе
               бонус не засчитается. Лимит {state.referral.daily_max} друзей в день, сегодня {state.referral.today}/{state.referral.daily_max}
               {state.referral.waiting ? `, ждут кейса: ${state.referral.waiting}` : ''}.
             </p>

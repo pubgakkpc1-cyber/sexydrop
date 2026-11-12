@@ -37,6 +37,7 @@ CAPTION_MAX = 1024  # лимит подписи к фото в Telegram
 PRESETS: dict[str, dict[str, str]] = {
     "clicker": {"label": "Кликалка: запуск (картинка + пост)", "photo": "clicker-photo.jpg", "button": "🕹 Играть в Кликалку"},
     "update": {"label": "Большое обновление (картинка + пост)", "photo": "update-photo.jpg", "button": "🎮 Играть"},
+    "invite_clicks": {"label": "Кликалка: 5 000 / 10 000 за друга (картинка + пост)", "photo": "invite-clicks-photo.jpg", "button": "🕹 Играть в Кликалку"},
     "maintenance": {"label": "Технические работы: 1–2 дня (текст)", "photo": "", "button": ""},
 }
 
@@ -46,6 +47,8 @@ def preset_text(preset: str, premium: bool = False) -> str:
 
     if preset == "clicker":
         return ref_share.clicker_launch_caption(premium)
+    if preset == "invite_clicks":
+        return ref_share.invite_clicks_caption(premium)
     if preset == "update":
         return ref_share.update_caption(premium)
     if preset == "maintenance":

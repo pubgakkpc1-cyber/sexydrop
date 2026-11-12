@@ -1,7 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { RatingScreen, formatPoints } from './RatingScreen'
+import { RatingScreen, formatTurnover } from './RatingScreen'
 import { useProfileStore } from '../store/profile'
 import { useQuestsStore } from '../store/quests'
 import { useGamesHistoryStore } from '../store/gamesHistory'
@@ -32,14 +31,14 @@ describe('RatingScreen (матовый рейтинг по референсу)',
     expect(screen.queryByText('999+')).not.toBeInTheDocument()
   })
 
-  it('реальная статистика: очки = оборот × 100, в таблице только вы', () => {
+  it('реальная статистика: оборот в TON, в таблице только вы', () => {
     useProfileStore.setState({ rounds: 12, wageredMinor: 800_000, netMinor: -2_300, pvpMatches: 3 })
-    render(<RatingScreen />) // 800 TON оборота = 80K очков
+    render(<RatingScreen />) // 800 TON оборота
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
     const items = within(list).getAllByRole('listitem')
     expect(items).toHaveLength(1)
     expect(within(items[0]!).getByText('Вы')).toBeInTheDocument()
-    expect(within(items[0]!).getByText('80.0K')).toBeInTheDocument()
+    expect(within(items[0]!).getByText('800.0')).toBeInTheDocument()
     expect(within(screen.getByLabelText('Ваше место')).getByText('1')).toBeInTheDocument()
     expect(screen.getByText(/PVP-матчей: 3/)).toBeInTheDocument()
   })
@@ -55,8 +54,8 @@ describe('RatingScreen: топ-20 с сервера', () => {
         ok: true,
         json: async () => ({
           rows: [
-            { rank: 1, name: 'Иван Петров', avatar: 'https://t.me/i/userpic/320/ivan.svg', points: 5000, me: false },
-            { rank: 2, name: 'Маша', avatar: null, points: 0, me: false },
+            { rank: 1, name: 'Иван Петров', avatar: 'https://t.me/i/userpic/320/ivan.svg', turnover_minor: 5_000_000, me: false },
+            { rank: 2, name: 'Маша', avatar: null, turnover_minor: 0, me: false },
           ],
           me: null,
           total: 2,
@@ -74,17 +73,10 @@ describe('RatingScreen: топ-20 с сервера', () => {
 })
 
 describe('форматтеры рейтинга', () => {
-  it('formatPoints — максимум один знак после точки, вниз', () => {
-    expect(formatPoints(29_650_000)).toBe('29.6M')
-    expect(formatPoints(84_000)).toBe('84.0K')
-    expect(formatPoints(999)).toBe('999')
-    expect(formatPoints(0)).toBe('0')
-  })
-
-  it('описание очков скрыто и раскрывается по нажатию', async () => {
-    render(<RatingScreen />)
-    expect(screen.queryByText(/100 очков за 1 TON/)).not.toBeInTheDocument()
-    await userEvent.click(screen.getByRole('button', { name: /Что за очки/ }))
-    expect(screen.getByText(/100 очков за 1 TON/)).toBeInTheDocument()
+  it('formatTurnover — максимум один знак после точки, вниз', () => {
+    expect(formatTurnover(3_250_000_000)).toBe('3.2M')
+    expect(formatTurnover(12_450_000)).toBe('12.4K')
+    expect(formatTurnover(999_900)).toBe('999.9')
+    expect(formatTurnover(0)).toBe('0.0')
   })
 })

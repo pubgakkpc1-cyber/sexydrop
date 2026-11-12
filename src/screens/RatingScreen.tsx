@@ -26,11 +26,12 @@ function PlayerAvatar({ name, src }: { name: string; src?: string | null }) {
   )
 }
 
-/** 29600000 → «29.6M», 84000 → «84.0K»: максимум один знак после точки. */
-export function formatPoints(points: number): string {
-  if (points >= 1_000_000) return `${(Math.floor(points / 100_000) / 10).toFixed(1)}M`
-  if (points >= 1_000) return `${(Math.floor(points / 100) / 10).toFixed(1)}K`
-  return String(Math.floor(points))
+/** Оборот в TON (minor → TON): максимум один знак после точки, вниз; 12 400 → «12.4K», 3 200 000 → «3.2M». */
+export function formatTurnover(minor: number): string {
+  const ton = minor / 1000
+  if (ton >= 1_000_000) return `${(Math.floor(ton / 100_000) / 10).toFixed(1)}M`
+  if (ton >= 1_000) return `${(Math.floor(ton / 100) / 10).toFixed(1)}K`
+  return (Math.floor(ton * 10) / 10).toFixed(1)
 }
 
 interface Row {
@@ -38,12 +39,12 @@ interface Row {
   me: boolean
   name: string
   avatar?: string | null
-  points: number
+  turnover: number
 }
 
 interface BoardResponse {
-  rows: Array<{ rank: number; name: string; avatar?: string | null; points: number; me: boolean }>
-  me: { rank: number; points: number } | null
+  rows: Array<{ rank: number; name: string; avatar?: string | null; turnover_minor: number; me: boolean }>
+  me: { rank: number; turnover_minor: number } | null
   total: number
 }
 
@@ -67,17 +68,16 @@ export function RatingScreen() {
   }, [])
 
   const noData = rounds === 0 && (board?.rows.length ?? 0) === 0
-  const [infoOpen, setInfoOpen] = useState(false)
-  const myPoints = Math.floor(wageredMinor / 10) // 1 TON оборота = 100 очков
+  const myTurnover = wageredMinor
 
   // Топ-20 с сервера: имя из Telegram (не @username) и аватарка
   const rows = useMemo<Row[]>(() => {
     // Реальные игроки с сервера; если он не ответил, показываем только себя
     if (board && board.rows.length > 0) {
-      return board.rows.map((r) => ({ key: `r${r.rank}`, me: r.me, name: r.name, avatar: r.avatar, points: r.points }))
+      return board.rows.map((r) => ({ key: `r${r.rank}`, me: r.me, name: r.name, avatar: r.avatar, turnover: r.turnover_minor }))
     }
-    return noData ? [] : [{ key: 'me', me: true, name: 'Вы', points: myPoints }]
-  }, [board, noData, myPoints])
+    return noData ? [] : [{ key: 'me', me: true, name: 'Вы', turnover: myTurnover }]
+  }, [board, noData, myTurnover])
 
   const myIndex = rows.findIndex((r) => r.me)
   const myRankLabel = noData
@@ -92,32 +92,12 @@ export function RatingScreen() {
     <div className={styles.screen}>
       <h1 className={styles.title}>Рейтинг</h1>
 
-      {/* Маленькое описание очков: раскрывается только по нажатию */}
-      <div className={styles.info}>
-        <button
-          type="button"
-          className={styles.infoBtn}
-          aria-expanded={infoOpen}
-          onClick={() => setInfoOpen((v) => !v)}
-        >
-          Что за очки? <span className={cx(styles.infoCaret, infoOpen && styles.infoCaretOpen)} aria-hidden>▾</span>
-        </button>
-        {infoOpen && (
-          <div className={styles.infoPanel} role="note">
-            <p><b>Очки</b> показывают, как много вы играете. За каждую ставку в Ракетке и мини-играх
-            вы получаете <b>100 очков за 1 TON</b> ставки (1 TON оборота = 100 очков).</p>
-            <p>Выигрыш и проигрыш не важны — считается только оборот. Таблица обновляется после
-            каждого раунда.</p>
-          </div>
-        )}
-      </div>
-
       <div className={styles.listHead}>
         <span className={styles.listTitle}>
           <TrophyIcon className={styles.listTitleIcon} aria-hidden />
           Топ-20 игроков
         </span>
-        <span className={styles.colLabel}>Очки</span>
+        <span className={styles.colLabel}>Оборот, TON</span>
       </div>
 
       {rows.length === 0 && (
@@ -152,7 +132,7 @@ export function RatingScreen() {
                 <PlayerAvatar name={row.name} src={row.avatar} />
               )}
               <span className={styles.name}>{row.name}</span>
-              <span className={styles.points}>{formatPoints(row.points)}</span>
+              <span className={styles.points}>{formatTurnover(row.turnover)}</span>
             </li>
           )
         })}
@@ -163,7 +143,7 @@ export function RatingScreen() {
         <span className={styles.meRank}>{myRankLabel}</span>
         <UserAvatar size={40} className={styles.avatar} />
         <span className={styles.meChip}>ВЫ</span>
-        <span className={styles.points}>{formatPoints(board?.me?.points ?? myPoints)}</span>
+        <span className={styles.points}>{formatTurnover(board?.me?.turnover_minor ?? myTurnover)}</span>
       </div>
       )}
 

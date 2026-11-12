@@ -4,7 +4,6 @@ import { CrashLoop } from '../components/home/CrashLoop'
 import { MinesLoop } from '../components/home/MinesLoop'
 import { ClickerLoop } from '../components/home/ClickerLoop'
 import { formatMultiplier, plinkoMaxMultiplier } from '../lib/plinkoMath'
-import { GameHistory } from '../components/games/GameHistory'
 import { DiceIcon, FlameIcon, ZapIcon } from '../components/shell/icons'
 import { FEATURES } from '../lib/features'
 import styles from './GamesScreen.module.css'
@@ -213,7 +212,6 @@ export function GamesScreen() {
       </button>
       )}
 
-      <GameHistory />
     </div>
   )
 }

@@ -1,5 +1,4 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { PvpMatchHistory } from '../components/pvp/PvpMatchHistory'
 import { PvpLeaderboard } from '../components/pvp/PvpLeaderboard'
 import { usePvpRoundsStore } from '../store/pvpRounds'
 import { formatMinor } from '../lib/money'
@@ -68,7 +67,6 @@ export function PvpScreen() {
 
       <PvpLeaderboard />
 
-      <PvpMatchHistory />
 
       <button
         type="button"

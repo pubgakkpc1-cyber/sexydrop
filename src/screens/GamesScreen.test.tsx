@@ -63,25 +63,8 @@ describe('GamesScreen (PLAY HUB по кадру frame_126)', () => {
     expect(screen.getByText('MINES-ROUTE')).toBeInTheDocument()
   })
 
-  it('история ставок скрыта без записей и показана при наличии', () => {
-    const { rerender } = renderHub()
+  it('истории ставок на хабе игр нет', () => {
+    renderHub()
     expect(screen.queryByRole('region', { name: 'История ставок' })).not.toBeInTheDocument()
-
-    useGamesHistoryStore.getState().push({
-      game: 'Ракетка',
-      stakeLabel: '0.1 GRAM',
-      outcome: 'won',
-      deltaMinor: 410,
-      detail: 'x1.51',
-    })
-    rerender(
-      <MemoryRouter initialEntries={['/games']}>
-        <Routes>
-          <Route path="/games" element={<GamesScreen />} />
-        </Routes>
-      </MemoryRouter>,
-    )
-    expect(screen.getByRole('region', { name: 'История ставок' })).toBeInTheDocument()
-    expect(screen.getByText('+0.41 TON')).toBeInTheDocument()
   })
 })

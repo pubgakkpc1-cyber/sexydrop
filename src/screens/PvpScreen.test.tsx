@@ -60,16 +60,6 @@ describe('PvpScreen — PVP HUB (5.1, 5.5, 5.6)', () => {
     expect(screen.getByText(/Матчей пока нет — сыграйте/)).toBeInTheDocument()
   })
 
-  it('5.5: история матчей показывает реальные записи после игр', () => {
-    _setJackpotRngForTests(() => 0.05)
-    startJackpotRound(1000, 'req-1')
-    drawJackpot('req-2')
-    renderScreen()
-    expect(screen.getByRole('region', { name: 'История матчей' })).toBeInTheDocument()
-    expect(screen.getByText('Победа')).toBeInTheDocument()
-    expect(screen.getByText(/билет 500 из 10000/)).toBeInTheDocument()
-  })
-
   it('5.4: открытый раунд Джекпота показывает баннер возврата', () => {
     startJackpotRound(1000, 'req-1')
     renderScreen()

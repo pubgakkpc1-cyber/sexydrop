@@ -374,12 +374,15 @@ def _safe_photo(url: str | None) -> str | None:
 
 
 async def leaderboard(session: AsyncSession, my_id: uuid.UUID | None, limit: int = LEADERBOARD_TOP) -> dict[str, Any]:
-    """Рейтинг всех игроков по обороту (1 TON оборота = 100 очков): имя и аватарка, без username и id."""
+    """Рейтинг игроков по обороту в TON (сумма ставок): имя и аватарка, без username и id. Админы в рейтинг не входят."""
+    from app.api.odds import ADMIN_USERNAMES
+
     total_bet = func.coalesce(func.sum(PlayRound.bet_minor), 0).label("bet")
     rows = (
         await session.execute(
             select(User.id, User.first_name, User.last_name, User.photo_url, total_bet)
             .outerjoin(PlayRound, PlayRound.user_id == User.id)
+            .where(func.lower(func.coalesce(User.username, "")).not_in(sorted(ADMIN_USERNAMES)))
             .group_by(User.id)
             .order_by(total_bet.desc(), User.created_at)
         )
@@ -390,11 +393,15 @@ async def leaderboard(session: AsyncSession, my_id: uuid.UUID | None, limit: int
             "name": _display_name(r.first_name, r.last_name),
             "avatar": _safe_photo(r.photo_url),
             "points": int(r.bet) // 10,
+            "turnover_minor": int(r.bet),
             "me": my_id is not None and r.id == my_id,
         }
         for i, r in enumerate(rows)
     ]
-    me = next(({"rank": r["rank"], "points": r["points"]} for r in ranked if r["me"]), None)
+    me = next(
+        ({"rank": r["rank"], "points": r["points"], "turnover_minor": r["turnover_minor"]} for r in ranked if r["me"]),
+        None,
+    )
     return {"rows": ranked[:limit], "me": me, "total": len(ranked)}
 
 

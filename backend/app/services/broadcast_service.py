@@ -36,6 +36,7 @@ CAPTION_MAX = 1024  # лимит подписи к фото в Telegram
 # Готовые посты (картинка + текст): админ выбирает в рассылке одним нажатием.
 PRESETS: dict[str, dict[str, str]] = {
     "clicker": {"label": "Кликалка: запуск (картинка + пост)", "photo": "clicker-photo.jpg", "button": "🕹 Играть в Кликалку"},
+    "update": {"label": "Большое обновление (картинка + пост)", "photo": "update-photo.jpg", "button": "🎮 Играть"},
     "maintenance": {"label": "Технические работы: 1–2 дня (текст)", "photo": "", "button": ""},
 }
 
@@ -45,6 +46,8 @@ def preset_text(preset: str, premium: bool = False) -> str:
 
     if preset == "clicker":
         return ref_share.clicker_launch_caption(premium)
+    if preset == "update":
+        return ref_share.update_caption(premium)
     if preset == "maintenance":
         from app.services import maintenance
 

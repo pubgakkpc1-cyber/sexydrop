@@ -640,3 +640,81 @@ async def send_back_online_to_admins_once(delay_s: float = 90.0) -> None:
                     await session.commit()
     except Exception as exc:  # noqa: BLE001
         log.warning("back-online post to admins failed: %s", exc)
+
+
+# ---------------------------------------------------------------- пост «большое обновление»
+
+UPDATE_VERSION = "2026-11-13-update-v1"
+
+
+def update_caption(premium: bool = True) -> str:
+    """Готовый пост для канала про большое обновление (до 1024 символов): премиум-эмодзи, обычные при отказе Telegram."""
+    from app.services.telegram_bot import em
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('spark')} <b>Большое обновление SEXY DROP!</b>\n\n"
+        f"{e('play')} <b>Кликалка:</b> усиление тапа x2 за 50 ★ или 0.5 TON и x3 за 100 ★ или 1 TON (до конца марафона)\n"
+        f"{e('rocket')} <b>Новая Ракета:</b> плавный след, цвета иксов и новый взрыв\n"
+        f"{e('case')} <b>Меню выигрыша:</b> сразу вывести, забрать в инвентарь, продать или улучшить\n"
+        f"{e('trophy')} <b>Рейтинг</b> теперь по обороту в TON\n"
+        f"{e('ton')} <b>Цены подарков</b> сами подстраиваются под рынок\n"
+        f"{e('bolt')} <b>Версия для ПК:</b> игры удобнее на большом экране\n\n"
+        f"{e('check')} @sexydropbot"
+    )
+
+
+async def send_update_post(chat_id: int) -> bool:
+    """Присылает админу готовый пост (картинка + текст) — переслать в канал."""
+    if not get_settings().bot_token:
+        return False
+    path = photo_path("update")
+    if path is None:
+        log.warning("update photo not found")
+        return False
+    markup = json.dumps({"inline_keyboard": [[{"text": "🎮 Играть", "url": "https://t.me/sexydropbot"}]]}, ensure_ascii=False)
+    body: dict = {}
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Готовый пост: большое обновление</b> — скопируйте или перешлите в канал 👇", "parse_mode": "HTML"},
+        )
+        for premium in (True, False):
+            data = {"chat_id": str(chat_id), "caption": update_caption(premium), "parse_mode": "HTML", "reply_markup": markup}
+            body = (await client.post(f"{_api()}/sendPhoto", data=data, files={"photo": ("update.jpg", path.read_bytes(), "image/jpeg")})).json()
+            if body.get("ok"):
+                break
+            log.warning("update post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
+    return bool(body.get("ok"))
+
+
+async def send_update_to_admins_once(delay_s: float = 110.0) -> None:
+    """После деплоя присылает админам пост про обновление (один раз на версию)."""
+    await asyncio.sleep(delay_s)
+    if not get_settings().bot_token:
+        return
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.core.db import get_session_factory
+    from app.models.economy import UserMeta
+    from app.models.user import User
+    from app.services.economy_core import ensure_account
+
+    try:
+        async with get_session_factory()() as session:
+            admins = (
+                await session.execute(select(User).where(func.lower(User.username).in_(sorted(ADMIN_USERNAMES))))
+            ).scalars().all()
+            for admin in admins:
+                await ensure_account(session, admin.id)
+                meta = await session.get(UserMeta, admin.id)
+                if meta is None or (meta.quests_claimed or {}).get("_updatepost") == UPDATE_VERSION:
+                    continue
+                if await send_update_post(admin.telegram_id):
+                    meta.quests_claimed = {**(meta.quests_claimed or {}), "_updatepost": UPDATE_VERSION}
+                    await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("update post to admins failed: %s", exc)

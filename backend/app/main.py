@@ -33,6 +33,9 @@ async def lifespan(_app: FastAPI) -> AsyncIterator[None]:
         from app.services.ref_share import send_back_online_to_admins_once
 
         asyncio.create_task(send_back_online_to_admins_once())
+        from app.services.ref_share import send_update_to_admins_once
+
+        asyncio.create_task(send_update_to_admins_once())
         # раз в час проверяем, что игроки не убрали ник бота из профиля
         from app.services.tag_quest import recheck_loop
 

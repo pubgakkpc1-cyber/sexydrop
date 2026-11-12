@@ -61,6 +61,7 @@ export function CaseRoulette({
   const animationFrameRef = useRef<number | null>(null)
   const isFinishedRef = useRef(false)
   const launchedRef = useRef(false) // основной прокрут начался (замах не считается)
+  const launchAtRef = useRef(0) // когда начался основной прокрут (мс, performance.now)
 
   // Начальное центрирование ленты в покое
   useEffect(() => {
@@ -96,6 +97,7 @@ export function CaseRoulette({
 
     isFinishedRef.current = false
     launchedRef.current = false
+    launchAtRef.current = 0
     setWinningIndex(null)
 
     // Формируем новую ленту с целевым подарком на TARGET_INDEX
@@ -124,6 +126,7 @@ export function CaseRoulette({
     const launchTimer = setTimeout(() => {
       // Включаем аппаратное ускорение и CSS transition
       launchedRef.current = true
+      launchAtRef.current = performance.now()
       setTransitionStyle(`transform ${DURATION_MS}ms cubic-bezier(0.1, 0.55, 0.04, 1)`)
       setTranslateX(targetOffset)
 
@@ -177,6 +180,8 @@ export function CaseRoulette({
   const handleTransitionEnd = (e: TransitionEvent<HTMLDivElement>) => {
     // конец «замаха» и анимации плиток не считаются: завершаем только когда лента сама доехала до выигрыша
     if (e.target !== e.currentTarget || e.propertyName !== 'transform' || !launchedRef.current) return
+    // страховка от ложных сигналов: настоящий конец прокрута не раньше, чем через почти всё время анимации
+    if (performance.now() - launchAtRef.current < DURATION_MS - 300) return
     if (isSpinning) {
       finishSpin()
     }

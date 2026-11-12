@@ -64,3 +64,13 @@ def test_rarity_order_is_kept(monkeypatch):
     eff = dict(catalog.effective_entries(case))
     pairs = sorted((catalog._cost(i), eff[i] / base[i]) for i in eff if base.get(i))
     assert all(pairs[k][1] >= pairs[k + 1][1] * 0.98 for k in range(len(pairs) - 1) if pairs[k][0] != pairs[k + 1][0])
+
+
+def test_at_most_three_ton_prizes_and_only_below_gifts(monkeypatch):
+    for case in _paid(monkeypatch):
+        eff = catalog.effective_entries(case)
+        tons = [i for i, _w in eff if catalog.is_ton_prize(i)]
+        gifts = [catalog._cost(i) for i, _w in eff if not catalog.is_ton_prize(i)]
+        assert len(tons) <= catalog.MAX_TON_PRIZES, (case.id, len(tons))
+        if gifts:
+            assert all(catalog._cost(i) < min(gifts) for i in tons), case.id

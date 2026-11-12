@@ -155,19 +155,27 @@ MAX_LOSING_ITEMS = 4  # в платном кейсе не больше 4 при�
 TON_PRIZE_MAX_CASE = 15_000  # TON-призы остаются только в кейсах дешевле 15 TON
 
 
-def shape_entries(entries: list[tuple[str, int]], price: int) -> list[tuple[str, int]]:
-    """Состав платного кейса: TON-призы только в мелких кейсах, не больше MAX_LOSING_ITEMS призов дешевле цены кейса.
+MAX_TON_PRIZES = 3  # в одном кейсе не больше 3 призов в TON
 
-    - в кейсе от 15 TON TON-призы убираются, если в нём остаётся хотя бы один неокупающий подарок (иначе кейс нельзя
-      свести к нужному возврату, и TON-призы остаются как «дешёвая» часть);
-    - из неокупающих призов остаются до 4: те, что ближе всего к 45% цены кейса, — так среднюю отдачу можно свести к целевому RTP;
+
+def shape_entries(entries: list[tuple[str, int]], price: int) -> list[tuple[str, int]]:
+    """Состав платного кейса.
+
+    - TON-призы только «снизу»: дешевле самого дешёвого подарка кейса, и не больше MAX_TON_PRIZES штук;
+    - в кейсе от 15 TON TON-призы убираются, если без них остаётся хотя бы один неокупающий подарок;
+    - неокупающих призов (дешевле цены кейса) не больше MAX_LOSING_ITEMS: остаются те, что ближе к 45% цены кейса —
+      так среднюю отдачу можно свести к целевому RTP;
     - окупающие призы (дороже или равные цене кейса) остаются все, их суммарный шанс ограничивается отдельно.
     """
     ents = list(entries)
-    if price >= TON_PRIZE_MAX_CASE:
-        no_ton = [(i, w) for i, w in ents if not is_ton_prize(i)]
-        if any(_cost(i) < price for i, _w in no_ton):
-            ents = no_ton
+    gifts = [e for e in ents if not is_ton_prize(e[0])]
+    if price >= TON_PRIZE_MAX_CASE and any(_cost(i) < price for i, _w in gifts):
+        ents = gifts
+    elif gifts:
+        floor = min(_cost(i) for i, _w in gifts)
+        tons = sorted((e for e in ents if is_ton_prize(e[0]) and _cost(e[0]) < floor), key=lambda e: abs(_cost(e[0]) - 0.45 * price))
+        keep_ton = {i for i, _w in tons[:MAX_TON_PRIZES]}
+        ents = [(i, w) for i, w in ents if not is_ton_prize(i) or i in keep_ton]
     losing = [e for e in ents if _cost(e[0]) < price]
     if len(losing) > MAX_LOSING_ITEMS:
         keep = {i for i, _w in sorted(losing, key=lambda e: abs(_cost(e[0]) - 0.45 * price))[:MAX_LOSING_ITEMS]}

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { FREE_NFT_CASE_MAINTENANCE } from '../lib/features'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CaseRoulette } from '../components/cases/CaseRoulette'
@@ -38,6 +38,8 @@ function formatCountdown(ms: number): string {
   return `${minutes}м ${String(seconds).padStart(2, '0')}с`
 }
 
+const MIN_SPIN_MS = 7000 // не короче настоящего прокрута рулетки (7.2 с)
+
 export function CaseDetailScreen() {
   const { caseId } = useParams()
   const navigate = useNavigate()
@@ -50,6 +52,7 @@ export function CaseDetailScreen() {
 
   const [now, setNow] = useState(() => Date.now())
   const [isSpinning, setIsSpinning] = useState(false)
+  const spinStartedAt = useRef(0) // когда началась рулетка: приз показываем не раньше, чем она докрутится
   const [targetGiftId, setTargetGiftId] = useState<string | null>(null)
   const [spinResult, setSpinResult] = useState<{ gift: Gift; uid: string } | null>(null)
   const [winModalOpen, setWinModalOpen] = useState(false)
@@ -121,6 +124,7 @@ export function CaseDetailScreen() {
         if (gift) {
           setTargetGiftId(result.giftId)
           setSpinResult({ gift, uid: result.uid })
+          spinStartedAt.current = performance.now()
           setIsSpinning(true)
           // после третьего прокрута FREE 24 просим пополнение — окно появится, когда закроется выигрыш
           if (result.depositRequired) setPromptAfterWin(true)
@@ -170,7 +174,8 @@ export function CaseDetailScreen() {
             if (gift) {
               setTargetGiftId(result.giftId)
               setSpinResult({ gift, uid: result.uid })
-              setIsSpinning(true)
+              spinStartedAt.current = performance.now()
+          setIsSpinning(true)
             }
           } else {
             setError('Недостаточно средств')
@@ -185,6 +190,12 @@ export function CaseDetailScreen() {
   }
 
   const handleSpinComplete = () => {
+    // страховка на любом устройстве: результат не показываем раньше конца анимации прокрута
+    const wait = MIN_SPIN_MS - (performance.now() - spinStartedAt.current)
+    if (wait > 50) {
+      window.setTimeout(handleSpinComplete, wait)
+      return
+    }
     setIsSpinning(false)
     releaseServerUpdates()
     if (isQuestFree) {

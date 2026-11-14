@@ -22,6 +22,9 @@ import { formatMinor } from '../lib/money'
 import { makeRequestId } from '../lib/requestId'
 import { claimFreeCaseApi, errorText, openCaseApi } from '../services/gameApi'
 import { holdServerUpdates, releaseServerUpdates } from '../lib/serverSync'
+import { useSpinSpeedStore } from '../store/spinSpeed'
+import { TurboToggle } from '../components/ui/TurboToggle'
+import { CaseMultiOpen, type MultiResult } from '../components/cases/CaseMultiOpen'
 import { hapticImpact } from '../lib/telegram'
 import { useFreeCasesStore, getMsk23ResetInfo } from '../store/freeCases'
 import { useWalletStore } from '../store/wallet'
@@ -38,7 +41,8 @@ function formatCountdown(ms: number): string {
   return `${minutes}м ${String(seconds).padStart(2, '0')}с`
 }
 
-const MIN_SPIN_MS = 7000 // не короче настоящего прокрута рулетки (7.2 с)
+const minSpinMs = (turbo: boolean) => (turbo ? 1900 : 7000) // не короче настоящего прокрута рулетки
+const OPEN_COUNTS = [1, 3, 5, 10] as const
 
 export function CaseDetailScreen() {
   const { caseId } = useParams()
@@ -63,6 +67,9 @@ export function CaseDetailScreen() {
   const [depositPrompt, setDepositPrompt] = useState(false)
   const [promptAfterWin, setPromptAfterWin] = useState(false)
   const [subGate, setSubGate] = useState<SubChannel[] | null>(null)
+  const turbo = useSpinSpeedStore((s) => s.turbo)
+  const [openCount, setOpenCount] = useState<(typeof OPEN_COUNTS)[number]>(1)
+  const [multi, setMulti] = useState<MultiResult[] | null>(null)
 
   // Таймер для обновления кулдауна каждую секунду
   useEffect(() => {
@@ -191,7 +198,7 @@ export function CaseDetailScreen() {
 
   const handleSpinComplete = () => {
     // страховка на любом устройстве: результат не показываем раньше конца анимации прокрута
-    const wait = MIN_SPIN_MS - (performance.now() - spinStartedAt.current)
+    const wait = minSpinMs(turbo) - (performance.now() - spinStartedAt.current)
     if (wait > 50) {
       window.setTimeout(handleSpinComplete, wait)
       return
@@ -203,6 +210,38 @@ export function CaseDetailScreen() {
     } else {
       setWinModalOpen(true)
     }
+  }
+
+  /** Открывает openCount кейсов подряд (каждое открытие — отдельный честный запрос), затем показывает общую анимацию. */
+  const handleOpenMany = async () => {
+    if (!gameCase || isSpinning || opening || checkingSubs) return
+    setError(null)
+    if (balance < gameCase.priceMinor * openCount) {
+      if (balance < gameCase.priceMinor) navigate('/deposit')
+      else setError(`Не хватает на ×${openCount}: выберите меньше кейсов или пополните баланс`)
+      return
+    }
+    setOpening(true)
+    holdServerUpdates()
+    const out: MultiResult[] = []
+    try {
+      for (let i = 0; i < openCount; i += 1) {
+        const r = await openCaseApi(gameCase.id, makeRequestId())
+        if (r.status !== 'ok') {
+          setError('Недостаточно средств для всех кейсов')
+          break
+        }
+        out.push({ giftId: r.giftId, uid: r.uid })
+      }
+    } catch (e) {
+      setError(errorText(e))
+    }
+    setOpening(false)
+    if (out.length === 0) {
+      releaseServerUpdates()
+      return
+    }
+    setMulti(out)
   }
 
   const handleCloseWinModal = () => {
@@ -273,7 +312,31 @@ export function CaseDetailScreen() {
         targetGiftId={targetGiftId}
         isSpinning={isSpinning}
         onSpinComplete={handleSpinComplete}
+        turbo={turbo}
       />
+
+      <TurboToggle disabled={isSpinning || opening} />
+
+      {/* Сколько кейсов открыть за раз (только платные) */}
+      {!isFreeCase && (
+        <div className={styles.countRow} role="group" aria-label="Сколько кейсов открыть">
+          {OPEN_COUNTS.map((n) => (
+            <button
+              key={n}
+              type="button"
+              className={`${styles.countBtn} ${openCount === n ? styles.countBtnOn : ''}`}
+              aria-pressed={openCount === n}
+              disabled={isSpinning || opening}
+              onClick={() => {
+                hapticImpact('light')
+                setOpenCount(n)
+              }}
+            >
+              ×{n}
+            </button>
+          ))}
+        </div>
+      )}
 
       {/* 4. Главная кнопка действия */}
       <div className={styles.actionSection}>
@@ -330,7 +393,7 @@ export function CaseDetailScreen() {
           <button
             type="button"
             className={`${styles.openButton} ${styles.openButtonCta}`}
-            onClick={handleOpen}
+            onClick={() => (!isFreeCase && openCount > 1 ? void handleOpenMany() : handleOpen())}
           >
             <span className={styles.buttonIcon}>
               <GiftIcon style={{ width: '19px', height: '19px' }} />
@@ -338,7 +401,9 @@ export function CaseDetailScreen() {
             <span>
               {isFreeCase
                 ? 'Открыть бесплатно'
-                : `Открыть за ${formatMinor(gameCase.priceMinor)} TON`}
+                : openCount > 1
+                  ? `Открыть ×${openCount} за ${formatMinor(gameCase.priceMinor * openCount)} TON`
+                  : `Открыть за ${formatMinor(gameCase.priceMinor)} TON`}
             </span>
           </button>
         )}
@@ -376,6 +441,16 @@ export function CaseDetailScreen() {
           ))}
         </div>
       </section>
+
+      {/* Несколько кейсов за раз: ленты, итог, «Продать всё» */}
+      {multi && (
+        <CaseMultiOpen
+          gameCase={gameCase}
+          results={multi}
+          onAnimationDone={releaseServerUpdates}
+          onClose={() => setMulti(null)}
+        />
+      )}
 
       {/* 6. Модалка обычной победы */}
       {winModalOpen && spinResult && (

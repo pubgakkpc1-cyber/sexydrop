@@ -3,6 +3,7 @@ import { giftById, type CaseDefinition } from '../../data/catalog'
 import { buildCaseStrip } from '../../lib/caseStrip'
 import { hapticImpact, hapticNotify } from '../../lib/telegram'
 import { playRouletteTick, playWinChime } from '../../lib/sound'
+import { caseSpinMs } from '../../store/spinSpeed'
 import styles from './CaseRoulette.module.css'
 
 const STRIP_LENGTH = 50
@@ -10,7 +11,6 @@ const TARGET_INDEX = 40
 const TILE_WIDTH = 80
 const TILE_MARGIN = 5 // margin left and right = 10px total
 const STRIDE = TILE_WIDTH + TILE_MARGIN * 2 // 90px
-const DURATION_MS = 7200 // долгий прокрут: быстрый старт и очень медленный «ледяной» хвост (интрига до последнего)
 const WINDUP_MS = 300 // «замах»: лента чуть откатывается назад перед рывком
 
 interface CaseRouletteProps {
@@ -18,6 +18,8 @@ interface CaseRouletteProps {
   targetGiftId: string | null
   isSpinning: boolean
   onSpinComplete: () => void
+  /** Быстрый прокрут: тот же рывок, но в несколько раз короче. */
+  turbo?: boolean
 }
 
 function generateInitialStrip(caseDefinition: CaseDefinition): string[] {
@@ -49,7 +51,11 @@ export function CaseRoulette({
   targetGiftId,
   isSpinning,
   onSpinComplete,
+  turbo = false,
 }: CaseRouletteProps) {
+  const turboRef = useRef(turbo)
+  turboRef.current = turbo
+  const durRef = useRef(caseSpinMs(false))
   // Текущая лента подарков
   const [strip, setStrip] = useState<string[]>(() => generateInitialStrip(caseDefinition))
   const [translateX, setTranslateX] = useState<number>(0)
@@ -95,6 +101,9 @@ export function CaseRoulette({
   useEffect(() => {
     if (!isSpinning || !targetGiftId) return
 
+    const dur = caseSpinMs(turboRef.current)
+    const windup = turboRef.current ? 120 : WINDUP_MS
+    durRef.current = dur
     isFinishedRef.current = false
     launchedRef.current = false
     launchAtRef.current = 0
@@ -118,7 +127,7 @@ export function CaseRoulette({
 
     // Замах: короткий откат ленты назад + вспышка у маркера
     const windupTimer = setTimeout(() => {
-      setTransitionStyle(`transform ${WINDUP_MS}ms cubic-bezier(0.3, 0, 0.3, 1)`)
+      setTransitionStyle(`transform ${windup}ms cubic-bezier(0.3, 0, 0.3, 1)`)
       setTranslateX(startOffset + 38)
       hapticImpact('medium')
     }, 40)
@@ -127,7 +136,7 @@ export function CaseRoulette({
       // Включаем аппаратное ускорение и CSS transition
       launchedRef.current = true
       launchAtRef.current = performance.now()
-      setTransitionStyle(`transform ${DURATION_MS}ms cubic-bezier(0.1, 0.55, 0.04, 1)`)
+      setTransitionStyle(`transform ${dur}ms cubic-bezier(0.1, 0.55, 0.04, 1)`)
       setTranslateX(targetOffset)
 
       lastTileIndexRef.current = -1
@@ -135,7 +144,7 @@ export function CaseRoulette({
 
       const trackTicks = (now: number) => {
         const elapsed = now - startTime
-        const rawProgress = Math.min(1, Math.max(0, elapsed / DURATION_MS))
+        const rawProgress = Math.min(1, Math.max(0, elapsed / dur))
 
         if (rawProgress < 1 && !isFinishedRef.current) {
           const easedProgress = evaluateCubicBezier(rawProgress)
@@ -163,8 +172,8 @@ export function CaseRoulette({
       // Гарантированный таймер завершения на случай сбоев transitionend в WebView
       safetyTimer = setTimeout(() => {
         finishSpin()
-      }, DURATION_MS + 80)
-    }, 40 + WINDUP_MS)
+      }, dur + 80)
+    }, 40 + windup)
 
     return () => {
       clearTimeout(windupTimer)
@@ -181,7 +190,7 @@ export function CaseRoulette({
     // конец «замаха» и анимации плиток не считаются: завершаем только когда лента сама доехала до выигрыша
     if (e.target !== e.currentTarget || e.propertyName !== 'transform' || !launchedRef.current) return
     // страховка от ложных сигналов: настоящий конец прокрута не раньше, чем через почти всё время анимации
-    if (performance.now() - launchAtRef.current < DURATION_MS - 300) return
+    if (performance.now() - launchAtRef.current < durRef.current - 300) return
     if (isSpinning) {
       finishSpin()
     }

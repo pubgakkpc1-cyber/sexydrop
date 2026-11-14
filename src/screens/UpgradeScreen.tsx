@@ -13,6 +13,8 @@ import { UpgradeTargetSheet } from '../components/inventory/UpgradeTargetSheet'
 import { BottomSheet, Button, GramAmount } from '../components/ui'
 import { ChevronLeftIcon } from '../components/shell/icons'
 import { cx } from '../lib/cx'
+import { upgradeSpinMs, useSpinSpeedStore } from '../store/spinSpeed'
+import { TurboToggle } from '../components/ui/TurboToggle'
 import styles from './UpgradeScreen.module.css'
 
 interface UpgradeOutcome {
@@ -26,7 +28,6 @@ interface UpgradeOutcome {
 
 /** Быстрый выбор цели: во сколько раз дороже источника. */
 const MULTIPLIERS = [2, 3, 5, 10, 25] as const
-const SPIN_MS = 3200
 const RING_R = 66
 const RING_LEN = 2 * Math.PI * RING_R
 
@@ -43,6 +44,8 @@ function fmtPct(value: number): string {
 export function UpgradeScreen() {
   const navigate = useNavigate()
   const items = useInventoryStore((s) => s.items)
+  const turbo = useSpinSpeedStore((s) => s.turbo)
+  const SPIN_MS = upgradeSpinMs(turbo)
 
   const [pickerOpen, setPickerOpen] = useState(false)
   const [targetPickerOpen, setTargetPickerOpen] = useState(false)
@@ -204,7 +207,7 @@ export function UpgradeScreen() {
     timers.current.push(
       window.setTimeout(() => {
         setNeedleAnimated(true)
-        setNeedleDeg(base + 360 * 5 + landFrac * 360)
+        setNeedleDeg(base + 360 * (turbo ? 3 : 5) + landFrac * 360)
       }, 60),
     )
     // «тики» при вращении — замедляются к концу
@@ -355,6 +358,8 @@ export function UpgradeScreen() {
           </button>
         ))}
       </div>
+
+      <TurboToggle disabled={spinning} />
 
       <button
         type="button"

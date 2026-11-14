@@ -30,7 +30,12 @@ async function request<T>(method: 'GET' | 'POST', path: string, body?: unknown):
   }
   const data = (await res.json().catch(() => null)) as (T & { detail?: unknown; code?: unknown }) | null
   if (!res.ok) {
-    const detail = typeof data?.detail === 'string' ? data.detail : `Ошибка ${res.status}`
+    const detail =
+      typeof data?.detail === 'string'
+        ? data.detail
+        : res.status === 422
+          ? 'Сервер не принял данные: проверьте сумму и выбранные подарки'
+          : `Ошибка ${res.status}`
     const code = typeof data?.code === 'string' ? data.code : res.status === 401 ? 'no_auth' : 'error'
     throw new ApiError(res.status, code, detail)
   }

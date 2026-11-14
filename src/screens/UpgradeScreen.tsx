@@ -442,10 +442,9 @@ export function UpgradeScreen() {
       </div>
 
       <div className={styles.sliderBox}>
-        <div className={styles.sliderHead}>
-          <span className={styles.sliderMult}>{currentMult ? `x${currentMult < 10 ? currentMult.toFixed(1) : Math.round(currentMult)}` : 'x—'}</span>
-          <span className={styles.sliderChance} data-testid="slider-chance">{chancePct !== null ? `шанс ${fmtPct(chancePct)}%` : 'выберите предмет'}</span>
-        </div>
+        <span className={styles.srOnly} data-testid="slider-chance">
+          {chancePct !== null ? `шанс ${fmtPct(chancePct)}%` : ''}
+        </span>
         <input
           type="range"
           className={styles.slider}
@@ -458,10 +457,6 @@ export function UpgradeScreen() {
           onChange={(e) => onSlide(Number(e.target.value))}
           style={{ ['--fill' as string]: `${sliderValue / 10}%` }}
         />
-        <div className={styles.sliderScale} aria-hidden>
-          <span>шанс выше</span>
-          <span>подарок дороже</span>
-        </div>
       </div>
 
       <div className={styles.multRow} role="group" aria-label="Быстрый выбор икса">
@@ -509,7 +504,14 @@ export function UpgradeScreen() {
           setTargetId(null)
         }}
         excludeUids={pickerMode === 'add' ? [...(sourceUid ? [sourceUid] : []), ...extraUids] : extraUids}
-        title="Предмет для апгрейда"
+        multiple={pickerMode === 'add'}
+        maxSelect={Math.max(1, 5 - extraUids.length)}
+        onConfirmMany={(list: InventoryItem[]) => {
+          playUpgradeSelect()
+          setExtraUids((u) => [...u, ...list.map((i) => i.uid).filter((id) => id !== sourceUid && !u.includes(id))].slice(0, 5))
+          setTargetId(null)
+        }}
+        title={pickerMode === 'add' ? 'Добавить подарки к ставке' : 'Предмет для апгрейда'}
       />
 
       <UpgradeTargetSheet

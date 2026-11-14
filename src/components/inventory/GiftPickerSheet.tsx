@@ -16,6 +16,10 @@ export interface GiftPickerSheetProps {
   title?: string
   /** Эти подарки уже в ставке — в списке их не показываем. */
   excludeUids?: readonly string[]
+  /** Режим «несколько сразу»: отмечаем галочками до maxSelect подарков и подтверждаем одним нажатием. */
+  multiple?: boolean
+  maxSelect?: number
+  onConfirmMany?: (items: InventoryItem[]) => void
 }
 
 /**
@@ -31,6 +35,9 @@ export function GiftPickerSheet({
   onConfirm,
   title = 'Выберите ваш подарок',
   excludeUids,
+  multiple = false,
+  maxSelect = 5,
+  onConfirmMany,
 }: GiftPickerSheetProps) {
   const navigate = useNavigate()
   const allItems = useInventoryStore((s) => s.items)
@@ -40,12 +47,14 @@ export function GiftPickerSheet({
   )
   const [query, setQuery] = useState('')
   const [selectedUid, setSelectedUid] = useState<string | null>(null)
+  const [picked, setPicked] = useState<string[]>([])
 
   // Каждое открытие — чистое состояние: без прошлого поиска и выбора
   useEffect(() => {
     if (open) {
       setQuery('')
       setSelectedUid(null)
+      setPicked([])
     }
   }, [open])
 
@@ -102,12 +111,17 @@ export function GiftPickerSheet({
               <li key={item.uid}>
                 <button
                   type="button"
-                  className={cx(styles.row, item.uid === selectedUid && styles.rowActive)}
+                  className={cx(styles.row, (multiple ? picked.includes(item.uid) : item.uid === selectedUid) && styles.rowActive)}
                   data-rarity={gift.rarity}
-                  aria-pressed={item.uid === selectedUid}
-                  onClick={() => setSelectedUid(item.uid)}
+                  aria-pressed={multiple ? picked.includes(item.uid) : item.uid === selectedUid}
+                  onClick={() => {
+                    if (!multiple) return setSelectedUid(item.uid)
+                    setPicked((p) =>
+                      p.includes(item.uid) ? p.filter((u) => u !== item.uid) : p.length >= maxSelect ? p : [...p, item.uid],
+                    )
+                  }}
                 >
-                  {item.uid === selectedUid && <span className={styles.check} aria-hidden>✓</span>}
+                  {(multiple ? picked.includes(item.uid) : item.uid === selectedUid) && <span className={styles.check} aria-hidden>✓</span>}
                   <img loading="lazy" decoding="async"
                     className={cx(styles.image, /_\d\.webp$/.test(gift.image) ? styles.imageFull : styles.imageContain)}
                     src={gift.image}
@@ -124,27 +138,49 @@ export function GiftPickerSheet({
             {rows.length === 0 && <li className={styles.noMatches}>Ничего не найдено</li>}
           </ul>
           <div className={styles.footer}>
-            {selected ? (
-              <span className={styles.selected}>
-                Выбран: <strong>{selected.gift.name}</strong>
-                {' · '}
-                <GramAmount minor={selected.gift.priceMinor} />
-              </span>
+            {multiple ? (
+              <>
+                <span className={picked.length ? styles.selected : styles.selectedMuted}>
+                  {picked.length
+                    ? <>Выбрано: <strong>{picked.length}</strong> из {maxSelect} · <GramAmount minor={rows.filter((r) => picked.includes(r.item.uid)).reduce((a, r) => a + r.gift.priceMinor, 0)} /></>
+                    : `Отметьте до ${maxSelect} подарков`}
+                </span>
+                <Button
+                  fullWidth
+                  disabled={picked.length === 0}
+                  onClick={() => {
+                    onConfirmMany?.(rows.filter((r) => picked.includes(r.item.uid)).map((r) => r.item))
+                    onClose()
+                  }}
+                >
+                  {picked.length > 1 ? `Добавить ${picked.length}` : 'Добавить'}
+                </Button>
+              </>
             ) : (
-              <span className={styles.selectedMuted}>Выберите подарок из списка</span>
+              <>
+                {selected ? (
+                  <span className={styles.selected}>
+                    Выбран: <strong>{selected.gift.name}</strong>
+                    {' · '}
+                    <GramAmount minor={selected.gift.priceMinor} />
+                  </span>
+                ) : (
+                  <span className={styles.selectedMuted}>Выберите подарок из списка</span>
+                )}
+                <Button
+                  fullWidth
+                  disabled={!selected}
+                  onClick={() => {
+                    if (selected) {
+                      onConfirm(selected.item)
+                      onClose()
+                    }
+                  }}
+                >
+                  Подтвердить
+                </Button>
+              </>
             )}
-            <Button
-              fullWidth
-              disabled={!selected}
-              onClick={() => {
-                if (selected) {
-                  onConfirm(selected.item)
-                  onClose()
-                }
-              }}
-            >
-              Подтвердить
-            </Button>
           </div>
         </>
       )}

@@ -400,3 +400,57 @@
     transform: translate(-50%, -50%);
   }
 }
+
+/* ===== Запуск с нуля: пока окно не готово (шрифты, разворот на весь экран), все анимации стоят на первом кадре ===== */
+.splashBackdrop:not(.run) *,
+.splashBackdrop:not(.run) *::before,
+.splashBackdrop:not(.run) *::after {
+  animation-play-state: paused !important;
+}
+
+.splashBackdrop:not(.run) .content {
+  visibility: hidden;
+}
+
+/* ===== ПК: своя крупная заставка на весь экран ===== */
+.desktop {
+  background:
+    radial-gradient(900px 600px at 50% 42%, rgba(184, 58, 63, 0.16), transparent 70%),
+    radial-gradient(circle at 50% 40%, #1d1b1c 0%, #0b0b0b 100%);
+}
+
+.desktop .stage {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 64px;
+  scale: 1.75; /* отдельное свойство: не мешает «тряске» сцены, которая анимирует transform */
+  max-width: none;
+}
+
+.desktop .ambientGlow {
+  width: 980px;
+  height: 980px;
+}
+
+.desktop .wordmark {
+  font-size: 64px;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+}
+
+.desktop .brandSub {
+  font-size: 17px;
+}
+
+.desktop .progressContainer {
+  width: 460px;
+  max-width: 80vw;
+}
+
+.desktop .progressBarTrack {
+  height: 8px;
+}
+
+.desktop .statusText {
+  font-size: 14px;
+}

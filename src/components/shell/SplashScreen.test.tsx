@@ -39,16 +39,17 @@ describe('SplashScreen (Моушн-загрузка и аватар)', () => {
     expect(onFinish).toHaveBeenCalled()
   })
 
-  it('автоматически завершает загрузку и вызывает onFinish через 2.8с', () => {
+  it('автоматически завершает загрузку и вызывает onFinish через 2.8с', async () => {
     const onFinish = vi.fn()
     render(<SplashScreen onFinish={onFinish} />)
 
-    act(() => {
-      vi.advanceTimersByTime(2500)
+    // сначала ждём готовности окна (шрифты, разворот на весь экран), затем идёт анимация
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(4000)
     })
 
-    act(() => {
-      vi.advanceTimersByTime(450)
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(450)
     })
 
     expect(onFinish).toHaveBeenCalled()

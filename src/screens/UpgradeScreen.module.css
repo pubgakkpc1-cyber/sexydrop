@@ -896,3 +896,76 @@
   right: 10px;
   z-index: 3;
 }
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Ползунок без подписей: только дорожка и ручка */
+.sliderBox {
+  padding: 16px 18px;
+}
+
+/* ===== Телефон: большое кольцо сверху, под ним ставка и цель, сразу ползунок и кнопка ===== */
+@media (max-width: 999px) {
+  .screen {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .board {
+    order: 1;
+    padding: 18px 12px 14px;
+  }
+
+  .sliderBox {
+    order: 2;
+  }
+
+  .multRow {
+    order: 3;
+  }
+
+  .placeBet {
+    order: 4;
+  }
+
+  .addBox {
+    order: 5;
+  }
+
+  .note {
+    order: 6;
+  }
+
+  .duel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .duel .ringWrap {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    width: min(66vw, 260px);
+    height: min(66vw, 260px);
+    margin-bottom: 8px;
+  }
+
+  .duel .ringCenter {
+    inset: 15%;
+  }
+
+  .duel .chanceValue {
+    font-size: 30px;
+  }
+
+  .slot {
+    min-height: 118px;
+  }
+}

@@ -34,7 +34,7 @@ class UpgradeBody(RequestId):
     target_gift_id: str = Field(min_length=1, max_length=64)
     # несколько подарков в одну ставку (первый — item_id) и доплата с баланса TON
     item_ids: list[str] | None = Field(default=None, max_length=6)
-    extra_minor: int = Field(default=0, ge=0, le=1_000_000)
+    extra_minor: int = Field(default=0, ge=0, le=10**9)
 
 
 class MinesStartBody(RequestId):

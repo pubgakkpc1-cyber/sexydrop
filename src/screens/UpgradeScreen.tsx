@@ -2,12 +2,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { giftById, gifts, type Gift } from '../data/catalog'
 import { useInventoryStore, type InventoryItem } from '../store/inventory'
-import { formatMinor, type Minor } from '../lib/money'
+import { formatMinor, toMinor, type Minor } from '../lib/money'
+import { useWalletStore } from '../store/wallet'
 import { makeRequestId } from '../lib/requestId'
 import { upgradeChancePercent } from '../services/demoUpgradeService'
 import { errorText, placeUpgradeApi } from '../services/gameApi'
 import { hapticImpact, hapticNotify } from '../lib/telegram'
-import { playRouletteTick, playWinChime } from '../lib/sound'
+import { playRouletteTick, playUpgradeLose, playUpgradeSelect, playUpgradeSlide, playUpgradeSpin, playUpgradeWin } from '../lib/sound'
 import { GiftPickerSheet } from '../components/inventory/GiftPickerSheet'
 import { UpgradeTargetSheet } from '../components/inventory/UpgradeTargetSheet'
 import { BottomSheet, Button, GramAmount } from '../components/ui'
@@ -59,6 +60,14 @@ export function UpgradeScreen() {
   const timers = useRef<number[]>([])
   const upgrading = useRef(false)
   const [error, setError] = useState<string | null>(null)
+  // дополнительные подарки в ту же ставку и доплата с баланса
+  const [extraUids, setExtraUids] = useState<string[]>([])
+  const [extraTon, setExtraTon] = useState('')
+  const [pickerMode, setPickerMode] = useState<'main' | 'add'>('main')
+  const [spinStake, setSpinStake] = useState<number | null>(null)
+  const [flash, setFlash] = useState<'win' | 'lose' | null>(null)
+  const lastSlideSound = useRef(0)
+  const balance = useWalletStore((s) => s.balances[s.mode])
 
   useEffect(() => {
     const list = timers.current
@@ -98,11 +107,26 @@ export function UpgradeScreen() {
 
   const targetGift = targetId ? giftById.get(targetId) ?? null : null
 
+  const extraItems = useMemo(
+    () => extraUids.map((u) => items.find((i) => i.uid === u)).filter((i): i is InventoryItem => i !== undefined),
+    [extraUids, items],
+  )
+  const extraGiftsMinor = extraItems.reduce((a, i) => a + (giftById.get(i.giftId)?.priceMinor ?? 0), 0)
+  let extraMinor = 0
+  try {
+    extraMinor = extraTon.trim() ? Math.max(0, toMinor(extraTon.replace(',', '.'))) : 0
+  } catch {
+    extraMinor = 0
+  }
+  const extraTooBig = extraMinor > balance
+  // ставка: главный подарок + добавленные подарки + доплата (во время прокрута — снимок на момент ставки)
+  const stakeMinor = spinStake ?? (sourceGift ? sourceGift.priceMinor + extraGiftsMinor + extraMinor : 0)
+
   // Процент кольца — целочисленный floor2(p×100) из сервиса (без float-хвостов).
   const chancePct = useMemo(() => {
     if (!sourceGift || !targetGift) return null
-    return upgradeChancePercent(sourceGift.priceMinor, targetGift.priceMinor)
-  }, [sourceGift, targetGift])
+    return upgradeChancePercent(stakeMinor, targetGift.priceMinor)
+  }, [sourceGift, targetGift, stakeMinor])
 
   // Ставка больше недоступна — выбор сбрасывается (предмет сгорел).
   useEffect(() => {
@@ -115,10 +139,10 @@ export function UpgradeScreen() {
   const chipTargets = useMemo(() => {
     const map = new Map<number, Gift | null>()
     if (!sourceGift) return map
-    const above = allTargets.filter((g) => g.priceMinor > sourceGift.priceMinor)
+    const above = allTargets.filter((g) => g.priceMinor > stakeMinor)
     let floorIdx = 0
     for (const mult of MULTIPLIERS) {
-      const want = sourceGift.priceMinor * mult
+      const want = stakeMinor * mult
       let bestIdx = -1
       for (let i = floorIdx; i < above.length; i += 1) {
         const dist = Math.abs(Math.log(above[i]!.priceMinor / want))
@@ -132,27 +156,27 @@ export function UpgradeScreen() {
       }
     }
     return map
-  }, [allTargets, sourceGift])
+  }, [allTargets, sourceGift, stakeMinor])
 
   // Ползунок икса: чем правее — тем дороже подарок и меньше шанс. Шкала логарифмическая, цель — ближайший по цене подарок.
   const sliderTargets = useMemo(
-    () => (sourceGift ? allTargets.filter((g) => g.priceMinor > sourceGift.priceMinor) : []),
-    [allTargets, sourceGift],
+    () => (sourceGift ? allTargets.filter((g) => g.priceMinor > stakeMinor) : []),
+    [allTargets, sourceGift, stakeMinor],
   )
   const sliderBounds = useMemo(() => {
     if (!sourceGift || sliderTargets.length === 0) return null
-    const lo = Math.log(sliderTargets[0]!.priceMinor / sourceGift.priceMinor)
-    const hi = Math.log(sliderTargets[sliderTargets.length - 1]!.priceMinor / sourceGift.priceMinor)
+    const lo = Math.log(sliderTargets[0]!.priceMinor / stakeMinor)
+    const hi = Math.log(sliderTargets[sliderTargets.length - 1]!.priceMinor / stakeMinor)
     return { lo, hi: Math.max(hi, lo + 0.0001) }
-  }, [sliderTargets, sourceGift])
-  const currentMult = sourceGift && targetGift ? targetGift.priceMinor / sourceGift.priceMinor : null
+  }, [sliderTargets, sourceGift, stakeMinor])
+  const currentMult = sourceGift && targetGift && stakeMinor > 0 ? targetGift.priceMinor / stakeMinor : null
   const sliderValue =
     sliderBounds && currentMult ? Math.round(((Math.log(currentMult) - sliderBounds.lo) / (sliderBounds.hi - sliderBounds.lo)) * 1000) : 0
 
   const onSlide = (raw: number) => {
     if (!sourceGift || !sliderBounds || sliderTargets.length === 0) return
     const mult = Math.exp(sliderBounds.lo + (raw / 1000) * (sliderBounds.hi - sliderBounds.lo))
-    const want = sourceGift.priceMinor * mult
+    const want = stakeMinor * mult
     let best = sliderTargets[0]!
     for (const g of sliderTargets) {
       if (Math.abs(Math.log(g.priceMinor / want)) < Math.abs(Math.log(best.priceMinor / want))) best = g
@@ -160,6 +184,11 @@ export function UpgradeScreen() {
     if (best.id !== targetId) {
       hapticImpact('light')
       setTargetId(best.id)
+      const now = performance.now()
+      if (now - lastSlideSound.current > 70) {
+        lastSlideSound.current = now
+        playUpgradeSlide(upgradeChancePercent(stakeMinor, best.priceMinor))
+      }
     }
   }
 
@@ -167,16 +196,23 @@ export function UpgradeScreen() {
     const target = chipTargets.get(mult)
     if (!target) return
     hapticImpact('light')
+    playUpgradeSelect()
     setTargetId(target.id)
   }
 
   const confirm = async () => {
     if (!source || !targetId || spin || upgrading.current) return
+    if (extraTooBig) {
+      setError('Доплата больше вашего баланса')
+      return
+    }
     setError(null)
     upgrading.current = true
     let result
     try {
-      result = await placeUpgradeApi(source.uid, targetId, makeRequestId())
+      const stakeNow = stakeMinor
+      result = await placeUpgradeApi([source.uid, ...extraItems.map((i) => i.uid)], targetId, makeRequestId(), extraMinor)
+      setSpinStake(stakeNow)
     } catch (e) {
       setError(errorText(e))
       return
@@ -195,14 +231,18 @@ export function UpgradeScreen() {
     }
 
     // Стрелка делает несколько оборотов и встаёт в зелёный сектор (победа) или мимо него
-    const winShare = Math.min(100, pending.chancePercent) / 100
-    const landFrac = pending.won
-      ? winShare * (0.12 + Math.random() * 0.76)
-      : winShare + (1 - winShare) * (0.12 + Math.random() * 0.76)
+    // зелёная зона — дуга с центром внизу (180°), растекается в обе стороны на ±шанс×180°
+    const half = (Math.min(100, pending.chancePercent) / 100) * 180
+    const landAngle = pending.won
+      ? 180 + (Math.random() - 0.5) * 2 * half * 0.8
+      : 180 + half + (0.08 + Math.random() * 0.84) * (360 - 2 * half)
+    const landFrac = (((landAngle % 360) + 360) % 360) / 360
     const base = Math.ceil(needleDeg / 360) * 360
     setSpin({ sourceGiftId: source.giftId, pending })
     setNeedleAnimated(false)
     hapticImpact('medium')
+    playUpgradeSpin()
+    setFlash(null)
     // кадр без transition (сброс), затем рывок
     timers.current.push(
       window.setTimeout(() => {
@@ -217,11 +257,27 @@ export function UpgradeScreen() {
     }
     timers.current.push(
       window.setTimeout(() => {
-        if (pending.won) playWinChime()
+        if (pending.won) playUpgradeWin()
+        else playUpgradeLose()
         hapticNotify(pending.won ? 'success' : 'error')
+        setFlash(pending.won ? 'win' : 'lose')
+        timers.current.push(window.setTimeout(() => setFlash(null), 900))
         setOutcome(pending)
         setSpin(null)
-        setSourceUid(null)
+        // сразу ставим в апгрейд самый дорогой подарок из инвентаря (после выигрыша это обычно новый подарок)
+        const burned = source.uid
+        let best: { uid: string; price: number } | null = null
+        const used = new Set([burned, ...extraUids])
+        for (const it of useInventoryStore.getState().items) {
+          if (used.has(it.uid)) continue
+          const price = giftById.get(it.giftId)?.priceMinor ?? 0
+          if (price > 0 && (!best || price > best.price)) best = { uid: it.uid, price }
+        }
+        setSourceUid(best ? best.uid : null)
+        setTargetId(null)
+        setExtraUids([])
+        setExtraTon('')
+        setSpinStake(null)
       }, SPIN_MS + 500),
     )
   }
@@ -245,7 +301,11 @@ export function UpgradeScreen() {
           <button
             type="button"
             className={cx(styles.slot, sourceGift && styles.slotFilled)}
-            onClick={() => !spinning && setPickerOpen(true)}
+            onClick={() => {
+              if (spinning) return
+              setPickerMode('main')
+              setPickerOpen(true)
+            }}
             aria-label="Выбрать предмет"
           >
             <span className={styles.slotLabel}>Ваш предмет</span>
@@ -263,7 +323,10 @@ export function UpgradeScreen() {
             )}
           </button>
 
-          <div className={styles.ringWrap}>
+          <div
+            className={cx(styles.ringWrap, spinning && styles.ringShake, flash === 'win' && styles.flashWin, flash === 'lose' && styles.flashLose)}
+            style={spinning ? { animationDuration: `${SPIN_MS}ms` } : undefined}
+          >
             <svg className={styles.ringSvg} viewBox="0 0 148 148" aria-hidden>
               <circle cx="74" cy="74" r={RING_R} fill="none" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="10" />
               {chancePct !== null && (
@@ -276,6 +339,7 @@ export function UpgradeScreen() {
                   strokeWidth="10"
                   strokeLinecap="round"
                   strokeDasharray={`${(Math.min(100, chancePct) / 100) * RING_LEN} ${RING_LEN}`}
+                  style={{ transform: `rotate(${180 - Math.min(100, chancePct) * 1.8}deg)`, transformOrigin: '74px 74px' }}
                 />
               )}
             </svg>
@@ -290,6 +354,7 @@ export function UpgradeScreen() {
               <span className={styles.needleTip} />
             </div>
             <div className={styles.ringCenter}>
+              <span className={styles.liquid} style={{ height: `${chancePct === null ? 0 : Math.min(100, chancePct)}%` }} aria-hidden />
               <span className={styles.chanceValue}>
                 {chancePct === null ? '—' : `${fmtPct(chancePct)}%`}
               </span>
@@ -321,6 +386,58 @@ export function UpgradeScreen() {
       </div>
 
       {/* Быстрый выбор цели по иксу */}
+      <div className={styles.addBox}>
+        <div className={styles.addHead}>
+          <span>Добавить к ставке</span>
+          <b>ставка {formatMinor(stakeMinor)} TON</b>
+        </div>
+        <div className={styles.addRow}>
+          {extraItems.map((it) => {
+            const g = giftById.get(it.giftId)
+            return (
+              <span key={it.uid} className={styles.addChip}>
+                {g && <img src={g.image} alt="" className={styles.addChipImg} />}
+                <span className={styles.addChipPrice}>{formatMinor(g?.priceMinor ?? 0)}</span>
+                <button
+                  type="button"
+                  className={styles.addChipX}
+                  aria-label={`Убрать ${g?.name ?? 'подарок'}`}
+                  disabled={spinning}
+                  onClick={() => setExtraUids((u) => u.filter((x) => x !== it.uid))}
+                >
+                  ×
+                </button>
+              </span>
+            )
+          })}
+          <button
+            type="button"
+            className={styles.addBtn}
+            disabled={!sourceGift || spinning || extraUids.length >= 5}
+            onClick={() => {
+              setPickerMode('add')
+              setPickerOpen(true)
+            }}
+          >
+            + подарок
+          </button>
+        </div>
+        <label className={styles.topup}>
+          <span>Доплатить с баланса</span>
+          <input
+            className={styles.topupInput}
+            inputMode="decimal"
+            placeholder="0"
+            value={extraTon}
+            disabled={!sourceGift || spinning}
+            onChange={(e) => setExtraTon(e.target.value.replace(/[^0-9.,]/g, ''))}
+            aria-label="Доплата в TON"
+          />
+          <span className={styles.topupUnit}>TON</span>
+        </label>
+        {extraTooBig && <span className={styles.topupErr}>Больше, чем на балансе ({formatMinor(balance)} TON)</span>}
+      </div>
+
       <div className={styles.sliderBox}>
         <div className={styles.sliderHead}>
           <span className={styles.sliderMult}>{currentMult ? `x${currentMult < 10 ? currentMult.toFixed(1) : Math.round(currentMult)}` : 'x—'}</span>
@@ -359,7 +476,9 @@ export function UpgradeScreen() {
         ))}
       </div>
 
-      <TurboToggle disabled={spinning} />
+      <div className={styles.turboWrap}>
+        <TurboToggle disabled={spinning} />
+      </div>
 
       <button
         type="button"
@@ -379,7 +498,17 @@ export function UpgradeScreen() {
       <GiftPickerSheet
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
-        onConfirm={(item: InventoryItem) => setSourceUid(item.uid)}
+        onConfirm={(item: InventoryItem) => {
+          playUpgradeSelect()
+          if (pickerMode === 'add') {
+            if (item.uid !== sourceUid) setExtraUids((u) => (u.includes(item.uid) ? u : [...u, item.uid].slice(0, 5)))
+          } else {
+            setSourceUid(item.uid)
+            setExtraUids((u) => u.filter((x) => x !== item.uid))
+          }
+          setTargetId(null)
+        }}
+        excludeUids={pickerMode === 'add' ? [...(sourceUid ? [sourceUid] : []), ...extraUids] : extraUids}
         title="Предмет для апгрейда"
       />
 
@@ -387,7 +516,7 @@ export function UpgradeScreen() {
         open={targetPickerOpen}
         onClose={() => setTargetPickerOpen(false)}
         targets={allVariants}
-        sourcePriceMinor={sourceGift ? sourceGift.priceMinor : null}
+        sourcePriceMinor={sourceGift ? stakeMinor : null}
         selectedId={targetId}
         onConfirm={(id) => setTargetId(id)}
       />

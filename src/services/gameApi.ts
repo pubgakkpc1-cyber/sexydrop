@@ -123,8 +123,19 @@ export async function withdrawItemApi(uid: string): Promise<void> {
 
 /* ------------------------------------------------------------------ апгрейд */
 
-export async function placeUpgradeApi(uid: string, targetGiftId: string, requestId: string): Promise<UpgradeResult> {
-  if (!SERVER_MODE) return placeUpgrade(uid, targetGiftId, requestId)
+/**
+ * Апгрейд: один или несколько подарков (первый — главный) и доплата с баланса TON.
+ * Ставка = сумма цен подарков + доплата; хотя бы один подарок обязателен.
+ */
+export async function placeUpgradeApi(
+  uids: string | readonly string[],
+  targetGiftId: string,
+  requestId: string,
+  extraMinor = 0,
+): Promise<UpgradeResult> {
+  const list = typeof uids === 'string' ? [uids] : [...uids]
+  const first = list[0] ?? ''
+  if (!SERVER_MODE) return placeUpgrade(first, targetGiftId, requestId)
   try {
     const res = await apiPost<
       {
@@ -135,15 +146,22 @@ export async function placeUpgradeApi(uid: string, targetGiftId: string, request
         gift_id: string | null
         uid: string
       } & WithBalance
-    >('/api/play/upgrade', { item_id: uid, target_gift_id: targetGiftId, client_request_id: requestId })
+    >('/api/play/upgrade', {
+      item_id: first,
+      item_ids: list,
+      extra_minor: Math.max(0, Math.floor(extraMinor)),
+      target_gift_id: targetGiftId,
+      client_request_id: requestId,
+    })
     applyBalance(res)
-    const sourceItem = useInventoryStore.getState().items.find((i) => i.uid === uid)
-    removeServerItem(uid)
+    const inv = useInventoryStore.getState().items
+    const names = list.map((u) => giftById.get(inv.find((i) => i.uid === u)?.giftId ?? '')?.name ?? 'Подарок')
+    for (const u of list) removeServerItem(u)
     if (res.won && res.gift_id) addServerItem(res.uid, res.gift_id, 'upgrade')
     const percent = upgradeChancePercent(res.source_price_minor, res.target_price_minor)
     useGamesHistoryStore.getState().push({
       game: 'Апгрейд',
-      stakeLabel: giftById.get(sourceItem?.giftId ?? '')?.name ?? 'Подарок',
+      stakeLabel: names.length > 1 ? `${names[0]} +${names.length - 1}` : (names[0] ?? 'Подарок'),
       outcome: res.won ? 'won' : 'lost',
       deltaMinor: res.won ? res.target_price_minor - res.source_price_minor : -res.source_price_minor,
       detail: res.won

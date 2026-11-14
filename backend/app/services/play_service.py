@@ -420,8 +420,22 @@ async def claim_free(session: AsyncSession, user_id: uuid.UUID, case_id: str, re
 # ---------------------------------------------------------------- апгрейд
 
 async def upgrade(
-    session: AsyncSession, user_id: uuid.UUID, item_id: str, target_gift_id: str, request_id: str
+    session: AsyncSession,
+    user_id: uuid.UUID,
+    item_id: str | list[str],
+    target_gift_id: str,
+    request_id: str,
+    *,
+    extra_minor: int = 0,
 ) -> dict[str, Any]:
+    """Апгрейд: один или несколько NFT (до 6) плюс доплата с баланса TON. Ставка = сумма цен подарков + доплата.
+
+    Без подарка нельзя: хотя бы один NFT обязателен, доплата — только добавка к нему.
+    """
+    item_ids = list(dict.fromkeys(item_id if isinstance(item_id, list) else [item_id]))
+    if not 1 <= len(item_ids) <= 6:
+        raise GameError("bad_items", 400, "Выберите от 1 до 6 подарков")
+    extra_minor = max(0, int(extra_minor))
     _check_request_id(request_id)
     target_price = catalog.gift_price(target_gift_id)
     if target_price is None or target_price <= 0 or catalog.is_ton_prize(target_gift_id):
@@ -431,15 +445,25 @@ async def upgrade(
         round_ = await _begin(session, user_id, "upgrade", request_id)
     except _Replay as replay:
         return replay.result
-    item = await lock_item(session, user_id, item_id)
-    await check_quest_item(session, user_id, item, "улучшить подарок")
-    if item.status != "available":
-        raise GameError("item_unavailable", 409)
-    source_price = item.price_minor
+    items = []
+    for one in item_ids:
+        item = await lock_item(session, user_id, one)
+        await check_quest_item(session, user_id, item, "улучшить подарок")
+        if item.status != "available":
+            raise GameError("item_unavailable", 409)
+        items.append(item)
+    if extra_minor:
+        # доплата списывается сразу; не хватает — вся ставка отклоняется
+        await post_ledger(
+            session, user_id, type="upgrade_extra", direction="debit", minor=extra_minor, key=f"{round_.id}:extra",
+            description="Апгрейд: доплата",
+        )
+    source_price = sum(int(i.price_minor) for i in items) + extra_minor
     # шанс p = min(1, s/t · 0.98): выигрыш, если randrange(100·t) < 98·s
     won = GAME_RTP_PCT * source_price >= 100 * target_price or randrange(100 * target_price) < GAME_RTP_PCT * source_price
     chance = min(1.0, GAME_RTP_PCT * source_price / (100 * target_price))
-    item.status = "burned"
+    for it in items:
+        it.status = "burned"
     round_.bet_minor = source_price
     result: dict[str, Any] = {
         "status": "ok",
@@ -449,6 +473,8 @@ async def upgrade(
         "target_price_minor": target_price,
         "gift_id": target_gift_id if won else None,
         "uid": "",
+        "items": len(items),
+        "extra_minor": extra_minor,
     }
     if won:
         new_item = await add_item(session, user_id, target_gift_id, target_price, "upgrade")

@@ -523,3 +523,46 @@ export function playKeyThock(): void {
     /* без Web Audio просто тихо */
   }
 }
+
+
+/* ===================== Апгрейд: звук на каждом этапе ===================== */
+
+/** Выбор подарка или цели: мягкий «поп». */
+export function playUpgradeSelect(): void {
+  playTones(
+    [
+      { f: 520, t: 0, d: 0.09, v: 0.05, type: 'triangle', slideTo: 760 },
+      { f: 1040, t: 0.03, d: 0.08, v: 0.02 },
+    ],
+    3000,
+  )
+}
+
+/** Движение ползунка: короткий щелчок, чем меньше шанс — тем выше звук. */
+export function playUpgradeSlide(chancePct: number): void {
+  const k = Math.max(0, Math.min(1, 1 - chancePct / 100))
+  playTones([{ f: 380 + k * 620, t: 0, d: 0.04, v: 0.035, type: 'triangle' }], 2600)
+}
+
+/** Старт прокрута: нарастающий «вжух» с гулом. */
+export function playUpgradeSpin(): void {
+  playTones(
+    [
+      { f: 140, t: 0, d: 0.7, v: 0.06, type: 'sawtooth', slideTo: 420 },
+      { f: 280, t: 0.05, d: 0.6, v: 0.04, type: 'triangle', slideTo: 840 },
+      { f: 660, t: 0.45, d: 0.25, v: 0.03 },
+    ],
+    1800,
+  )
+}
+
+/** Выигрыш: победный аккорд и «монетки». */
+export function playUpgradeWin(): void {
+  playWinChime()
+  playMinesCashout()
+}
+
+/** Проигрыш: глухой удар и нисходящий «стон». */
+export function playUpgradeLose(): void {
+  playMinesBoom()
+}

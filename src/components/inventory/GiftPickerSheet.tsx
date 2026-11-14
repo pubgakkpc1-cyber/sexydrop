@@ -14,6 +14,8 @@ export interface GiftPickerSheetProps {
   /** Подтверждение выбора: получает реальный предмет инвентаря (uid, giftId). */
   onConfirm: (item: InventoryItem) => void
   title?: string
+  /** Эти подарки уже в ставке — в списке их не показываем. */
+  excludeUids?: readonly string[]
 }
 
 /**
@@ -28,9 +30,14 @@ export function GiftPickerSheet({
   onClose,
   onConfirm,
   title = 'Выберите ваш подарок',
+  excludeUids,
 }: GiftPickerSheetProps) {
   const navigate = useNavigate()
-  const items = useInventoryStore((s) => s.items)
+  const allItems = useInventoryStore((s) => s.items)
+  const items = useMemo(
+    () => (excludeUids && excludeUids.length ? allItems.filter((i) => !excludeUids.includes(i.uid)) : allItems),
+    [allItems, excludeUids],
+  )
   const [query, setQuery] = useState('')
   const [selectedUid, setSelectedUid] = useState<string | null>(null)
 

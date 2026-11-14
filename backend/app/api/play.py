@@ -32,6 +32,9 @@ class RequestId(BaseModel):
 class UpgradeBody(RequestId):
     item_id: str = Field(min_length=1, max_length=64)
     target_gift_id: str = Field(min_length=1, max_length=64)
+    # несколько подарков в одну ставку (первый — item_id) и доплата с баланса TON
+    item_ids: list[str] | None = Field(default=None, max_length=6)
+    extra_minor: int = Field(default=0, ge=0, le=1_000_000)
 
 
 class MinesStartBody(RequestId):
@@ -126,7 +129,8 @@ async def free_quest(user: CurrentUser, session: Session) -> dict[str, Any]:
 @router.post("/play/upgrade")
 async def upgrade(body: UpgradeBody, user: CurrentUser, session: Session) -> dict[str, Any]:
     uid = user.id
-    result = await play_service.upgrade(session, uid, body.item_id, body.target_gift_id, body.client_request_id)
+    ids = [body.item_id, *[i for i in (body.item_ids or []) if i != body.item_id]]
+    result = await play_service.upgrade(session, uid, ids, body.target_gift_id, body.client_request_id, extra_minor=body.extra_minor)
     return await _with_balance(session, uid, result)
 
 

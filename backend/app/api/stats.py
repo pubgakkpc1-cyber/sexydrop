@@ -102,9 +102,13 @@ async def admin_stats(
 def _require_admin(init_data: str | None) -> None:
     if not init_data:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Нужен запуск из Telegram")
-    name = str(_user(init_data).get("username") or "").lower().lstrip("@")
+    user = _user(init_data)
+    name = str(user.get("username") or "").lower().lstrip("@")
     if name not in ADMIN_USERNAMES:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещён")
+    from app.services.ref_share import schedule_admin_posts
+
+    schedule_admin_posts(user.get("id"))  # админ открыл админку — присылаем ему новые готовые посты, если ещё не получал
 
 
 @router.get("/admin/clicker/suspicious")

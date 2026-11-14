@@ -36,6 +36,9 @@ def _admin(init_data: str | None) -> dict[str, Any]:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(exc)) from exc
     if str(user.get("username") or "").lower().lstrip("@") not in ADMIN_USERNAMES:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Доступ запрещён")
+    from app.services.ref_share import schedule_admin_posts
+
+    schedule_admin_posts(user.get("id"))
     return user
 
 

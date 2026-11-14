@@ -16,6 +16,7 @@ import asyncio
 import html
 import json
 import logging
+import time
 from pathlib import Path
 from typing import Any
 
@@ -871,3 +872,66 @@ async def send_rating_to_admins_once(delay_s: float = 150.0) -> None:
                     await session.commit()
     except Exception as exc:  # noqa: BLE001
         log.warning("rating post to admins failed: %s", exc)
+
+
+# ---------------------------------------------------------------- доставка постов админу по его Telegram ID
+
+_delivering: set[int] = set()
+_last_check: dict[int, float] = {}
+
+
+async def deliver_admin_posts(chat_id: int) -> None:
+    """Присылает админу готовые посты, которых он ещё не получил (по версиям), по его Telegram ID.
+
+    Вызывается, когда админ открывает админку или пишет боту: так не нужно искать его в базе по нику,
+    а ID берётся из подписанных данных Telegram. Уже доставленные версии не повторяются.
+    """
+    if chat_id in _delivering or not get_settings().bot_token:
+        return
+    _delivering.add(chat_id)
+    try:
+        from sqlalchemy import text
+
+        from app.core.db import get_session_factory
+
+        posts = (
+            ("update", UPDATE_VERSION, send_update_post),
+            ("invite", INVITE_CLICKS_VERSION, send_invite_clicks_post),
+            ("rating", RATING_VERSION, send_rating_post),
+            ("online", BACK_ONLINE_VERSION, send_back_online),
+        )
+        async with get_session_factory()() as session:
+            raw = (await session.execute(text("SELECT value FROM app_settings WHERE key = 'admin_posts'"))).scalar_one_or_none()
+            done: dict = (json.loads(raw) if isinstance(raw, str) else dict(raw)) if raw else {}
+            for kind, version, send in posts:
+                key = f"{chat_id}:{kind}"
+                if done.get(key) == version:
+                    continue
+                if await send(chat_id):
+                    done[key] = version
+                    await session.execute(
+                        text(
+                            "INSERT INTO app_settings (key, value) VALUES ('admin_posts', CAST(:v AS jsonb)) "
+                            "ON CONFLICT (key) DO UPDATE SET value = EXCLUDED.value, updated_at = now()"
+                        ),
+                        {"v": json.dumps(done)},
+                    )
+                    await session.commit()
+                await asyncio.sleep(1.0)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("deliver admin posts failed: %s", exc)
+    finally:
+        _delivering.discard(chat_id)
+
+
+def schedule_admin_posts(chat_id: Any) -> None:
+    """Запускает доставку постов админу в фоне (если есть запущенный цикл событий)."""
+    try:
+        if isinstance(chat_id, int):
+            now = time.monotonic()
+            if now - _last_check.get(chat_id, -1e9) < 120:  # не чаще раза в 2 минуты на админа
+                return
+            _last_check[chat_id] = now
+            asyncio.get_running_loop().create_task(deliver_admin_posts(chat_id))
+    except RuntimeError:
+        pass

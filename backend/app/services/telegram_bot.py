@@ -439,6 +439,14 @@ async def handle_update(update: dict[str, Any]) -> bool:
         await _record_payment(payment, (message.get("from") or {}).get("id"))
         return True
     chat = message.get("chat") or {}
+    if chat.get("type") in (None, "private"):
+        from app.api.odds import ADMIN_USERNAMES as _ADMINS
+
+        _from = message.get("from") or {}
+        if str(_from.get("username") or "").lower().lstrip("@") in _ADMINS:
+            from app.services.ref_share import schedule_admin_posts
+
+            schedule_admin_posts(_from.get("id"))  # админ написал боту (например /start) — присылаем новые готовые посты
     if chat.get("type") not in (None, "private"):
         # в чате SEXY DROP бот убирает служебные «вступил / покинул группу»
         if message.get("new_chat_members") or message.get("left_chat_member"):

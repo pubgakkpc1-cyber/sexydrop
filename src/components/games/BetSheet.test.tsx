@@ -108,14 +108,15 @@ describe('BetSheet (4.1: Dual Betting)', () => {
     expect(within(dialog).getByRole('button', { name: 'Сделать ставку' })).toBeDisabled()
   })
 
-  it('вкладка «Подарки» при пустом инвентаре: честное состояние без выдуманных сервисов', async () => {
+  it('вкладка «Подарки» при пустом инвентаре: можно отправить подарки владельцу', async () => {
     renderSheet()
     const dialog = screen.getByRole('dialog')
 
     await user.click(within(dialog).getByRole('button', { name: 'Подарки' }))
 
     expect(within(dialog).getByText('Нет доступных подарков')).toBeInTheDocument()
-    expect(within(dialog).getByRole('button', { name: 'Отправить подарки' })).toBeDisabled()
+    expect(within(dialog).getByRole('button', { name: 'Отправить подарки' })).toBeEnabled()
+    expect(within(dialog).getByText(/Отправьте подарки @SexyDropOwner/)).toBeInTheDocument()
 
     // «Открыть кейсы» реально уводит на главную
     await user.click(within(dialog).getByRole('button', { name: 'Открыть кейсы' }))

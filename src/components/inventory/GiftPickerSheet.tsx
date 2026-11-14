@@ -5,6 +5,7 @@ import { useInventoryStore, type InventoryItem } from '../../store/inventory'
 import { BottomSheet, Button, GramAmount, Input } from '../ui'
 import { CubeIcon } from '../shell/icons'
 import { cx } from '../../lib/cx'
+import { openOwnerChat, OWNER_HANDLE } from '../../lib/telegram'
 import styles from './GiftPickerSheet.module.css'
 
 export interface GiftPickerSheetProps {
@@ -72,11 +73,11 @@ export function GiftPickerSheet({
             Открыть кейсы
           </Button>
           <div className={styles.emptySecondary}>
-            <Button variant="secondary" disabled>
+            <Button variant="secondary" onClick={() => openOwnerChat()}>
               Отправить подарки
             </Button>
             <p className={styles.emptyHint}>
-              Получение подарков извне появится после подключения сервера
+              Отправьте подарки {OWNER_HANDLE}: после проверки они появятся в инвентаре
             </p>
           </div>
         </div>

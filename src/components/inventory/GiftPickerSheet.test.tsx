@@ -84,13 +84,11 @@ describe('GiftPickerSheet (3.3: выбор подарка для игры)', () 
     expect(screen.getByRole('button', { name: 'Подтвердить' })).toBeDisabled()
   })
 
-  it('пустой инвентарь: «Открыть кейсы» работает, «Отправить подарки» честно недоступна', async () => {
+  it('пустой инвентарь: «Открыть кейсы» работает, «Отправить подарки» ведёт в чат с владельцем', async () => {
     renderPicker()
     expect(screen.getByText('Пока нет подарков')).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Отправить подарки' })).toBeDisabled()
-    expect(
-      screen.getByText(/Получение подарков извне появится после подключения сервера/),
-    ).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Отправить подарки' })).toBeEnabled()
+    expect(screen.getByText(/Отправьте подарки @SexyDropOwner/)).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: 'Открыть кейсы' }))
     expect(onClose).toHaveBeenCalledTimes(1)

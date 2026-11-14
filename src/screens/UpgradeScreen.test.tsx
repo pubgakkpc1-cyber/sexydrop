@@ -1,7 +1,7 @@
 import { upgradeChancePercent } from '../services/demoUpgradeService'
 import { giftById } from '../data/catalog'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { fireEvent, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter, Route, Routes } from 'react-router-dom'
 import { UpgradeScreen } from './UpgradeScreen'
@@ -79,6 +79,30 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     await user.click(within(targetDialog).getAllByRole('button', { name: /^Snoop Dogg$/ })[0]!)
     await user.click(within(targetDialog).getByRole('button', { name: 'Подтвердить' }))
     expect(screen.getAllByText(`${pctText(50, SNOOP_ID)}%`).length).toBeGreaterThan(0)
+    expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
+  })
+
+  it('ползунок икса: правее — дороже цель и меньше шанс', async () => {
+    useInventoryStore.setState({
+      items: [{ uid: 'u1', giftId: 'fresh-socks', acquiredAt: 0, source: 'case-open' }],
+      history: [],
+    })
+    renderScreen()
+    const slider = screen.getByRole('slider')
+    expect(slider).toBeDisabled() // без предмета двигать нечего
+
+    await user.click(screen.getByRole('button', { name: 'Выбрать предмет' }))
+    const dialog = screen.getByRole('dialog')
+    await user.click(within(dialog).getByText('Fresh Socks'))
+    await user.click(within(dialog).getByRole('button', { name: 'Подтвердить' }))
+    expect(slider).toBeEnabled()
+
+    const chance = () => Number(screen.getByTestId('slider-chance').textContent!.replace(/[^0-9.]/g, ''))
+    fireEvent.change(slider, { target: { value: '200' } })
+    const near = chance()
+    fireEvent.change(slider, { target: { value: '900' } })
+    const far = chance()
+    expect(near).toBeGreaterThan(far)
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
   })
 

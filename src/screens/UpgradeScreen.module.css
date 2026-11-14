@@ -541,3 +541,87 @@
     height: 60px;
   }
 }
+
+/* ===== Ползунок икса: правее — дороже подарок и меньше шанс ===== */
+.sliderBox {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 16px 12px;
+  border-radius: 18px;
+  background: var(--card);
+  border: 1px solid var(--border);
+}
+
+.sliderHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sliderMult {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.sliderChance {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e3a0a3;
+  font-variant-numeric: tabular-nums;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 10px;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #b83a3f var(--fill, 0%), rgba(255, 255, 255, 0.12) var(--fill, 0%));
+}
+
+.slider:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #f2eded;
+  border: 4px solid #b83a3f;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f2eded;
+  border: 4px solid #b83a3f;
+}
+
+.sliderScale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+@media (min-width: 900px) {
+  .sliderBox {
+    padding: 18px 22px 16px;
+  }
+
+  .sliderMult {
+    font-size: 32px;
+  }
+}

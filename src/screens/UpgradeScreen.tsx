@@ -131,6 +131,35 @@ export function UpgradeScreen() {
     return map
   }, [allTargets, sourceGift])
 
+  // Ползунок икса: чем правее — тем дороже подарок и меньше шанс. Шкала логарифмическая, цель — ближайший по цене подарок.
+  const sliderTargets = useMemo(
+    () => (sourceGift ? allTargets.filter((g) => g.priceMinor > sourceGift.priceMinor) : []),
+    [allTargets, sourceGift],
+  )
+  const sliderBounds = useMemo(() => {
+    if (!sourceGift || sliderTargets.length === 0) return null
+    const lo = Math.log(sliderTargets[0]!.priceMinor / sourceGift.priceMinor)
+    const hi = Math.log(sliderTargets[sliderTargets.length - 1]!.priceMinor / sourceGift.priceMinor)
+    return { lo, hi: Math.max(hi, lo + 0.0001) }
+  }, [sliderTargets, sourceGift])
+  const currentMult = sourceGift && targetGift ? targetGift.priceMinor / sourceGift.priceMinor : null
+  const sliderValue =
+    sliderBounds && currentMult ? Math.round(((Math.log(currentMult) - sliderBounds.lo) / (sliderBounds.hi - sliderBounds.lo)) * 1000) : 0
+
+  const onSlide = (raw: number) => {
+    if (!sourceGift || !sliderBounds || sliderTargets.length === 0) return
+    const mult = Math.exp(sliderBounds.lo + (raw / 1000) * (sliderBounds.hi - sliderBounds.lo))
+    const want = sourceGift.priceMinor * mult
+    let best = sliderTargets[0]!
+    for (const g of sliderTargets) {
+      if (Math.abs(Math.log(g.priceMinor / want)) < Math.abs(Math.log(best.priceMinor / want))) best = g
+    }
+    if (best.id !== targetId) {
+      hapticImpact('light')
+      setTargetId(best.id)
+    }
+  }
+
   const pickMultiplier = (mult: number) => {
     const target = chipTargets.get(mult)
     if (!target) return
@@ -289,6 +318,29 @@ export function UpgradeScreen() {
       </div>
 
       {/* Быстрый выбор цели по иксу */}
+      <div className={styles.sliderBox}>
+        <div className={styles.sliderHead}>
+          <span className={styles.sliderMult}>{currentMult ? `x${currentMult < 10 ? currentMult.toFixed(1) : Math.round(currentMult)}` : 'x—'}</span>
+          <span className={styles.sliderChance} data-testid="slider-chance">{chancePct !== null ? `шанс ${fmtPct(chancePct)}%` : 'выберите предмет'}</span>
+        </div>
+        <input
+          type="range"
+          className={styles.slider}
+          min={0}
+          max={1000}
+          step={1}
+          value={sliderValue}
+          disabled={!sliderBounds || spinning}
+          aria-label="Икс цели: правее — дороже подарок и меньше шанс"
+          onChange={(e) => onSlide(Number(e.target.value))}
+          style={{ ['--fill' as string]: `${sliderValue / 10}%` }}
+        />
+        <div className={styles.sliderScale} aria-hidden>
+          <span>шанс выше</span>
+          <span>подарок дороже</span>
+        </div>
+      </div>
+
       <div className={styles.multRow} role="group" aria-label="Быстрый выбор икса">
         {MULTIPLIERS.map((m) => (
           <button

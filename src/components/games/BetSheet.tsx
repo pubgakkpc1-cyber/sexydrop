@@ -15,6 +15,7 @@ import { useCrashStore } from '../../store/crash'
 import { BottomSheet, Button, GramAmount, Input } from '../ui'
 import { CubeIcon, GiftIcon, TonIcon } from '../shell/icons'
 import { cx } from '../../lib/cx'
+import { openOwnerChat, OWNER_HANDLE } from '../../lib/telegram'
 import { MAX_BET_MINOR } from '../../lib/gameConfig'
 import styles from './BetSheet.module.css'
 
@@ -250,11 +251,11 @@ export function BetSheet({ open, onClose }: BetSheetProps) {
           <span className={styles.divider} role="separator" aria-label="ИЛИ">
             ИЛИ
           </span>
-          <Button variant="secondary" fullWidth disabled>
+          <Button variant="secondary" fullWidth onClick={() => openOwnerChat()}>
             Отправить подарки
           </Button>
           <p className={styles.emptyHint}>
-            Получение подарков извне появится после подключения сервера
+            Отправьте подарки {OWNER_HANDLE}: после проверки они появятся в инвентаре
           </p>
         </div>
       ) : (

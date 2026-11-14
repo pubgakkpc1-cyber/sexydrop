@@ -365,7 +365,7 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
     """Команды админа в личке бота. /gifs — прислать все реферальные гифки."""
     text = str(message.get("text") or "").strip()
     command = text.split()[0].split("@")[0].lower() if text.startswith("/") else ""
-    if command not in ("/gifs", "/post", "/rassylka", "/rassylka_vsem", "/opros"):
+    if command not in ("/gifs", "/post", "/rassylka", "/rassylka_vsem", "/opros", "/klikalka", "/novoe", "/obnova", "/druzya", "/reiting", "/rabotaet"):
         return False
     from app.api.odds import ADMIN_USERNAMES
     from app.services import ref_share
@@ -380,6 +380,20 @@ async def _admin_command(message: dict[str, Any], chat_id: int) -> bool:
         return True
     if command == "/klikalka":
         await ref_share.send_clicker_launch(chat_id)
+        return True
+    # готовые посты по запросу админа (то же, что приходит само после выката): картинка + текст, переслать в канал
+    posts = {
+        "/obnova": ref_share.send_update_post,
+        "/druzya": ref_share.send_invite_clicks_post,
+        "/reiting": ref_share.send_rating_post,
+        "/rabotaet": ref_share.send_back_online,
+    }
+    if command in posts:
+        await posts[command](chat_id)
+        return True
+    if command == "/novoe":
+        for send in posts.values():
+            await send(chat_id)
         return True
     if command == "/post":
         await ref_share.send_task_post(chat_id, int(sender.get("id") or chat_id))

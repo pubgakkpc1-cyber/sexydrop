@@ -1,8 +1,10 @@
-"""Рейтинг-марафон на 30 дней: два топа — «Рефералы» (друзья, открывшие бесплатный кейс) и «Оборот в TON».
+"""Рейтинг: два топа — «Рефералы» (марафон 30 дней с призами) и «Оборот в TON» (прежняя таблица за всё время, без призов).
 
-- Счёт начинается с момента, когда рейтинг впервые запросили на сервере (дальше сезоны идут подряд по 30 дней).
-- В топ считаются только события внутри сезона; админы в рейтинге не участвуют.
-- Награда за каждый топ: 1 место — NFT + 10 TON, 2 место — 10 TON, 3 место — 5 TON. TON начисляет админ кнопкой (повтор безопасен), NFT выдаётся вручную.
+- «Рефералы»: друзья, открывшие бесплатный кейс; счёт начинается с момента, когда рейтинг впервые запросили на сервере
+  (дальше сезоны идут подряд по 30 дней). Награда: 1 место — NFT + 10 TON, 2 место — 10 TON, 3 место — 5 TON.
+  TON начисляет админ кнопкой (повтор безопасен), NFT выдаётся вручную.
+- «Оборот»: сумма всех ставок игрока за всё время (как раньше), без призов и без сезона.
+- Админы в рейтинге не участвуют.
 Начало сезона хранится в app_settings (ключ rating_season), поэтому одинаково для всех экземпляров сервера.
 """
 
@@ -122,7 +124,11 @@ async def state(session: AsyncSession, user: User) -> dict[str, Any]:
     start = await season_start(session)
     idx = index_at(start)
     s, e = window(start, idx)
-    boards = {b: _board_view(await standings(session, b, s, e), user.id) for b in BOARDS}
+    ALL_FROM, ALL_TO = datetime(2000, 1, 1, tzinfo=timezone.utc), datetime(2200, 1, 1, tzinfo=timezone.utc)
+    boards = {
+        "refs": _board_view(await standings(session, "refs", s, e), user.id),
+        "turnover": _board_view(await standings(session, "turnover", ALL_FROM, ALL_TO), user.id),  # за всё время
+    }
     return {
         "season": {"index": idx, "starts_at": int(s.timestamp()), "ends_at": int(e.timestamp()), "days": SEASON_DAYS},
         "prizes": PRIZES,
@@ -136,13 +142,13 @@ async def last_finished_index(session: AsyncSession) -> int | None:
 
 
 async def pay_season(session: AsyncSession, index: int) -> list[dict[str, Any]]:
-    """Начисляет TON призёрам обоих топов завершённого сезона (один раз на место и топ: идемпотентно по ключу проводки)."""
+    """Начисляет TON призёрам рейтинга рефералов за завершённый сезон (один раз на место: идемпотентно по ключу проводки)."""
     from app.services.economy_core import post_ledger
 
     start = await season_start(session)
     s, e = window(start, index)
     paid: list[dict[str, Any]] = []
-    for board in BOARDS:
+    for board in ("refs",):
         rows = (await standings(session, board, s, e))[: len(PRIZES)]
         for prize, row in zip(PRIZES, rows):
             await post_ledger(

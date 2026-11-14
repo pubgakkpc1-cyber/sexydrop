@@ -217,7 +217,7 @@ async def rating_pay_season(
     _admin_name: Annotated[str, Depends(verify_admin)],
     season: Optional[int] = None,
 ) -> dict:
-    """Начислить TON призёрам завершённого сезона рейтинга (оба топа, повтор безопасен). NFT первому месту — выдать вручную."""
+    """Начислить TON призёрам завершённого сезона рейтинга рефералов (повтор безопасен). NFT первому месту — выдать вручную."""
     from app.services import rating
 
     target = season if season is not None else await rating.last_finished_index(session)

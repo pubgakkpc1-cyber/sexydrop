@@ -114,7 +114,16 @@ export function RatingScreen() {
     <div className={styles.screen}>
       <h1 className={styles.title}>Рейтинг</h1>
 
-      <section className={styles.hero} aria-label="Марафон">
+      <div className={styles.segment} role="tablist" aria-label="Выбор рейтинга">
+        {BOARDS.map((b) => (
+          <button key={b.id} type="button" role="tab" aria-selected={board === b.id} className={cx(styles.segBtn, board === b.id && styles.segBtnOn)} onClick={() => setBoard(b.id)}>
+            {b.label}
+          </button>
+        ))}
+      </div>
+
+      {board === 'refs' && (
+        <section className={styles.hero} aria-label="Марафон">
         <div className={styles.heroHead}>
           <h2 className={styles.heroTitle}>Марафон {state?.season.days ?? 30} дней</h2>
           <span className={styles.timer}>до конца: {state ? countdown(endsIn) : '…'}</span>
@@ -130,22 +139,15 @@ export function RatingScreen() {
             </li>
           ))}
         </ul>
-        <p className={styles.heroNote}>Призы получают лучшие в каждом рейтинге.</p>
+        <p className={styles.heroNote}>Призы получают лучшие в рейтинге рефералов.</p>
       </section>
-
-      <div className={styles.segment} role="tablist" aria-label="Выбор рейтинга">
-        {BOARDS.map((b) => (
-          <button key={b.id} type="button" role="tab" aria-selected={board === b.id} className={cx(styles.segBtn, board === b.id && styles.segBtnOn)} onClick={() => setBoard(b.id)}>
-            {b.label}
-          </button>
-        ))}
-      </div>
+      )}
 
       <section className={styles.invite} aria-label="Приглашение">
         <p className={styles.inviteText}>
           {board === 'refs'
             ? 'В зачёт идёт друг, который зашёл по вашей ссылке и открыл бесплатный кейс.'
-            : 'В зачёт идёт сумма всех ваших ставок в играх и кейсах.'}
+            : 'Оборот: сумма всех ваших ставок в играх и кейсах за всё время. Призов в этом рейтинге нет.'}
         </p>
         <button type="button" className={styles.inviteBtn} onClick={invite}>
           Пригласить друга
@@ -201,10 +203,10 @@ export function RatingScreen() {
         </button>
         {rulesOpen && (
           <ol className={styles.rulesList}>
-            <li>Марафон длится 30 дней. Счёт начался с запуска рейтинга и идёт без пауз, после конца стартует новый.</li>
+            <li>Марафон рефералов длится 30 дней. Счёт начался с запуска рейтинга и идёт без пауз, после конца стартует новый.</li>
             <li>«Рефералы»: друг засчитывается, если зашёл по вашей ссылке во время марафона и открыл бесплатный кейс.</li>
-            <li>«Оборот»: сумма всех ваших ставок в играх и кейсах за марафон, в TON.</li>
-            <li>Награда в каждом рейтинге: 1 место — NFT + 10 TON, 2 место — 10 TON, 3 место — 5 TON.</li>
+            <li>«Оборот»: сумма всех ваших ставок в играх и кейсах за всё время, в TON. Это обычная таблица без призов и без сезона.</li>
+            <li>Награда только в рейтинге рефералов: 1 место — NFT + 10 TON, 2 место — 10 TON, 3 место — 5 TON.</li>
             <li>TON приходят на баланс после конца марафона, NFT выдаёт администратор вручную.</li>
             <li>Накрутка и администраторы в рейтинге не учитываются. Итоги подводит сервер.</li>
           </ol>

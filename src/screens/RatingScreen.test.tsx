@@ -34,6 +34,7 @@ describe('RatingScreen: марафон 30 дней', () => {
     expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
     expect(await screen.findByText('NFT + 10 TON')).toBeInTheDocument()
     expect(screen.getByText('5 TON')).toBeInTheDocument()
+    expect(screen.getByText(/до конца:/)).toBeInTheDocument()
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
     expect(await within(list).findByText('Иван Петров')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'Пригласить друга' })).toBeInTheDocument()
@@ -44,6 +45,8 @@ describe('RatingScreen: марафон 30 дней', () => {
     await screen.findByText('Иван Петров')
     await userEvent.click(screen.getByRole('tab', { name: 'Оборот, TON' }))
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
+    expect(screen.queryByText('NFT + 10 TON')).not.toBeInTheDocument() // призы и таймер — только у рефералов
+    expect(screen.queryByText(/до конца:/)).not.toBeInTheDocument()
     expect(within(list).getByText('12.4K')).toBeInTheDocument()
     expect(within(list).getByText('800.0')).toBeInTheDocument()
     expect(within(screen.getByLabelText('Ваше место')).getByText('2')).toBeInTheDocument()
@@ -51,9 +54,9 @@ describe('RatingScreen: марафон 30 дней', () => {
 
   it('правила скрыты и раскрываются по нажатию', async () => {
     render(<RatingScreen />)
-    expect(screen.queryByText(/Марафон длится 30 дней/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/Марафон рефералов длится 30 дней/)).not.toBeInTheDocument()
     await userEvent.click(screen.getByRole('button', { name: /Правила/ }))
-    expect(screen.getByText(/Марафон длится 30 дней/)).toBeInTheDocument()
+    expect(screen.getByText(/Марафон рефералов длится 30 дней/)).toBeInTheDocument()
   })
 })
 

@@ -798,7 +798,7 @@ async def send_invite_clicks_to_admins_once(delay_s: float = 130.0) -> None:
 
 # ---------------------------------------------------------------- пост «рейтинг-марафон»
 
-RATING_VERSION = "2026-11-14-rating-v1"
+RATING_VERSION = "2026-11-15-rating-v2"
 
 
 def rating_caption(premium: bool = True) -> str:
@@ -809,14 +809,13 @@ def rating_caption(premium: bool = True) -> str:
         return em(name, premium)
 
     return (
-        f"{e('trophy')} <b>Рейтинг-марафон на 30 дней!</b>\n\n"
-        f"{e('spark')} Два рейтинга на выбор:\n"
-        f"{e('friends')} <b>Рефералы</b>: друзья, которые зашли по твоей ссылке и открыли бесплатный кейс\n"
-        f"{e('ton')} <b>Оборот в TON</b>: сумма всех твоих ставок\n\n"
+        f"{e('trophy')} <b>Рейтинг-марафон рефералов на 30 дней!</b>\n\n"
+        f"{e('friends')} Приглашай друзей: считаются те, кто зашёл по твоей ссылке и открыл бесплатный кейс\n\n"
         f"{e('nft')} <b>1 место</b>: NFT + 10 TON\n"
         f"{e('dot')} <b>2 место</b>: 10 TON\n"
         f"{e('dot')} <b>3 место</b>: 5 TON\n\n"
-        f"{e('check')} Счёт идёт с запуска, топ-30 виден всем\n"
+        f"{e('ton')} Рядом рейтинг оборота в TON: таблица за всё время, без призов\n"
+        f"{e('check')} Счёт рефералов идёт с запуска, топ-30 виден всем\n"
         f"{e('bolt')} @sexydropbot, вкладка «Рейтинг»"
     )
 

@@ -211,6 +211,21 @@ async def resolve_withdrawal(
     return await account_service.resolve_withdrawal(session, withdrawal_id, done=action == "done")
 
 
+@router.post("/rating/pay-season")
+async def rating_pay_season(
+    session: Annotated[AsyncSession, Depends(get_session)],
+    _admin_name: Annotated[str, Depends(verify_admin)],
+    season: Optional[int] = None,
+) -> dict:
+    """Начислить TON призёрам завершённого сезона рейтинга (оба топа, повтор безопасен). NFT первому месту — выдать вручную."""
+    from app.services import rating
+
+    target = season if season is not None else await rating.last_finished_index(session)
+    if target is None:
+        raise HTTPException(status_code=400, detail="Первый сезон рейтинга ещё не закончился")
+    return {"season": target, "winners": await rating.pay_season(session, target)}
+
+
 @router.post("/clicker/pay-season")
 async def clicker_pay_season(
     session: Annotated[AsyncSession, Depends(get_session)],

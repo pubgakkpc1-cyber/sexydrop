@@ -794,3 +794,81 @@ async def send_invite_clicks_to_admins_once(delay_s: float = 130.0) -> None:
                     await session.commit()
     except Exception as exc:  # noqa: BLE001
         log.warning("invite-clicks post to admins failed: %s", exc)
+
+
+# ---------------------------------------------------------------- пост «рейтинг-марафон»
+
+RATING_VERSION = "2026-11-14-rating-v1"
+
+
+def rating_caption(premium: bool = True) -> str:
+    """Готовый пост для канала: рейтинг-марафон 30 дней, два топа и призы."""
+    from app.services.telegram_bot import em
+
+    def e(name: str) -> str:
+        return em(name, premium)
+
+    return (
+        f"{e('trophy')} <b>Рейтинг-марафон на 30 дней!</b>\n\n"
+        f"{e('spark')} Два рейтинга на выбор:\n"
+        f"{e('friends')} <b>Рефералы</b>: друзья, которые зашли по твоей ссылке и открыли бесплатный кейс\n"
+        f"{e('ton')} <b>Оборот в TON</b>: сумма всех твоих ставок\n\n"
+        f"{e('nft')} <b>1 место</b>: NFT + 10 TON\n"
+        f"{e('dot')} <b>2 место</b>: 10 TON\n"
+        f"{e('dot')} <b>3 место</b>: 5 TON\n\n"
+        f"{e('check')} Счёт идёт с запуска, топ-30 виден всем\n"
+        f"{e('bolt')} @sexydropbot, вкладка «Рейтинг»"
+    )
+
+
+async def send_rating_post(chat_id: int) -> bool:
+    if not get_settings().bot_token:
+        return False
+    path = photo_path("rating")
+    if path is None:
+        log.warning("rating photo not found")
+        return False
+    markup = json.dumps({"inline_keyboard": [[{"text": "🏆 Открыть рейтинг", "url": "https://t.me/sexydropbot"}]]}, ensure_ascii=False)
+    body: dict = {}
+    async with httpx.AsyncClient(timeout=60.0) as client:
+        await client.post(
+            f"{_api()}/sendMessage",
+            json={"chat_id": chat_id, "text": "<b>Готовый пост: рейтинг-марафон</b> — скопируйте или перешлите в канал 👇", "parse_mode": "HTML"},
+        )
+        for premium in (True, False):
+            data = {"chat_id": str(chat_id), "caption": rating_caption(premium), "parse_mode": "HTML", "reply_markup": markup}
+            body = (await client.post(f"{_api()}/sendPhoto", data=data, files={"photo": ("rating.jpg", path.read_bytes(), "image/jpeg")})).json()
+            if body.get("ok"):
+                break
+            log.warning("rating post (premium=%s) to %s failed: %s", premium, chat_id, body.get("description"))
+    return bool(body.get("ok"))
+
+
+async def send_rating_to_admins_once(delay_s: float = 150.0) -> None:
+    """После деплоя присылает админам пост про рейтинг-марафон (один раз на версию)."""
+    await asyncio.sleep(delay_s)
+    if not get_settings().bot_token:
+        return
+    from sqlalchemy import func, select
+
+    from app.api.odds import ADMIN_USERNAMES
+    from app.core.db import get_session_factory
+    from app.models.economy import UserMeta
+    from app.models.user import User
+    from app.services.economy_core import ensure_account
+
+    try:
+        async with get_session_factory()() as session:
+            admins = (
+                await session.execute(select(User).where(func.lower(User.username).in_(sorted(ADMIN_USERNAMES))))
+            ).scalars().all()
+            for admin in admins:
+                await ensure_account(session, admin.id)
+                meta = await session.get(UserMeta, admin.id)
+                if meta is None or (meta.quests_claimed or {}).get("_ratingpost") == RATING_VERSION:
+                    continue
+                if await send_rating_post(admin.telegram_id):
+                    meta.quests_claimed = {**(meta.quests_claimed or {}), "_ratingpost": RATING_VERSION}
+                    await session.commit()
+    except Exception as exc:  # noqa: BLE001
+        log.warning("rating post to admins failed: %s", exc)

@@ -1,79 +1,64 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+
+const STATE = {
+  season: { index: 0, starts_at: 1_800_000_000, ends_at: 1_800_000_000 + 30 * 86400, days: 30 },
+  prizes: [
+    { place: 1, ton_minor: 10000, nft: true },
+    { place: 2, ton_minor: 10000, nft: false },
+    { place: 3, ton_minor: 5000, nft: false },
+  ],
+  boards: {
+    refs: { top: [{ rank: 1, name: 'Иван Петров', avatar: null, value: 7, me: false }], me: null, me_outside: null, players: 1 },
+    turnover: {
+      top: [
+        { rank: 1, name: 'Маша', avatar: null, value: 12_400_000, me: false },
+        { rank: 2, name: 'Вы', avatar: null, value: 800_000, me: true },
+      ],
+      me: { rank: 2, value: 800_000 },
+      me_outside: null,
+      players: 2,
+    },
+  },
+}
+
+const apiGet = vi.fn(async () => STATE)
+vi.mock('../lib/api', () => ({ apiGet: (...a: unknown[]) => apiGet(...(a as [])) }))
+
 import { RatingScreen, formatTurnover } from './RatingScreen'
-import { useProfileStore } from '../store/profile'
-import { useQuestsStore } from '../store/quests'
-import { useGamesHistoryStore } from '../store/gamesHistory'
-import { usePvpMatchesStore } from '../store/pvpMatches'
 
-beforeEach(() => {
-  useProfileStore.setState({ rounds: 0, wageredMinor: 0, netMinor: 0, pvpMatches: 0 })
-  useQuestsStore.setState({ claimed: {} })
-  useGamesHistoryStore.setState({ entries: [] })
-  usePvpMatchesStore.setState({ entries: [] })
-})
-
-describe('RatingScreen (матовый рейтинг по референсу)', () => {
-  it('без ботов: пустая таблица с подсказкой, пока вы не играли', () => {
+describe('RatingScreen: марафон 30 дней', () => {
+  it('показывает призы, переключатель рейтингов и топ с сервера', async () => {
     render(<RatingScreen />)
     expect(screen.getByRole('heading', { name: 'Рейтинг' })).toBeInTheDocument()
-    expect(screen.queryByText('Заканчивается через')).not.toBeInTheDocument()
-    expect(screen.queryByRole('timer')).not.toBeInTheDocument()
-    expect(screen.getByText('Топ-20 игроков')).toBeInTheDocument()
-    const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
-    expect(within(list).queryAllByRole('listitem')).toHaveLength(0)
-    expect(screen.getByText(/Пока в рейтинге никого нет/)).toBeInTheDocument()
-  })
-
-  it('без игры нет ни «999+», ни строки «ВЫ» — пока пользователей нет, показывать нечего', () => {
-    render(<RatingScreen />)
-    expect(screen.queryByLabelText('Ваше место')).not.toBeInTheDocument()
-    expect(screen.queryByText('999+')).not.toBeInTheDocument()
-  })
-
-  it('реальная статистика: оборот в TON, в таблице только вы', () => {
-    useProfileStore.setState({ rounds: 12, wageredMinor: 800_000, netMinor: -2_300, pvpMatches: 3 })
-    render(<RatingScreen />) // 800 TON оборота
-    const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
-    const items = within(list).getAllByRole('listitem')
-    expect(items).toHaveLength(1)
-    expect(within(items[0]!).getByText('Вы')).toBeInTheDocument()
-    expect(within(items[0]!).getByText('800.0')).toBeInTheDocument()
-    expect(within(screen.getByLabelText('Ваше место')).getByText('1')).toBeInTheDocument()
-    expect(screen.getByText(/PVP-матчей: 3/)).toBeInTheDocument()
-  })
-})
-
-describe('RatingScreen: топ-20 с сервера', () => {
-  afterEach(() => vi.unstubAllGlobals())
-
-  it('показывает имена из Telegram и аватарки, без @username', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn(async () => ({
-        ok: true,
-        json: async () => ({
-          rows: [
-            { rank: 1, name: 'Иван Петров', avatar: 'https://t.me/i/userpic/320/ivan.svg', turnover_minor: 5_000_000, me: false },
-            { rank: 2, name: 'Маша', avatar: null, turnover_minor: 0, me: false },
-          ],
-          me: null,
-          total: 2,
-        }),
-      })),
-    )
-    render(<RatingScreen />)
+    expect(await screen.findByText('NFT + 10 TON')).toBeInTheDocument()
+    expect(screen.getByText('5 TON')).toBeInTheDocument()
     const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
     expect(await within(list).findByText('Иван Петров')).toBeInTheDocument()
-    expect(within(list).getByText('Маша')).toBeInTheDocument()
-    expect(list.querySelector('img')).toHaveAttribute('src', 'https://t.me/i/userpic/320/ivan.svg')
-    expect(within(list).getByText('М')).toBeInTheDocument() // без фото — инициалы
-    expect(within(list).queryByText(/@/)).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Пригласить друга' })).toBeInTheDocument()
+  })
+
+  it('переключается на оборот в TON и показывает своё место', async () => {
+    render(<RatingScreen />)
+    await screen.findByText('Иван Петров')
+    await userEvent.click(screen.getByRole('tab', { name: 'Оборот, TON' }))
+    const list = screen.getByRole('list', { name: 'Рейтинг игроков' })
+    expect(within(list).getByText('12.4K')).toBeInTheDocument()
+    expect(within(list).getByText('800.0')).toBeInTheDocument()
+    expect(within(screen.getByLabelText('Ваше место')).getByText('2')).toBeInTheDocument()
+  })
+
+  it('правила скрыты и раскрываются по нажатию', async () => {
+    render(<RatingScreen />)
+    expect(screen.queryByText(/Марафон длится 30 дней/)).not.toBeInTheDocument()
+    await userEvent.click(screen.getByRole('button', { name: /Правила/ }))
+    expect(screen.getByText(/Марафон длится 30 дней/)).toBeInTheDocument()
   })
 })
 
-describe('форматтеры рейтинга', () => {
-  it('formatTurnover — максимум один знак после точки, вниз', () => {
+describe('форматтер оборота', () => {
+  it('максимум один знак после точки, вниз', () => {
     expect(formatTurnover(3_250_000_000)).toBe('3.2M')
     expect(formatTurnover(12_450_000)).toBe('12.4K')
     expect(formatTurnover(999_900)).toBe('999.9')

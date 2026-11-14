@@ -10,6 +10,7 @@ from app.api.live import router as live_router
 from app.api.maintenance import router as maintenance_router
 from app.api.odds import router as odds_router
 from app.api.play import router as play_router
+from app.api.rating import router as rating_router
 from app.api.referrals import router as referrals_router
 from app.api.stats import router as stats_router
 from app.api.subscriptions import router as subscriptions_router
@@ -30,5 +31,6 @@ api_router.include_router(odds_router)
 api_router.include_router(play_router)
 api_router.include_router(broadcast_router)
 api_router.include_router(clicker_router)
+api_router.include_router(rating_router)
 api_router.include_router(live_router)
 api_router.include_router(maintenance_router)

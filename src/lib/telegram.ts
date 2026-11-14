@@ -74,10 +74,11 @@ export function initTelegram(): void {
     /* старые клиенты могут не поддерживать часть методов */
   }
 
-  // Полноэкранный режим на телефоне: убирает родную шапку Telegram («← Название ⌄ ⋮»).
+  // Полноэкранный режим сразу при запуске — на телефоне и на ПК (Telegram Desktop, macOS):
+  // убирает родную шапку Telegram, приложение занимает весь экран/окно.
   try {
-    const mobile = webApp.platform === 'android' || webApp.platform === 'ios'
-    if (mobile && webApp.isVersionAtLeast?.('8.0') && webApp.requestFullscreen && !webApp.isFullscreen) {
+    const full = ['android', 'ios', 'tdesktop', 'macos', 'unigram'].includes(String(webApp.platform))
+    if (full && webApp.isVersionAtLeast?.('8.0') && webApp.requestFullscreen && !webApp.isFullscreen) {
       webApp.requestFullscreen()
     }
     applyTelegramInsets()

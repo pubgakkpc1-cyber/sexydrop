@@ -307,15 +307,16 @@ export function CaseDetailScreen() {
       )}
 
       {/* 3. Горизонтальная рулетка */}
-      <CaseRoulette
-        caseDefinition={gameCase}
-        targetGiftId={targetGiftId}
-        isSpinning={isSpinning}
-        onSpinComplete={handleSpinComplete}
-        turbo={turbo}
-      />
-
-      <TurboToggle disabled={isSpinning || opening} />
+      <div className={styles.rouletteWrap}>
+        <CaseRoulette
+          caseDefinition={gameCase}
+          targetGiftId={targetGiftId}
+          isSpinning={isSpinning}
+          onSpinComplete={handleSpinComplete}
+          turbo={turbo}
+        />
+        <TurboToggle disabled={isSpinning || opening} className={styles.turboCorner} />
+      </div>
 
       {/* Сколько кейсов открыть за раз (только платные) */}
       {!isFreeCase && (

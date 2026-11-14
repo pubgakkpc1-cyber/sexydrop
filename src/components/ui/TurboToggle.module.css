@@ -1,18 +1,15 @@
 .toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  align-self: center;
-  min-height: 36px;
-  padding: 0 14px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--text-muted);
-  font: inherit;
-  font-size: 13px;
-  font-weight: 600;
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 50%;
+  background: rgba(20, 19, 19, 0.85);
+  color: rgba(255, 255, 255, 0.55);
   cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .toggle:disabled {
@@ -22,21 +19,6 @@
 
 .on {
   color: #fff;
-  border-color: rgba(184, 58, 63, 0.7);
-  background: rgba(184, 58, 63, 0.2);
-}
-
-.bolt {
-  display: inline-flex;
-}
-
-.state {
-  padding: 2px 8px;
-  font-size: 11px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.1);
-}
-
-.on .state {
+  border-color: rgba(184, 58, 63, 0.9);
   background: #b83a3f;
 }

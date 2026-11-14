@@ -297,6 +297,7 @@ export function UpgradeScreen() {
 
       {/* Полотно: ваш предмет → кольцо шанса → цель */}
       <div className={cx(styles.board, spinning && styles.boardSpinning)}>
+        <TurboToggle disabled={spinning} className={styles.turboCorner} />
         <div className={styles.duel}>
           <button
             type="button"
@@ -354,7 +355,9 @@ export function UpgradeScreen() {
               <span className={styles.needleTip} />
             </div>
             <div className={styles.ringCenter}>
-              <span className={styles.liquid} style={{ height: `${chancePct === null ? 0 : Math.min(100, chancePct)}%` }} aria-hidden />
+              {chancePct !== null && chancePct > 0 && (
+                <span className={styles.liquid} style={{ height: `${Math.min(100, chancePct)}%` }} aria-hidden />
+              )}
               <span className={styles.chanceValue}>
                 {chancePct === null ? '—' : `${fmtPct(chancePct)}%`}
               </span>
@@ -476,9 +479,6 @@ export function UpgradeScreen() {
         ))}
       </div>
 
-      <div className={styles.turboWrap}>
-        <TurboToggle disabled={spinning} />
-      </div>
 
       <button
         type="button"

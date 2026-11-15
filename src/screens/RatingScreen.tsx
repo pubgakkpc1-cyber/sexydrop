@@ -112,6 +112,7 @@ export function RatingScreen() {
 
   return (
     <div className={styles.screen}>
+      <div className={styles.colSide}>
       <h1 className={styles.title}>Рейтинг</h1>
 
       <div className={styles.segment} role="tablist" aria-label="Выбор рейтинга">
@@ -154,6 +155,9 @@ export function RatingScreen() {
         </button>
       </section>
 
+      </div>
+
+      <div className={styles.colList}>
       {error && (
         <p className={styles.error} role="alert">
           {error}
@@ -197,6 +201,9 @@ export function RatingScreen() {
         </div>
       )}
 
+      </div>
+
+      <div className={styles.colRules}>
       <section className={styles.rules} aria-label="Правила">
         <button type="button" className={styles.rulesBtn} aria-expanded={rulesOpen} onClick={() => setRulesOpen((v) => !v)}>
           Правила <span className={cx(styles.caret, rulesOpen && styles.caretOpen)} aria-hidden>▾</span>
@@ -212,6 +219,7 @@ export function RatingScreen() {
           </ol>
         )}
       </section>
+      </div>
     </div>
   )
 }

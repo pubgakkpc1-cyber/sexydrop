@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react'
 import { getWebApp, hapticImpact } from '../../lib/telegram'
+import { isDesktopLaunch, waitUntilReady } from './splashReady'
+import { SplashDesktop } from './SplashDesktop'
 import { UserAvatar } from '../ui/UserAvatar'
 import { FlameIcon } from './icons'
 import styles from './SplashScreen.module.css'
@@ -9,37 +11,6 @@ interface SplashScreenProps {
 }
 
 const DURATION_MS = 1100
-/** На ПК заставка крупнее и чуть дольше: успевает сыграть целиком после разворота окна на весь экран. */
-const DESKTOP_DURATION_MS = 1700
-
-function isDesktop(): boolean {
-  if (typeof window === 'undefined') return false
-  const platform = String((getWebApp() as unknown as { platform?: string } | undefined)?.platform ?? '')
-  return ['tdesktop', 'macos', 'unigram', 'weba', 'webk'].includes(platform) || window.innerWidth >= 1000
-}
-
-/**
- * Ждём, пока окно готово: шрифты загружены и (на ПК) Telegram закончил разворачивать мини-приложение
- * на весь экран. Иначе анимация начинается «не с нуля» — первые кадры уходят на разворот окна.
- */
-async function waitUntilReady(desktop: boolean): Promise<void> {
-  const fonts = (document as unknown as { fonts?: { ready?: Promise<unknown> } }).fonts?.ready ?? Promise.resolve()
-  const fullscreen = new Promise<void>((resolve) => {
-    const wa = getWebApp() as unknown as { isFullscreen?: boolean; onEvent?: (e: string, cb: () => void) => void; offEvent?: (e: string, cb: () => void) => void } | undefined
-    if (!desktop || !wa || wa.isFullscreen) return resolve()
-    const done = () => {
-      wa.offEvent?.('fullscreenChanged', done)
-      resolve()
-    }
-    wa.onEvent?.('fullscreenChanged', done)
-    window.setTimeout(done, 700)
-  })
-  await Promise.race([Promise.all([fonts, fullscreen]), new Promise((r) => window.setTimeout(r, 1200))])
-  const frame = () =>
-    new Promise<void>((r) => (typeof requestAnimationFrame === 'function' ? requestAnimationFrame(() => r()) : window.setTimeout(r, 16)))
-  await frame()
-  await frame()
-}
 const WORDMARK = 'SEXY DROP'.split('')
 /** Подарки вылетают из точки удара в свои места (dx/dy в px от центра, поворот). */
 const FAN = [
@@ -53,10 +24,16 @@ const SPARKS = Array.from({ length: 16 }, (_, i) => ({
   d: 110 + (i % 4) * 34,
 }))
 
+/** Запуск: на ПК — отдельная заставка на весь экран, на телефоне — компактная. */
 export function SplashScreen({ onFinish }: SplashScreenProps) {
+  const [desktop] = useState(isDesktopLaunch)
+  return desktop ? <SplashDesktop onFinish={onFinish} /> : <SplashMobile onFinish={onFinish} />
+}
+
+function SplashMobile({ onFinish }: SplashScreenProps) {
   const [progress, setProgress] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
-  const [desktop] = useState(isDesktop)
+  const desktop = false
   // вне Telegram (браузер, тесты) ждать нечего — анимация идёт сразу
   const [running, setRunning] = useState(() => !getWebApp())
 
@@ -74,7 +51,7 @@ export function SplashScreen({ onFinish }: SplashScreenProps) {
 
   useEffect(() => {
     if (!running) return
-    const total = desktop ? DESKTOP_DURATION_MS : DURATION_MS
+    const total = DURATION_MS
     const startTime = performance.now()
     let impacted = false
 

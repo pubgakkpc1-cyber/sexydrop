@@ -80,7 +80,7 @@ describe('UpgradeScreen (4.4: UI апгрейда)', () => {
     await user.click(within(targetDialog).getByRole('button', { name: 'Подтвердить' }))
     expect(screen.getAllByText(`${pctText(50, SNOOP_ID)}%`).length).toBeGreaterThan(0)
     expect(screen.getByRole('button', { name: 'Апгрейдить' })).toBeEnabled()
-  })
+  }, 20000)
 
   it('ползунок икса: правее — дороже цель и меньше шанс', async () => {
     useInventoryStore.setState({

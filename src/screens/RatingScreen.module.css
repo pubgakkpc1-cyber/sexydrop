@@ -327,3 +327,38 @@
     gap: 14px;
   }
 }
+
+/* ===== ПК (1920×1080): слева марафон, приглашение и правила, справа длинный топ ===== */
+.colSide,
+.colList,
+.colRules {
+  display: contents;
+}
+
+@media (min-width: 1100px) {
+  .screen {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'side list'
+      'rules list';
+    column-gap: 24px;
+    row-gap: 14px;
+    align-items: start;
+    max-width: 1500px;
+  }
+
+  .colSide,
+  .colList,
+  .colRules {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+
+  .colSide { grid-area: side; }
+  .colRules { grid-area: rules; }
+  .colList { grid-area: list; }
+}

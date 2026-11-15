@@ -711,3 +711,122 @@
   border: 1px solid rgba(79, 209, 139, 0.3);
   border-radius: 12px;
 }
+
+/* ===== Усиление тапа: компактно, без текста — две плитки x2 и x3 ===== */
+.boost {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+}
+
+.boostCell {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 8px 8px 14px;
+  border-radius: 14px;
+  background: #222020;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.boostCellDone {
+  border-color: rgba(79, 209, 139, 0.35);
+}
+
+.boostCell .boostMult {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.boostBuy {
+  display: flex;
+  gap: 4px;
+}
+
+.boostCell .boostBtn {
+  min-width: 0;
+  height: 32px;
+  padding: 0 8px;
+  font-size: 11.5px;
+  border-radius: 9px;
+}
+
+.boostDone {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(79, 209, 139, 0.16);
+  color: #4fd18b;
+  font-weight: 800;
+}
+
+.boost .boostMsg {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: 12px;
+}
+
+/* ===== Раскладка: на телефоне колонки «прозрачные», на ПК — кнопка слева, счёт и топ справа ===== */
+.colInfo,
+.colPlay,
+.colBoard {
+  display: contents;
+}
+
+@media (min-width: 1100px) {
+  .screen {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      'play info'
+      'play board';
+    column-gap: 24px;
+    row-gap: 16px;
+    align-items: start;
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  .colInfo,
+  .colPlay,
+  .colBoard {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .colInfo { grid-area: info; }
+  .colBoard { grid-area: board; }
+
+  .colPlay {
+    grid-area: play;
+    position: sticky;
+    top: 16px;
+  }
+
+  .stage {
+    min-height: 560px;
+    justify-content: center;
+  }
+
+  .coin {
+    width: 300px;
+    height: 300px;
+  }
+}
+
+@media (min-width: 1700px) {
+  .stage { min-height: 680px; }
+  .coin { width: 360px; height: 360px; }
+}

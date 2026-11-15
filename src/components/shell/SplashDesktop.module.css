@@ -1,0 +1,203 @@
+/* Запуск для ПК: матовый тёмный экран, красный акцент, без свечения и глянца */
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  grid-template-rows: 1fr auto 1fr;
+  place-items: center;
+  overflow: hidden;
+  background: #0d0c0d;
+  color: #fff;
+  user-select: none;
+  cursor: pointer;
+  opacity: 1;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.exit {
+  opacity: 0;
+  transform: scale(1.02);
+}
+
+/* пока окно не готово — всё стоит на первом кадре */
+.root:not(.run) *,
+.root:not(.run) *::before,
+.root:not(.run) *::after {
+  animation-play-state: paused !important;
+}
+
+.glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(900px 560px at 50% 50%, rgba(184, 58, 63, 0.14), transparent 70%);
+  pointer-events: none;
+}
+
+.rail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 150px;
+  overflow: hidden;
+  opacity: 0.55;
+  -webkit-mask: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+  mask: linear-gradient(90deg, transparent 0, #000 18%, #000 82%, transparent 100%);
+}
+
+.railTop {
+  top: 12%;
+}
+
+.railBottom {
+  bottom: 22%;
+}
+
+.track {
+  display: flex;
+  gap: 18px;
+  width: max-content;
+  animation: slideLeft 22s linear infinite;
+  will-change: transform;
+}
+
+.trackBack {
+  animation-name: slideRight;
+}
+
+.tile {
+  flex: 0 0 auto;
+  width: 130px;
+  height: 130px;
+  margin-top: 10px;
+  border-radius: 24px;
+  border: 3px solid rgba(255, 255, 255, 0.85);
+  object-fit: cover;
+}
+
+@keyframes slideLeft {
+  from { transform: translateX(0); }
+  to { transform: translateX(-33.333%); }
+}
+
+@keyframes slideRight {
+  from { transform: translateX(-33.333%); }
+  to { transform: translateX(0); }
+}
+
+.center {
+  grid-row: 2;
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.word {
+  display: flex;
+  font-family: var(--font-display);
+  font-size: clamp(56px, 7.4vw, 132px);
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(40px) scale(0.92);
+  animation: letterIn 0.6s cubic-bezier(0.2, 1, 0.3, 1) forwards;
+  animation-delay: calc(0.15s + var(--i) * 0.06s);
+}
+
+.letter:nth-child(n + 6) {
+  color: #c75459;
+}
+
+@keyframes letterIn {
+  to { opacity: 1; transform: none; }
+}
+
+.line {
+  width: min(520px, 40vw);
+  height: 4px;
+  border-radius: 2px;
+  background: #b83a3f;
+  transform: scaleX(0);
+  transform-origin: center;
+  animation: lineIn 0.7s cubic-bezier(0.2, 1, 0.3, 1) 0.8s forwards;
+}
+
+@keyframes lineIn {
+  to { transform: scaleX(1); }
+}
+
+.brand {
+  font-size: clamp(14px, 1.2vw, 20px);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+  opacity: 0;
+  animation: fadeIn 0.6s ease 1s forwards;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+.bar {
+  grid-row: 3;
+  align-self: end;
+  width: min(760px, 62vw);
+  margin-bottom: 9vh;
+  position: relative;
+  z-index: 2;
+}
+
+.barHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.status {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.percent {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.track2 {
+  height: 8px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.09);
+}
+
+.fill {
+  height: 100%;
+  border-radius: 4px;
+  background: #b83a3f;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track, .letter, .line, .brand {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* 1920×1080 и больше: ленты и плитки крупнее */
+@media (min-width: 1700px) {
+  .rail { height: 190px; }
+  .tile { width: 170px; height: 170px; border-radius: 30px; }
+  .track { gap: 24px; }
+}

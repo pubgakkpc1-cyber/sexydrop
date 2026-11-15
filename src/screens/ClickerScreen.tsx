@@ -338,6 +338,7 @@ export function ClickerScreen() {
   const league = leagueFor(total)
   return (
     <div className={styles.screen}>
+      <div className={styles.colInfo}>
       <header className={styles.head}>
         <h1 className={styles.title}>Кликалка</h1>
       </header>
@@ -363,6 +364,9 @@ export function ClickerScreen() {
         </div>
       </section>
 
+      </div>
+
+      <div className={styles.colPlay}>
       <section className={styles.stage} aria-label="Большая кнопка">
         <div className={styles.glow} aria-hidden style={{ background: `radial-gradient(circle, ${KEY_LEVELS[league.index]!.accent}55 0%, transparent 68%)` }} />
         <div className={styles.pops} aria-hidden>
@@ -400,42 +404,38 @@ export function ClickerScreen() {
 
       {state?.boost && (
         <section className={styles.boost} aria-label="Усиление тапа">
-          <div className={styles.boostHead}>
-            <h2 className={styles.boostTitle}>Усиление тапа</h2>
-            <span className={styles.boostNow}>сейчас x{state.boost.mult}</span>
-          </div>
           {state.boost.levels.map((o) => (
-            <div key={o.mult} className={styles.boostRow}>
-              <span className={styles.boostMult}>
-                x{o.mult}
-                <small>за каждый тап</small>
-              </span>
-              {o.status === 'owned' && <span className={styles.boostOwned}>Куплено ✓</span>}
-              {o.status === 'above' && <span className={styles.boostOwned}>Куплено выше: x{state.boost!.mult}</span>}
-              {o.status === 'available' && (
-                <>
-                  <button type="button" className={styles.boostBtn} disabled={buying !== null} onClick={() => void buyBoostStars(o.mult)}>
-                    {o.stars} ★
+            <div key={o.mult} className={`${styles.boostCell} ${o.status !== 'available' ? styles.boostCellDone : ''}`}>
+              <span className={styles.boostMult}>x{o.mult}</span>
+              {o.status === 'available' ? (
+                <span className={styles.boostBuy}>
+                  <button type="button" className={styles.boostBtn} disabled={buying !== null} onClick={() => void buyBoostStars(o.mult)} aria-label={`x${o.mult} за ${o.stars} звёзд`}>
+                    {o.stars}★
                   </button>
                   <button
                     type="button"
                     className={styles.boostBtn}
                     disabled={buying !== null || tonBalance < o.ton_minor}
                     onClick={() => void buyBoostTon(o.mult)}
+                    aria-label={`x${o.mult} за ${formatMinor(o.ton_minor)} TON`}
                   >
                     {formatMinor(o.ton_minor)} TON
                   </button>
-                </>
+                </span>
+              ) : (
+                <span className={styles.boostDone} aria-label={o.status === 'owned' ? 'Куплено' : 'Куплено выше'}>
+                  ✓
+                </span>
               )}
             </div>
           ))}
-          <p className={styles.boostHint}>
-            ★ — оплата настоящими Telegram Stars, TON — с баланса. Усиление действует до конца текущего марафона. Если куплен x2, до x3 доплачивается только разница.
-          </p>
           {boostMsg && <p className={styles.boostMsg} role="status">{boostMsg}</p>}
         </section>
       )}
 
+      </div>
+
+      <div className={styles.colBoard}>
       {error && (
         <p className={styles.error} role="alert">
           {error}
@@ -494,6 +494,7 @@ export function ClickerScreen() {
           )}
         </ol>
       </section>
+      </div>
     </div>
   )
 }

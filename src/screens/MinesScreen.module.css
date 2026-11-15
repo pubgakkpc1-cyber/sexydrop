@@ -500,3 +500,44 @@
     font-size: 28px;
   }
 }
+
+/* ===== ПК (1920×1080): поле слева крупно, ставка справа ===== */
+@media (min-width: 1100px) {
+  .screen {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    grid-template-areas:
+      'top top'
+      'title title'
+      'canvas bet';
+    column-gap: 24px;
+    align-items: start;
+    max-width: 1300px;
+  }
+
+  .topRow { grid-area: top; }
+  .title { grid-area: title; }
+  .canvas { grid-area: canvas; min-width: 0; }
+
+  .betPanel {
+    grid-area: bet;
+    position: sticky;
+    top: 16px;
+  }
+}
+
+@media (min-width: 1700px) {
+  .screen {
+    grid-template-columns: minmax(0, 1fr) 440px;
+    max-width: 1500px;
+  }
+
+  .tile { font-size: 34px; }
+}
+
+@media (min-width: 1100px) {
+  .board {
+    width: min(100%, 680px, calc(100vh - 300px));
+    margin: 0 auto;
+  }
+}

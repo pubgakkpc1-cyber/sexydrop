@@ -2792,3 +2792,54 @@
     height: 420px;
   }
 }
+
+/* ===== ПК (1920×1080): ракета крупно слева, живые ставки колонкой справа ===== */
+@media (min-width: 1100px) {
+  .screen {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 400px;
+    column-gap: 24px;
+    row-gap: 14px;
+    align-items: start;
+    max-width: 1500px;
+  }
+
+  .screen > :global(*) {
+    grid-column: 1 / -1;
+  }
+
+  .screen > .arena,
+  .screen > .historyRow,
+  .screen > .actionArea {
+    grid-column: 1;
+  }
+
+  .screen > .arena {
+    height: 500px;
+  }
+
+  .screen > .liveBetsSection {
+    grid-column: 2;
+    grid-row: 2 / span 3;
+    margin-top: 0;
+    max-height: 700px;
+    overflow-y: auto;
+    position: sticky;
+    top: 16px;
+  }
+}
+
+@media (min-width: 1700px) {
+  .screen {
+    grid-template-columns: minmax(0, 1fr) 440px;
+    max-width: 1560px;
+  }
+
+  .screen > .arena {
+    height: 580px;
+  }
+
+  .screen > .liveBetsSection {
+    max-height: 800px;
+  }
+}

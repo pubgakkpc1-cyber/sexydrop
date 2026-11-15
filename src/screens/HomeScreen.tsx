@@ -10,18 +10,18 @@ import styles from './screens.module.css'
  */
 export function HomeScreen() {
   return (
-    <div className={styles.screen}>
-      <section className={styles.panel} aria-label="Игры">
+    <div className={`${styles.screen} ${styles.home}`}>
+      <section className={`${styles.panel} ${styles.homeGames}`} aria-label="Игры">
         <h2 className={styles.panelTitle}>Игры</h2>
         <div className={styles.gamesGrid}>
           <Banners />
           <ClickerBanner />
         </div>
       </section>
-      <section className={styles.panel} aria-label="Бесплатные кейсы">
+      <section className={`${styles.panel} ${styles.homeFree}`} aria-label="Бесплатные кейсы">
         <FreeCasesSection />
       </section>
-      <section className={styles.panel} aria-label="Кейсы">
+      <section className={`${styles.panel} ${styles.homeCases}`} aria-label="Кейсы">
         <CasesGrid />
       </section>
     </div>

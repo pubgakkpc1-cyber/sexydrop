@@ -5,6 +5,7 @@ import { BottomNav } from './BottomNav'
 import { Header } from './Header'
 import { LiveFeed } from './LiveFeed'
 import { GameTopBar } from './GameTopBar'
+import { DesktopShell } from './DesktopShell'
 import { CubeIcon, GiftIcon, RocketIcon, SlotIcon, TonIcon } from './icons'
 import styles from './MobileShell.module.css'
 
@@ -21,10 +22,8 @@ export function MobileShell() {
   const isCustomHeaderScreen = location.pathname === '/games/crash'
   // Мини-игры (/games/mines, /games/upgrade …): компактная панель вместо обычной шапки и ленты Live
   const isMiniGame = location.pathname.startsWith('/games/') && !isCustomHeaderScreen
-  const [isWideScreen, setIsWideScreen] = useState(() => {
-    if (typeof window === 'undefined') return false
-    return window.innerWidth >= 1024
-  })
+  const [width, setWidth] = useState(() => (typeof window === 'undefined' ? 0 : window.innerWidth))
+  const isWideScreen = width >= 1024
 
   // Синхронизация системной кнопки Telegram «Назад»
   useEffect(() => {
@@ -42,15 +41,17 @@ export function MobileShell() {
     }
   }, [location.pathname, navigate])
 
-  // Отслеживание изменения размера окна в обычном браузере
+  // Отслеживание ширины окна: в Telegram Desktop окно можно растянуть или сузить на лету
   useEffect(() => {
-    if (inTelegram) return
-    const handleResize = () => {
-      setIsWideScreen(window.innerWidth >= 1024)
-    }
+    const handleResize = () => setWidth(window.innerWidth)
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
-  }, [inTelegram])
+  }, [])
+
+  // ПК (Telegram Desktop / macOS, окно от 1100px): своя раскладка, а не растянутый телефон
+  if (inTelegram && width >= 1100) {
+    return <DesktopShell isCustomHeaderScreen={isCustomHeaderScreen} isMiniGame={isMiniGame} />
+  }
 
   // Внутри Telegram (на мобильном или в Telegram Desktop) отображаем нативно без внешних сайдбаров
   if (inTelegram || !isWideScreen) {

@@ -17,7 +17,7 @@ interface ApiDrop {
  * Лента «Live» под шапкой: НАСТОЯЩИЕ последние дропы NFT из платных кейсов (с сервера, у всех одинаковые).
  * Если дропов ещё не было — показываем пустую ленту, ничего не выдумываем. Новый дроп выезжает слева.
  */
-export function LiveFeed() {
+export function LiveFeed({ variant = 'bar' }: { variant?: 'bar' | 'rail' } = {}) {
   const [drops, setDrops] = useState<ApiDrop[]>([])
   const seen = useRef<Set<string> | null>(null)
   const [fresh, setFresh] = useState<string | null>(null)
@@ -44,6 +44,43 @@ export function LiveFeed() {
   const items = drops
     .map((d) => ({ d, gift: giftById.get(d.gift_id), gameCase: paidCases.find((c) => c.id === d.case_id) }))
     .filter((x) => x.gift && /-\d$/.test(x.gift.id)) // только NFT (обычные подарки в ленте не показываем)
+
+  if (variant === 'rail') {
+    // ПК: колонка справа — промо-карточки и сетка последних дропов с ценами
+    return (
+      <section className={styles.rail} aria-label="Live: последние дропы">
+        <h2 className={styles.railHead}>
+          <span className={styles.dot} aria-hidden />
+          Live-дропы
+        </h2>
+        <Link to="/games/clicker" className={styles.railPromo}>
+          <b>Кликалка</b>
+          <span>Тапай и забирай NFT и TON за топ</span>
+        </Link>
+        <Link to="/rewards" className={cx(styles.railPromo, styles.railPromoRed)}>
+          <b>@sexydropbot в нике</b>
+          <span>10 звёзд каждый день</span>
+        </Link>
+        {items.length === 0 ? (
+          <p className={styles.railEmpty}>Дропов пока нет</p>
+        ) : (
+          <div className={styles.railGrid}>
+            {items.map(({ d, gift, gameCase }) => (
+              <div
+                key={d.id}
+                role="img"
+                className={cx(styles.railItem, d.id === fresh && styles.fresh)}
+                aria-label={`${gift!.name}${gameCase ? ` из кейса ${gameCase.name}` : ''} — ${formatMinor(gift!.priceMinor)} TON`}
+              >
+                <img src={gift!.image} alt="" className={styles.imgFull} loading="lazy" />
+                <span className={styles.railPrice}>{formatMinor(gift!.priceMinor)}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </section>
+    )
+  }
 
   return (
     <section className={styles.bar} aria-label="Live: последние дропы">

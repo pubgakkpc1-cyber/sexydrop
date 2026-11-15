@@ -437,3 +437,41 @@
   height: 20px;
   color: #ffffff;
 }
+
+/* ===== ПК: бесплатные кейсы колонкой, карточка горизонтальная (картинка слева, текст справа) ===== */
+:global(html[data-shell='pc']) .grid {
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+:global(html[data-shell='pc']) .tile {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-areas:
+    'art badges'
+    'art info'
+    'foot foot';
+  column-gap: 14px;
+  row-gap: 4px;
+  align-items: center;
+  padding: 14px;
+}
+
+:global(html[data-shell='pc']) .topBadgesRow {
+  grid-area: badges;
+  justify-content: flex-start;
+}
+
+:global(html[data-shell='pc']) .artWrapper { grid-area: art; }
+
+:global(html[data-shell='pc']) .infoCol {
+  grid-area: info;
+  align-items: flex-start;
+  text-align: left;
+  margin-bottom: 0;
+}
+
+:global(html[data-shell='pc']) .statusFooter {
+  grid-area: foot;
+  margin-top: 10px;
+}

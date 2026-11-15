@@ -151,3 +151,44 @@
     min-width: 0;
   }
 }
+
+/* ===== Главная на ПК: игры крупно слева, бесплатные кейсы колонкой справа, кейсы на всю ширину ===== */
+:global(html[data-shell='pc']) .home {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-areas:
+    'games free'
+    'cases cases';
+  gap: 20px;
+  align-items: stretch;
+  max-width: 1500px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+:global(html[data-shell='pc']) .homeGames { grid-area: games; }
+:global(html[data-shell='pc']) .homeFree { grid-area: free; }
+:global(html[data-shell='pc']) .homeCases { grid-area: cases; }
+
+:global(html[data-shell='pc']) .home .panel {
+  padding: 18px;
+  border-radius: 22px;
+}
+
+:global(html[data-shell='pc']) .homeGames .gamesGrid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  grid-auto-rows: minmax(150px, 1fr);
+  gap: 14px;
+}
+
+/* Ракетка — главный баннер слева в два ряда, остальные игры стопкой справа */
+:global(html[data-shell='pc']) .homeGames .gamesGrid [aria-label^='Ракетка'] {
+  grid-row: span 2;
+}
+
+:global(html[data-shell='pc']) .homeGames .gamesGrid a {
+  min-height: 0;
+  height: 100%;
+}
